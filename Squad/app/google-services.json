@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "898334656655",
+    "firebase_url": "https://squad-c15ba.firebaseio.com",
+    "project_id": "squad-c15ba",
+    "storage_bucket": "squad-c15ba.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:898334656655:android:bf497a70cdc275f1",
+        "android_client_info": {
+          "package_name": "uk.ac.tees.donut.squad"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "898334656655-gjkf671nk7i2kh198b4dolgaei9d0ui0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "uk.ac.tees.donut.squad",
+            "certificate_hash": "fb47304e85859c5aaae6ff46a392418730ceb16e"
+          }
+        },
+        {
+          "client_id": "898334656655-igsee9tfpqrb9j27r64ifogf51gbdo2m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBPNnf4jN8w84-WFKUeHBVNC42dKhTgwG0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "898334656655-igsee9tfpqrb9j27r64ifogf51gbdo2m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
