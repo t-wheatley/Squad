@@ -1,11 +1,11 @@
-package uk.ac.tees.donut.squad.events;
+package uk.ac.tees.donut.squad.posts;
 
 /**
  * Created by Scott Taylor on 3/3/2017.
  * if you contribute to this class put your name here as well
  */
 
-public class Event
+public class Meetup
 {
     int id;
     String name,
@@ -15,19 +15,21 @@ public class Event
     //temp location variables
     String address, postCode;
 
-    public Event()
+    public Meetup()
     {
         //empty constructor
     }
-    public Event(String n, String i, String d)
+    //constructor for meetup lists
+    public Meetup(int i, String n, String in)
     {
-        name = n; interest = i; description = d;
+        id = i; name = n; interest = in;
     }
-    //constructor with temp location variable
-    public Event(String n, String i, String d, String a, String p)
+    //constructor with temp location variables
+    public Meetup(int i, String n, String in, String d, String a, String p)
     {
+        id = i;
         name = n;
-        interest = i;
+        interest = in;
         description = d;
         address = a;
         postCode = p;
@@ -65,9 +67,9 @@ public class Event
     {
         name = n;
     }
-    public void setInterest(String i)
+    public void setInterest(String in)
     {
-        interest = i;
+        interest = in;
     }
     public void setDescription(String d)
     {
