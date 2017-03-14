@@ -15,14 +15,6 @@
       },
       "oauth_client": [
         {
-          "client_id": "898334656655-44sutfrf3ot8vs716rl0j05v427po93a.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "uk.ac.tees.donut.squad",
-            "certificate_hash": "ecc9d6dbcfea68c484a55ab4990d1b9693c129a6"
-          }
-        },
-        {
           "client_id": "898334656655-gjkf671nk7i2kh198b4dolgaei9d0ui0.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -38,9 +30,6 @@
       "api_key": [
         {
           "current_key": "AIzaSyBPNnf4jN8w84-WFKUeHBVNC42dKhTgwG0"
-        },
-        {
-          "current_key": "AIzaSyDGJQAU4al-z8tqBEhwQZ_eN5AK9lUGjlE"
         }
       ],
       "services": {

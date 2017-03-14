@@ -1,5 +1,6 @@
 package uk.ac.q5081793tees.squads;
 
+
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.app.Activity;
@@ -10,6 +11,15 @@ import android.widget.Button;
 import uk.ac.q5081793tees.squads.database.DatabaseHandler;
 import uk.ac.q5081793tees.squads.users.User;
 
+
+import uk.ac.tees.donut.squad.squads.Squad;
+import uk.ac.tees.donut.squad.users.User;
+
+import static uk.ac.tees.donut.squad.squads.Interest.*;
+
+public class MainActivity extends AppCompatActivity
+{
+
 public class MainActivity extends AppCompatActivity
 {
     @Override
@@ -17,6 +27,7 @@ public class MainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        
         User user = new User();
         //Manually set for test data
         user.setName("James");
