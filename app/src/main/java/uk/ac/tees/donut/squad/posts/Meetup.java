@@ -7,7 +7,7 @@ package uk.ac.tees.donut.squad.posts;
 
 public class Meetup
 {
-    int id;
+    String id;
     String name,
             interest,
             description;
@@ -19,13 +19,20 @@ public class Meetup
     {
         //empty constructor
     }
-    //constructor for meetup lists
-    public Meetup(int i, String n, String in)
+    //constructor for basic meetup with no id
+    public Meetup(String n, String in)
     {
-        id = i; name = n; interest = in;
+         name = n; interest = in;
     }
+
+    //constructor for meetup lists
+    public Meetup(String i, String n, String in)
+    {
+        name = n; interest = in;
+    }
+
     //constructor with temp location variables
-    public Meetup(int i, String n, String in, String d, String a, String p)
+    public Meetup(String i, String n, String in, String d, String a, String p)
     {
         id = i;
         name = n;
@@ -36,7 +43,7 @@ public class Meetup
     }
 
     //GETTERS
-    public int getId()
+    public String getId()
     {
         return id;
     }
@@ -63,6 +70,10 @@ public class Meetup
     }
 
     //SETTERS
+    public void setId(String i)
+    {
+        id = i;
+    }
     public void setName(String n)
     {
         name = n;
