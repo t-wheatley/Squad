@@ -1,5 +1,7 @@
 package uk.ac.tees.donut.squad.posts;
 
+import uk.ac.tees.donut.squad.users.User;
+
 /**
  * Created by Scott Taylor on 3/3/2017.
  * if you contribute to this class put your name here as well
@@ -11,6 +13,7 @@ public class Meetup
     String name,
             interest,
             description;
+    User user;
 
     //temp location variables
     String address, postCode;
