@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -10,61 +9,10 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="uk.ac.q5081793tees.squads.MainActivity">
+    tools:context="uk.ac.tees.donut.squad.MainActivity">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/iv_logo"
-        />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/iv_logo"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/textview"
-        android:text="Squads!" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/textview"
-        android:id="@+id/profileBtn"
-        android:text="My Profile"
-        android:onClick="openProfile" />
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/profileBtn"
-        android:id="@+id/squadsBtn"
-        android:text="Squads"
-        android:onClick="openSquads"/>
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/squadsBtn"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/eventsBtn"
-        android:text="Events"
-        android:onClick="openEvents" />
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/eventsBtn"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/hostBtn"
-        android:text="Host an Event"
-        android:onClick="openHost"/>
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/hostBtn"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/settingsBtn"
-        android:text="Settings"
-        android:onClick="openSettings"/>
+        android:text="Hello World!"/>
 </RelativeLayout>
