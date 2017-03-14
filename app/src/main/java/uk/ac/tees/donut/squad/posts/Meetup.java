@@ -1,5 +1,6 @@
 package uk.ac.tees.donut.squad.posts;
 
+import uk.ac.tees.donut.squad.squads.Interest;
 import uk.ac.tees.donut.squad.users.User;
 
 /**
@@ -11,8 +12,8 @@ public class Meetup
 {
     int id;
     String name,
-            interest,
             description;
+    Interest interest;
     User user;
 
     //temp location variables
@@ -23,12 +24,12 @@ public class Meetup
         //empty constructor
     }
     //constructor for meetup lists
-    public Meetup(int i, String n, String in)
+    public Meetup(int i, String n, Interest in)
     {
         id = i; name = n; interest = in;
     }
     //constructor with temp location variables
-    public Meetup(int i, String n, String in, String d, String a, String p)
+    public Meetup(int i, String n, Interest in, String d, String a, String p)
     {
         id = i;
         name = n;
@@ -47,7 +48,7 @@ public class Meetup
     {
         return name;
     }
-    public String getInterest()
+    public Interest getInterest()
     {
         return interest;
     }
@@ -70,7 +71,7 @@ public class Meetup
     {
         name = n;
     }
-    public void setInterest(String in)
+    public void setInterest(Interest in)
     {
         interest = in;
     }
