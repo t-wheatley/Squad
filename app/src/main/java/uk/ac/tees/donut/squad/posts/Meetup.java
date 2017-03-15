@@ -1,8 +1,7 @@
 package uk.ac.tees.donut.squad.posts;
 
 /**
- * Created by Scott Taylor on 3/3/2017.
- * if you contribute to this class put your name here as well
+ * Created by Scott Taylor, Thomas Wheatley
  */
 
 public class Meetup
@@ -12,26 +11,30 @@ public class Meetup
             interest,
             description;
 
-    //temp location variables
+    // Temp location variables
     String address, postCode;
 
     public Meetup()
     {
-        //empty constructor
-    }
-    //constructor for basic meetup with no id
-    public Meetup(String n, String in)
-    {
-         name = n; interest = in;
+        // Empty constructor
     }
 
-    //constructor for meetup lists
+    // Constructor for meetup to be post to Firebase
+    public Meetup(String i, String n, String in, String d)
+    {
+        id = i;
+        name = n;
+        interest = in;
+        description = d;
+    }
+
+    // Constructor for meetup lists
     public Meetup(String i, String n, String in)
     {
         name = n; interest = in;
     }
 
-    //constructor with temp location variables
+    // Constructor with temp location variables
     public Meetup(String i, String n, String in, String d, String a, String p)
     {
         id = i;
@@ -42,7 +45,7 @@ public class Meetup
         postCode = p;
     }
 
-    //GETTERS
+    // GETTERS
     public String getId()
     {
         return id;
@@ -59,7 +62,7 @@ public class Meetup
     {
         return description;
     }
-    //temp location getters
+    // Temp location getters
     public String getAddress()
     {
         return address;
@@ -69,7 +72,7 @@ public class Meetup
         return postCode;
     }
 
-    //SETTERS
+    // SETTERS
     public void setId(String i)
     {
         id = i;
@@ -86,7 +89,7 @@ public class Meetup
     {
         description = d;
     }
-    //temp location setter
+    // Temp location setter
     public void setAddress(String a)
     {
         address = a;
