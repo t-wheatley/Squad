@@ -1,5 +1,8 @@
 package uk.ac.tees.donut.squad.posts;
 
+import uk.ac.tees.donut.squad.squads.Interest;
+import uk.ac.tees.donut.squad.users.User;
+
 /**
  * Created by Scott Taylor, Thomas Wheatley
  */
@@ -8,8 +11,9 @@ public class Meetup
 {
     String id;
     String name,
-            interest,
             description;
+    Interest interest;
+    User user;
 
     // Temp location variables
     String address, postCode;
@@ -18,6 +22,7 @@ public class Meetup
     {
         // Empty constructor
     }
+<<<<<<< HEAD
 
     // Constructor for meetup to be post to Firebase
     public Meetup(String i, String n, String in, String d)
@@ -30,12 +35,21 @@ public class Meetup
 
     // Constructor for meetup lists
     public Meetup(String i, String n, String in)
+=======
+    //constructor for meetup lists
+    public Meetup(int i, String n, Interest in)
+>>>>>>> refs/remotes/origin/master
     {
         name = n; interest = in;
     }
+<<<<<<< HEAD
 
     // Constructor with temp location variables
     public Meetup(String i, String n, String in, String d, String a, String p)
+=======
+    //constructor with temp location variables
+    public Meetup(int i, String n, Interest in, String d, String a, String p)
+>>>>>>> refs/remotes/origin/master
     {
         id = i;
         name = n;
@@ -54,7 +68,7 @@ public class Meetup
     {
         return name;
     }
-    public String getInterest()
+    public Interest getInterest()
     {
         return interest;
     }
@@ -81,7 +95,7 @@ public class Meetup
     {
         name = n;
     }
-    public void setInterest(String in)
+    public void setInterest(Interest in)
     {
         interest = in;
     }

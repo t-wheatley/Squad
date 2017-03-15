@@ -1,0 +1,43 @@
+package uk.ac.tees.donut.squad.squads;
+
+/**
+ * Created by Scott on 14/03/2017.
+ */
+
+public class Squad
+{
+    String name;
+    Interest interest;
+    String description;
+
+    public Squad(String n, Interest i, String d)
+    {
+        name = n;
+        interest = i;
+        description = d;
+    }
+
+    //GETTERS
+    public String getName()
+    {
+        return name;
+    }
+    public Interest getInterest()
+    {
+        return interest;
+    }
+    public String getDescription()
+    {
+        return description;
+    }
+
+    //SETTERS
+    public void setName(String n)
+    {
+        name = n;
+    }
+    public void setDescription(String d)
+    {
+        description = d;
+    }
+}

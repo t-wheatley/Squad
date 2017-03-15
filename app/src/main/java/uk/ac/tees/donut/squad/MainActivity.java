@@ -7,6 +7,11 @@ import android.view.View;
 import android.widget.Button;
 
 
+import uk.ac.tees.donut.squad.squads.Squad;
+import uk.ac.tees.donut.squad.users.User;
+
+import static uk.ac.tees.donut.squad.squads.Interest.*;
+
 public class MainActivity extends AppCompatActivity
 {
     Button btnNewMeetup;
@@ -18,6 +23,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+<<<<<<< HEAD
         btnNewMeetup = (Button) findViewById(R.id.main_buttonNewMeetup);
         btnViewMeetups = (Button) findViewById(R.id.main_buttonViewMeetups);
 
@@ -34,5 +40,11 @@ public class MainActivity extends AppCompatActivity
                 startActivity(new Intent(MainActivity.this, ViewMeetups.class));
             }
         });
+=======
+        //TEST USER WITH MOVIES IN THEIR mySquads
+        User user = new User("defaultUser");
+        Squad movies = new Squad("Movie Squad", MOVIES, "A collection of avid movie-goers");
+        user.addInterest(MOVIES);
+>>>>>>> refs/remotes/origin/master
     }
 }
