@@ -119,16 +119,22 @@ public class DatabaseHandler extends SQLiteOpenHelper
             do {
                 //create Lecturer object for current database record
 
-                int nid= cursor.getInt(idIdx);
+                String nid= cursor.getString(idIdx);
                 String nname = cursor.getString(nameIdx);
                 String ninterest = cursor.getString(interestIdx);
 
 
 
                 Meetup meetup = new Meetup(
+<<<<<<< HEAD
         //                cursor.getInt(idIdx),
         //                cursor.getString(nameIdx),
           //              cursor.getString(interestIdx)
+=======
+                        cursor.getString(idIdx),
+                        cursor.getString(nameIdx),
+                        cursor.getString(interestIdx)
+>>>>>>> refs/remotes/origin/master
                 );
                 //add lecturer to the list
                 list.add(meetup);

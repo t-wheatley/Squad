@@ -22,13 +22,17 @@
                 android:name=".FetchAddressIntentService"
                 android:exported="false"/>
         </activity>
+<<<<<<< HEAD
 
         <activity android:name=".location.locating"></activity>
 =======
+=======
+        <activity android:name=".NewMeetup" />
+        <activity android:name=".ViewMeetups" />
+        <activity android:name=".MeetupDetail" />
+>>>>>>> refs/remotes/origin/master
         <activity android:name=".ProfileActivity" />
         <activity android:name=".SquadsActivity" />
-        <activity android:name=".NearbyActivity" />
-        <activity android:name=".HostActivity" />
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings" />
