@@ -11,8 +11,8 @@ public class Meetup
 {
     String id;
     String name,
-            description;
-    String interest;
+            description,
+            interest;
     User user;
 
     // Temp location variables
@@ -35,7 +35,7 @@ public class Meetup
     // Constructor for meetup lists
     public Meetup(String i, String n, String in)
     {
-        name = n; interest = in;
+        id = i; name = n; interest = in;
     }
 
 

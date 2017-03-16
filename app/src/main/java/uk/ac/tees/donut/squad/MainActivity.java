@@ -43,12 +43,12 @@ public class MainActivity extends AppCompatActivity
     }
     public void openEvents(View view)
     {
-        Intent intent = new Intent(this, NearbyActivity.class);
+        Intent intent = new Intent(this, ViewMeetups.class);
         startActivity(intent);
     }
     public void openHost(View view)
     {
-        Intent intent = new Intent(this, HostActivity.class);
+        Intent intent = new Intent(this, NewMeetup.class);
         startActivity(intent);
     }
     public void openSettings(View view)
