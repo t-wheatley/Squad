@@ -20,8 +20,6 @@
         <activity android:name=".MeetupDetail" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".SquadsActivity" />
-        <activity android:name=".NearbyActivity" />
-        <activity android:name=".HostActivity" />
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings" />
