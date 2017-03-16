@@ -1,14 +1,20 @@
 package uk.ac.tees.donut.squad;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.content.Intent;
 import android.view.View;
 import uk.ac.tees.donut.squad.database.DatabaseHandler;
 import android.content.ContentValues;
+
+
 import uk.ac.tees.donut.squad.posts.Meetup;
 
 public class HostActivity extends AppCompatActivity {
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,4 +45,7 @@ public class HostActivity extends AppCompatActivity {
         Intent intent = new Intent(this, ProfileActivity.class);
         startActivity(intent);
     }
-    }
+
+
+
+}

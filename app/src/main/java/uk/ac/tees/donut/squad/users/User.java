@@ -42,7 +42,7 @@ public class User
     //mySquads management
     public void addInterest(Interest in)
     {
-        mySquads.add(in);
+//        mySquads.add(in);
     }
     public void removeInterest(Interest in)
     {

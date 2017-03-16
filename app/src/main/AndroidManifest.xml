@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="uk.ac.tees.donut.squad">
-<<<<<<< HEAD
 
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 =======
 >>>>>>> refs/remotes/origin/master
 
@@ -19,9 +18,12 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <service
+                android:name=".FetchAddressIntentService"
+                android:exported="false"/>
         </activity>
-<<<<<<< HEAD
-        <activity android:name=".location.Locating"></activity>
+
+        <activity android:name=".location.locating"></activity>
 =======
         <activity android:name=".ProfileActivity" />
         <activity android:name=".SquadsActivity" />
