@@ -1,8 +1,10 @@
 package uk.ac.tees.donut.squad.location;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.*;
+import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -19,8 +21,9 @@ import uk.ac.tees.donut.squad.posts.Post;
 
 public class locating extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
-    GoogleApiClient mGoogleApiClient;
-    android.location.Location mLastLocation;
+    private GoogleApiClient mGoogleApiClient;
+    private Location mLastLocation;
+    private AddressResultReciever mResultReciever;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +39,13 @@ public class locating extends AppCompatActivity implements GoogleApiClient.Conne
                     .addApi(LocationServices.API)
                     .build();
         }
+    }
+
+    protected void startIntentService() {
+        Intent intent = new Intent(this, FetchAddressIntentService.class);
+        intent.putExtra(Constants.RECEIVER, mResultReceiver);
+        intent.putExtra(Constants.LOCATION_DATA_EXTRA, mLastLocation);
+        startService(intent);
     }
 
     protected void onStart() {

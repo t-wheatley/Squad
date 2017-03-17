@@ -63,7 +63,7 @@ public class Location extends IntentService implements
     @Override
     protected void onHandleIntent(Intent intent) {
         //Create geocoder
-        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+
 
         String errorMessage = "";
 

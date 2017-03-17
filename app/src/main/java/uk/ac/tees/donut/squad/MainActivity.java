@@ -27,20 +27,20 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-<<<<<<< HEAD
+
         //TEST USER WITH MOVIES IN THEIR mySquads
-<<<<<<< HEAD
+
         User user = new User("defaultUser");
         Squad movies = new Squad("Movie Squad", MOVIES, "A collection of avid movie-goers");
-=======
+
 //        User user = new User("defaultUser");
 //        Squad movies = new Squad("Movie Squad", MOVIES, "A collection of avid movie-goers");
->>>>>>> refs/remotes/origin/master
+
 //        user.addInterest(MOVIES);
 //        user.setName("James");
 //        user.setHostable(true);
-=======
->>>>>>> master
+
+
     }
 
     //Click functionality
