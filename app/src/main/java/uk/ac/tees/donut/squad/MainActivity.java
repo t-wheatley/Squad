@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import uk.ac.tees.donut.squad.location.locating;
 import uk.ac.tees.donut.squad.squads.Interest;
 import uk.ac.tees.donut.squad.squads.Squad;
 import uk.ac.tees.donut.squad.users.User;
@@ -67,6 +68,10 @@ public class MainActivity extends AppCompatActivity
     public void openSettings(View view)
     {
         Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+    }
+    public void locationTesting(View view){
+        Intent intent = new Intent(this, locating.class);
         startActivity(intent);
     }
 }

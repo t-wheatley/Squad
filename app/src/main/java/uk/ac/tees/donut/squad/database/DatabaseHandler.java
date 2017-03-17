@@ -126,15 +126,15 @@ public class DatabaseHandler extends SQLiteOpenHelper
 
 
                 Meetup meetup = new Meetup(
-<<<<<<< HEAD
+
         //                cursor.getInt(idIdx),
         //                cursor.getString(nameIdx),
           //              cursor.getString(interestIdx)
-=======
+
                         cursor.getString(idIdx),
                         cursor.getString(nameIdx),
                         cursor.getString(interestIdx)
->>>>>>> refs/remotes/origin/master
+
                 );
                 //add lecturer to the list
                 list.add(meetup);
