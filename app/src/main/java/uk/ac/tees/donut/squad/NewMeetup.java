@@ -4,12 +4,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import uk.ac.tees.donut.squad.posts.Meetup;
 
@@ -18,7 +26,7 @@ public class NewMeetup extends AppCompatActivity
     private DatabaseReference mDatabase;
 
     private EditText editName;
-    private EditText editInterest;
+    private Spinner spinnerInterest;
     private EditText editDescription;
     private EditText  editAddress;
     private Button btnSubmit;
@@ -35,7 +43,7 @@ public class NewMeetup extends AppCompatActivity
 
         // Links the variables to their layout items.
         editName = (EditText) findViewById(R.id.newMeetup_textEditName);
-        editInterest = (EditText) findViewById(R.id.newMeetup_textEditInterest);
+        spinnerInterest = (Spinner) findViewById(R.id.newMeetup_spinnerInterest);
         editDescription = (EditText) findViewById(R.id.newMeetup_textEditDescription);
         editAddress = (EditText) findViewById(R.id.newMeetup_meetupAddress);
         btnSubmit = (Button) findViewById(R.id.newMeetup_buttonSubmit);
@@ -48,13 +56,15 @@ public class NewMeetup extends AppCompatActivity
                 submitMeetup();
             }
         });
+
+        fillSpinner();
     }
 
     private void submitMeetup()
     {
         // Gets the strings from the editTexts
         final String name = editName.getText().toString();
-        final String interest = editInterest.getText().toString();
+        final String interest = spinnerInterest.getSelectedItem().toString();
         final String description = editDescription.getText().toString();
 
         // Checks if the name field is empty
@@ -65,12 +75,7 @@ public class NewMeetup extends AppCompatActivity
             return;
         }
 
-        // Interest is required
-        if (TextUtils.isEmpty(interest))
-        {
-            editInterest.setError("Required");
-            return;
-        }
+
 
         // Description is required
         if (TextUtils.isEmpty(description))
@@ -108,7 +113,7 @@ public class NewMeetup extends AppCompatActivity
     private void setEditingEnabled(boolean enabled)
     {
         editName.setEnabled(enabled);
-        editInterest.setEnabled(enabled);
+        spinnerInterest.setEnabled(enabled);
         editDescription.setEnabled(enabled);
         if (enabled)
         {
@@ -117,5 +122,30 @@ public class NewMeetup extends AppCompatActivity
         {
             btnSubmit.setVisibility(View.GONE);
         }
+    }
+
+    private void fillSpinner()
+    {
+        mDatabase.child("interests").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Toast.makeText(NewMeetup.this, "Loading interests...", Toast.LENGTH_SHORT).show();
+                final List<String> interests = new ArrayList<String>();
+
+                for (DataSnapshot interestSnapshot: dataSnapshot.getChildren()) {
+                    String interest = interestSnapshot.child("name").getValue(String.class);
+                    interests.add(interest);
+                }
+
+                ArrayAdapter<String> interestAdapter = new ArrayAdapter<String>(NewMeetup.this, android.R.layout.simple_spinner_item, interests);
+                interestAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinnerInterest.setAdapter(interestAdapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }
