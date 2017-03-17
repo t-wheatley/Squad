@@ -64,37 +64,5 @@
         android:layout_alignParentStart="true"
         android:id="@+id/meetupDetail_textEditDescription"
         android:layout_alignParentEnd="true"/>
-    <TextView
-        android:text="Address:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/meetupDetail_textEditDescription"
-        android:layout_alignParentStart="true"
-        android:id="@+id/meetupDetail_textViewAddress" />
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:layout_below="@+id/meetupDetail_textViewAddress"
-        android:layout_alignParentStart="true"
-        android:id="@+id/meetupDetail_textEditAddress"
-        android:layout_alignParentEnd="true"
-        />
-    <TextView
-        android:text="Postcode:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/meetupDetail_textEditAddress"
-        android:layout_alignParentStart="true"
-        android:id="@+id/meetupDetail_textViewPostCode" />
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:layout_below="@+id/meetupDetail_textViewPostCode"
-        android:layout_alignParentStart="true"
-        android:id="@+id/meetupDetail_textEditPostCode"
-        android:layout_alignParentEnd="true" />
+  
 </RelativeLayout>
