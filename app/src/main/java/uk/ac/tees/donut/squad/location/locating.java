@@ -11,6 +11,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.os.ResultReceiver;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -25,8 +26,8 @@ import uk.ac.tees.donut.squad.posts.Post;
 public class locating extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private GoogleApiClient mGoogleApiClient;
-    private Location mLastLocation;
-    private ResultReceiver mResultReciever;
+    private String userAddress;
+    private ResultReceiver mResultReceiver;
     private EditText address;
     private Button submit;
 
@@ -48,14 +49,29 @@ public class locating extends AppCompatActivity implements GoogleApiClient.Conne
                     .build();
         }
 
-        submit.setOnClickListener();
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                userAddress = address.getText().toString();
+                // When pressed calls the fetchAddressButtonHandler method
+                fetchAddressButtonHandler(v);
+            }
+        });;
 
+    }
+
+    public void fetchAddressButtonHandler(View view){
+        // Only start the service to fetch the address if GoogleApiClient is
+        // connected.
+        if (mGoogleApiClient.isConnected() && userAddress != null) {
+            startIntentService();
+        }
     }
 
     protected void startIntentService() {
         Intent intent = new Intent(this, FetchAddressIntentService.class);
         intent.putExtra(Constants.RECEIVER, mResultReceiver);
-        intent.putExtra(Constants.LOCATION_DATA_EXTRA, mLastLocation);
+        intent.putExtra(Constants.LOCATION_DATA_EXTRA, userAddress);
         startService(intent);
     }
 
@@ -75,13 +91,8 @@ public class locating extends AppCompatActivity implements GoogleApiClient.Conne
 
             return;
         }
-        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                mGoogleApiClient);
-        if (mLastLocation != null) {
-            Double mLatitude = mLastLocation.getLatitude();
-            Double mLongitude = mLastLocation.getLongitude();
-            String latitudeLogitude = mLatitude + " " + mLongitude;
-        }
+        userAddress = );
+
     }
 
     @Override
