@@ -47,14 +47,6 @@
         android:id="@+id/newMeetup_textEditInterest"
         android:layout_alignParentEnd="true"/>
 
-    <TextView
-        android:text="Description:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/newMeetup_textEditInterest"
-        android:layout_alignParentStart="true"
-        android:id="@+id/newMeetup_textDescription"/>
-
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -72,4 +64,23 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:id="@+id/newMeetup_buttonSubmit"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:layout_marginTop="17dp"
+        android:id="@+id/newMeetup_meetupAddress"
+        android:text="Address"
+        android:layout_below="@+id/newMeetup_textDescription"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="Description:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/newMeetup_textDescription"
+        android:layout_below="@+id/newMeetup_textEditInterest"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>

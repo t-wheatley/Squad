@@ -22,7 +22,7 @@
                 android:name=".FetchAddressIntentService"
                 android:exported="false"/>
         </activity>
-<<<<<<< HEAD
+
 
         <activity android:name=".location.locating"></activity>
 =======

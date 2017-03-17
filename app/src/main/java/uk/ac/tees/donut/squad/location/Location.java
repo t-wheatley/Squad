@@ -29,8 +29,8 @@ import static com.google.android.gms.wearable.DataMap.TAG;
 
 public class Location extends IntentService implements
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener{
-    protected ResultReceiver mReceiver;
-    protected String mLastLocation;
+    private ResultReceiver mReceiver;
+    private String mLastLocation;
     private AddressResultReceiver mResultReceiver;
 
     /**
@@ -72,6 +72,7 @@ public class Location extends IntentService implements
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        //Create geocoder
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
 
         String errorMessage = "";
@@ -94,7 +95,7 @@ public class Location extends IntentService implements
             errorMessage = getString(R.string.service_not_available);
             Log.e(TAG, errorMessage, ioException);
         } catch (IllegalArgumentException illegalArgumentException) {
-            // Catch invalid latitude or longitude values.
+            // Catch invalid Address
 
         }
 

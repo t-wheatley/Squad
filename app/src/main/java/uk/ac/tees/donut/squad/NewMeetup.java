@@ -20,6 +20,7 @@ public class NewMeetup extends AppCompatActivity
     private EditText editName;
     private EditText editInterest;
     private EditText editDescription;
+    private EditText  editAddress;
     private Button btnSubmit;
 
     @Override
@@ -36,6 +37,7 @@ public class NewMeetup extends AppCompatActivity
         editName = (EditText) findViewById(R.id.newMeetup_textEditName);
         editInterest = (EditText) findViewById(R.id.newMeetup_textEditInterest);
         editDescription = (EditText) findViewById(R.id.newMeetup_textEditDescription);
+        editAddress = (EditText) findViewById(R.id.newMeetup_meetupAddress);
         btnSubmit = (Button) findViewById(R.id.newMeetup_buttonSubmit);
 
         // onClick listener for the submit button
