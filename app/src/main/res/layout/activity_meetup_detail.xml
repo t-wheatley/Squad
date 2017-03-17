@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_meetup_detail"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="uk.ac.tees.donut.squad.MeetupDetail">
+
+    <TextView
+        android:text="Name:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/meetupDetail_textViewName"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:layout_below="@+id/meetupDetail_textViewName"
+        android:layout_alignParentStart="true"
+        android:id="@+id/meetupDetail_textEditName"
+        android:layout_alignParentEnd="true"/>
+
+    <TextView
+        android:text="Interest:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/meetupDetail_textEditName"
+        android:layout_alignParentStart="true"
+        android:id="@+id/meetupDetail_textViewInterest"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:layout_below="@+id/meetupDetail_textViewInterest"
+        android:layout_alignParentStart="true"
+        android:id="@+id/meetupDetail_textEditInterest"
+        android:layout_alignParentEnd="true"/>
+
+    <TextView
+        android:text="Description:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/meetupDetail_textEditInterest"
+        android:layout_alignParentStart="true"
+        android:id="@+id/meetupDetail_textViewDescription"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:layout_below="@+id/meetupDetail_textViewDescription"
+        android:layout_alignParentStart="true"
+        android:id="@+id/meetupDetail_textEditDescription"
+        android:layout_alignParentEnd="true"/>
+</RelativeLayout>

@@ -4,32 +4,43 @@ import uk.ac.tees.donut.squad.squads.Interest;
 import uk.ac.tees.donut.squad.users.User;
 
 /**
- * Created by Scott Taylor on 3/3/2017.
- * if you contribute to this class put your name here as well
+ * Created by Scott Taylor, Thomas Wheatley
  */
 
 public class Meetup
 {
-    int id;
+    String id;
     String name,
-            description;
-    Interest interest;
+            description,
+            interest;
     User user;
 
-    //temp location variables
+    // Temp location variables
     String address, postCode;
 
     public Meetup()
     {
-        //empty constructor
+        // Empty constructor
     }
-    //constructor for meetup lists
-    public Meetup(int i, String n, Interest in)
+
+    // Constructor for meetup to be post to Firebase
+    public Meetup(String i, String n, String in, String d)
+    {
+        id = i;
+        name = n;
+        interest = in;
+        description = d;
+    }
+
+    // Constructor for meetup lists
+    public Meetup(String i, String n, String in)
     {
         id = i; name = n; interest = in;
     }
-    //constructor with temp location variables
-    public Meetup(int i, String n, Interest in, String d, String a, String p)
+
+
+    // Constructor with temp location variables
+    public Meetup(String i, String n, String in, String d, String a, String p)
     {
         id = i;
         name = n;
@@ -39,8 +50,8 @@ public class Meetup
         postCode = p;
     }
 
-    //GETTERS
-    public int getId()
+    // GETTERS
+    public String getId()
     {
         return id;
     }
@@ -48,7 +59,7 @@ public class Meetup
     {
         return name;
     }
-    public Interest getInterest()
+    public String getInterest()
     {
         return interest;
     }
@@ -56,7 +67,7 @@ public class Meetup
     {
         return description;
     }
-    //temp location getters
+    // Temp location getters
     public String getAddress()
     {
         return address;
@@ -66,12 +77,16 @@ public class Meetup
         return postCode;
     }
 
-    //SETTERS
+    // SETTERS
+    public void setId(String i)
+    {
+        id = i;
+    }
     public void setName(String n)
     {
         name = n;
     }
-    public void setInterest(Interest in)
+    public void setInterest(String in)
     {
         interest = in;
     }
@@ -79,7 +94,7 @@ public class Meetup
     {
         description = d;
     }
-    //temp location setter
+    // Temp location setter
     public void setAddress(String a)
     {
         address = a;
