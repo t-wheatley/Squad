@@ -1,19 +1,40 @@
 package uk.ac.tees.donut.squad.squads;
 
 /**
- * Created by Scott on 14/03/2017.
+ * Created by Tom on 17/03/2017.
  */
 
-//enums for the interest of a Squad, these will be used to reference the squads, like a unique id number
-public enum Interest
+public class Interest
 {
-    COMIC_BOOKS,
-    VIDEO_GAMES,
-    MOVIES,
-    TV_SHOWS,
-    ATHLETICS,
-    FOOTBALL,
-    HANDEGG,
-    BASKETBALL,
-    TRADING_CARD_GAMES
+    String id, name;
+
+    public Interest()
+    {
+    }
+
+    public Interest(String i, String n)
+    {
+        id = i; name = n;
+    }
+
+    public String getId()
+    {
+        return id;
+    }
+
+    public void setId(String id)
+    {
+        this.id = id;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+
 }
