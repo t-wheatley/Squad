@@ -74,10 +74,10 @@ public class Location extends IntentService implements
         mReceiver.send(resultCode, bundle);
     }
 
-    protected void startIntentService() {
-        Intent intent = new Intent(this, FetchAddressIntentService.class);
-        intent.putExtra(Constants.RECEIVER, mResultReceiver);
-        intent.putExtra(Constants.LOCATION_DATA_EXTRA, mLastLocation);
-        startService(intent);
-    }
+   // protected void startIntentService() {
+     //   Intent intent = new Intent(this, FetchAddressIntentService.class);
+       // intent.putExtra(Constants.RECEIVER, mResultReceiver);
+        //intent.putExtra(Constants.LOCATION_DATA_EXTRA, mLastLocation);
+        //startService(intent);
+   // }
 }
