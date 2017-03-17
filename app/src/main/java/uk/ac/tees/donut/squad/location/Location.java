@@ -31,7 +31,7 @@ public class Location extends IntentService implements
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener{
     private ResultReceiver mReceiver;
     private String mLastLocation;
-    private AddressResultReceiver mResultReceiver;
+    private ResultReceiver mResultReceiver;
 
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
@@ -58,17 +58,7 @@ public class Location extends IntentService implements
 
     }
 
-    public final class Constants {
-        public static final int SUCCESS_RESULT = 0;
-        public static final int FAILURE_RESULT = 1;
-        public static final String PACKAGE_NAME =
-                "com.google.android.gms.location.sample.locationaddress";
-        public static final String RECEIVER = PACKAGE_NAME + ".RECEIVER";
-        public static final String RESULT_DATA_KEY = PACKAGE_NAME +
-                ".RESULT_DATA_KEY";
-        public static final String LOCATION_DATA_EXTRA = PACKAGE_NAME +
-                ".LOCATION_DATA_EXTRA";
-    }
+
 
     @Override
     protected void onHandleIntent(Intent intent) {

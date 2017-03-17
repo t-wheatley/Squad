@@ -53,7 +53,7 @@
         android:id="@+id/newMeetup_spinnerInterest"
         android:layout_alignParentEnd="true"/>
 
-<<<<<<< HEAD
+
 =======
     <TextView
         android:text="Description:"
@@ -70,7 +70,7 @@
         android:inputType="textMultiLine"
         android:ems="10"
         android:id="@+id/newMeetup_textEditDescription"
-<<<<<<< HEAD
+
         android:layout_alignParentEnd="true"/>
 
     <Button
