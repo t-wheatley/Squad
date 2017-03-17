@@ -27,9 +27,9 @@ public class locating extends AppCompatActivity implements GoogleApiClient.Conne
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+       // super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_locating);
-
+//test
 
         // Create an instance of GoogleAPIClient.
         if (mGoogleApiClient == null) {
