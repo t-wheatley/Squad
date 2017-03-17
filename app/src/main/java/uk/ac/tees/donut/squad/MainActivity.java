@@ -30,8 +30,8 @@ public class MainActivity extends AppCompatActivity
 
         //TEST USER WITH MOVIES IN THEIR mySquads
 
-        User user = new User("defaultUser");
-        Squad movies = new Squad("Movie Squad", MOVIES, "A collection of avid movie-goers");
+      //  User user = new User("defaultUser");
+       // Squad movies = new Squad("Movie Squad", MOVIES, "A collection of avid movie-goers");
 
 //        User user = new User("defaultUser");
 //        Squad movies = new Squad("Movie Squad", MOVIES, "A collection of avid movie-goers");
