@@ -67,6 +67,7 @@ public class NewMeetup extends AppCompatActivity
         final String interest = spinnerInterest.getSelectedItem().toString();
         final String description = editDescription.getText().toString();
 
+
         // Checks if the name field is empty
         if (TextUtils.isEmpty(name))
         {
