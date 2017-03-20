@@ -54,6 +54,7 @@ public class locating extends AppCompatActivity implements GoogleApiClient.Conne
             public void onClick(View v) {
                 userAddress = address.getText().toString();
                 // When pressed calls the fetchAddressButtonHandler method
+                mGoogleApiClient.connect();
                 fetchAddressButtonHandler(v);
             }
         });;
