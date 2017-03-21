@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity
 {
     Button btnNewMeetup;
     Button btnViewMeetups;
+    User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -27,12 +28,17 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        user = new User("defaultUser");
+
     }
 
     //Click functionality
     public void openProfile(View view)
     {
         Intent intent = new Intent(this, ProfileActivity.class);
+        Bundle b = new Bundle();
+        b.putSerializable("USER", user);
+        intent.putExtras(b);
         startActivity(intent);
     }
     public void openSquads(View view)
