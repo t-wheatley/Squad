@@ -14,8 +14,8 @@
         android:layout_height="wrap_content"
         android:background="@color/tw__composer_red">
 
-        <EditText
-            android:id="@+id/profileName_EditText"
+        <TextView
+            android:id="@+id/profileName"
             android:text="'Users Profile"
             android:textColor="#FFFFFF"
             android:layout_width="wrap_content"
@@ -28,7 +28,7 @@
             android:textColor="#FFFFFF"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/profileName_EditText"
+            android:layout_below="@+id/profileName"
             android:id="@+id/profileInterest_TextView"/>
         <EditText
             android:id="@+id/profileInterest_EditText"
@@ -40,8 +40,17 @@
             android:id="@+id/profileImage_ImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/profileName_EditText"
+            android:layout_alignParentRight="true"
             android:src="@drawable/com_facebook_profile_picture_blank_portrait"/>
+        <Button
+            android:id="@+id/attendingBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/profileImage_ImageView"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentLeft="true"
+            style="@style/Base.Widget.AppCompat.Button.Colored"
+            android:text="Show Attending Meetups"/>
     </RelativeLayout>
 
 </LinearLayout>
