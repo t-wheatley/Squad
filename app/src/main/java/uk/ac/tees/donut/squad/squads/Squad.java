@@ -36,6 +36,10 @@ public class Squad
     {
         name = n;
     }
+    public void setInterest(Interest in)
+    {
+        interest = in;
+    }
     public void setDescription(String d)
     {
         description = d;
