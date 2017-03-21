@@ -16,6 +16,7 @@ import java.util.Locale;
 
 import uk.ac.tees.donut.squad.R;
 
+import static android.R.id.list;
 import static com.google.android.gms.wearable.DataMap.TAG;
 
 /**
@@ -24,13 +25,15 @@ import static com.google.android.gms.wearable.DataMap.TAG;
 
 public class FetchAddressIntentService extends IntentService {
     protected ResultReceiver mReceiver;
+    private static final String TAG = "FetchAddyIntentService";
 
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
      *
      * @param name Used to name the worker thread, important only for debugging.
      */
-    public FetchAddressIntentService(String name) {
+    public FetchAddressIntentService(String name)
+    {
         super(name);
     }
 
@@ -43,50 +46,11 @@ public class FetchAddressIntentService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-        String errorMessage = "";
+        list<Address> address = null;
 
-        // Get the location passed to this service through an extra.
-        String address = intent.getParcelableExtra(
-                Constants.LOCATION_DATA_EXTRA);
-
-
-
-        List<Address> addresses = null;
-
-        try {
-            addresses = geocoder.getFromLocationName(
-                    address,
-                    // In this sample, get just a single address.
-                    1);
-        } catch (IOException ioException) {
-            // Catch network or other I/O problems.
-            errorMessage = "Service_not_available";
-            Log.e(TAG, errorMessage, ioException);
-        } catch (IllegalArgumentException illegalArgumentException) {
-            // Catch invalid Address
-
-        }
-
-        // Handle case where no address was found.
-        if (addresses == null || addresses.size()  == 0) {
-            if (errorMessage.isEmpty()) {
-                errorMessage = "No_Address_Found";
-                Log.e(TAG, errorMessage);
-            }
-            deliverResultToReceiver(Constants.FAILURE_RESULT, errorMessage);
-        } else {
-            Address address1 = addresses.get(0);
-            ArrayList<String> addressFragments = new ArrayList<String>();
-
-            // Fetch the address lines using getAddressLine,
-            // join them, and send them to the thread.
-            for(int i = 0; i <= address1.getMaxAddressLineIndex(); i++) {
-                addressFragments.add(address1.getAddressLine(i));
-            }
-            Log.i(TAG, "Address found");
-            deliverResultToReceiver(Constants.SUCCESS_RESULT,
-                    TextUtils.join(System.getProperty("line.separator"),
-                            addressFragments));
+        mReceiver = intent.getParcelableArrayExtra(Constants.RECEIVER);
+        int fetchType = intent.getIntExtra(Contsants.FETCH_TYPE_EXTRA, 0);
+        
     }
 }
-}
+
