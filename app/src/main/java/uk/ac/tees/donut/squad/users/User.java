@@ -24,6 +24,8 @@ public class User implements Serializable
     public User(String n)
     {
         name = n;
+        mySquads = new ArrayList<Interest>();
+        myMeetups = new ArrayList<String>();
     }
 
     //GETTERS

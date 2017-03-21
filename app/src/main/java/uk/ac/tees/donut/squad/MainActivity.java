@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         user = new User("defaultUser");
+        user.addMeetup("-KfRv3Q8wXywzAT1mFy-");
 
     }
 
