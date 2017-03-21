@@ -68,4 +68,14 @@
         android:id="@+id/settingsBtn"
         android:text="Settings"
         android:onClick="openSettings"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/testBtn"
+        android:text="Testing"
+        android:onClick="openTesting"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/settingsBtn"
+        android:layout_marginBottom="19dp"/>
 </RelativeLayout>
