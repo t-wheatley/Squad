@@ -51,6 +51,7 @@ public class ProfileActivity extends AppCompatActivity
         Intent intent = new Intent(this, ViewMeetups.class);
         Bundle b = new Bundle();
         b.putSerializable("USER", user);
+        b.putBoolean("ATT", true);
         intent.putExtras(b);
         startActivity(intent);
     }

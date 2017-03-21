@@ -49,6 +49,9 @@ public class MainActivity extends AppCompatActivity
     public void openEvents(View view)
     {
         Intent intent = new Intent(this, ViewMeetups.class);
+        Bundle b = new Bundle();
+        b.putSerializable("USER", user);
+        intent.putExtras(b);
         startActivity(intent);
     }
     public void openHost(View view)
