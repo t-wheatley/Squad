@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity
 {
     Button btnNewMeetup;
     Button btnViewMeetups;
+    User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+<<<<<<< HEAD
 
         //TEST USER WITH MOVIES IN THEIR mySquads
 
@@ -41,6 +43,10 @@ public class MainActivity extends AppCompatActivity
 //        user.setName("James");
 //        user.setHostable(true);
 
+=======
+        user = new User("defaultUser");
+        user.addMeetup("-KfRv3Q8wXywzAT1mFy-");
+>>>>>>> master
 
     }
 
@@ -48,6 +54,9 @@ public class MainActivity extends AppCompatActivity
     public void openProfile(View view)
     {
         Intent intent = new Intent(this, ProfileActivity.class);
+        Bundle b = new Bundle();
+        b.putSerializable("USER", user);
+        intent.putExtras(b);
         startActivity(intent);
     }
     public void openSquads(View view)
@@ -58,6 +67,9 @@ public class MainActivity extends AppCompatActivity
     public void openEvents(View view)
     {
         Intent intent = new Intent(this, ViewMeetups.class);
+        Bundle b = new Bundle();
+        b.putSerializable("USER", user);
+        intent.putExtras(b);
         startActivity(intent);
     }
     public void openHost(View view)
@@ -70,8 +82,14 @@ public class MainActivity extends AppCompatActivity
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
     }
+<<<<<<< HEAD
     public void locationTesting(View view){
         Intent intent = new Intent(this, locating.class);
+=======
+    public void openSignIn(View view)
+    {
+        Intent intent = new Intent(this, SignInActivity.class);
+>>>>>>> master
         startActivity(intent);
     }
 }
