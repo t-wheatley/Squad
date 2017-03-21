@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.*;
 import android.location.Location;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -61,6 +62,8 @@ public class locating extends AppCompatActivity implements GoogleApiClient.Conne
 
     }
 
+
+
     public void fetchAddressButtonHandler(View view){
         // Only start the service to fetch the address if GoogleApiClient is
         // connected.
@@ -100,5 +103,7 @@ public class locating extends AppCompatActivity implements GoogleApiClient.Conne
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
+
+
 }
 
