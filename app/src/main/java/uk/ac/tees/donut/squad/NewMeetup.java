@@ -122,6 +122,7 @@ public class NewMeetup extends AppCompatActivity
         }
     }
 
+    // Fill's the spinner with all of the interests stored in FireBase
     private void fillSpinner()
     {
         mDatabase.child("interests").addValueEventListener(new ValueEventListener() {
