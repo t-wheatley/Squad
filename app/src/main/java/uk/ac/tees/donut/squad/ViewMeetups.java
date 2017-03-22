@@ -13,13 +13,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import uk.ac.tees.donut.squad.posts.Meetup;
+import uk.ac.tees.donut.squad.users.CurrentUser;
 import uk.ac.tees.donut.squad.users.User;
 
 public class ViewMeetups extends AppCompatActivity
 {
 
     boolean attending = false;
-    User user;
 
     RecyclerView recycler;
     DatabaseReference mDatabase;
@@ -35,11 +35,9 @@ public class ViewMeetups extends AppCompatActivity
         Bundle b = getIntent().getExtras();
         if(b != null)
         {
-            user = (User) b.getSerializable("USER");
             if (b.containsKey("ATT"))
                 attending = b.getBoolean("ATT");
         }
-
 
         // Getting the reference for the Firebase Realtime Database
         mDatabase = FirebaseDatabase.getInstance().getReference("meetups");
@@ -99,7 +97,7 @@ public class ViewMeetups extends AppCompatActivity
             @Override
             protected void populateViewHolder(MeetupHolder meetupViewHolder, final Meetup meetup, int position)
             {
-                if(user.myMeetupsContains(meetup.getId()))
+                if(CurrentUser.u.myMeetupsContains(meetup.getId()))
                 {
                     // Gets the current meetups data and creates a meetupViewHolder
                     meetupViewHolder.setName(meetup.getName());

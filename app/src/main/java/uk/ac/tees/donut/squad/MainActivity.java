@@ -8,6 +8,7 @@ import android.widget.Button;
 
 import uk.ac.tees.donut.squad.squads.Interest;
 import uk.ac.tees.donut.squad.squads.Squad;
+import uk.ac.tees.donut.squad.users.CurrentUser;
 import uk.ac.tees.donut.squad.users.User;
 import android.content.Intent;
 
@@ -20,7 +21,6 @@ public class MainActivity extends AppCompatActivity
 {
     Button btnNewMeetup;
     Button btnViewMeetups;
-    User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -28,8 +28,8 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        user = new User("defaultUser");
-        user.addMeetup("-KfRv3Q8wXywzAT1mFy-");
+        CurrentUser.u = new User("defaultUser");
+        CurrentUser.u.addMeetup("-KfRv3Q8wXywzAT1mFy-");
 
     }
 
@@ -37,9 +37,6 @@ public class MainActivity extends AppCompatActivity
     public void openProfile(View view)
     {
         Intent intent = new Intent(this, ProfileActivity.class);
-        Bundle b = new Bundle();
-        b.putSerializable("USER", user);
-        intent.putExtras(b);
         startActivity(intent);
     }
     public void openSquads(View view)
@@ -50,9 +47,6 @@ public class MainActivity extends AppCompatActivity
     public void openEvents(View view)
     {
         Intent intent = new Intent(this, ViewMeetups.class);
-        Bundle b = new Bundle();
-        b.putSerializable("USER", user);
-        intent.putExtras(b);
         startActivity(intent);
     }
     public void openHost(View view)
