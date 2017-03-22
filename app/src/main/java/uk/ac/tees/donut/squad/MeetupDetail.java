@@ -3,6 +3,7 @@ package uk.ac.tees.donut.squad;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.google.firebase.database.DataSnapshot;
@@ -12,6 +13,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import uk.ac.tees.donut.squad.posts.Meetup;
+import uk.ac.tees.donut.squad.users.CurrentUser;
 
 public class MeetupDetail extends AppCompatActivity
 {
@@ -21,6 +23,8 @@ public class MeetupDetail extends AppCompatActivity
     EditText interestDisplay;
     EditText descriptionDisplay;
     String meetupId;
+
+    Button btnAttend;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -48,6 +52,13 @@ public class MeetupDetail extends AppCompatActivity
             meetupId = (String) b.get("meetupId");
             this.setTitle(meetupId);
         }
+
+        //getting button and doing stuff
+        btnAttend = (Button) findViewById(R.id.btnAttend);
+        if(CurrentUser.u.myMeetupsContains(meetupId))
+        {
+            btnAttend.setText("Unattend Meetup");
+        }
         // Getting the reference for the Firebase Realtime Database
         mDatabase = FirebaseDatabase.getInstance().getReference("meetups");
 
@@ -72,5 +83,19 @@ public class MeetupDetail extends AppCompatActivity
 
             }
         });
+    }
+
+    public void attend()
+    {
+        if(CurrentUser.u.myMeetupsContains(meetupId))
+        {
+            CurrentUser.u.removeMeetup(meetupId);
+            btnAttend.setText("Attend Meetup");
+        }
+        else
+        {
+            CurrentUser.u.addMeetup(meetupId);
+            btnAttend.setText("Unattend Meetup");
+        }
     }
 }
