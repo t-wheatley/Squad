@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +35,7 @@ public class SignInActivity extends AppCompatActivity implements
     private FirebaseAuth.AuthStateListener mAuthListener;
 
     private TextView statusTextView;
+    private Button btnSignOut;
 
 
     @Override
@@ -45,6 +47,7 @@ public class SignInActivity extends AppCompatActivity implements
         mAuth = FirebaseAuth.getInstance();
 
         statusTextView = (TextView) findViewById(R.id.statusTextView);
+        btnSignOut = (Button) findViewById(R.id.signOutBtn);
 
         findViewById(R.id.sign_in_button).setOnClickListener(this);
 
@@ -76,6 +79,15 @@ public class SignInActivity extends AppCompatActivity implements
                 // ...
             }
         };
+
+        // onClick listener for the signOut button
+        btnSignOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // When pressed calls the submitMeeup method
+                signOut();
+            }
+        });
     }
 
     @Override
@@ -112,6 +124,13 @@ public class SignInActivity extends AppCompatActivity implements
         startActivityForResult(signInIntent, RC_SIGN_IN);
 
     }
+
+    private void signOut() {
+        FirebaseAuth.getInstance().signOut();
+        statusTextView.setText("Signed Out");
+    }
+
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
