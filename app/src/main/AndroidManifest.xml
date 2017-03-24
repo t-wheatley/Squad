@@ -12,6 +12,16 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <activity android:name=".SplashScreen"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -20,15 +30,32 @@
             </intent-filter>
 
         </activity>
+<<<<<<< HEAD
 
 
 
         <activity android:name=".location.LocationActivity"/>
+=======
+<<<<<<< HEAD
+
+        <activity android:name=".NewMeetup" />
+
+        <activity android:name=".ViewMeetups" />
+
+        <activity android:name=".MeetupDetail" />
+
+        <activity android:name=".ProfileActivity" />
+
+        <activity android:name=".SquadsActivity" />
+
+=======
+>>>>>>> Display
         <activity android:name=".NewMeetup"/>
         <activity android:name=".ViewMeetups"/>
         <activity android:name=".MeetupDetail"/>
         <activity android:name=".ProfileActivity"/>
         <activity android:name=".SquadsActivity"/>
+>>>>>>> Display
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"/>
