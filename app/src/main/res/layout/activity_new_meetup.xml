@@ -53,6 +53,8 @@
         android:id="@+id/newMeetup_spinnerInterest"
         android:layout_alignParentEnd="true"/>
 
+
+=======
     <TextView
         android:text="Description:"
         android:layout_width="wrap_content"
@@ -61,12 +63,45 @@
         android:layout_below="@+id/newMeetup_spinnerInterest"
         android:layout_alignParentStart="true"/>
 
+>>>>>>> master
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textMultiLine"
         android:ems="10"
         android:id="@+id/newMeetup_textEditDescription"
+
+        android:layout_alignParentEnd="true"/>
+
+    <Button
+        android:text="Submit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/newMeetup_buttonSubmit"/>
+
+    <TextView
+        android:text="Description:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/newMeetup_textDescription"
+        android:layout_below="@+id/newMeetup_textEditInterest"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:layout_marginTop="123dp"
+        android:id="@+id/newMeetup_meetupAddress"
+        android:text="Address"
+        android:layout_below="@+id/newMeetup_textDescription"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="12dp" />
+    =======
         android:layout_below="@+id/newMeetup_textDescription"
         android:layout_alignParentStart="true"/>
+>>>>>>> master
 </RelativeLayout>
