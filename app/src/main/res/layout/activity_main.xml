@@ -75,7 +75,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/settingsBtn"
         android:text="Settings"
-<<<<<<< HEAD
+
         android:onClick="openSettings"/>
 
     <Button
@@ -88,10 +88,5 @@
         android:layout_below="@+id/settingsBtn"
         android:layout_centerHorizontal="true" />
 
-=======
-        android:onClick="openSettings"
-        android:layout_marginTop="53dp"
-        android:layout_below="@+id/hostBtn"
-        android:layout_alignStart="@+id/signInBtn"/>
->>>>>>> master
++
 </RelativeLayout>
