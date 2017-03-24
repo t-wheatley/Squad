@@ -29,12 +29,8 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-<<<<<<< HEAD
-=======
         user = new User("defaultUser");
         user.addMeetup("-KfRv3Q8wXywzAT1mFy-");
->>>>>>> refs/remotes/origin/master
-
     }
 
     //Click functionality
@@ -46,11 +42,13 @@ public class MainActivity extends AppCompatActivity
         intent.putExtras(b);
         startActivity(intent);
     }
+
     public void openSquads(View view)
     {
         Intent intent = new Intent(this, SquadsActivity.class);
         startActivity(intent);
     }
+
     public void openEvents(View view)
     {
         Intent intent = new Intent(this, ViewMeetups.class);
