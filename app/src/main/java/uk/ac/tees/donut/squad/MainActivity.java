@@ -3,7 +3,6 @@ package uk.ac.tees.donut.squad;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 
@@ -31,6 +30,7 @@ public class MainActivity extends AppCompatActivity
 
         user = new User("defaultUser");
         user.addMeetup("-KfRv3Q8wXywzAT1mFy-");
+
     }
 
     //Click functionality
@@ -42,13 +42,11 @@ public class MainActivity extends AppCompatActivity
         intent.putExtras(b);
         startActivity(intent);
     }
-
     public void openSquads(View view)
     {
         Intent intent = new Intent(this, SquadsActivity.class);
         startActivity(intent);
     }
-
     public void openEvents(View view)
     {
         Intent intent = new Intent(this, ViewMeetups.class);

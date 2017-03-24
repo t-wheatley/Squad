@@ -3,7 +3,6 @@ package uk.ac.tees.donut.squad;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.widget.EditText;
 
 import com.google.firebase.database.DataSnapshot;
@@ -16,11 +15,6 @@ import uk.ac.tees.donut.squad.posts.Meetup;
 
 public class MeetupDetail extends AppCompatActivity
 {
-    //RecyclerView  items
-    private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
-
     DatabaseReference mDatabase;
 
     EditText nameDisplay;
@@ -39,8 +33,6 @@ public class MeetupDetail extends AppCompatActivity
         interestDisplay = (EditText) findViewById(R.id.meetupDetail_textEditInterest);
         descriptionDisplay = (EditText) findViewById(R.id.meetupDetail_textEditDescription);
 
-        //Recyclerview stuff
-        
         // Disabling the editTexts
         nameDisplay.setEnabled(false);
         interestDisplay.setEnabled(false);
