@@ -28,6 +28,7 @@ public class NewMeetup extends AppCompatActivity
     private EditText editName;
     private Spinner spinnerInterest;
     private EditText editDescription;
+    private EditText  editAddress;
     private Button btnSubmit;
 
     @Override
@@ -44,6 +45,7 @@ public class NewMeetup extends AppCompatActivity
         editName = (EditText) findViewById(R.id.newMeetup_textEditName);
         spinnerInterest = (Spinner) findViewById(R.id.newMeetup_spinnerInterest);
         editDescription = (EditText) findViewById(R.id.newMeetup_textEditDescription);
+        editAddress = (EditText) findViewById(R.id.newMeetup_meetupAddress);
         btnSubmit = (Button) findViewById(R.id.newMeetup_buttonSubmit);
 
         // onClick listener for the submit button
@@ -64,6 +66,7 @@ public class NewMeetup extends AppCompatActivity
         final String name = editName.getText().toString();
         final String interest = spinnerInterest.getSelectedItem().toString();
         final String description = editDescription.getText().toString();
+
 
         // Checks if the name field is empty
         if (TextUtils.isEmpty(name))

@@ -77,7 +77,7 @@ public class DatabaseHandler extends SQLiteOpenHelper
 
         ContentValues values = new ContentValues();
         values.put(COL_NAME, m.getName());
-        values.put(COL_INTEREST, m.getInterest());
+       // values.put(COL_INTEREST, m.getInterest());
         values.put(COL_DESCRIPTION, m.getDescription());
         //temporary location values
         values.put(COL_ADDRESS, m.getAddress());
@@ -126,9 +126,15 @@ public class DatabaseHandler extends SQLiteOpenHelper
 
 
                 Meetup meetup = new Meetup(
+
+        //                cursor.getInt(idIdx),
+        //                cursor.getString(nameIdx),
+          //              cursor.getString(interestIdx)
+
                         cursor.getString(idIdx),
                         cursor.getString(nameIdx),
                         cursor.getString(interestIdx)
+
                 );
                 //add lecturer to the list
                 list.add(meetup);
