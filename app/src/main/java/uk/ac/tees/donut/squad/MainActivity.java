@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import uk.ac.tees.donut.squad.location.LocationActivity;
 import uk.ac.tees.donut.squad.users.User;
 
 public class MainActivity extends AppCompatActivity {

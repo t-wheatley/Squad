@@ -16,9 +16,6 @@ import java.util.Locale;
 
 import uk.ac.tees.donut.squad.R;
 
-import static android.R.id.list;
-import static com.google.android.gms.wearable.DataMap.TAG;
-
 /**
  * Created by Anthony Ward on 17/03/2017.
  */
@@ -27,14 +24,10 @@ public class FetchAddressIntentService extends IntentService {
     protected ResultReceiver mReceiver;
     private static final String TAG = "FetchAddyIntentService";
 
-    /**
-     * Creates an IntentService.  Invoked by your subclass's constructor.
-     *
-     * @param name Used to name the worker thread, important only for debugging.
-     */
-    public FetchAddressIntentService(String name)
+
+    public FetchAddressIntentService()
     {
-        super(name);
+        super("FetchAddressIntentService");
     }
 
     @Override

@@ -18,14 +18,12 @@
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-            <service
-                android:name=".FetchAddressIntentService"
-                android:exported="false"/>
+
         </activity>
 
 
 
-        <activity android:name=".LocationActivity"/>
+        <activity android:name=".location.LocationActivity"/>
         <activity android:name=".NewMeetup"/>
         <activity android:name=".ViewMeetups"/>
         <activity android:name=".MeetupDetail"/>
@@ -36,7 +34,9 @@
             android:label="@string/title_activity_settings"/>
         <activity android:name=".SignInActivity">
         </activity>
->>>>>>> master
+        <service
+            android:name=".location.FetchAddressIntentService"
+            android:exported="false"/>
     </application>
 
 </manifest>

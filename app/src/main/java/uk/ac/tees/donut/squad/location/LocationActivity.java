@@ -1,20 +1,13 @@
-package uk.ac.tees.donut.squad;
+package uk.ac.tees.donut.squad.location;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.*;
-import android.location.Location;
-import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.os.ResultReceiver;
-import android.support.v7.app.AppCompatActivity;
+import android.location.Address;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.ResultReceiver;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -24,10 +17,8 @@ import android.widget.Toast;
 
 
 
+
 import uk.ac.tees.donut.squad.R;
-import uk.ac.tees.donut.squad.location.Constants;
-import uk.ac.tees.donut.squad.location.FetchAddressIntentService;
-import uk.ac.tees.donut.squad.posts.Post;
 
 public class LocationActivity extends AppCompatActivity {
 
@@ -46,7 +37,7 @@ public class LocationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_locating);
 
         longitudeEdit = (EditText) findViewById(R.id.longitudeEdit);
         latitudeEdit = (EditText) findViewById(R.id.latitudeEdit);
@@ -116,7 +107,7 @@ public class LocationActivity extends AppCompatActivity {
         startService(intent);
     }
 
-    class AddressResultReceiver extends android.os.ResultReceiver {
+    class AddressResultReceiver extends ResultReceiver {
         public AddressResultReceiver(Handler handler) {
             super(handler);
         }
