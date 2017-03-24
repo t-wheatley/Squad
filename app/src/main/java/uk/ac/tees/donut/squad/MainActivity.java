@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void locationTesting(View view) {
+    public void openLocation(View view) {
     Intent intent = new Intent (this, LocationActivity.class);
         startActivity(intent);
 
@@ -78,7 +78,6 @@ public class MainActivity extends AppCompatActivity {
     public void openSignIn (View view)
     {
         Intent intent = new Intent(this, SignInActivity.class);
-
         startActivity(intent);
     }
 }

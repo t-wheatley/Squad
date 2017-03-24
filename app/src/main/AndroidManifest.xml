@@ -25,13 +25,7 @@
 
 
 
-        <activity android:name=".LocationActivity"></activity>
-=======
-=======
-
-
->>>>>>> refs/remotes/origin/master
-=======
+        <activity android:name=".LocationActivity"/>
         <activity android:name=".NewMeetup"/>
         <activity android:name=".ViewMeetups"/>
         <activity android:name=".MeetupDetail"/>
@@ -40,8 +34,6 @@
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"/>
-        <activity android:name=".Auth">
-        </activity>
         <activity android:name=".SignInActivity">
         </activity>
 >>>>>>> master

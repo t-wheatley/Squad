@@ -84,7 +84,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:id="@+id/locationTest"
-        android:onClick="locationTesting"
+        android:onClick="openLocation"
         android:layout_below="@+id/settingsBtn"
         android:layout_centerHorizontal="true" />
 

@@ -22,10 +22,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.vision.text.Text;
+
 
 import uk.ac.tees.donut.squad.R;
 import uk.ac.tees.donut.squad.location.Constants;
