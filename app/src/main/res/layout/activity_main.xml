@@ -75,7 +75,6 @@
         android:id="@+id/settingsBtn"
         android:text="Settings"
 
-
         android:onClick="openSettings"/>
 
     <Button

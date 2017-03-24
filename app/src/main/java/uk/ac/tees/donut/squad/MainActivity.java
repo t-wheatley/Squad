@@ -21,22 +21,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-<<<<<<< HEAD
-        //TEST USER WITH MOVIES IN THEIR mySquads
-
-        //  User user = new User("defaultUser");
-        // Squad movies = new Squad("Movie Squad", MOVIES, "A collection of avid movie-goers");
-
-//        User user = new User("defaultUser");
-//        Squad movies = new Squad("Movie Squad", MOVIES, "A collection of avid movie-goers");
-
-//        user.addInterest(MOVIES);
-//        user.setName("James");
-//        user.setHostable(true);
-
-
-=======
->>>>>>> Display
         user = new User("defaultUser");
         user.addMeetup("-KfRv3Q8wXywzAT1mFy-");
 

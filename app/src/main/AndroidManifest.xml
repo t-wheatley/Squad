@@ -34,6 +34,7 @@
 
 
 
+
         <activity android:name=".location.LocationActivity"/>
 
 
@@ -46,6 +47,10 @@
         <activity android:name=".ProfileActivity" />
 
         <activity android:name=".SquadsActivity" />
+
+
+
+
 
         <activity
             android:name=".SettingsActivity"
