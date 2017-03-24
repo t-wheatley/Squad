@@ -25,7 +25,6 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-<<<<<<< HEAD
 
         <activity android:name=".NewMeetup" />
 
@@ -36,14 +35,6 @@
         <activity android:name=".ProfileActivity" />
 
         <activity android:name=".SquadsActivity" />
-
-=======
-        <activity android:name=".NewMeetup"/>
-        <activity android:name=".ViewMeetups"/>
-        <activity android:name=".MeetupDetail"/>
-        <activity android:name=".ProfileActivity"/>
-        <activity android:name=".SquadsActivity"/>
->>>>>>> Display
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"/>
