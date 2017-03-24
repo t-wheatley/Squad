@@ -11,27 +11,26 @@ public class Interest
     public Interest()
     {
     }
-
     public Interest(String i, String n)
     {
         id = i; name = n;
     }
 
+    //GETTERS
     public String getId()
     {
         return id;
     }
-
     public void setId(String id)
     {
         this.id = id;
     }
-
     public String getName()
     {
         return name;
     }
 
+    //SETTERS
     public void setName(String name)
     {
         this.name = name;
