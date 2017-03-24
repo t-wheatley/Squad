@@ -47,7 +47,7 @@ public class User implements Serializable
     //MYSQUADS MANAGEMENT
     public void addInterest(Interest in)
     {
-        mySquads.add(in);
+//        mySquads.add(in);
     }
     public void removeInterest(Interest in)
     {
