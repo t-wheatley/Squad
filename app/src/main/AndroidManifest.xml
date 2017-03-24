@@ -30,13 +30,12 @@
             </intent-filter>
 
         </activity>
-<<<<<<< HEAD
+
 
 
 
         <activity android:name=".location.LocationActivity"/>
-=======
-<<<<<<< HEAD
+
 
         <activity android:name=".NewMeetup" />
 
@@ -48,14 +47,6 @@
 
         <activity android:name=".SquadsActivity" />
 
-=======
->>>>>>> Display
-        <activity android:name=".NewMeetup"/>
-        <activity android:name=".ViewMeetups"/>
-        <activity android:name=".MeetupDetail"/>
-        <activity android:name=".ProfileActivity"/>
-        <activity android:name=".SquadsActivity"/>
->>>>>>> Display
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"/>
