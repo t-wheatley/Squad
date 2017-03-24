@@ -29,11 +29,10 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-<<<<<<< HEAD
-=======
+
         user = new User("defaultUser");
         user.addMeetup("-KfRv3Q8wXywzAT1mFy-");
->>>>>>> refs/remotes/origin/master
+
 
     }
 
