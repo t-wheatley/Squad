@@ -81,12 +81,10 @@
         android:text="Location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:id="@+id/locationTest"
         android:onClick="openLocation"
-        android:layout_below="@+id/settingsBtn"
-        android:layout_centerHorizontal="true" />
-
+        android:layout_below="@+id/signInBtn"
+        android:layout_alignEnd="@+id/signInBtn" />
 
 
 </RelativeLayout>
