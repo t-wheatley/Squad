@@ -16,7 +16,6 @@ public class ProfileActivity extends AppCompatActivity
 {
     DatabaseReference mDatabase;
 
-    User user;
     TextView profileName;
     TextView profileInterest;
     Button attendingBtn;
@@ -27,13 +26,9 @@ public class ProfileActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        Bundle b = this.getIntent().getExtras();
-        if(b != null)
-            user = (User)b.getSerializable("USER");
-
         //Declaring editText
         profileName = (TextView) findViewById(R.id.profileName);
-        profileName.setText(user.getName());
+        profileName.setText(User.getName());
 
         profileInterest = (TextView) findViewById(R.id.profileInterest_EditText);
 
@@ -50,7 +45,6 @@ public class ProfileActivity extends AppCompatActivity
     {
         Intent intent = new Intent(this, ViewMeetups.class);
         Bundle b = new Bundle();
-        b.putSerializable("USER", user);
         b.putBoolean("ATT", true);
         intent.putExtras(b);
         startActivity(intent);
