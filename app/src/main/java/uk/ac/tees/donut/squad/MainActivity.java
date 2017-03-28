@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 
 import uk.ac.tees.donut.squad.location.LocationActivity;
+import uk.ac.tees.donut.squad.location.MapActivity;
 import uk.ac.tees.donut.squad.users.User;
 
 public class MainActivity extends AppCompatActivity {
@@ -67,6 +68,11 @@ public class MainActivity extends AppCompatActivity {
     public void openSignIn (View view)
     {
         Intent intent = new Intent(this, SignInActivity.class);
+        startActivity(intent);
+    }
+
+    public void openMap(View view){
+        Intent intent = new Intent(this, MapActivity.class);
         startActivity(intent);
     }
 }

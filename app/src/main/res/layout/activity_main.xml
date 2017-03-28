@@ -75,18 +75,30 @@
         android:id="@+id/settingsBtn"
         android:text="Settings"
 
-        android:onClick="openSettings"/>
+        android:onClick="openSettings"
+        android:layout_below="@+id/iv_logo"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:text="Map"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:id="@+id/mapTest"
+        android:layout_below="@+id/signInBtn"
+        android:layout_alignStart="@+id/signInBtn"
+        android:onClick="openMap" />
+
 
     <Button
         android:text="Location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:id="@+id/locationTest"
         android:onClick="openLocation"
-        android:layout_below="@+id/settingsBtn"
-        android:layout_centerHorizontal="true" />
-
+        android:layout_marginTop="14dp"
+        android:layout_below="@+id/mapTest"
+        android:layout_alignStart="@+id/mapTest" />
 
 
 </RelativeLayout>
