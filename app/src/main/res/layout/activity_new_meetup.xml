@@ -87,4 +87,3 @@
             android:id="@+id/newMeetup_buttonSubmit"/>
 
 </RelativeLayout>
-    </RelativeLayout>
