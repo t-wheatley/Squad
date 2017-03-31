@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="uk.ac.tees.donut.squad">
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+=======
+>>>>>>> refs/remotes/origin/master
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -24,7 +28,15 @@
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+
         </activity>
+
+
+
+
+
+        <activity android:name=".location.LocationActivity"/>
+
 
         <activity android:name=".NewMeetup" />
 
@@ -35,11 +47,19 @@
         <activity android:name=".ProfileActivity" />
 
         <activity android:name=".SquadsActivity" />
+
+
+
+
+
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"/>
         <activity android:name=".SignInActivity">
         </activity>
+        <service
+            android:name=".location.FetchAddressIntentService"
+            android:exported="false"/>
     </application>
 
 </manifest>
