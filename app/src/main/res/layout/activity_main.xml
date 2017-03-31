@@ -94,68 +94,23 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"/>
 
-    </RelativeLayout>
-    <RelativeLayout
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/mainLayout"
-        android:layout_marginTop="20dp"
-        android:padding="10dp"
-        android:background="@color/colorPrimary"
-        >
         <Button
+            android:text="Map"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/signInBtn"
-            android:text="Sign In"
-            android:onClick="openSignIn"
-            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/locationTest"
+            android:id="@+id/mapTest"
+            android:onClick="openMap"
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"/>
-
-<<<<<<< HEAD
-        android:onClick="openSettings"
-        android:layout_below="@+id/iv_logo"
-        android:layout_alignParentStart="true" />
-
-    <Button
-        android:text="Map"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:id="@+id/mapTest"
-        android:layout_below="@+id/signInBtn"
-        android:layout_alignStart="@+id/signInBtn"
-        android:onClick="openMap" />
+            android:layout_alignParentRight="true"/>/>
 
 
-    <Button
-        android:text="Location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/locationTest"
-        android:onClick="openLocation"
-        android:layout_marginTop="14dp"
-        android:layout_below="@+id/mapTest"
-        android:layout_alignStart="@+id/mapTest" />
-=======
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/settingsBtn"
-            android:text="Settings"
-            android:layout_below="@+id/signInBtn"
-            android:layout_centerHorizontal="true"
-            android:onClick="openSettings"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"/>
+
+
     </RelativeLayout>
 
 
->>>>>>> master
 
 
 </RelativeLayout>
