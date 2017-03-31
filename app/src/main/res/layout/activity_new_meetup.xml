@@ -12,6 +12,10 @@
     tools:context="uk.ac.tees.donut.squad.NewMeetup">
 
     <TextView
+        android:id="@+id/meetup_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
         android:text="Name:"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
