@@ -45,7 +45,6 @@ public class NewMeetup extends AppCompatActivity
         editName = (EditText) findViewById(R.id.newMeetup_textEditName);
         spinnerInterest = (Spinner) findViewById(R.id.newMeetup_spinnerInterest);
         editDescription = (EditText) findViewById(R.id.newMeetup_textEditDescription);
-        editAddress = (EditText) findViewById(R.id.newMeetup_meetupAddress);
         btnSubmit = (Button) findViewById(R.id.newMeetup_buttonSubmit);
 
         // onClick listener for the submit button
