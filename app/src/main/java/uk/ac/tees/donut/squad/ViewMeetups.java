@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -19,7 +20,6 @@ public class ViewMeetups extends AppCompatActivity
 {
 
     boolean attending = false;
-    User user;
 
     RecyclerView recycler;
     DatabaseReference mDatabase;
@@ -35,11 +35,9 @@ public class ViewMeetups extends AppCompatActivity
         Bundle b = getIntent().getExtras();
         if(b != null)
         {
-            user = (User) b.getSerializable("USER");
             if (b.containsKey("ATT"))
                 attending = b.getBoolean("ATT");
         }
-
 
         // Getting the reference for the Firebase Realtime Database
         mDatabase = FirebaseDatabase.getInstance().getReference("meetups");
@@ -99,7 +97,7 @@ public class ViewMeetups extends AppCompatActivity
             @Override
             protected void populateViewHolder(MeetupHolder meetupViewHolder, final Meetup meetup, int position)
             {
-                if(user.myMeetupsContains(meetup.getId()))
+                if(User.myMeetupsContains(meetup.getId()))
                 {
                     // Gets the current meetups data and creates a meetupViewHolder
                     meetupViewHolder.setName(meetup.getName());

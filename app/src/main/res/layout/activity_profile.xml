@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_profile"
     android:layout_width="match_parent"
@@ -8,11 +8,16 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="uk.ac.tees.donut.squad.ProfileActivity">
+    tools:context="uk.ac.tees.donut.squad.ProfileActivity"
+    android:background="@color/cardview_dark_background">
+
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/tw__composer_red">
+        android:background="@color/colorPrimary"
+        android:padding="10dp"
+        android:id="@+id/profileLayout"
+        >
 
         <TextView
             android:id="@+id/profileName"
@@ -42,15 +47,25 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:src="@drawable/com_facebook_profile_picture_blank_portrait"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/profileLayout"
+        android:background="@color/colorPrimary"
+        android:layout_centerHorizontal="true"
+        android:padding="5dp"
+        android:layout_marginTop="10dp"
+        android:id="@+id/buttonLayout">
         <Button
             android:id="@+id/attendingBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/profileImage_ImageView"
             android:layout_alignParentRight="true"
             android:layout_alignParentLeft="true"
             style="@style/Base.Widget.AppCompat.Button.Colored"
             android:text="Show Attending Meetups"/>
     </RelativeLayout>
 
-</LinearLayout>
+</RelativeLayout>
