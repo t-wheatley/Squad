@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="uk.ac.tees.donut.squad">
+          package="uk.ac.tees.donut.squad">
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+=======
+>>>>>>> refs/remotes/origin/master
 
     <application
         android:allowBackup="true"
@@ -10,8 +12,8 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".SplashScreen"
+
+        <activity android:name=".SplashScreen"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,42 +21,45 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+
         </activity>
-        <activity android:name=".location.LocationActivity" />
+
+
+
+
+
+        <activity android:name=".location.LocationActivity"/>
+
+
         <activity android:name=".NewMeetup" />
+
         <activity android:name=".ViewMeetups" />
+
         <activity android:name=".MeetupDetail" />
+
         <activity android:name=".ProfileActivity" />
+
         <activity android:name=".SquadsActivity" />
+
+
+
+
+
         <activity
             android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings" />
-        <activity android:name=".SignInActivity"></activity>
-
+            android:label="@string/title_activity_settings"/>
+        <activity android:name=".SignInActivity">
+        </activity>
         <service
             android:name=".location.FetchAddressIntentService"
-            android:exported="false" />
-        <!--
-             The API key for Google Maps-based APIs is defined as a string resource.
-             (See the file "res/values/google_maps_api.xml").
-             Note that the API key is linked to the encryption key used to sign the APK.
-             You need a different API key for each encryption key, including the release key that is used to
-             sign the APK for publishing.
-             You can define the keys for the debug and release targets in src/debug/ and src/release/. 
-        -->
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
-
-        <activity
-            android:name=".location.MapActivity"
-            android:label="@string/title_activity_map"></activity>
+            android:exported="false"/>
     </application>
 
 </manifest>
