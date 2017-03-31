@@ -60,15 +60,6 @@
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="textMultiLine"
-            android:ems="10"
-            android:id="@+id/newMeetup_textEditDescription"
-
-            android:layout_alignParentEnd="true"/>
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:inputType="textPersonName"
             android:ems="10"
             android:layout_marginTop="123dp"
@@ -86,5 +77,16 @@
             android:layout_alignParentEnd="true"
             android:id="@+id/newMeetup_buttonSubmit"/>
 
-</RelativeLayout>
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:ems="10"
+            android:id="@+id/newMeetup_textEditDescription"
+
+            android:layout_below="@+id/newMeetup_textDescription"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true" />
+
     </RelativeLayout>
+</RelativeLayout>
