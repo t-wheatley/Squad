@@ -2,6 +2,9 @@
     <string name="app_name">Squad</string>
     <string name="title_activity_settings">Settings</string>
 
+    <!-- Strings related to Firebase -->
+    <string name="web_client_id">898334656655-igsee9tfpqrb9j27r64ifogf51gbdo2m.apps.googleusercontent.com</string>
+
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->

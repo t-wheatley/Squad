@@ -3,6 +3,7 @@ package uk.ac.tees.donut.squad;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.google.firebase.database.DataSnapshot;
@@ -12,6 +13,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import uk.ac.tees.donut.squad.posts.Meetup;
+import uk.ac.tees.donut.squad.users.User;
 
 public class MeetupDetail extends AppCompatActivity
 {
@@ -21,6 +23,8 @@ public class MeetupDetail extends AppCompatActivity
     EditText interestDisplay;
     EditText descriptionDisplay;
     String meetupId;
+
+    Button attendBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -46,8 +50,17 @@ public class MeetupDetail extends AppCompatActivity
         {
             // Collects the meetupId passed from the RecyclerView
             meetupId = (String) b.get("meetupId");
-            this.setTitle(meetupId);
+            this.setTitle("Meetup Details");
         }
+
+        //getting attend Button
+        attendBtn = (Button) findViewById(R.id.attendBtn);
+
+        /* Static things ain't working
+        if(User.myMeetupsContains(meetupId))
+            attendBtn.setText("Unattend Meetup");
+            */
+
         // Getting the reference for the Firebase Realtime Database
         mDatabase = FirebaseDatabase.getInstance().getReference("meetups");
 
@@ -72,5 +85,21 @@ public class MeetupDetail extends AppCompatActivity
 
             }
         });
+    }
+
+    public void attend()
+    {
+        /*static things ain't working
+        if(User.myMeetupsContains(meetupId))
+        {
+            User.removeMeetup(meetupId);
+            attendBtn.setText("Attend Button");
+        }
+        else
+        {
+            User.addMeetup(meetupId);
+            attendBtn.setText("Unattend Button");
+        }
+        */
     }
 }

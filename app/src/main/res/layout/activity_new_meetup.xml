@@ -9,99 +9,98 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="uk.ac.tees.donut.squad.NewMeetup">
+    tools:context="uk.ac.tees.donut.squad.NewMeetup"
+    android:background="@color/cardview_dark_background">
 
-    <TextView
-        android:text="Name:"
+    <RelativeLayout
+        android:padding="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/newMeetup_textViewName"/>
+        android:background="@color/colorPrimary"
+        android:id="@+id/descriptionLayout">
+        <TextView
+            android:text="Name:"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:id="@+id/newMeetup_textViewName"
+            style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
 
-    <EditText
-        android:layout_width="wrap_content"
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:layout_below="@+id/newMeetup_textViewName"
+            android:layout_alignParentStart="true"
+            android:id="@+id/newMeetup_textEditName"
+            android:layout_alignParentEnd="true"/>
+
+        <TextView
+            android:text="Interest:"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/newMeetup_textEditName"
+            android:layout_alignParentStart="true"
+            android:id="@+id/newMeetup_textInterest"
+            style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_below="@+id/newMeetup_textInterest"
+            android:layout_alignParentStart="true"
+            android:id="@+id/newMeetup_spinnerInterest"
+            android:layout_alignParentEnd="true"
+            style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
+
+        <TextView
+            android:text="Description:"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/newMeetup_textDescription"
+            android:layout_below="@+id/newMeetup_spinnerInterest"
+            android:layout_alignParentStart="true"
+            style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:layout_below="@+id/newMeetup_textDescription"
+            android:id="@+id/newMeetup_textEditDescription"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Address:"
+            android:layout_below="@+id/newMeetup_textEditDescription"
+            android:id="@+id/newMeetup_textAddress"
+            style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:id="@+id/newMeetup_textEditAddress"
+            android:layout_below="@+id/newMeetup_textAddress"
+            android:layout_alignParentStart="true"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_marginTop="10dp"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:layout_below="@+id/newMeetup_textViewName"
-        android:layout_alignParentStart="true"
-        android:id="@+id/newMeetup_textEditName"
-        android:layout_alignParentEnd="true"/>
+        android:layout_below="@+id/descriptionLayout"
+        android:layout_centerHorizontal="true"
+        android:background="@color/colorPrimary"
+        android:padding="5dp">
+        <Button
+            android:text="Submit"
+            android:layout_width="500dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/newMeetup_buttonSubmit"
+            style="@style/Widget.AppCompat.Button.Colored"/>
+        </RelativeLayout>
 
-    <TextView
-        android:text="Interest:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/newMeetup_textEditName"
-        android:layout_alignParentStart="true"
-        android:id="@+id/newMeetup_textInterest"/>
-
-    <Button
-        android:text="Submit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:id="@+id/newMeetup_buttonSubmit"/>
-
-    <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/newMeetup_textInterest"
-        android:layout_alignParentStart="true"
-        android:id="@+id/newMeetup_spinnerInterest"
-        android:layout_alignParentEnd="true"/>
-
-
-=======
-    <TextView
-        android:text="Description:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/newMeetup_textDescription"
-        android:layout_below="@+id/newMeetup_spinnerInterest"
-        android:layout_alignParentStart="true"/>
-
->>>>>>> master
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textMultiLine"
-        android:ems="10"
-        android:id="@+id/newMeetup_textEditDescription"
-
-        android:layout_alignParentEnd="true"/>
-
-    <Button
-        android:text="Submit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:id="@+id/newMeetup_buttonSubmit"/>
-
-    <TextView
-        android:text="Description:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/newMeetup_textDescription"
-        android:layout_below="@+id/newMeetup_textEditInterest"
-        android:layout_alignParentStart="true" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:layout_marginTop="123dp"
-        android:id="@+id/newMeetup_meetupAddress"
-        android:text="Address"
-        android:layout_below="@+id/newMeetup_textDescription"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="12dp" />
-    =======
-        android:layout_below="@+id/newMeetup_textDescription"
-        android:layout_alignParentStart="true"/>
->>>>>>> master
 </RelativeLayout>
