@@ -14,17 +14,21 @@ import uk.ac.tees.donut.squad.users.User;
 public class MainActivity extends AppCompatActivity {
     Button btnNewMeetup;
     Button btnViewMeetups;
+    boolean firstStart = true;
+
+    User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /* static stuff ain't working for some reason
-        User.setName("Default User");
-        User.addMeetup("-KfRv3Q8wXywzAT1mFy-");
-        */
+        if(firstStart) {
+            user = new User("Default User");
+            firstStart = false;
 
+            User.addMeetup("-Kg3OkIfWwS8YXCi6vF4");
+        }
     }
 
     //Click functionality

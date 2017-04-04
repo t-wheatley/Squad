@@ -3,8 +3,10 @@ package uk.ac.tees.donut.squad;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -19,9 +21,9 @@ public class MeetupDetail extends AppCompatActivity
 {
     DatabaseReference mDatabase;
 
-    EditText nameDisplay;
-    EditText interestDisplay;
-    EditText descriptionDisplay;
+    TextView nameDisplay;
+    TextView interestDisplay;
+    TextView descriptionDisplay;
     String meetupId;
 
     Button attendBtn;
@@ -33,9 +35,9 @@ public class MeetupDetail extends AppCompatActivity
         setContentView(R.layout.activity_meetup_detail);
 
         // Declaring editTexts
-        nameDisplay = (EditText) findViewById(R.id.meetupDetail_textEditName);
-        interestDisplay = (EditText) findViewById(R.id.meetupDetail_textEditInterest);
-        descriptionDisplay = (EditText) findViewById(R.id.meetupDetail_textEditDescription);
+        nameDisplay = (TextView) findViewById(R.id.meetupDetail_textEditName);
+        interestDisplay = (TextView) findViewById(R.id.meetupDetail_textEditInterest);
+        descriptionDisplay = (TextView) findViewById(R.id.meetupDetail_textEditDescription);
 
         // Disabling the editTexts
         nameDisplay.setEnabled(false);
@@ -56,10 +58,8 @@ public class MeetupDetail extends AppCompatActivity
         //getting attend Button
         attendBtn = (Button) findViewById(R.id.attendBtn);
 
-        /* Static things ain't working
         if(User.myMeetupsContains(meetupId))
             attendBtn.setText("Unattend Meetup");
-            */
 
         // Getting the reference for the Firebase Realtime Database
         mDatabase = FirebaseDatabase.getInstance().getReference("meetups");
@@ -87,9 +87,8 @@ public class MeetupDetail extends AppCompatActivity
         });
     }
 
-    public void attend()
+    public void attend(View view)
     {
-        /*static things ain't working
         if(User.myMeetupsContains(meetupId))
         {
             User.removeMeetup(meetupId);
@@ -100,6 +99,5 @@ public class MeetupDetail extends AppCompatActivity
             User.addMeetup(meetupId);
             attendBtn.setText("Unattend Button");
         }
-        */
     }
 }

@@ -30,8 +30,6 @@ public class ProfileActivity extends AppCompatActivity
         profileName = (TextView) findViewById(R.id.profileName);
         profileName.setText(User.getName());
 
-        profileInterest = (TextView) findViewById(R.id.profileInterest_EditText);
-
         attendingBtn = (Button) findViewById(R.id.attendingBtn);
         attendingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
