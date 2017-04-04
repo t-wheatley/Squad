@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -15,7 +16,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import uk.ac.tees.donut.squad.posts.Meetup;
-import uk.ac.tees.donut.squad.users.User;
 
 public class MeetupDetail extends AppCompatActivity
 {
@@ -25,8 +25,6 @@ public class MeetupDetail extends AppCompatActivity
     TextView interestDisplay;
     TextView descriptionDisplay;
     String meetupId;
-
-    Button attendBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -60,7 +58,7 @@ public class MeetupDetail extends AppCompatActivity
 
         if(User.myMeetupsContains(meetupId))
             attendBtn.setText("Unattend Meetup");
-
+            
         // Getting the reference for the Firebase Realtime Database
         mDatabase = FirebaseDatabase.getInstance().getReference("meetups");
 
