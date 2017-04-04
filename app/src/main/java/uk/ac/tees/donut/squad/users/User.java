@@ -15,7 +15,8 @@ public class User
     static public int id;
     static public String name;
     static public ArrayList<Interest> mySquads;
-    static public ArrayList<String> myMeetups;    //arraylist containing the ids for the meetups they are attending
+    static public ArrayList<String> myMeetups; //arraylist containing the ids for the meetups they are attending
+    static public String bio;
 
     public User()
     {
@@ -26,6 +27,7 @@ public class User
         name = n;
         mySquads = new ArrayList<Interest>();
         myMeetups = new ArrayList<String>();
+        bio = "You can change this bio to say whatever you want.";
     }
 
     //GETTERS
@@ -37,11 +39,19 @@ public class User
     {
         return name;
     }
+    static public String getBio()
+    {
+        return bio;
+    }
 
     //SETTERS
     static public void setName(String n)
     {
         name = n;
+    }
+    static public void setBio(String b)
+    {
+        bio = b;
     }
 
     //MYSQUADS MANAGEMENT
