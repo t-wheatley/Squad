@@ -9,11 +9,11 @@ import uk.ac.tees.donut.squad.users.User;
 
 public class Meetup
 {
-    String id;
-    String name,
+    String id,
+            name,
             description,
-            interest;
-    User user;
+            interest,
+            user;
 
     // Temp location variables
     String address, postCode;
@@ -24,12 +24,13 @@ public class Meetup
     }
 
     // Constructor for meetup to be post to Firebase
-    public Meetup(String i, String n, String in, String d)
+    public Meetup(String i, String n, String in, String d, String u)
     {
         id = i;
         name = n;
         interest = in;
         description = d;
+        user = u;
     }
 
     // Constructor for meetup lists
@@ -67,6 +68,10 @@ public class Meetup
     {
         return description;
     }
+    public String getUser()
+    {
+        return user;
+    }
     // Temp location getters
     public String getAddress()
     {
@@ -93,6 +98,10 @@ public class Meetup
     public void setDescription(String d)
     {
         description = d;
+    }
+    public void setUser(String u)
+    {
+        user = u;
     }
     // Temp location setter
     public void setAddress(String a)

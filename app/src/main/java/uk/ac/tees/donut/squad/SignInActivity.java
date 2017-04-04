@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +35,7 @@ public class SignInActivity extends AppCompatActivity implements
     private FirebaseAuth.AuthStateListener mAuthListener;
 
     private TextView statusTextView;
+    private Button btnSignOut;
 
 
     @Override
@@ -45,13 +47,14 @@ public class SignInActivity extends AppCompatActivity implements
         mAuth = FirebaseAuth.getInstance();
 
         statusTextView = (TextView) findViewById(R.id.statusTextView);
+        btnSignOut = (Button) findViewById(R.id.signOutBtn);
 
         findViewById(R.id.sign_in_button).setOnClickListener(this);
 
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestIdToken(getString(R.string.web_client_id))
                 .requestEmail()
                 .build();
 
@@ -76,6 +79,15 @@ public class SignInActivity extends AppCompatActivity implements
                 // ...
             }
         };
+
+        // onClick listener for the signOut button
+        btnSignOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // When pressed calls the submitMeeup method
+                signOut();
+            }
+        });
     }
 
     @Override
@@ -113,6 +125,13 @@ public class SignInActivity extends AppCompatActivity implements
 
     }
 
+    private void signOut() {
+        FirebaseAuth.getInstance().signOut();
+        statusTextView.setText("Signed Out");
+    }
+
+
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -127,7 +146,7 @@ public class SignInActivity extends AppCompatActivity implements
                 handleSignInResult(result);
             } else {
                 // Google Sign In failed, update UI appropriately
-                // ...
+                statusTextView.setText("Google Sign-In failed.");
             }
         }
     }

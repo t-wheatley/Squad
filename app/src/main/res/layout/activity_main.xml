@@ -94,7 +94,22 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"/>
 
+        <Button
+            android:text="Map"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/locationTest"
+            android:id="@+id/mapTest"
+            android:onClick="openMap"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"/>/>
+
+
+
+
     </RelativeLayout>
+
     <RelativeLayout
         android:layout_width="200dp"
         android:layout_height="wrap_content"
