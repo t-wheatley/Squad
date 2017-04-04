@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -31,17 +32,16 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import uk.ac.tees.donut.squad.R;
 
-public class MapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     //GOOGLE MAP API V2
 
+    private SupportMapFragment mapFrag;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     protected Location mLastLocation;
     private Marker mCurrLocationMarker;
-
-
     private GoogleMap mMap;
 
     @Override
@@ -49,14 +49,11 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-        buildGoogleApiClient();
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        mapFrag = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFrag.getMapAsync(this);
     }
-
-
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -89,6 +86,18 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
 
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        //stop location updates when Activity is no longer active
+        if (mGoogleApiClient != null) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        }
+    }
+
+
+
     protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -98,19 +107,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         mGoogleApiClient.connect();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mGoogleApiClient.connect();
-    }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.disconnect();
-        }
-    }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
@@ -137,7 +134,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
 
     @Override
     public void onConnectionSuspended(int i) {
-
     }
 
     @Override
