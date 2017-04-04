@@ -16,9 +16,8 @@ public class ProfileActivity extends AppCompatActivity
 {
     DatabaseReference mDatabase;
 
-    User user;
     TextView profileName;
-    TextView profileInterest;
+    TextView bio;
     Button attendingBtn;
 
     @Override
@@ -27,15 +26,12 @@ public class ProfileActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        Bundle b = this.getIntent().getExtras();
-        if(b != null)
-            user = (User)b.getSerializable("USER");
-
-        //Declaring editText
+        //getting ui elements
         profileName = (TextView) findViewById(R.id.profileName);
-        profileName.setText(user.getName());
+        profileName.setText(User.getName());
 
-        profileInterest = (TextView) findViewById(R.id.profileInterest_EditText);
+        bio = (TextView) findViewById(R.id.bio);
+        bio.setText(User.getBio());
 
         attendingBtn = (Button) findViewById(R.id.attendingBtn);
         attendingBtn.setOnClickListener(new View.OnClickListener() {
@@ -50,7 +46,6 @@ public class ProfileActivity extends AppCompatActivity
     {
         Intent intent = new Intent(this, ViewMeetups.class);
         Bundle b = new Bundle();
-        b.putSerializable("USER", user);
         b.putBoolean("ATT", true);
         intent.putExtras(b);
         startActivity(intent);

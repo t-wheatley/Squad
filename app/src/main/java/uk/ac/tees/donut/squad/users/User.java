@@ -10,12 +10,13 @@ import uk.ac.tees.donut.squad.squads.Interest;
  * Created by Scott on 3/3/2017.
  */
 
-public class User implements Serializable
+public class User
 {
-    int id;
-    String name;
-    ArrayList<Interest> mySquads;
-    ArrayList<String> myMeetups;    //arraylist containing the ids for the meetups they are attending
+    static public int id;
+    static public String name;
+    static public ArrayList<Interest> mySquads;
+    static public ArrayList<String> myMeetups; //arraylist containing the ids for the meetups they are attending
+    static public String bio;
 
     public User()
     {
@@ -26,58 +27,67 @@ public class User implements Serializable
         name = n;
         mySquads = new ArrayList<Interest>();
         myMeetups = new ArrayList<String>();
+        bio = "You can change this bio to say whatever you want.";
     }
 
     //GETTERS
-    public int getId()
+    static public int getId()
     {
         return id;
     }
-    public String getName()
+    static public String getName()
     {
         return name;
     }
+    static public String getBio()
+    {
+        return bio;
+    }
 
     //SETTERS
-    public void setName(String n)
+    static public void setName(String n)
     {
         name = n;
     }
+    static public void setBio(String b)
+    {
+        bio = b;
+    }
 
     //MYSQUADS MANAGEMENT
-    public void addInterest(Interest in)
+    static public void addInterest(Interest in)
     {
-        mySquads.add(in);
+//        mySquads.add(in);
     }
-    public void removeInterest(Interest in)
+    static public void removeInterest(Interest in)
     {
         mySquads.remove(in);
     }
     //returns the Interest if you have its index
-    public Interest getInterest(int i)
+    static public Interest getInterest(int i)
     {
         return mySquads.get(i);
     }
 
     //MYMEETUPS MANAGEMENT
-    public void addMeetup(String m)
+    static public void addMeetup(String m)
     {
         myMeetups.add(m);
     }
-    public void removeMeetup(String m)
+    static public void removeMeetup(String m)
     {
         myMeetups.remove(m);
     }
     //returns the Meetup id you have its index
-    public String getMeetup(int i)
+    static public String getMeetup(int i)
     {
         return myMeetups.get(i);
     }
-    public void clearMyMeetups()
+    static public void clearMyMeetups()
     {
         myMeetups.clear();
     }
-    public boolean myMeetupsContains(String id)
+    static public boolean myMeetupsContains(String id)
     {
         boolean contains = false;
         for(int i = 0; i < myMeetups.size(); i++)

@@ -1,8 +1,12 @@
 package uk.ac.tees.donut.squad;
 
+import android.content.DialogInterface;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -10,6 +14,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,11 +29,17 @@ import uk.ac.tees.donut.squad.posts.Meetup;
 
 public class NewMeetup extends AppCompatActivity
 {
+    private static final String TAG = "Auth";
+
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+
     private DatabaseReference mDatabase;
 
     private EditText editName;
     private Spinner spinnerInterest;
     private EditText editDescription;
+    private EditText  editAddress;
     private Button btnSubmit;
 
     @Override
@@ -44,6 +56,7 @@ public class NewMeetup extends AppCompatActivity
         editName = (EditText) findViewById(R.id.newMeetup_textEditName);
         spinnerInterest = (Spinner) findViewById(R.id.newMeetup_spinnerInterest);
         editDescription = (EditText) findViewById(R.id.newMeetup_textEditDescription);
+        editAddress = (EditText) findViewById(R.id.newMeetup_textEditAddress);
         btnSubmit = (Button) findViewById(R.id.newMeetup_buttonSubmit);
 
         // onClick listener for the submit button
@@ -56,6 +69,49 @@ public class NewMeetup extends AppCompatActivity
         });
 
         fillSpinner();
+
+        mAuth = FirebaseAuth.getInstance();
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // User is signed in
+                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    Toast.makeText(NewMeetup.this, "User: " + user.getUid(), Toast.LENGTH_SHORT).show();
+                } else {
+                    // User is signed out
+                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                    Toast.makeText(NewMeetup.this, "No User", Toast.LENGTH_SHORT).show();
+
+                    new AlertDialog.Builder(NewMeetup.this)
+                            .setTitle("Sign-in Error")
+                            .setMessage("You do not appear to be signed in, please try again.")
+                            .setPositiveButton("Back", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    finish();
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                }
+                // ...
+            }
+        };
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
     }
 
     private void submitMeetup()
@@ -65,6 +121,7 @@ public class NewMeetup extends AppCompatActivity
         final String interest = spinnerInterest.getSelectedItem().toString();
         final String description = editDescription.getText().toString();
 
+
         // Checks if the name field is empty
         if (TextUtils.isEmpty(name))
         {
@@ -72,8 +129,6 @@ public class NewMeetup extends AppCompatActivity
             editName.setError("Required");
             return;
         }
-
-
 
         // Description is required
         if (TextUtils.isEmpty(description))
@@ -97,14 +152,25 @@ public class NewMeetup extends AppCompatActivity
     // Takes a meetup and pushes it to the Firebase Realtime Database (Without extras)
     public void createMeetup(String n, String i, String d)
     {
-        // Creating a new meetup node and getting the key value
-        String meetupId = mDatabase.child("meetups").push().getKey();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // User is signed in
 
-        // Creating a meetup object
-        Meetup meetup = new Meetup(meetupId, n, i, d);
+            // Creating a new meetup node and getting the key value
+            String meetupId = mDatabase.child("meetups").push().getKey();
 
-        // Pushing the meetup to the "meetups" node using the meetupId
-        mDatabase.child("meetups").child(meetupId).setValue(meetup);
+            // Creating a meetup object
+            Meetup meetup = new Meetup(meetupId, n, i, d, user.getUid());
+
+            // Pushing the meetup to the "meetups" node using the meetupId
+            mDatabase.child("meetups").child(meetupId).setValue(meetup);
+        } else {
+            // No user is signed in
+
+            Toast.makeText(this, "Something went wrong, please try again.", Toast.LENGTH_SHORT).show();
+        }
+
+
     }
 
     // Takes a boolean value to either enable or disable the UI elements, this is used to avoid multiple posts
@@ -122,6 +188,7 @@ public class NewMeetup extends AppCompatActivity
         }
     }
 
+    // Fill's the spinner with all of the interests stored in FireBase
     private void fillSpinner()
     {
         mDatabase.child("interests").addValueEventListener(new ValueEventListener() {
