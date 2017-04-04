@@ -58,11 +58,6 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
 
     }
-    public void openSignIn (View view)
-    {
-        Intent intent = new Intent(this, SignInActivity.class);
-        startActivity(intent);
-    }
 
     public void openMap(View view){
         Intent intent = new Intent(this, MapActivity.class);
