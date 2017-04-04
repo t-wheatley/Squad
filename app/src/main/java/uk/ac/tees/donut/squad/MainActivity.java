@@ -18,8 +18,6 @@ import uk.ac.tees.donut.squad.location.MapActivity;
 import uk.ac.tees.donut.squad.users.User;
 
 public class MainActivity extends AppCompatActivity {
-    Button btnNewMeetup;
-    Button btnViewMeetups;
     boolean firstStart = true;
 
     User user;
@@ -86,42 +84,5 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         return super.onOptionsItemSelected(item);
-    }
-
-    //Click functionality
-    public void openProfile(View view) {
-        Intent intent = new Intent(this, ProfileActivity.class);
-        startActivity(intent);
-    }
-
-    public void openSquads(View view) {
-        Intent intent = new Intent(this, SquadsActivity.class);
-        startActivity(intent);
-    }
-
-    public void openEvents(View view) {
-        Intent intent = new Intent(this, ViewMeetups.class);
-        startActivity(intent);
-    }
-
-    public void openHost(View view) {
-        Intent intent = new Intent(this, NewMeetup.class);
-        startActivity(intent);
-    }
-
-    public void openSettings(View view) {
-        Intent intent = new Intent(this, SettingsActivity.class);
-        startActivity(intent);
-    }
-
-    public void openLocation(View view) {
-    Intent intent = new Intent (this, LocationActivity.class);
-        startActivity(intent);
-
-    }
-
-    public void openMap(View view){
-        Intent intent = new Intent(this, MapActivity.class);
-        startActivity(intent);
     }
 }

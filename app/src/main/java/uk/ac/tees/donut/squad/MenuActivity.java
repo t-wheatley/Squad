@@ -11,23 +11,12 @@ import uk.ac.tees.donut.squad.location.MapActivity;
 import uk.ac.tees.donut.squad.users.User;
 
 public class MenuActivity extends AppCompatActivity {
-    Button btnNewMeetup;
-    Button btnViewMeetups;
     boolean firstStart = true;
-
-    User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        if(firstStart) {
-            user = new User("Default User");
-            firstStart = false;
-
-            User.addMeetup("-Kg3OkIfWwS8YXCi6vF4");
-        }
     }
 
     //Click functionality
@@ -60,11 +49,6 @@ public class MenuActivity extends AppCompatActivity {
     Intent intent = new Intent (this, LocationActivity.class);
         startActivity(intent);
 
-    }
-    public void openSignIn (View view)
-    {
-        Intent intent = new Intent(this, SignInActivity.class);
-        startActivity(intent);
     }
 
     public void openMap(View view){
