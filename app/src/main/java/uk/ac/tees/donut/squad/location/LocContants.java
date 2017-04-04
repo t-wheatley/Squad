@@ -6,7 +6,7 @@ import android.os.ResultReceiver;
  * Created by Anthony Ward on 17/03/2017.
  */
 
-public final class Constants {
+public final class LocContants {
     public static final int SUCCESS_RESULT = 0;
     public static final int FAILURE_RESULT = 1;
 
