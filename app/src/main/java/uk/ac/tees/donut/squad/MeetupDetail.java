@@ -16,6 +16,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import uk.ac.tees.donut.squad.posts.Meetup;
+import uk.ac.tees.donut.squad.users.User;
 
 public class MeetupDetail extends AppCompatActivity
 {
@@ -25,6 +26,8 @@ public class MeetupDetail extends AppCompatActivity
     TextView interestDisplay;
     TextView descriptionDisplay;
     String meetupId;
+
+    Button attendBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
