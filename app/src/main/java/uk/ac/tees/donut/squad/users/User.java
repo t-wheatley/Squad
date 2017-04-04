@@ -10,12 +10,12 @@ import uk.ac.tees.donut.squad.squads.Interest;
  * Created by Scott on 3/3/2017.
  */
 
-public class User implements Serializable
+public class User
 {
-    static int id;
-    static String name;
-    static ArrayList<Interest> mySquads;
-    static ArrayList<String> myMeetups;    //arraylist containing the ids for the meetups they are attending
+    static public int id;
+    static public String name;
+    static public ArrayList<Interest> mySquads;
+    static public ArrayList<String> myMeetups;    //arraylist containing the ids for the meetups they are attending
 
     public User()
     {
