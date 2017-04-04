@@ -6,12 +6,20 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import uk.ac.tees.donut.squad.posts.Meetup;
 import uk.ac.tees.donut.squad.users.User;
@@ -20,7 +28,7 @@ public class ViewMeetups extends AppCompatActivity
 {
 
     boolean attending = false;
-
+    private Spinner spinnerInterest;
     RecyclerView recycler;
     DatabaseReference mDatabase;
     FirebaseRecyclerAdapter mAdapter;
@@ -41,7 +49,6 @@ public class ViewMeetups extends AppCompatActivity
 
         // Getting the reference for the Firebase Realtime Database
         mDatabase = FirebaseDatabase.getInstance().getReference("meetups");
-
         // Defining RecyclerView
         recycler = (RecyclerView) findViewById(R.id.viewMeetups_recyclerView);
         recycler.setHasFixedSize(true);
@@ -54,6 +61,10 @@ public class ViewMeetups extends AppCompatActivity
             getAttending();
         else
             getAll();
+
+        spinnerInterest = (Spinner) findViewById(R.id.spinner);
+
+        fillSpinner();
 
         // Display the adapter in the RecyclerView
         recycler.setAdapter(mAdapter);
@@ -121,5 +132,31 @@ public class ViewMeetups extends AppCompatActivity
                 }
             }
         };
+    }
+
+
+    private void fillSpinner(){
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase.child("interests").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Toast.makeText(ViewMeetups.this, "Loading interests...", Toast.LENGTH_SHORT).show();
+                final List<String> interests = new ArrayList<String>();
+
+                for (DataSnapshot interestSnapshot: dataSnapshot.getChildren()) {
+                    String interest = interestSnapshot.child("name").getValue(String.class);
+                    interests.add(interest);
+                }
+
+                ArrayAdapter<String> interestAdapter = new ArrayAdapter<String>(ViewMeetups.this, android.R.layout.simple_spinner_item, interests);
+                interestAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinnerInterest.setAdapter(interestAdapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }

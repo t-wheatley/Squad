@@ -46,7 +46,7 @@ public class MeetupDetail extends AppCompatActivity
         {
             // Collects the meetupId passed from the RecyclerView
             meetupId = (String) b.get("meetupId");
-            this.setTitle(meetupId);
+            this.setTitle("Meetup Details");
         }
         // Getting the reference for the Firebase Realtime Database
         mDatabase = FirebaseDatabase.getInstance().getReference("meetups");
