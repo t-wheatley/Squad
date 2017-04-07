@@ -78,10 +78,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
 
 
-        // Add a marker in Teesside and move the camera
-        //LatLng Teesside = new LatLng(54.572872, -1.234802);
-        // mMap.addMarker(new MarkerOptions().position(Teesside).title("Marker in Teesside"));
-        // mMap.moveCamera(CameraUpdateFactory.newLatLng(Teesside));
+        // Add a marker at home
+        LatLng Home = new LatLng(54.6993131, -1.5103871);
+        mMap.addMarker(new MarkerOptions().position(Home).title("My house"));
+
 
 
     }
@@ -225,8 +225,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 return;
             }
 
-            // other 'case' lines to check for other
-            // permissions this app might request
         }
     }
 }
