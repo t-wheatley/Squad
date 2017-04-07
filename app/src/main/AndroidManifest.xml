@@ -19,19 +19,9 @@
             </intent-filter>
         </activity>
 
-<<<<<<< HEAD
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".location.GeocoderActivity" />
-        <activity android:name=".NewMeetup" />
-        <activity android:name=".ViewMeetups" />
-        <activity android:name=".MeetupDetail" />
-        <activity android:name=".ProfileActivity" />
-        <activity android:name=".SquadsActivity" />
-=======
+
         <activity android:name=".activities.MainActivity" />
-        <activity android:name=".location.LocationActivity" />
+        <activity android:name=".location.GeocoderActivity" />
         <activity android:name=".activities.NewMeetup" />
         <activity android:name=".activities.ViewMeetups" />
         <activity android:name=".activities.MeetupDetail" />

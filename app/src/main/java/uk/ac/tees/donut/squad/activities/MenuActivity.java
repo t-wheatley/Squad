@@ -2,18 +2,16 @@ package uk.ac.tees.donut.squad.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-<<<<<<< HEAD:app/src/main/java/uk/ac/tees/donut/squad/MainActivity.java
-=======
+
 import android.support.v7.app.AppCompatActivity;
->>>>>>> master:app/src/main/java/uk/ac/tees/donut/squad/activities/MenuActivity.java
+
 import android.view.View;
 
-<<<<<<< HEAD:app/src/main/java/uk/ac/tees/donut/squad/MainActivity.java
+
 import uk.ac.tees.donut.squad.location.GeocoderActivity;
-=======
+
 import uk.ac.tees.donut.squad.R;
-import uk.ac.tees.donut.squad.location.LocationActivity;
->>>>>>> master:app/src/main/java/uk/ac/tees/donut/squad/activities/MenuActivity.java
+
 import uk.ac.tees.donut.squad.location.MapActivity;
 
 public class MenuActivity extends AppCompatActivity {
