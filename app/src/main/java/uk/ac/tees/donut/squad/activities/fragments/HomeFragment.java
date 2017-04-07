@@ -1,22 +1,30 @@
-package uk.ac.tees.donut.squad;
+package uk.ac.tees.donut.squad.activities.fragments;
+
+/**
+ * Created by jlc-1 on 31/03/2017.
+ */
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
+import android.view.ViewGroup;
 
+import uk.ac.tees.donut.squad.activities.NewMeetup;
+import uk.ac.tees.donut.squad.activities.ProfileActivity;
+import uk.ac.tees.donut.squad.R;
+import uk.ac.tees.donut.squad.activities.SettingsActivity;
+import uk.ac.tees.donut.squad.activities.SquadsActivity;
+import uk.ac.tees.donut.squad.activities.ViewMeetups;
 import uk.ac.tees.donut.squad.location.LocationActivity;
 import uk.ac.tees.donut.squad.location.MapActivity;
-import uk.ac.tees.donut.squad.users.User;
 
-public class MenuActivity extends AppCompatActivity {
-    boolean firstStart = true;
-
+public class HomeFragment extends Fragment
+{
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.home_fragment, container, false);
     }
 
     //Click functionality
@@ -46,7 +54,7 @@ public class MenuActivity extends AppCompatActivity {
     }
 
     public void openLocation(View view) {
-    Intent intent = new Intent (this, LocationActivity.class);
+        Intent intent = new Intent (this, LocationActivity.class);
         startActivity(intent);
 
     }

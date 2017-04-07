@@ -1,15 +1,15 @@
-package uk.ac.tees.donut.squad;
+package uk.ac.tees.donut.squad.activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.firebase.database.DatabaseReference;
 
+import uk.ac.tees.donut.squad.R;
 import uk.ac.tees.donut.squad.users.User;
 
 public class ProfileActivity extends AppCompatActivity
