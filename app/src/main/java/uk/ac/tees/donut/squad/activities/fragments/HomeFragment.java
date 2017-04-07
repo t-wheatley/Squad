@@ -26,41 +26,4 @@ public class HomeFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.home_fragment, container, false);
     }
-
-    //Click functionality
-    public void openProfile(View view) {
-        Intent intent = new Intent(this, ProfileActivity.class);
-        startActivity(intent);
-    }
-
-    public void openSquads(View view) {
-        Intent intent = new Intent(this, SquadsActivity.class);
-        startActivity(intent);
-    }
-
-    public void openEvents(View view) {
-        Intent intent = new Intent(this, ViewMeetups.class);
-        startActivity(intent);
-    }
-
-    public void openHost(View view) {
-        Intent intent = new Intent(this, NewMeetup.class);
-        startActivity(intent);
-    }
-
-    public void openSettings(View view) {
-        Intent intent = new Intent(this, SettingsActivity.class);
-        startActivity(intent);
-    }
-
-    public void openLocation(View view) {
-        Intent intent = new Intent (this, LocationActivity.class);
-        startActivity(intent);
-
-    }
-
-    public void openMap(View view){
-        Intent intent = new Intent(this, MapActivity.class);
-        startActivity(intent);
-    }
 }

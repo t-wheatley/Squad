@@ -62,8 +62,6 @@ public class ViewMeetups extends AppCompatActivity
         else
             getAll();
 
-        spinnerInterest = (Spinner) findViewById(R.id.spinner);
-
         fillSpinner();
 
         // Display the adapter in the RecyclerView
