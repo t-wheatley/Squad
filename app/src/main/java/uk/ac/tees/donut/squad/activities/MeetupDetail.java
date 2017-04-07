@@ -1,4 +1,4 @@
-package uk.ac.tees.donut.squad;
+package uk.ac.tees.donut.squad.activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -15,7 +15,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import uk.ac.tees.donut.squad.R;
 import uk.ac.tees.donut.squad.posts.Meetup;
+import uk.ac.tees.donut.squad.users.User;
 
 public class MeetupDetail extends AppCompatActivity
 {
@@ -25,6 +27,8 @@ public class MeetupDetail extends AppCompatActivity
     TextView interestDisplay;
     TextView descriptionDisplay;
     String meetupId;
+
+    Button attendBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)

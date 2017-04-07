@@ -1,15 +1,15 @@
-package uk.ac.tees.donut.squad;
+package uk.ac.tees.donut.squad.activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.firebase.database.DatabaseReference;
 
+import uk.ac.tees.donut.squad.R;
 import uk.ac.tees.donut.squad.users.User;
 
 public class ProfileActivity extends AppCompatActivity
@@ -17,7 +17,7 @@ public class ProfileActivity extends AppCompatActivity
     DatabaseReference mDatabase;
 
     TextView profileName;
-    TextView profileInterest;
+    TextView bio;
     Button attendingBtn;
 
     @Override
@@ -26,9 +26,12 @@ public class ProfileActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        //Declaring editText
+        //getting ui elements
         profileName = (TextView) findViewById(R.id.profileName);
         profileName.setText(User.getName());
+
+        bio = (TextView) findViewById(R.id.bio);
+        bio.setText(User.getBio());
 
         attendingBtn = (Button) findViewById(R.id.attendingBtn);
         attendingBtn.setOnClickListener(new View.OnClickListener() {

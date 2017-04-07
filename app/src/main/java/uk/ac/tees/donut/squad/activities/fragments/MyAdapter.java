@@ -1,9 +1,11 @@
-package uk.ac.tees.donut.squad;
+package uk.ac.tees.donut.squad.activities.fragments;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import uk.ac.tees.donut.squad.R;
 
 /**
  * Created by jlc-1 on 24/03/2017.

@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".SplashScreen"
+            android:name=".activities.SplashScreen"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,15 +19,15 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".MainActivity" />
+        <activity android:name=".activities.MainActivity" />
         <activity android:name=".location.LocationActivity" />
-        <activity android:name=".NewMeetup" />
-        <activity android:name=".ViewMeetups" />
-        <activity android:name=".MeetupDetail" />
-        <activity android:name=".ProfileActivity" />
-        <activity android:name=".SquadsActivity" />
+        <activity android:name=".activities.NewMeetup" />
+        <activity android:name=".activities.ViewMeetups" />
+        <activity android:name=".activities.MeetupDetail" />
+        <activity android:name=".activities.ProfileActivity" />
+        <activity android:name=".activities.SquadsActivity" />
         <activity
-            android:name=".SettingsActivity"
+            android:name=".activities.SettingsActivity"
             android:label="@string/title_activity_settings" />
 
         <service
