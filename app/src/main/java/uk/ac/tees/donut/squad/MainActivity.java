@@ -3,13 +3,11 @@ package uk.ac.tees.donut.squad;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 
-import uk.ac.tees.donut.squad.location.LocationActivity;
+import uk.ac.tees.donut.squad.location.GeocoderActivity;
 import uk.ac.tees.donut.squad.location.MapActivity;
-import uk.ac.tees.donut.squad.users.User;
 
 public class MainActivity extends AppCompatActivity {
     Button btnNewMeetup;
@@ -54,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void openLocation(View view) {
-    Intent intent = new Intent (this, LocationActivity.class);
+    Intent intent = new Intent (this, GeocoderActivity.class);
         startActivity(intent);
 
     }

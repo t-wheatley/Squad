@@ -20,7 +20,7 @@ import android.widget.Toast;
 
 import uk.ac.tees.donut.squad.R;
 
-public class LocationActivity extends AppCompatActivity {
+public class GeocoderActivity extends AppCompatActivity {
 
     AddressResultReceiver mResultReceiver;
 

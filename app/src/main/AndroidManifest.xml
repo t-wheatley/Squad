@@ -26,7 +26,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".location.LocationActivity" />
+        <activity android:name=".location.GeocoderActivity" />
         <activity android:name=".NewMeetup" />
         <activity android:name=".ViewMeetups" />
         <activity android:name=".MeetupDetail" />
