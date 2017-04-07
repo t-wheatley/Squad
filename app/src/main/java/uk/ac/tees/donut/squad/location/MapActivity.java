@@ -14,7 +14,10 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
+
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -38,17 +41,22 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     //GOOGLE MAP API V2
 
     private SupportMapFragment mapFrag;
+    private Button btnRequest;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     protected Location mLastLocation;
     private Marker mCurrLocationMarker;
     private GoogleMap mMap;
+    private LatLng currentLocation;
+    private LatLng destination;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
+        btnRequest = (Button) findViewById(R.id.btn_request_direction);
+        btnRequest.setOnClickListener((View.OnClickListener) this);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         mapFrag = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
