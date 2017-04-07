@@ -62,7 +62,7 @@ public class ViewMeetups extends AppCompatActivity
         else
             getAll();
 
-        fillSpinner();
+        //fillSpinner();
 
         // Display the adapter in the RecyclerView
         recycler.setAdapter(mAdapter);
