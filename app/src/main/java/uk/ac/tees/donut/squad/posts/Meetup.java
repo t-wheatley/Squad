@@ -81,6 +81,11 @@ public class Meetup
     {
         return postCode;
     }
+    public String getShortDescription()
+    {
+        String shortDesc = description.substring(0, 15) + "...";
+        return shortDesc;
+    }
 
     // SETTERS
     public void setId(String i)
