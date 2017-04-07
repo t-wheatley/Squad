@@ -103,10 +103,7 @@
             android:onClick="openMap"
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"/>/>
-
-
-
+            android:layout_alignParentRight="true"/>
 
     </RelativeLayout>
 

@@ -57,12 +57,10 @@ public class ViewMeetups extends AppCompatActivity
         // Notification for user
         Toast.makeText(this, "Loading meetups...", Toast.LENGTH_SHORT).show();
 
-        if(attending)
+        if(attending)   //if came from 'Attending Meetups' button on profile...
             getAttending();
         else
             getAll();
-
-        fillSpinner();
 
         // Display the adapter in the RecyclerView
         recycler.setAdapter(mAdapter);
@@ -132,29 +130,4 @@ public class ViewMeetups extends AppCompatActivity
         };
     }
 
-
-    private void fillSpinner(){
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("interests").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Toast.makeText(ViewMeetups.this, "Loading interests...", Toast.LENGTH_SHORT).show();
-                final List<String> interests = new ArrayList<String>();
-
-                for (DataSnapshot interestSnapshot: dataSnapshot.getChildren()) {
-                    String interest = interestSnapshot.child("name").getValue(String.class);
-                    interests.add(interest);
-                }
-
-                ArrayAdapter<String> interestAdapter = new ArrayAdapter<String>(ViewMeetups.this, android.R.layout.simple_spinner_item, interests);
-                interestAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spinnerInterest.setAdapter(interestAdapter);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
 }
