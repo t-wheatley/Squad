@@ -1,28 +1,28 @@
-package uk.ac.tees.donut.squad;
+package uk.ac.tees.donut.squad.activities;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+<<<<<<< HEAD:app/src/main/java/uk/ac/tees/donut/squad/MainActivity.java
+=======
+import android.support.v7.app.AppCompatActivity;
+>>>>>>> master:app/src/main/java/uk/ac/tees/donut/squad/activities/MenuActivity.java
 import android.view.View;
-import android.widget.Button;
 
+<<<<<<< HEAD:app/src/main/java/uk/ac/tees/donut/squad/MainActivity.java
 import uk.ac.tees.donut.squad.location.GeocoderActivity;
+=======
+import uk.ac.tees.donut.squad.R;
+import uk.ac.tees.donut.squad.location.LocationActivity;
+>>>>>>> master:app/src/main/java/uk/ac/tees/donut/squad/activities/MenuActivity.java
 import uk.ac.tees.donut.squad.location.MapActivity;
 
-public class MainActivity extends AppCompatActivity {
-    Button btnNewMeetup;
-    Button btnViewMeetups;
+public class MenuActivity extends AppCompatActivity {
+    boolean firstStart = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        /* static stuff ain't working for some reason
-        User.setName("Default User");
-        User.addMeetup("-KfRv3Q8wXywzAT1mFy-");
-        */
-
     }
 
     //Click functionality
@@ -55,11 +55,6 @@ public class MainActivity extends AppCompatActivity {
     Intent intent = new Intent (this, GeocoderActivity.class);
         startActivity(intent);
 
-    }
-    public void openSignIn (View view)
-    {
-        Intent intent = new Intent(this, SignInActivity.class);
-        startActivity(intent);
     }
 
     public void openMap(View view){

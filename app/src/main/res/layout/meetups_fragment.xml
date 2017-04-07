@@ -15,24 +15,8 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/picture"
-        android:background="@color/colorPrimary"
-        android:layout_marginRight="10dp"
-        android:padding="10dp"
-        >
-
-        <ImageView
-            android:layout_width="90dp"
-            android:layout_height="90dp" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="110dp"
         android:background="@color/colorPrimary"
         android:id="@+id/detailsLayout"
-        android:layout_toRightOf="@+id/picture"
         android:padding="5dp">
         <TextView
             android:text="Name:"
@@ -44,7 +28,7 @@
             style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"
             />
 
-        <TextView
+        <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
@@ -53,7 +37,7 @@
             android:layout_alignParentStart="true"
             android:id="@+id/meetupDetail_textEditName"
             android:layout_alignParentEnd="true"
-            android:textColor="@color/tw__solid_white"/>
+            style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
 
         <TextView
             android:text="Interest:"
@@ -64,7 +48,7 @@
             android:id="@+id/meetupDetail_textViewInterest"
             style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
 
-        <TextView
+        <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
@@ -73,30 +57,18 @@
             android:layout_alignParentStart="true"
             android:id="@+id/meetupDetail_textEditInterest"
             android:layout_alignParentEnd="true"
-            android:textColor="@color/tw__solid_white"/>
-
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/detailsLayout"
-        android:background="@color/colorPrimary"
-        android:padding="5dp"
-        android:layout_marginTop="10dp"
-        android:id="@+id/descriptionLayout"
-        >
+            style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
 
         <TextView
             android:text="Description:"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/meetupDetail_textEditInterest"
             android:layout_alignParentStart="true"
             android:id="@+id/meetupDetail_textViewDescription"
             style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
 
-        <TextView
+        <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="textMultiLine"
@@ -105,14 +77,14 @@
             android:layout_alignParentStart="true"
             android:id="@+id/meetupDetail_textEditDescription"
             android:layout_alignParentEnd="true"
-            android:textColor="@color/tw__solid_white"/>
+            style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="200dp"
         android:layout_centerHorizontal="true"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/descriptionLayout"
+        android:layout_below="@+id/detailsLayout"
         android:id="@+id/buttonLayout"
         android:background="@color/colorPrimary"
         android:padding="5dp"
@@ -128,5 +100,5 @@
             style="@style/Widget.AppCompat.Button.Colored"
             android:onClick="attend"/>
     </RelativeLayout>
-  
+
 </RelativeLayout>

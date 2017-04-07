@@ -1,4 +1,4 @@
-package uk.ac.tees.donut.squad;
+package uk.ac.tees.donut.squad.activities;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

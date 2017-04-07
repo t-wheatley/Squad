@@ -1,13 +1,11 @@
-package uk.ac.tees.donut.squad;
+package uk.ac.tees.donut.squad.activities;
 
+import android.os.Bundle;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -24,7 +22,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-public class SignInActivity extends AppCompatActivity implements
+import uk.ac.tees.donut.squad.R;
+
+/**
+ * Created by jlc-1 on 21/03/2017.
+ */
+
+public class SplashScreen extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener, View.OnClickListener
 {
     private GoogleApiClient mGoogleApiClient;
@@ -34,20 +38,14 @@ public class SignInActivity extends AppCompatActivity implements
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
-    private TextView statusTextView;
-    private Button btnSignOut;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_in);
+        setContentView(R.layout.activity_splash_screen);
 
         mAuth = FirebaseAuth.getInstance();
 
-        statusTextView = (TextView) findViewById(R.id.statusTextView);
-        btnSignOut = (Button) findViewById(R.id.signOutBtn);
 
         findViewById(R.id.sign_in_button).setOnClickListener(this);
 
@@ -80,14 +78,6 @@ public class SignInActivity extends AppCompatActivity implements
             }
         };
 
-        // onClick listener for the signOut button
-        btnSignOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // When pressed calls the submitMeeup method
-                signOut();
-            }
-        });
     }
 
     @Override
@@ -127,7 +117,6 @@ public class SignInActivity extends AppCompatActivity implements
 
     private void signOut() {
         FirebaseAuth.getInstance().signOut();
-        statusTextView.setText("Signed Out");
     }
 
 
@@ -146,7 +135,8 @@ public class SignInActivity extends AppCompatActivity implements
                 handleSignInResult(result);
             } else {
                 // Google Sign In failed, update UI appropriately
-                statusTextView.setText("Google Sign-In failed.");
+                Toast.makeText(SplashScreen.this, "Google Sign-In failed.",
+                        Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -167,7 +157,7 @@ public class SignInActivity extends AppCompatActivity implements
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
                             Log.w(TAG, "signInWithCredential", task.getException());
-                            Toast.makeText(SignInActivity.this, "Authentication failed.",
+                            Toast.makeText(SplashScreen.this, "Firebase Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
                         // ...
@@ -180,10 +170,14 @@ public class SignInActivity extends AppCompatActivity implements
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
-            statusTextView.setText(acct.getDisplayName());
+            Intent i = new Intent(SplashScreen.this, MainActivity.class);
+            finish();;
+            startActivity(i);
         } else {
 
         }
     }
+
+
 
 }

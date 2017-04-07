@@ -30,7 +30,7 @@ public class GeocoderActivity extends AppCompatActivity {
     CheckBox checkBox;
 
     boolean fetchAddress;
-    int fetchType = Constants.USE_ADDRESS_LOCATION;
+    int fetchType = LocContants.USE_ADDRESS_LOCATION;
     private static final String TAG = "LOCATION_ACTIVITY";
 
 
@@ -56,7 +56,7 @@ public class GeocoderActivity extends AppCompatActivity {
             case R.id.radioAddress:
                 if (checked) {
                     fetchAddress = false;
-                    fetchType = Constants.USE_ADDRESS_NAME;
+                    fetchType = LocContants.USE_ADDRESS_NAME;
                     longitudeEdit.setEnabled(false);
                     latitudeEdit.setEnabled(false);
                     addressEdit.setEnabled(true);
@@ -66,7 +66,7 @@ public class GeocoderActivity extends AppCompatActivity {
             case R.id.radioLocation:
                 if (checked) {
                     fetchAddress = true;
-                    fetchType = Constants.USE_ADDRESS_LOCATION;
+                    fetchType = LocContants.USE_ADDRESS_LOCATION;
                     latitudeEdit.setEnabled(true);
                     latitudeEdit.requestFocus();
                     longitudeEdit.setEnabled(true);
@@ -80,14 +80,14 @@ public class GeocoderActivity extends AppCompatActivity {
 
     public void onButtonClicked(View view) {
         Intent intent = new Intent(this, FetchAddressIntentService.class);
-        intent.putExtra(Constants.RECEIVER, mResultReceiver);
-        intent.putExtra(Constants.FETCH_TYPE_EXTRA, fetchType);
-        if(fetchType == Constants.USE_ADDRESS_NAME) {
+        intent.putExtra(LocContants.RECEIVER, mResultReceiver);
+        intent.putExtra(LocContants.FETCH_TYPE_EXTRA, fetchType);
+        if(fetchType == LocContants.USE_ADDRESS_NAME) {
             if(addressEdit.getText().length() == 0) {
                 Toast.makeText(this, "Please enter an address name", Toast.LENGTH_LONG).show();
                 return;
             }
-            intent.putExtra(Constants.LOCATION_NAME_DATA_EXTRA, addressEdit.getText().toString());
+            intent.putExtra(LocContants.LOCATION_NAME_DATA_EXTRA, addressEdit.getText().toString());
         }
         else {
             if(latitudeEdit.getText().length() == 0 || longitudeEdit.getText().length() == 0) {
@@ -96,9 +96,9 @@ public class GeocoderActivity extends AppCompatActivity {
                         Toast.LENGTH_LONG).show();
                 return;
             }
-            intent.putExtra(Constants.LOCATION_LATITUDE_DATA_EXTRA,
+            intent.putExtra(LocContants.LOCATION_LATITUDE_DATA_EXTRA,
                     Double.parseDouble(latitudeEdit.getText().toString()));
-            intent.putExtra(Constants.LOCATION_LONGITUDE_DATA_EXTRA,
+            intent.putExtra(LocContants.LOCATION_LONGITUDE_DATA_EXTRA,
                     Double.parseDouble(longitudeEdit.getText().toString()));
         }
         infoText.setVisibility(View.INVISIBLE);
@@ -114,8 +114,8 @@ public class GeocoderActivity extends AppCompatActivity {
 
         @Override
         protected void onReceiveResult(int resultCode, final Bundle resultData) {
-            if (resultCode == Constants.SUCCESS_RESULT) {
-                final Address address = resultData.getParcelable(Constants.RESULT_ADDRESS);
+            if (resultCode == LocContants.SUCCESS_RESULT) {
+                final Address address = resultData.getParcelable(LocContants.RESULT_ADDRESS);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -123,7 +123,7 @@ public class GeocoderActivity extends AppCompatActivity {
                         infoText.setVisibility(View.VISIBLE);
                         infoText.setText("Latitude: " + address.getLatitude() + "\n" +
                                 "Longitude: " + address.getLongitude() + "\n" +
-                                "Address: " + resultData.getString(Constants.RESULT_DATA_KEY));
+                                "Address: " + resultData.getString(LocContants.RESULT_DATA_KEY));
                     }
                 });
             }
@@ -133,7 +133,7 @@ public class GeocoderActivity extends AppCompatActivity {
                     public void run() {
                         progressBar.setVisibility(View.GONE);
                         infoText.setVisibility(View.VISIBLE);
-                        infoText.setText(resultData.getString(Constants.RESULT_DATA_KEY));
+                        infoText.setText(resultData.getString(LocContants.RESULT_DATA_KEY));
                     }
                 });
             }

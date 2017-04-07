@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="uk.ac.tees.donut.squad.ProfileActivity"
+    tools:context="uk.ac.tees.donut.squad.activities.ProfileActivity"
     android:background="@color/cardview_dark_background">
 
     <RelativeLayout
@@ -16,8 +16,27 @@
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         android:padding="10dp"
-        android:id="@+id/profileLayout"
+        android:id="@+id/pictureLayout"
+        android:layout_marginRight="10dp"
         >
+
+
+
+        <ImageView
+            android:id="@+id/profileImage_ImageView"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/com_facebook_profile_picture_blank_portrait" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="110dp"
+        android:background="@color/colorPrimary"
+        android:padding="10dp"
+        android:layout_toRightOf="@+id/pictureLayout">
 
         <TextView
             android:id="@+id/profileName"
@@ -26,46 +45,49 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_marginBottom="5dp"
+            android:layout_centerHorizontal="true"
+            style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored" />
+
         <TextView
-            android:text="Interests:"
-            android:textColor="#FFFFFF"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/profileName"
-            android:id="@+id/profileInterest_TextView"/>
-        <EditText
-            android:id="@+id/profileInterest_EditText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/profileInterest_TextView"
-            />
-        <ImageView
-            android:id="@+id/profileImage_ImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/com_facebook_profile_picture_blank_portrait"/>
+            android:id="@+id/bio"
+            android:textColor="@color/tw__solid_white"/>
+
+
     </RelativeLayout>
 
-    <RelativeLayout
-        android:layout_width="250dp"
+    <LinearLayout
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/profileLayout"
+        android:layout_below="@+id/pictureLayout"
         android:background="@color/colorPrimary"
         android:layout_centerHorizontal="true"
         android:padding="5dp"
         android:layout_marginTop="10dp"
-        android:id="@+id/buttonLayout">
+        android:id="@+id/buttonLayout"
+        android:orientation="vertical">
+
         <Button
-            android:id="@+id/attendingBtn"
-            android:layout_width="wrap_content"
+            android:id="@+id/mySquads"
+            android:layout_width="190dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignParentLeft="true"
             style="@style/Base.Widget.AppCompat.Button.Colored"
-            android:text="Show Attending Meetups"/>
-    </RelativeLayout>
+            android:text="My Squads"/>
+
+        <Button
+            android:id="@+id/attendingBtn"
+            android:layout_width="190dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentLeft="true"
+            style="@style/Base.Widget.AppCompat.Button.Colored"
+            android:text="My Meetups"/>
+
+    </LinearLayout>
 
 </RelativeLayout>

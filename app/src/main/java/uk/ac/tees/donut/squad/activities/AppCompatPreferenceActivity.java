@@ -1,4 +1,4 @@
-package uk.ac.tees.donut.squad;
+package uk.ac.tees.donut.squad.activities;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
