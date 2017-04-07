@@ -1,4 +1,4 @@
-package uk.ac.tees.donut.squad;
+package uk.ac.tees.donut.squad.activities.fragments;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

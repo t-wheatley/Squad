@@ -1,4 +1,4 @@
-package uk.ac.tees.donut.squad;
+package uk.ac.tees.donut.squad.activities;
 
 
 import android.annotation.TargetApi;
@@ -21,6 +21,8 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 
 import java.util.List;
+
+import uk.ac.tees.donut.squad.R;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On

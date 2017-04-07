@@ -1,6 +1,5 @@
-package uk.ac.tees.donut.squad;
+package uk.ac.tees.donut.squad.activities;
 
-import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -10,11 +9,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 
-import uk.ac.tees.donut.squad.location.LocationActivity;
-import uk.ac.tees.donut.squad.location.MapActivity;
+import uk.ac.tees.donut.squad.R;
+import uk.ac.tees.donut.squad.activities.fragments.FragmentsAdapter;
 import uk.ac.tees.donut.squad.users.User;
 
 public class MainActivity extends AppCompatActivity {
