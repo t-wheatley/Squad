@@ -3,6 +3,7 @@ package uk.ac.tees.donut.squad.location;
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -18,7 +19,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-
+import com.akexorcist.googledirection.DirectionCallback;
+import com.akexorcist.googledirection.GoogleDirection;
+import com.akexorcist.googledirection.constant.TransportMode;
+import com.akexorcist.googledirection.model.Direction;
+import com.akexorcist.googledirection.util.DirectionConverter;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -33,10 +39,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+
 import uk.ac.tees.donut.squad.R;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, LocationListener {
+        GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener, DirectionCallback {
 
     //GOOGLE MAP API V2
 
@@ -47,6 +55,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     protected Location mLastLocation;
     private Marker mCurrLocationMarker;
     private GoogleMap mMap;
+    private String directionAPIKey = "AIzaSyBPSyzwv_Lr4JyCgKRswRhBRebSi8htqt8";
     private LatLng currentLocation;
     private LatLng destination;
 
@@ -56,7 +65,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_map);
 
         btnRequest = (Button) findViewById(R.id.btn_request_direction);
-        btnRequest.setOnClickListener((View.OnClickListener) this);
+        btnRequest.setOnClickListener(this);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         mapFrag = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -88,10 +97,27 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         // Add a marker at home
         LatLng Home = new LatLng(54.6993131, -1.5103871);
+        destination = Home;
         mMap.addMarker(new MarkerOptions().position(Home).title("My house"));
 
 
 
+    }
+
+
+    public void onClick(View v){
+        int id = v.getId();
+        if (id == R.id.btn_request_direction){
+            requestDirection();
+        }
+    }
+
+    public void requestDirection(){
+       GoogleDirection.withServerKey(directionAPIKey)
+               .from(currentLocation)
+               .to(destination)
+               .transportMode(TransportMode.DRIVING)
+               .execute(this);
     }
 
     @Override
@@ -153,6 +179,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         //Place current location marker
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        currentLocation = latLng;
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latLng);
         markerOptions.title("Current Position");
@@ -235,4 +262,22 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         }
     }
+
+    @Override
+    public void onDirectionSuccess(Direction direction, String rawBody) {
+        if (direction.isOK()) {
+            ArrayList<LatLng> directionPositionList = direction.getRouteList().get(0).getLegList().get(0).getDirectionPoint();
+            mMap.addPolyline(DirectionConverter.createPolyline(this, directionPositionList, 5, Color.RED));
+
+            btnRequest.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onDirectionFailure(Throwable t) {
+
+    }
 }
+
+
+//https://github.com/akexorcist/Android-GoogleDirectionLibrary
