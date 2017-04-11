@@ -20,6 +20,9 @@ import android.widget.Toast;
 
 import uk.ac.tees.donut.squad.R;
 
+/**
+ * Created by Anthony Ward
+ */
 public class GeocoderActivity extends AppCompatActivity {
 
     AddressResultReceiver mResultReceiver;

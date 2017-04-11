@@ -43,6 +43,10 @@ import java.util.ArrayList;
 
 import uk.ac.tees.donut.squad.R;
 
+/**
+ * Created by Anthony Ward
+ */
+
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener, DirectionCallback {
 
