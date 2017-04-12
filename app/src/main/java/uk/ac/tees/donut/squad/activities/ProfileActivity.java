@@ -6,14 +6,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.plus.Plus;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 
@@ -29,6 +29,7 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
     Button attendingBtn;
     Button signOutBtn;
 
+    FirebaseAuth mAuth;
     GoogleApiClient mGoogleApiClient;
 
     @Override
@@ -51,7 +52,18 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
+        // Getting instance of Firebase Auth
+        mAuth = FirebaseAuth.getInstance();
+
         // Getting ui elements
+        ImageView profileImage = (ImageView)findViewById(R.id.profileImage_ImageView);
+
+        Glide.with(this)
+                .load(mAuth.getCurrentUser().getPhotoUrl())
+                .fitCenter()
+                .error(R.drawable.com_facebook_profile_picture_blank_portrait)
+                .into(profileImage);
+
         profileName = (TextView) findViewById(R.id.profileName);
         profileName.setText(User.getName());
 
@@ -86,7 +98,7 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
 
     public void signOut()
     {
-        FirebaseAuth.getInstance().signOut();
+        mAuth.signOut();
         Auth.GoogleSignInApi.signOut(mGoogleApiClient);
 
         Intent intent = new Intent(this, MainActivity.class);
