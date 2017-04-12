@@ -38,6 +38,8 @@ public class SplashScreen extends AppCompatActivity implements
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
+    GoogleSignInAccount account;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -70,6 +72,8 @@ public class SplashScreen extends AppCompatActivity implements
                 if (user != null) {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    Intent i = new Intent(SplashScreen.this, MainActivity.class);
+                    startActivity(i);
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
@@ -114,12 +118,6 @@ public class SplashScreen extends AppCompatActivity implements
         startActivityForResult(signInIntent, RC_SIGN_IN);
 
     }
-
-    private void signOut() {
-        FirebaseAuth.getInstance().signOut();
-    }
-
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -169,7 +167,6 @@ public class SplashScreen extends AppCompatActivity implements
         Log.d(TAG, "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
-            GoogleSignInAccount acct = result.getSignInAccount();
             Intent i = new Intent(SplashScreen.this, MainActivity.class);
             finish();;
             startActivity(i);

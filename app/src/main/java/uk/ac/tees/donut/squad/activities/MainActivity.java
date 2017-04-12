@@ -12,6 +12,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+
 import uk.ac.tees.donut.squad.R;
 import uk.ac.tees.donut.squad.activities.fragments.FragmentsAdapter;
 import uk.ac.tees.donut.squad.location.LocationActivity;
@@ -28,12 +33,22 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if(firstStart) {
+        if(firstStart)
+        {
             user = new User("Default User");
             firstStart = false;
 
             User.addMeetup("-Kg3OkIfWwS8YXCi6vF4");
         }
+
+        if (getIntent().getBooleanExtra("EXIT", false))
+        {
+            Intent intent = new Intent(this, SplashScreen.class);
+            finish();
+
+            startActivity(intent);
+        }
+
 
     }
 
