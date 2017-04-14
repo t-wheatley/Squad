@@ -38,8 +38,6 @@ public class SplashScreen extends AppCompatActivity implements
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
-    GoogleSignInAccount account;
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -65,17 +63,19 @@ public class SplashScreen extends AppCompatActivity implements
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
+        // AuthListener used to check if the user has previously signed in
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    // User is signed in
+                    // User is signed in, skip the SplashScreen and load MainActivity
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                     Intent i = new Intent(SplashScreen.this, MainActivity.class);
                     startActivity(i);
+                    finish();
                 } else {
-                    // User is signed out
+                    // User is not signed in, nothing
                     Log.d(TAG, "onAuthStateChanged:signed_out");
                 }
                 // ...
@@ -136,6 +136,9 @@ public class SplashScreen extends AppCompatActivity implements
                 Toast.makeText(SplashScreen.this, "Google Sign-In failed.",
                         Toast.LENGTH_SHORT).show();
             }
+        } else
+        {
+
         }
     }
 
@@ -166,15 +169,15 @@ public class SplashScreen extends AppCompatActivity implements
     private void handleSignInResult(GoogleSignInResult result) {
         Log.d(TAG, "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
+
             // Signed in successfully, show authenticated UI.
             Intent i = new Intent(SplashScreen.this, MainActivity.class);
             finish();;
             startActivity(i);
         } else {
-
+            Log.d(TAG, "GoogleSignInResult not successful");
         }
     }
-
 
 
 }
