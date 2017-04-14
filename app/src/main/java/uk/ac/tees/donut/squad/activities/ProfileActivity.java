@@ -58,14 +58,7 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
         // Getting ui elements
         ImageView profileImage = (ImageView)findViewById(R.id.profileImage_ImageView);
 
-        Glide.with(this)
-                .load(mAuth.getCurrentUser().getPhotoUrl())
-                .fitCenter()
-                .error(R.drawable.com_facebook_profile_picture_blank_portrait)
-                .into(profileImage);
-
         profileName = (TextView) findViewById(R.id.profileName);
-        profileName.setText(User.getName());
 
         bio = (TextView) findViewById(R.id.bio);
         bio.setText(User.getBio());
@@ -85,10 +78,23 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
                 signOut();
             }
         });
+
+        // Gets the photo from the Firebase User and displays it in the ImageView
+        Glide.with(this)
+                .load(mAuth.getCurrentUser().getPhotoUrl())
+                .fitCenter()
+                .error(R.drawable.com_facebook_profile_picture_blank_portrait)
+                .into(profileImage);
+
+        // Gets the users displayname and displays it in the editText
+        profileName.setText(mAuth.getCurrentUser().getDisplayName());
+
+
     }
 
     public void showAttending()
     {
+        // Loads the ViewMeetups acitivty displaying the meetups that the user has attended
         Intent intent = new Intent(this, ViewMeetups.class);
         Bundle b = new Bundle();
         b.putBoolean("ATT", true);
@@ -98,9 +104,11 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
 
     public void signOut()
     {
+        // Signs the user out of Firebase Auth and then Google Sign In
         mAuth.signOut();
         Auth.GoogleSignInApi.signOut(mGoogleApiClient);
 
+        // Loads the SplashScreen activity and closes all other activites
         Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("EXIT", true);
