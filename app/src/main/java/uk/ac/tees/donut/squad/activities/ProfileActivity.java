@@ -1,13 +1,20 @@
 package uk.ac.tees.donut.squad.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputFilter;
+import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.Auth;
@@ -15,22 +22,30 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import uk.ac.tees.donut.squad.R;
+import uk.ac.tees.donut.squad.users.FBUser;
 import uk.ac.tees.donut.squad.users.User;
 
 public class ProfileActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener
 {
+    FirebaseAuth mAuth;
+    GoogleApiClient mGoogleApiClient;
     DatabaseReference mDatabase;
 
     TextView profileName;
     TextView bio;
     Button attendingBtn;
     Button signOutBtn;
+    ImageButton editBioBtn;
 
-    FirebaseAuth mAuth;
-    GoogleApiClient mGoogleApiClient;
+    private String bioText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -55,13 +70,16 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
         // Getting instance of Firebase Auth
         mAuth = FirebaseAuth.getInstance();
 
+        // Getting the reference for the Firebase Realtime Database
+        mDatabase = FirebaseDatabase.getInstance().getReference("users");
+
         // Getting ui elements
         ImageView profileImage = (ImageView)findViewById(R.id.profileImage_ImageView);
 
         profileName = (TextView) findViewById(R.id.profileName);
 
         bio = (TextView) findViewById(R.id.bio);
-        bio.setText(User.getBio());
+        loadBio();
 
         attendingBtn = (Button) findViewById(R.id.attendingBtn);
         attendingBtn.setOnClickListener(new View.OnClickListener() {
@@ -76,6 +94,15 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
             @Override
             public void onClick(View v) {
                 signOut();
+            }
+        });
+
+        editBioBtn = (ImageButton) findViewById(R.id.imageButtonEdit);
+        editBioBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Load Dialog to edit Bio
+                editBio();
             }
         });
 
@@ -113,6 +140,90 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("EXIT", true);
         startActivity(intent);
+    }
+
+    public void editBio()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Bio:");
+
+        // EditText for input
+        final EditText editTextBio = new EditText(this);
+        // Sets the expected input types, text, long message, auto correct and multi line
+        editTextBio.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_LONG_MESSAGE |
+                InputType.TYPE_TEXT_FLAG_AUTO_COMPLETE | InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE);
+        // Sets the maximum characters to 120
+        editTextBio.setFilters(new InputFilter[] { new InputFilter.LengthFilter(120) });
+        builder.setView(editTextBio);
+
+        // Buttons on the Dialog
+        builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                bioText = editTextBio.getText().toString();
+                bio.setText(bioText);
+                updateBio(bioText);
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        // Displays the Dialog
+        builder.show();
+    }
+
+    public void updateBio(String bio)
+    {
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (firebaseUser != null)
+        {
+            // User is signed in
+            // Creating a User object and setting its Bio
+            FBUser user = new FBUser();
+            user.setBio(bio);
+
+            // Pushing the Bio to the "users" node using the FirebaseUser's Uid
+            mDatabase.child(firebaseUser.getUid()).setValue(user);
+        } else
+        {
+            // No user is signed in
+            Toast.makeText(this, "Something went wrong, please try again.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void loadBio()
+    {
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (firebaseUser != null)
+        {
+            // User is signed in
+            mDatabase.child(firebaseUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener()
+            {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot)
+                {
+                    // Gets the data from Firebase and stores it in a FBUser class
+                    FBUser user = dataSnapshot.getValue(FBUser.class);
+
+                    // Displays the found meetup's attributes
+                    bio.setText(user.getBio());
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError)
+                {
+
+                }
+            });
+        } else
+        {
+            // No user is signed in
+            Toast.makeText(this, "Something went wrong, please try again.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
