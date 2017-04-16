@@ -1,11 +1,17 @@
 package uk.ac.tees.donut.squad.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputFilter;
+import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,6 +34,9 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
     TextView bio;
     Button attendingBtn;
     Button signOutBtn;
+    ImageButton editBioBtn;
+
+    private String bioText;
 
     FirebaseAuth mAuth;
     GoogleApiClient mGoogleApiClient;
@@ -79,6 +88,15 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
             }
         });
 
+        editBioBtn = (ImageButton) findViewById(R.id.imageButtonEdit);
+        editBioBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Load Dialog to edit Bio
+                editBio();
+            }
+        });
+
         // Gets the photo from the Firebase User and displays it in the ImageView
         Glide.with(this)
                 .load(mAuth.getCurrentUser().getPhotoUrl())
@@ -113,6 +131,45 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("EXIT", true);
         startActivity(intent);
+    }
+
+    public void editBio()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Bio:");
+
+        // EditText for input
+        final EditText editTextBio = new EditText(this);
+        // Sets the expected input types, text, long message, auto correct and multi line
+        editTextBio.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_LONG_MESSAGE |
+                InputType.TYPE_TEXT_FLAG_AUTO_COMPLETE | InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE);
+        // Sets the maximum characters to 120
+        editTextBio.setFilters(new InputFilter[] { new InputFilter.LengthFilter(120) });
+        builder.setView(editTextBio);
+
+        // Buttons on the Dialog
+        builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                bioText = editTextBio.getText().toString();
+                bio.setText(bioText);
+                updateBio(bioText);
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        // Displays the Dialog
+        builder.show();
+    }
+
+    public void updateBio(String bio)
+    {
+
     }
 
     @Override
