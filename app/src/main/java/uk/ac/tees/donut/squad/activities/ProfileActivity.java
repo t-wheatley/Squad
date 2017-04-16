@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.Auth;
@@ -21,13 +22,21 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import uk.ac.tees.donut.squad.R;
+import uk.ac.tees.donut.squad.users.FBUser;
 import uk.ac.tees.donut.squad.users.User;
 
 public class ProfileActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener
 {
+    FirebaseAuth mAuth;
+    GoogleApiClient mGoogleApiClient;
     DatabaseReference mDatabase;
 
     TextView profileName;
@@ -37,9 +46,6 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
     ImageButton editBioBtn;
 
     private String bioText;
-
-    FirebaseAuth mAuth;
-    GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -64,13 +70,16 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
         // Getting instance of Firebase Auth
         mAuth = FirebaseAuth.getInstance();
 
+        // Getting the reference for the Firebase Realtime Database
+        mDatabase = FirebaseDatabase.getInstance().getReference("users");
+
         // Getting ui elements
         ImageView profileImage = (ImageView)findViewById(R.id.profileImage_ImageView);
 
         profileName = (TextView) findViewById(R.id.profileName);
 
         bio = (TextView) findViewById(R.id.bio);
-        bio.setText(User.getBio());
+        loadBio();
 
         attendingBtn = (Button) findViewById(R.id.attendingBtn);
         attendingBtn.setOnClickListener(new View.OnClickListener() {
@@ -169,7 +178,52 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
 
     public void updateBio(String bio)
     {
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (firebaseUser != null)
+        {
+            // User is signed in
+            // Creating a User object and setting its Bio
+            FBUser user = new FBUser();
+            user.setBio(bio);
 
+            // Pushing the Bio to the "users" node using the FirebaseUser's Uid
+            mDatabase.child(firebaseUser.getUid()).setValue(user);
+        } else
+        {
+            // No user is signed in
+            Toast.makeText(this, "Something went wrong, please try again.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void loadBio()
+    {
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (firebaseUser != null)
+        {
+            // User is signed in
+            mDatabase.child(firebaseUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener()
+            {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot)
+                {
+                    // Gets the data from Firebase and stores it in a FBUser class
+                    FBUser user = dataSnapshot.getValue(FBUser.class);
+
+                    // Displays the found meetup's attributes
+                    bio.setText(user.getBio());
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError)
+                {
+
+                }
+            });
+        } else
+        {
+            // No user is signed in
+            Toast.makeText(this, "Something went wrong, please try again.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
