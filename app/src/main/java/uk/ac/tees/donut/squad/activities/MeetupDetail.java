@@ -12,6 +12,7 @@ import android.widget.Button;
 
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,13 +26,15 @@ import com.google.firebase.database.ValueEventListener;
 
 import uk.ac.tees.donut.squad.R;
 import uk.ac.tees.donut.squad.posts.Meetup;
-import uk.ac.tees.donut.squad.users.FBUser;
 import uk.ac.tees.donut.squad.users.User;
 
 public class MeetupDetail extends AppCompatActivity
 {
     DatabaseReference mDatabase;
     FirebaseUser firebaseUser;
+
+    RelativeLayout loadingOverlay;
+    TextView loadingText;
 
     Meetup meetup;
 
@@ -49,6 +52,12 @@ public class MeetupDetail extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meetup_detail);
+
+        // Initialising loading overlay and displaying
+        loadingOverlay = (RelativeLayout) this.findViewById(R.id.loading_overlay);
+        loadingText = (TextView) this.findViewById(R.id.loading_overlay_text);
+        loadingText.setText("Loading Meetup...");
+        loadingOverlay.setVisibility(View.VISIBLE);
 
         // Declaring editTexts
         nameDisplay = (TextView) findViewById(R.id.meetupDetail_textEditName);
@@ -104,6 +113,16 @@ public class MeetupDetail extends AppCompatActivity
         // Getting the reference for the Firebase Realtime Database
         mDatabase = FirebaseDatabase.getInstance().getReference("meetups");
 
+        // Loads the data for the Meetup from Firebase
+        loadMeetup();
+
+
+
+
+    }
+
+    public void loadMeetup()
+    {
         // Reads the data from the meetupId in Firebase
         mDatabase.child(meetupId).addListenerForSingleValueEvent(new ValueEventListener()
         {
@@ -123,6 +142,8 @@ public class MeetupDetail extends AppCompatActivity
                 {
                     editMode();
                 }
+                // Hiding loading overlay
+                loadingOverlay.setVisibility(View.GONE);
             }
 
             @Override

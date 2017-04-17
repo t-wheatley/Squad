@@ -234,6 +234,7 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
                     // If profileName != default and profileImage isnt null
                     if ((!profileName.getText().equals("'Users Profile")) && (profileImage != null))
                     {
+                        // Hiding loading overlay
                         loadingOverlay.setVisibility(View.GONE);
                     }
                 }
