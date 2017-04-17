@@ -1,11 +1,14 @@
 package uk.ac.tees.donut.squad.activities;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -40,6 +43,9 @@ public class SplashScreen extends AppCompatActivity implements
     private FirebaseAuth.AuthStateListener mAuthListener;
     private GoogleSignInAccount googleSignInAccount;
 
+    RelativeLayout loadingOverlay;
+    TextView loadingText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -48,6 +54,10 @@ public class SplashScreen extends AppCompatActivity implements
 
         mAuth = FirebaseAuth.getInstance();
 
+        // Initialising loading overlay
+        loadingOverlay = (RelativeLayout) this.findViewById(R.id.loading_overlay);
+        loadingText = (TextView) this.findViewById(R.id.loading_overlay_text);
+        loadingText.setText("Logging in...");
 
         findViewById(R.id.sign_in_button).setOnClickListener(this);
 
@@ -71,12 +81,17 @@ public class SplashScreen extends AppCompatActivity implements
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
+                    loadingOverlay.setVisibility(View.VISIBLE);
+
                     // Try to update details
                     if (googleSignInAccount != null)
                     {
                         updateDetails(user);
                     }
-                    // User is signed in, skip the SplashScreen and load MainActivity
+                    // Hiding loading overlay
+                    loadingOverlay.setVisibility(View.GONE);
+
+                    // User is signed in, load MainActivity
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                     Intent i = new Intent(SplashScreen.this, MainActivity.class);
                     startActivity(i);
@@ -123,12 +138,14 @@ public class SplashScreen extends AppCompatActivity implements
     private void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
-
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        // Display loading overlay
+        loadingOverlay.setVisibility(View.VISIBLE);
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
@@ -142,10 +159,10 @@ public class SplashScreen extends AppCompatActivity implements
                 // Google Sign In failed, update UI appropriately
                 Toast.makeText(SplashScreen.this, "Google Sign-In failed.",
                         Toast.LENGTH_SHORT).show();
-            }
-        } else
-        {
 
+                // Hiding loading overlay
+                loadingOverlay.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -167,6 +184,9 @@ public class SplashScreen extends AppCompatActivity implements
                             Log.w(TAG, "signInWithCredential", task.getException());
                             Toast.makeText(SplashScreen.this, "Firebase Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
+
+                            // Hiding loading overlay
+                            loadingOverlay.setVisibility(View.GONE);
                         }
                         // ...
                     }
@@ -180,6 +200,12 @@ public class SplashScreen extends AppCompatActivity implements
             Log.d(TAG, "GoogleSignInResult successful");
         } else {
             Log.d(TAG, "GoogleSignInResult not successful");
+
+            Toast.makeText(SplashScreen.this, "GoogleSignInResult failed.",
+                    Toast.LENGTH_SHORT).show();
+
+            // Hiding loading overlay
+            loadingOverlay.setVisibility(View.GONE);
         }
     }
 
