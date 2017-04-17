@@ -1,5 +1,7 @@
 package uk.ac.tees.donut.squad.activities;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -8,11 +10,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,13 +46,18 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
     GoogleApiClient mGoogleApiClient;
     DatabaseReference mDatabase;
 
+    RelativeLayout loadingOverlay;
+    TextView loadingText;
+
+    private String bioText;
+
     TextView profileName;
     TextView bio;
     Button attendingBtn;
     Button signOutBtn;
     ImageButton editBioBtn;
+    ImageView profileImage;
 
-    private String bioText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -78,12 +89,11 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         // Getting ui elements
-        ImageView profileImage = (ImageView)findViewById(R.id.profileImage_ImageView);
+        profileImage = (ImageView)findViewById(R.id.profileImage_ImageView);
 
         profileName = (TextView) findViewById(R.id.profileName);
 
         bio = (TextView) findViewById(R.id.bio);
-        loadBio();
 
         attendingBtn = (Button) findViewById(R.id.attendingBtn);
         attendingBtn.setOnClickListener(new View.OnClickListener() {
@@ -110,17 +120,12 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
             }
         });
 
-        // Gets the photo from the Firebase User and displays it in the ImageView
-        Glide.with(this)
-                .load(mAuth.getCurrentUser().getPhotoUrl())
-                .fitCenter()
-                .error(R.drawable.com_facebook_profile_picture_blank_portrait)
-                .into(profileImage);
-
-        // Gets the users displayname and displays it in the editText
-        profileName.setText(mAuth.getCurrentUser().getDisplayName());
-
-
+        // Load info and display loading overlay
+        loadInfo();
+        loadingOverlay = (RelativeLayout) this.findViewById(R.id.loading_overlay);
+        loadingText = (TextView) this.findViewById(R.id.loading_overlay_text);
+        loadingText.setText("Loading profile info...");
+        loadingOverlay.setVisibility(View.VISIBLE);
     }
 
     public void showAttending()
@@ -194,11 +199,21 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
         }
     }
 
-    public void loadBio()
+    public void loadInfo()
     {
         if (firebaseUser != null)
         {
-            // User is signed in
+            // Gets the photo from the Firebase User and displays it in the ImageView
+            Glide.with(this)
+                    .load(mAuth.getCurrentUser().getPhotoUrl())
+                    .fitCenter()
+                    .error(R.drawable.com_facebook_profile_picture_blank_portrait)
+                    .into(profileImage);
+
+            // Gets the user's displayname and displays it in the editText
+            profileName.setText(mAuth.getCurrentUser().getDisplayName());
+
+            // Get the user's Bio
             mDatabase.child(firebaseUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener()
             {
                 @Override
@@ -215,6 +230,11 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
                     } else
                     {
                         bio.setText("Write something about yourself!");
+                    }
+                    // If profileName != default and profileImage isnt null
+                    if ((!profileName.getText().equals("'Users Profile")) && (profileImage != null))
+                    {
+                        loadingOverlay.setVisibility(View.GONE);
                     }
                 }
 

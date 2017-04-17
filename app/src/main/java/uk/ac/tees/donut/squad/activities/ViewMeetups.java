@@ -10,7 +10,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -29,15 +31,17 @@ import uk.ac.tees.donut.squad.users.User;
 
 public class ViewMeetups extends AppCompatActivity
 {
+    RecyclerView recycler;
+    DatabaseReference mDatabase;
+    FirebaseRecyclerAdapter mAdapter;
+
+    RelativeLayout loadingOverlay;
+    TextView loadingText;
 
     boolean attending = false;
     Spinner spinnerInterest;
     ProgressBar progressBar;
     int count;
-
-    RecyclerView recycler;
-    DatabaseReference mDatabase;
-    FirebaseRecyclerAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -56,19 +60,26 @@ public class ViewMeetups extends AppCompatActivity
         // Getting the reference for the Firebase Realtime Database
         mDatabase = FirebaseDatabase.getInstance().getReference("meetups");
 
-        // Progress Bar
-        progressBar = (ProgressBar) this.findViewById(R.id.viewMeetups_progressBar);
-        progressBar.setVisibility(View.VISIBLE);
-
         // Defining RecyclerView
         recycler = (RecyclerView) findViewById(R.id.viewMeetups_recyclerView);
         recycler.setHasFixedSize(true);
         recycler.setLayoutManager(new LinearLayoutManager(this));
 
+        // Load meetups and display loading overlay
+        loadingOverlay = (RelativeLayout) this.findViewById(R.id.loading_overlay);
+        loadingText = (TextView) this.findViewById(R.id.loading_overlay_text);
+        loadingOverlay.setVisibility(View.VISIBLE);
+
         if(attending)   //if came from 'Attending Meetups' button on profile...
+        {
             getAttending();
+            loadingText.setText("Loading your Meetups...");
+        }
         else
+        {
             getAll();
+            loadingText.setText("Loading Meetups...");
+        }
 
         // Display the adapter in the RecyclerView
         recycler.setAdapter(mAdapter);
@@ -107,8 +118,8 @@ public class ViewMeetups extends AppCompatActivity
                 // If loading the last item
                 if (mAdapter.getItemCount() == count)
                 {
-                    // Hide the progress bar
-                    progressBar.setVisibility(View.GONE);
+                    // Hide the loading overlay
+                    loadingOverlay.setVisibility(View.GONE);
                 }
 
                 count++;
@@ -155,8 +166,8 @@ public class ViewMeetups extends AppCompatActivity
                 // If loading the last item
                 if (mAdapter.getItemCount() == count)
                 {
-                    // Hide the progress bar
-                    progressBar.setVisibility(View.GONE);
+                    // Hide the loading overlay
+                    loadingOverlay.setVisibility(View.GONE);
                 }
 
                 count++;
