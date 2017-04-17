@@ -62,7 +62,7 @@
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/ic_mode_edit_white_24px"
             android:background="?android:selectableItemBackground"
-            android:id="@+id/imageButtonEdit"
+            android:id="@+id/profile_imageButtonProfileBioEdit"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"/>
 

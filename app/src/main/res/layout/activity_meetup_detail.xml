@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_meetup_detail"
     android:layout_width="match_parent"
@@ -75,6 +76,15 @@
             android:layout_alignParentEnd="true"
             android:textColor="@color/tw__solid_white"/>
 
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_mode_edit_white_24px"
+            android:id="@+id/meetupDetail_imageButtonEditName"
+            android:background="?android:selectableItemBackground"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"/>
+
 
     </RelativeLayout>
 
@@ -106,6 +116,16 @@
             android:id="@+id/meetupDetail_textEditDescription"
             android:layout_alignParentEnd="true"
             android:textColor="@color/tw__solid_white"/>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_mode_edit_white_24px"
+            android:id="@+id/meetupDetail_imageButtonEditDescription"
+            android:background="?android:selectableItemBackground"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"/>
+
     </RelativeLayout>
 
     <RelativeLayout
@@ -128,5 +148,5 @@
             style="@style/Widget.AppCompat.Button.Colored"
             android:onClick="attend"/>
     </RelativeLayout>
-  
+
 </RelativeLayout>

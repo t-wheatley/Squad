@@ -184,13 +184,9 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
     {
         if (firebaseUser != null)
         {
-            // User is signed in
-            // Creating a User object and setting its Bio
-            FBUser user = new FBUser();
-            user.setBio(bio);
+            // Pushing the new bio to the bio field of the User's data
+            mDatabase.child(firebaseUser.getUid()).child("bio").setValue(bio);
 
-            // Pushing the Bio to the "users" node using the FirebaseUser's Uid
-            mDatabase.child(firebaseUser.getUid()).setValue(user);
         } else
         {
             // No user is signed in
