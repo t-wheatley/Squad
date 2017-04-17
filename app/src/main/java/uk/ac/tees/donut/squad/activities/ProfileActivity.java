@@ -36,6 +36,7 @@ import uk.ac.tees.donut.squad.users.User;
 public class ProfileActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener
 {
     FirebaseAuth mAuth;
+    FirebaseUser firebaseUser;
     GoogleApiClient mGoogleApiClient;
     DatabaseReference mDatabase;
 
@@ -73,6 +74,9 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
         // Getting the reference for the Firebase Realtime Database
         mDatabase = FirebaseDatabase.getInstance().getReference("users");
 
+        // Getting the current user
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
         // Getting ui elements
         ImageView profileImage = (ImageView)findViewById(R.id.profileImage_ImageView);
 
@@ -97,7 +101,7 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
             }
         });
 
-        editBioBtn = (ImageButton) findViewById(R.id.imageButtonEdit);
+        editBioBtn = (ImageButton) findViewById(R.id.profile_imageButtonProfileBioEdit);
         editBioBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -178,7 +182,6 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
 
     public void updateBio(String bio)
     {
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser != null)
         {
             // User is signed in
@@ -197,7 +200,6 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
 
     public void loadBio()
     {
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser != null)
         {
             // User is signed in
@@ -206,11 +208,18 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot)
                 {
-                    // Gets the data from Firebase and stores it in a FBUser class
-                    FBUser user = dataSnapshot.getValue(FBUser.class);
+                    // If user has created a bio
+                    if(dataSnapshot.hasChild("bio"))
+                    {
+                        // Gets the data from Firebase and stores it in a FBUser class
+                        FBUser user = dataSnapshot.getValue(FBUser.class);
 
-                    // Displays the found meetup's attributes
-                    bio.setText(user.getBio());
+                        // Displays the found meetup's attributes
+                        bio.setText(user.getBio());
+                    } else
+                    {
+                        bio.setText("Write something about yourself!");
+                    }
                 }
 
                 @Override
