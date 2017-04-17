@@ -81,7 +81,7 @@ public class MeetupsAdapter extends RecyclerView.Adapter<MeetupsAdapter.ViewHold
         squadText.setText(meetup.getInterest());
 
         TextView description = viewHolder.description;
-        description.setText(meetup.getShortDescription());
+        description.setText(meetup.getDescription().substring(0, 15) + "...");
     }
 
     //returns the total count of items in the list
