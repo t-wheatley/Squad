@@ -12,6 +12,16 @@
     tools:context="uk.ac.tees.donut.squad.activities.ViewMeetups"
     android:background="@color/cardview_dark_background">
 
+    <ProgressBar
+        android:id="@+id/viewMeetups_progressBar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerInParent = "true"
+        android:visibility="gone">
+    </ProgressBar>
+
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

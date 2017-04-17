@@ -1,12 +1,15 @@
 package uk.ac.tees.donut.squad.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -28,7 +31,10 @@ public class ViewMeetups extends AppCompatActivity
 {
 
     boolean attending = false;
-    private Spinner spinnerInterest;
+    Spinner spinnerInterest;
+    ProgressBar progressBar;
+    int count;
+
     RecyclerView recycler;
     DatabaseReference mDatabase;
     FirebaseRecyclerAdapter mAdapter;
@@ -49,13 +55,15 @@ public class ViewMeetups extends AppCompatActivity
 
         // Getting the reference for the Firebase Realtime Database
         mDatabase = FirebaseDatabase.getInstance().getReference("meetups");
+
+        // Progress Bar
+        progressBar = (ProgressBar) this.findViewById(R.id.viewMeetups_progressBar);
+        progressBar.setVisibility(View.VISIBLE);
+
         // Defining RecyclerView
         recycler = (RecyclerView) findViewById(R.id.viewMeetups_recyclerView);
         recycler.setHasFixedSize(true);
         recycler.setLayoutManager(new LinearLayoutManager(this));
-
-        // Notification for user
-        Toast.makeText(this, "Loading meetups...", Toast.LENGTH_SHORT).show();
 
         if(attending)   //if came from 'Attending Meetups' button on profile...
             getAttending();
@@ -68,6 +76,9 @@ public class ViewMeetups extends AppCompatActivity
 
     public void getAll()
     {
+        // Count for hiding the progress bar
+        count = 1;
+
         // Firebase RecyclerView adapter, finds all meetups and displays them in a RecyclerView
         mAdapter = new FirebaseRecyclerAdapter<Meetup, MeetupHolder>(Meetup.class, android.R.layout.two_line_list_item, MeetupHolder.class, mDatabase)
         {
@@ -92,12 +103,26 @@ public class ViewMeetups extends AppCompatActivity
                         startActivity(detail);
                     }
                 });
+
+                // If loading the last item
+                if (mAdapter.getItemCount() == count)
+                {
+                    // Hide the progress bar
+                    progressBar.setVisibility(View.GONE);
+                }
+
+                count++;
             }
+
+
         };
     }
 
     public void getAttending()
     {
+        // Count for hiding the progress bar
+        count = 1;
+
         // Firebase RecyclerView adapter, finds all meetups and displays them in a RecyclerView
         mAdapter = new FirebaseRecyclerAdapter<Meetup, MeetupHolder>(Meetup.class, android.R.layout.two_line_list_item, MeetupHolder.class, mDatabase)
         {
@@ -126,6 +151,15 @@ public class ViewMeetups extends AppCompatActivity
                         }
                     });
                 }
+
+                // If loading the last item
+                if (mAdapter.getItemCount() == count)
+                {
+                    // Hide the progress bar
+                    progressBar.setVisibility(View.GONE);
+                }
+
+                count++;
             }
         };
     }
