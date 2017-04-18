@@ -82,13 +82,26 @@
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"/>
+
+        <Button
+            android:text="New Place"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/newPlace"
+            android:onClick="openNewPlace"
+            android:layout_below="@+id/hostBtn"
+            android:layout_centerHorizontal="true"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"/>
+
         <Button
             android:text="Location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/locationTest"
             android:onClick="openLocation"
-            android:layout_below="@+id/hostBtn"
+            android:layout_below="@+id/newPlace"
             android:layout_centerHorizontal="true"
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_alignParentLeft="true"
