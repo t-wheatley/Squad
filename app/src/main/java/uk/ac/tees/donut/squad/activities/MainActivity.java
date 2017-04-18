@@ -1,19 +1,11 @@
 package uk.ac.tees.donut.squad.activities;
 
 import android.content.Intent;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 
 import uk.ac.tees.donut.squad.R;
-import uk.ac.tees.donut.squad.activities.fragments.FragmentsAdapter;
 import uk.ac.tees.donut.squad.location.LocationActivity;
 import uk.ac.tees.donut.squad.location.MapActivity;
 import uk.ac.tees.donut.squad.users.User;
@@ -28,12 +20,22 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if(firstStart) {
+        if(firstStart)
+        {
             user = new User("Default User");
             firstStart = false;
 
             User.addMeetup("-Kg3OkIfWwS8YXCi6vF4");
         }
+
+        if (getIntent().getBooleanExtra("EXIT", false))
+        {
+            Intent intent = new Intent(this, SplashScreen.class);
+            finish();
+
+            startActivity(intent);
+        }
+
 
     }
 
