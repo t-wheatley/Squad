@@ -21,6 +21,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.JsonObject;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -126,12 +130,10 @@ public class NewPlaceActivity extends AppCompatActivity {
         }
     }
 
-    private void submitPlace()
-    {
+    private void submitPlace(){
         // Gets the strings from the editTexts
         final String name = editName.getText().toString();
-        //final String interest = spinnerInterest.getSelectedItem().toString();
-        final String interest = "Programming";
+        final String interest = spinnerInterest.getSelectedItem().toString();
         final String description = editDescription.getText().toString();
 
         final String a1 = editA1.getText().toString();
@@ -169,8 +171,7 @@ public class NewPlaceActivity extends AppCompatActivity {
     }
 
     // Takes a meetup and pushes it to the Firebase Realtime Database (Without extras)
-    public void createPlace(String n, String i, String d, String a1, String a2, String tc, String c, String pc)
-    {
+    public void createPlace(String n, String i, String d, String a1, String a2, String tc, String c, String pc){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             // User is signed in
