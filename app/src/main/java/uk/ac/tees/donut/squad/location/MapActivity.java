@@ -106,7 +106,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         // Add a marker at home
         LatLng Home = new LatLng(54.6993131, -1.5103871);
         destination = Home;
-        mMap.addMarker(new MarkerOptions().position(Home).title("My house"));
+        mMap.addMarker(new MarkerOptions().position(Home).snippet("I live here").title("My house"));
 
 
 
