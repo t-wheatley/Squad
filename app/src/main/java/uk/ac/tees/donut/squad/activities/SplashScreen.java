@@ -1,11 +1,14 @@
 package uk.ac.tees.donut.squad.activities;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -21,6 +24,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 import uk.ac.tees.donut.squad.R;
 
@@ -37,6 +41,10 @@ public class SplashScreen extends AppCompatActivity implements
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private GoogleSignInAccount googleSignInAccount;
+
+    RelativeLayout loadingOverlay;
+    TextView loadingText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -46,6 +54,10 @@ public class SplashScreen extends AppCompatActivity implements
 
         mAuth = FirebaseAuth.getInstance();
 
+        // Initialising loading overlay
+        loadingOverlay = (RelativeLayout) this.findViewById(R.id.loading_overlay);
+        loadingText = (TextView) this.findViewById(R.id.loading_overlay_text);
+        loadingText.setText("Logging in...");
 
         findViewById(R.id.sign_in_button).setOnClickListener(this);
 
@@ -63,15 +75,29 @@ public class SplashScreen extends AppCompatActivity implements
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
+        // AuthListener used to check if the user has previously signed in
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    // User is signed in
+                    loadingOverlay.setVisibility(View.VISIBLE);
+
+                    // Try to update details
+                    if (googleSignInAccount != null)
+                    {
+                        updateDetails(user);
+                    }
+                    // Hiding loading overlay
+                    loadingOverlay.setVisibility(View.GONE);
+
+                    // User is signed in, load MainActivity
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    Intent i = new Intent(SplashScreen.this, MainActivity.class);
+                    startActivity(i);
+                    finish();
                 } else {
-                    // User is signed out
+                    // User is not signed in, nothing
                     Log.d(TAG, "onAuthStateChanged:signed_out");
                 }
                 // ...
@@ -112,31 +138,30 @@ public class SplashScreen extends AppCompatActivity implements
     private void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
-
     }
-
-    private void signOut() {
-        FirebaseAuth.getInstance().signOut();
-    }
-
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        // Display loading overlay
+        loadingOverlay.setVisibility(View.VISIBLE);
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
                 // Google Sign In was successful, authenticate with Firebase
-                GoogleSignInAccount account = result.getSignInAccount();
-                firebaseAuthWithGoogle(account);
+                googleSignInAccount = result.getSignInAccount();
+                firebaseAuthWithGoogle(googleSignInAccount);
                 handleSignInResult(result);
             } else {
                 // Google Sign In failed, update UI appropriately
                 Toast.makeText(SplashScreen.this, "Google Sign-In failed.",
                         Toast.LENGTH_SHORT).show();
+
+                // Hiding loading overlay
+                loadingOverlay.setVisibility(View.GONE);
             }
         }
     }
@@ -159,6 +184,9 @@ public class SplashScreen extends AppCompatActivity implements
                             Log.w(TAG, "signInWithCredential", task.getException());
                             Toast.makeText(SplashScreen.this, "Firebase Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
+
+                            // Hiding loading overlay
+                            loadingOverlay.setVisibility(View.GONE);
                         }
                         // ...
                     }
@@ -168,16 +196,27 @@ public class SplashScreen extends AppCompatActivity implements
     private void handleSignInResult(GoogleSignInResult result) {
         Log.d(TAG, "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
-            // Signed in successfully, show authenticated UI.
-            GoogleSignInAccount acct = result.getSignInAccount();
-            Intent i = new Intent(SplashScreen.this, MainActivity.class);
-            finish();;
-            startActivity(i);
+            // Signed in successfully, update profile info, show authenticated UI.
+            Log.d(TAG, "GoogleSignInResult successful");
         } else {
+            Log.d(TAG, "GoogleSignInResult not successful");
 
+            Toast.makeText(SplashScreen.this, "GoogleSignInResult failed.",
+                    Toast.LENGTH_SHORT).show();
+
+            // Hiding loading overlay
+            loadingOverlay.setVisibility(View.GONE);
         }
     }
 
+    private void updateDetails(FirebaseUser fUser)
+    {
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                .setDisplayName(googleSignInAccount.getDisplayName())
+                .setPhotoUri(googleSignInAccount.getPhotoUrl())
+                .build();
 
+        fUser.updateProfile(profileUpdates);
+    }
 
 }

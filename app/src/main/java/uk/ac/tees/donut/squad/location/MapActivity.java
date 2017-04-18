@@ -76,6 +76,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mapFrag.getMapAsync(this);
     }
 
+    public void setDestination(double lat, double lng){
+        destination = new LatLng(lat, lng);
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap=googleMap;
@@ -117,11 +121,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     public void requestDirection(){
-       GoogleDirection.withServerKey(directionAPIKey)
-               .from(currentLocation)
-               .to(destination)
-               .transportMode(TransportMode.DRIVING)
-               .execute(this);
+        if (currentLocation == null || destination == null){
+            Toast.makeText(this, "Invalid Destination", Toast.LENGTH_LONG).show();
+        }
+        else {
+            GoogleDirection.withServerKey(directionAPIKey)
+                    .from(currentLocation)
+                    .to(destination)
+                    .transportMode(TransportMode.DRIVING)
+                    .execute(this);
+        }
     }
 
     @Override

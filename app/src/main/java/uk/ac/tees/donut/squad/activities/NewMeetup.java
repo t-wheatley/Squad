@@ -40,7 +40,6 @@ public class NewMeetup extends AppCompatActivity
     private EditText editName;
     private Spinner spinnerInterest;
     private EditText editDescription;
-    private EditText  editAddress;
     private Button btnSubmit;
 
     @Override

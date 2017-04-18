@@ -31,10 +31,11 @@ public class GeocoderActivity extends AppCompatActivity {
     ProgressBar progressBar;
     TextView infoText;
     CheckBox checkBox;
+    MapActivity m =new MapActivity();
 
     boolean fetchAddress;
     int fetchType = LocContants.USE_ADDRESS_LOCATION;
-    private static final String TAG = "LOCATION_ACTIVITY";
+    private static final String TAG = "GEOCODER";
 
 
     @Override
@@ -127,6 +128,7 @@ public class GeocoderActivity extends AppCompatActivity {
                         infoText.setText("Latitude: " + address.getLatitude() + "\n" +
                                 "Longitude: " + address.getLongitude() + "\n" +
                                 "Address: " + resultData.getString(LocContants.RESULT_DATA_KEY));
+
                     }
                 });
             }
