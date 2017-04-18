@@ -78,8 +78,9 @@ public class ViewMeetups extends AppCompatActivity
         else
         {
             getAll();
-            loadingText.setText("Loading Meetups...");
+
         }
+
 
         // Display the adapter in the RecyclerView
         recycler.setAdapter(mAdapter);
