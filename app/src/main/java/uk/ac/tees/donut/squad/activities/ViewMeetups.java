@@ -1,13 +1,18 @@
 package uk.ac.tees.donut.squad.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -26,12 +31,17 @@ import uk.ac.tees.donut.squad.users.User;
 
 public class ViewMeetups extends AppCompatActivity
 {
-
-    boolean attending = false;
-    private Spinner spinnerInterest;
     RecyclerView recycler;
     DatabaseReference mDatabase;
     FirebaseRecyclerAdapter mAdapter;
+
+    RelativeLayout loadingOverlay;
+    TextView loadingText;
+
+    boolean attending = false;
+    Spinner spinnerInterest;
+    ProgressBar progressBar;
+    int count;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -49,18 +59,28 @@ public class ViewMeetups extends AppCompatActivity
 
         // Getting the reference for the Firebase Realtime Database
         mDatabase = FirebaseDatabase.getInstance().getReference("meetups");
+
         // Defining RecyclerView
         recycler = (RecyclerView) findViewById(R.id.viewMeetups_recyclerView);
         recycler.setHasFixedSize(true);
         recycler.setLayoutManager(new LinearLayoutManager(this));
 
-        // Notification for user
-        Toast.makeText(this, "Loading meetups...", Toast.LENGTH_SHORT).show();
+        // Load meetups and display loading overlay
+        loadingOverlay = (RelativeLayout) this.findViewById(R.id.loading_overlay);
+        loadingText = (TextView) this.findViewById(R.id.loading_overlay_text);
+        loadingOverlay.setVisibility(View.VISIBLE);
 
         if(attending)   //if came from 'Attending Meetups' button on profile...
+        {
             getAttending();
+            loadingText.setText("Loading your Meetups...");
+        }
         else
+        {
             getAll();
+
+        }
+
 
         // Display the adapter in the RecyclerView
         recycler.setAdapter(mAdapter);
@@ -68,6 +88,9 @@ public class ViewMeetups extends AppCompatActivity
 
     public void getAll()
     {
+        // Count for hiding the progress bar
+        count = 1;
+
         // Firebase RecyclerView adapter, finds all meetups and displays them in a RecyclerView
         mAdapter = new FirebaseRecyclerAdapter<Meetup, MeetupHolder>(Meetup.class, android.R.layout.two_line_list_item, MeetupHolder.class, mDatabase)
         {
@@ -92,12 +115,26 @@ public class ViewMeetups extends AppCompatActivity
                         startActivity(detail);
                     }
                 });
+
+                // If loading the last item
+                if (mAdapter.getItemCount() == count)
+                {
+                    // Hide the loading overlay
+                    loadingOverlay.setVisibility(View.GONE);
+                }
+
+                count++;
             }
+
+
         };
     }
 
     public void getAttending()
     {
+        // Count for hiding the progress bar
+        count = 1;
+
         // Firebase RecyclerView adapter, finds all meetups and displays them in a RecyclerView
         mAdapter = new FirebaseRecyclerAdapter<Meetup, MeetupHolder>(Meetup.class, android.R.layout.two_line_list_item, MeetupHolder.class, mDatabase)
         {
@@ -126,6 +163,15 @@ public class ViewMeetups extends AppCompatActivity
                         }
                     });
                 }
+
+                // If loading the last item
+                if (mAdapter.getItemCount() == count)
+                {
+                    // Hide the loading overlay
+                    loadingOverlay.setVisibility(View.GONE);
+                }
+
+                count++;
             }
         };
     }
