@@ -59,4 +59,8 @@
         android:layout_below="@+id/titleLayout"
         android:layout_centerHorizontal="true" />
 
+
+    <!-- Loading overlay; -->
+    <include layout="@layout/loading_overlay"/>
+
 </RelativeLayout>

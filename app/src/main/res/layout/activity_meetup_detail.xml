@@ -1,132 +1,160 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_meetup_detail"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="uk.ac.tees.donut.squad.activities.MeetupDetail"
     android:background="@color/cardview_dark_background">
 
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/picture"
-        android:background="@color/colorPrimary"
-        android:layout_marginRight="10dp"
-        android:padding="10dp"
-        >
-
-        <ImageView
-            android:layout_width="90dp"
-            android:layout_height="90dp" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="110dp"
-        android:background="@color/colorPrimary"
-        android:id="@+id/detailsLayout"
-        android:layout_toRightOf="@+id/picture"
-        android:padding="5dp">
-        <TextView
-            android:text="Name:"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true"
-            android:id="@+id/meetupDetail_textViewName"
-            style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:ems="10"
-            android:layout_below="@+id/meetupDetail_textViewName"
-            android:layout_alignParentStart="true"
-            android:id="@+id/meetupDetail_textEditName"
-            android:layout_alignParentEnd="true"
-            android:textColor="@color/tw__solid_white"/>
-
-        <TextView
-            android:text="Interest:"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/meetupDetail_textEditName"
-            android:layout_alignParentStart="true"
-            android:id="@+id/meetupDetail_textViewInterest"
-            style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:ems="10"
-            android:layout_below="@+id/meetupDetail_textViewInterest"
-            android:layout_alignParentStart="true"
-            android:id="@+id/meetupDetail_textEditInterest"
-            android:layout_alignParentEnd="true"
-            android:textColor="@color/tw__solid_white"/>
-
-
-    </RelativeLayout>
-
-    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/detailsLayout"
-        android:background="@color/colorPrimary"
-        android:padding="5dp"
-        android:layout_marginTop="10dp"
-        android:id="@+id/descriptionLayout"
-        >
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
 
-        <TextView
-            android:text="Description:"
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:id="@+id/meetupDetail_textViewDescription"
-            style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
+            android:id="@+id/picture"
+            android:background="@color/colorPrimary"
+            android:layout_marginRight="10dp"
+            android:padding="10dp"
+            >
 
-        <TextView
+            <ImageView
+                android:layout_width="90dp"
+                android:layout_height="90dp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
             android:layout_width="wrap_content"
+            android:layout_height="110dp"
+            android:background="@color/colorPrimary"
+            android:id="@+id/detailsLayout"
+            android:layout_toRightOf="@+id/picture"
+            android:padding="5dp">
+            <TextView
+                android:text="Name:"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:id="@+id/meetupDetail_textViewName"
+                style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:ems="10"
+                android:layout_below="@+id/meetupDetail_textViewName"
+                android:layout_alignParentStart="true"
+                android:id="@+id/meetupDetail_textEditName"
+                android:layout_alignParentEnd="true"
+                android:textColor="@color/tw__solid_white"/>
+
+            <TextView
+                android:text="Interest:"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/meetupDetail_textEditName"
+                android:layout_alignParentStart="true"
+                android:id="@+id/meetupDetail_textViewInterest"
+                style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:ems="10"
+                android:layout_below="@+id/meetupDetail_textViewInterest"
+                android:layout_alignParentStart="true"
+                android:id="@+id/meetupDetail_textEditInterest"
+                android:layout_alignParentEnd="true"
+                android:textColor="@color/tw__solid_white"/>
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_mode_edit_white_24px"
+                android:id="@+id/meetupDetail_imageButtonEditName"
+                android:background="?android:selectableItemBackground"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"/>
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textMultiLine"
-            android:ems="10"
-            android:layout_below="@+id/meetupDetail_textViewDescription"
-            android:layout_alignParentStart="true"
-            android:id="@+id/meetupDetail_textEditDescription"
-            android:layout_alignParentEnd="true"
-            android:textColor="@color/tw__solid_white"/>
+            android:layout_below="@+id/detailsLayout"
+            android:background="@color/colorPrimary"
+            android:padding="5dp"
+            android:layout_marginTop="10dp"
+            android:id="@+id/descriptionLayout"
+            >
+
+            <TextView
+                android:text="Description:"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:id="@+id/meetupDetail_textViewDescription"
+                style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:ems="10"
+                android:layout_below="@+id/meetupDetail_textViewDescription"
+                android:layout_alignParentStart="true"
+                android:id="@+id/meetupDetail_textEditDescription"
+                android:layout_alignParentEnd="true"
+                android:textColor="@color/tw__solid_white"/>
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_mode_edit_white_24px"
+                android:id="@+id/meetupDetail_imageButtonEditDescription"
+                android:background="?android:selectableItemBackground"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="200dp"
+            android:layout_centerHorizontal="true"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/descriptionLayout"
+            android:id="@+id/buttonLayout"
+            android:background="@color/colorPrimary"
+            android:padding="5dp"
+            android:layout_marginTop="10dp">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:text="Attend Meetup"
+                android:id="@+id/attendBtn"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:onClick="attend"/>
+        </RelativeLayout>
     </RelativeLayout>
 
-    <RelativeLayout
-        android:layout_width="200dp"
-        android:layout_centerHorizontal="true"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/descriptionLayout"
-        android:id="@+id/buttonLayout"
-        android:background="@color/colorPrimary"
-        android:padding="5dp"
-        android:layout_marginTop="10dp">
+    <!-- Loading overlay; -->
+    <include layout="@layout/loading_overlay"/>
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:text="Attend Meetup"
-            android:id="@+id/attendBtn"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:onClick="attend"/>
-    </RelativeLayout>
-  
 </RelativeLayout>
