@@ -26,7 +26,9 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/container_scroll_view">
+        android:id="@+id/container_scroll_view"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
 
         <GridLayout
             android:id="@+id/container"
@@ -37,37 +39,17 @@
 
             <ImageButton
                 android:layout_width="wrap_content"
-                android:layout_height="150dp"
+                android:layout_height="164dp"
                 android:layout_columnWeight="1"
                 android:id="@+id/videoGamesBtn" />
 
             <ImageButton
                 android:layout_width="wrap_content"
-                android:layout_height="150dp"
+                android:layout_height="164dp"
                 android:layout_columnWeight="1"
                 />
 
         </GridLayout>
 
     </ScrollView>
-
-    <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="248dp"
-        android:id="@+id/textviewAS" />
-
-    <Button
-        android:text="Button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/textviewAS"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="247dp"
-        android:onClick=""
-        android:id="@+id/button2" />
 </RelativeLayout>
