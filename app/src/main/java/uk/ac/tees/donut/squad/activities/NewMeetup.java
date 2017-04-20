@@ -1,6 +1,7 @@
 package uk.ac.tees.donut.squad.activities;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -29,6 +30,7 @@ import java.util.List;
 
 import uk.ac.tees.donut.squad.R;
 import uk.ac.tees.donut.squad.posts.Meetup;
+import uk.ac.tees.donut.squad.squads.Interest;
 
 public class NewMeetup extends AppCompatActivity
 {
@@ -159,9 +161,9 @@ public class NewMeetup extends AppCompatActivity
     public void createMeetup(String n, String i, String d)
     {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
+        if (user != null)
+        {
             // User is signed in
-
             // Creating a new meetup node and getting the key value
             String meetupId = mDatabase.child("meetups").push().getKey();
 
@@ -170,9 +172,16 @@ public class NewMeetup extends AppCompatActivity
 
             // Pushing the meetup to the "meetups" node using the meetupId
             mDatabase.child("meetups").child(meetupId).setValue(meetup);
-        } else {
-            // No user is signed in
 
+            // Send user to their meetup on the MeetupDetail activity
+            Intent intent = new Intent(NewMeetup.this, MeetupDetail.class);
+            intent.putExtra("meetupId", meetupId);
+            startActivity(intent);
+            finish();
+
+        } else
+        {
+            // No user is signed in
             Toast.makeText(this, "Something went wrong, please try again.", Toast.LENGTH_SHORT).show();
         }
 
