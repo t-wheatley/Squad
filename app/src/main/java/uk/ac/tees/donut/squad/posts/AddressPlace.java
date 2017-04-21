@@ -49,7 +49,7 @@ public class AddressPlace extends Place
         return postCode;
     }
 
-    public String fullAddress() {
+    public String FullAddress() {
         String a = "";
         if (address1 != null)
             a = a + address1;
