@@ -73,11 +73,23 @@
             android:layout_below="@+id/textDescription"
             android:id="@+id/textEditDescription"/>
 
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/descriptionLayout"
+        android:id="@+id/addressLayout"
+        android:background="@color/colorPrimary"
+        android:padding="5dp"
+        android:layout_marginTop="10dp"
+        >
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Address:"
-            android:layout_below="@+id/textEditDescription"
             android:id="@+id/textAddress"
             style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
 
@@ -88,7 +100,7 @@
             android:id="@+id/textEditAddress1"
             android:layout_below="@+id/textAddress"
             android:layout_alignParentStart="true"
-            android:text="Address Line 1" />
+            android:hint="Address Line 1" />
 
         <EditText
             android:layout_width="match_parent"
@@ -97,7 +109,7 @@
             android:id="@+id/textEditAddress2"
             android:layout_below="@+id/textEditAddress1"
             android:layout_alignParentStart="true"
-            android:text="Address Line 2" />
+            android:hint="Address Line 2" />
 
         <EditText
             android:layout_width="match_parent"
@@ -106,7 +118,7 @@
             android:id="@+id/textEditAddressTC"
             android:layout_below="@+id/textEditAddress2"
             android:layout_alignParentStart="true"
-            android:text="Town/City" />
+            android:hint="Town/City" />
 
         <EditText
             android:layout_width="match_parent"
@@ -115,7 +127,7 @@
             android:id="@+id/textEditAddressCounty"
             android:layout_below="@+id/textEditAddressTC"
             android:layout_alignParentStart="true"
-            android:text="County" />
+            android:hint="County" />
 
         <EditText
             android:layout_width="match_parent"
@@ -124,7 +136,7 @@
             android:id="@+id/textEditAddressPC"
             android:layout_below="@+id/textEditAddressCounty"
             android:layout_alignParentStart="true"
-            android:text="Postcode" />
+            android:hint="Postcode" />
 
     </RelativeLayout>
 
@@ -132,7 +144,7 @@
         android:layout_marginTop="10dp"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/descriptionLayout"
+        android:layout_below="@+id/addressLayout"
         android:layout_centerHorizontal="true"
         android:background="@color/colorPrimary"
         android:padding="5dp">

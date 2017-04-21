@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import uk.ac.tees.donut.squad.R;
+import uk.ac.tees.donut.squad.posts.AddressPlace;
 import uk.ac.tees.donut.squad.posts.Meetup;
 import uk.ac.tees.donut.squad.posts.Place;
 
@@ -180,7 +181,7 @@ public class NewPlaceActivity extends AppCompatActivity {
             String placeId = mDatabase.child("places").push().getKey();
 
             // Creating a place object
-            Place place = new Place(placeId, n, i, d, a1, a2, tc, c, pc, user.getUid());
+            Place place = new AddressPlace(placeId, n, i, d, user.getUid(), a1, a2, tc, c, pc);
 
             // Pushing the meetup to the "meetups" node using the placeId
             mDatabase.child("places").child(placeId).setValue(place);
