@@ -79,7 +79,7 @@ public class NewMeetup extends AppCompatActivity
 
         //Creating new result reciever and setting the fetch type for Geocoder
         mResultReceiver = new AddressResultReceiver(null);
-        fetchType = LocContants.USE_ADDRESS_LOCATION;
+        fetchType = LocContants.USE_ADDRESS_NAME;
 
         // Links the variables to their layout items.
 
