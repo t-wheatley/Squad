@@ -46,6 +46,7 @@ public class MeetupDetail extends AppCompatActivity
     ImageButton editName;
     ImageButton editDesc;
     Button attendBtn;
+    Button deleteBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -59,10 +60,23 @@ public class MeetupDetail extends AppCompatActivity
         loadingText.setText("Loading Meetup...");
         loadingOverlay.setVisibility(View.VISIBLE);
 
-        // Declaring editTexts
+        // Declaring everything
         nameDisplay = (TextView) findViewById(R.id.meetupDetail_textEditName);
         interestDisplay = (TextView) findViewById(R.id.meetupDetail_textEditInterest);
         descriptionDisplay = (TextView) findViewById(R.id.meetupDetail_textEditDescription);
+        attendBtn = (Button) findViewById(R.id.meetupDetail_attendBtn);
+        deleteBtn = (Button) findViewById(R.id.meetupDetail_deleteBtn);
+        editName = (ImageButton) findViewById(R.id.meetupDetail_imageButtonEditName);
+        editDesc = (ImageButton) findViewById(R.id.meetupDetail_imageButtonEditDescription);
+
+        // Disabling the edit ImageButtons and delete Button
+        editName.setEnabled(false);
+        editName.setVisibility(View.GONE);
+        editDesc.setEnabled(false);
+        editDesc.setVisibility(View.GONE);
+        deleteBtn.setEnabled(false);
+        deleteBtn.setVisibility(View.GONE);
+
 
         // Disabling the editTexts
         nameDisplay.setEnabled(false);
@@ -95,20 +109,9 @@ public class MeetupDetail extends AppCompatActivity
                     .show();
         }
 
-        // Getting attend Button
-        attendBtn = (Button) findViewById(R.id.attendBtn);
 
         if(User.myMeetupsContains(meetupId))
             attendBtn.setText("Unattend Meetup");
-
-        // Disabling the edit ImageButtons
-        editName = (ImageButton) findViewById(R.id.meetupDetail_imageButtonEditName);
-        editName.setEnabled(false);
-        editName.setVisibility(View.GONE);
-
-        editDesc = (ImageButton) findViewById(R.id.meetupDetail_imageButtonEditDescription);
-        editDesc.setEnabled(false);
-        editDesc.setVisibility(View.GONE);
             
         // Getting the reference for the Firebase Realtime Database
         mDatabase = FirebaseDatabase.getInstance().getReference("meetups");
@@ -154,7 +157,7 @@ public class MeetupDetail extends AppCompatActivity
         });
     }
 
-    public void attend(View view)
+    public void attendMeetup(View view)
     {
         if(User.myMeetupsContains(meetupId))
         {
@@ -166,6 +169,26 @@ public class MeetupDetail extends AppCompatActivity
             User.addMeetup(meetupId);
             attendBtn.setText("Unattend Button");
         }
+    }
+
+    public void deleteMeetup()
+    {
+        new AlertDialog.Builder(this)
+                .setTitle("Delete Meetup")
+                .setMessage("Are you sure you want to delete this Meetup?" +
+                        "\nYou will not be able to get it back!")
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        mDatabase.child(meetupId).removeValue();
+                        finish();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Do nothing
+                    }
+                })
+                .show();
     }
 
     public void editMode()
@@ -191,6 +214,15 @@ public class MeetupDetail extends AppCompatActivity
             }
         });
 
+        deleteBtn.setEnabled(true);
+        deleteBtn.setVisibility(View.VISIBLE);
+        deleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Load Dialog to confirm deletion of Meetup
+                deleteMeetup();
+            }
+        });
     }
 
     public void editDesc()

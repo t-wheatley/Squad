@@ -5,13 +5,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.FirebaseDatabase;
-
 import uk.ac.tees.donut.squad.R;
 import uk.ac.tees.donut.squad.location.LocationActivity;
 import uk.ac.tees.donut.squad.location.MapActivity;
-import uk.ac.tees.donut.squad.squads.Interest;
 import uk.ac.tees.donut.squad.users.User;
 
 public class MainActivity extends AppCompatActivity {
@@ -39,9 +35,6 @@ public class MainActivity extends AppCompatActivity {
 
             startActivity(intent);
         }
-
-        Interest VideoGames = new Interest("id", "Video Games");
-
 
     }
 

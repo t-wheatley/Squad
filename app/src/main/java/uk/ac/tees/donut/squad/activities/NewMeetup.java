@@ -1,6 +1,7 @@
 package uk.ac.tees.donut.squad.activities;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -11,7 +12,9 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,6 +30,7 @@ import java.util.List;
 
 import uk.ac.tees.donut.squad.R;
 import uk.ac.tees.donut.squad.posts.Meetup;
+import uk.ac.tees.donut.squad.squads.Interest;
 
 public class NewMeetup extends AppCompatActivity
 {
@@ -37,11 +41,13 @@ public class NewMeetup extends AppCompatActivity
 
     private DatabaseReference mDatabase;
 
+    RelativeLayout loadingOverlay;
+    TextView loadingText;
+
     private EditText editName;
     private Spinner spinnerInterest;
     private EditText editDescription;
     private Button btnSubmit;
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -67,6 +73,11 @@ public class NewMeetup extends AppCompatActivity
             }
         });
 
+        // Load interests and display loading overlay
+        loadingOverlay = (RelativeLayout) this.findViewById(R.id.loading_overlay);
+        loadingText = (TextView) this.findViewById(R.id.loading_overlay_text);
+        loadingText.setText("Loading...");
+        loadingOverlay.setVisibility(View.VISIBLE);
         fillSpinner();
 
         mAuth = FirebaseAuth.getInstance();
@@ -77,11 +88,9 @@ public class NewMeetup extends AppCompatActivity
                 if (user != null) {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                    Toast.makeText(NewMeetup.this, "User: " + user.getUid(), Toast.LENGTH_SHORT).show();
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
-                    Toast.makeText(NewMeetup.this, "No User", Toast.LENGTH_SHORT).show();
 
                     new AlertDialog.Builder(NewMeetup.this)
                             .setTitle("Sign-in Error")
@@ -152,9 +161,9 @@ public class NewMeetup extends AppCompatActivity
     public void createMeetup(String n, String i, String d)
     {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
+        if (user != null)
+        {
             // User is signed in
-
             // Creating a new meetup node and getting the key value
             String meetupId = mDatabase.child("meetups").push().getKey();
 
@@ -163,9 +172,16 @@ public class NewMeetup extends AppCompatActivity
 
             // Pushing the meetup to the "meetups" node using the meetupId
             mDatabase.child("meetups").child(meetupId).setValue(meetup);
-        } else {
-            // No user is signed in
 
+            // Send user to their meetup on the MeetupDetail activity
+            Intent intent = new Intent(NewMeetup.this, MeetupDetail.class);
+            intent.putExtra("meetupId", meetupId);
+            startActivity(intent);
+            finish();
+
+        } else
+        {
+            // No user is signed in
             Toast.makeText(this, "Something went wrong, please try again.", Toast.LENGTH_SHORT).show();
         }
 
@@ -193,17 +209,21 @@ public class NewMeetup extends AppCompatActivity
         mDatabase.child("interests").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Toast.makeText(NewMeetup.this, "Loading interests...", Toast.LENGTH_SHORT).show();
                 final List<String> interests = new ArrayList<String>();
 
+                // Get all the interests
                 for (DataSnapshot interestSnapshot: dataSnapshot.getChildren()) {
                     String interest = interestSnapshot.child("name").getValue(String.class);
                     interests.add(interest);
                 }
 
+                // Fill the spinner
                 ArrayAdapter<String> interestAdapter = new ArrayAdapter<String>(NewMeetup.this, android.R.layout.simple_spinner_item, interests);
                 interestAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinnerInterest.setAdapter(interestAdapter);
+
+                // Hide the loading overlay
+                loadingOverlay.setVisibility(View.GONE);
             }
 
             @Override
