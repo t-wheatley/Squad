@@ -1,15 +1,8 @@
 package uk.ac.tees.donut.squad.posts;
 
-import android.content.Intent;
-import android.location.Address;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.ResultReceiver;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import uk.ac.tees.donut.squad.location.FetchAddressIntentService;
-import uk.ac.tees.donut.squad.location.LocContants;
 
 
 /**
@@ -19,9 +12,6 @@ import uk.ac.tees.donut.squad.location.LocContants;
 public class Place
 {
     public String placeId;
-
-    protected AddressResultReceiver mResultReceiver;
-    protected int fetchType;
 
     public String name;
     public String interest;
@@ -257,33 +247,6 @@ public class Place
         //update the address using
     }
 
-    private void geocode(){
-        addressFull = address1 + " " + address2 + " " + townCity + " " + county + " " + postCode;
-        Intent intent = new Intent(this, FetchAddressIntentService.class);
-        intent.putExtra(LocContants.RECEIVER, mResultReceiver);
-        intent.putExtra(LocContants.FETCH_TYPE_EXTRA, fetchType);
-        if(fetchType == LocContants.USE_ADDRESS_NAME) {
-            if(addressFull.length() == 0) {
-                return;
-            }
-            intent.putExtra(LocContants.LOCATION_NAME_DATA_EXTRA, addressFull);
-        }
 
-        startService(intent);
-    }
 
-    //Inner Class to recieve address for Geocoder
-    public class AddressResultReceiver extends ResultReceiver {
-        public AddressResultReceiver(Handler handler) {
-            super(handler);
-        }
-
-        @Override
-        protected void onReceiveResult(int resultCode, final Bundle resultData) {
-            if (resultCode == LocContants.SUCCESS_RESULT) {
-                final Address address = resultData.getParcelable(LocContants.RESULT_ADDRESS);
-
-            }
-        }
-    }
 }
