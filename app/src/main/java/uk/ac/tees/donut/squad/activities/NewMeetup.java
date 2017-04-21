@@ -53,6 +53,7 @@ public class NewMeetup extends AppCompatActivity
     protected double latitude;
     protected double longitude;
     protected String addressFull;
+    String name, interest, description;
 
     RelativeLayout loadingOverlay;
     TextView loadingText;
@@ -79,7 +80,7 @@ public class NewMeetup extends AppCompatActivity
 
         //Creating new result reciever and setting the fetch type for Geocoder
         mResultReceiver = new AddressResultReceiver(null);
-        fetchType = LocContants.USE_ADDRESS_LOCATION;
+        fetchType = LocContants.USE_ADDRESS_NAME;
 
         // Links the variables to their layout items.
 
@@ -101,7 +102,6 @@ public class NewMeetup extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 // When pressed calls the submitMeeup and geocode methods
-                geocode();
                 submitMeetup();
             }
         });
@@ -156,6 +156,7 @@ public class NewMeetup extends AppCompatActivity
     }
 
     private void geocode(){
+        setEditingEnabled(true);
         addressFull = editAddress1.getText() +" " + editAddress2.getText() + " " + editAddressT.getText() + " " + editAddressC.getText() + " " +editAddressPC;
         Intent intent = new Intent(this, FetchAddressIntentService.class);
         intent.putExtra(LocContants.RECEIVER, mResultReceiver);
@@ -175,9 +176,9 @@ public class NewMeetup extends AppCompatActivity
     private void submitMeetup()
     {
         // Gets the strings from the editTexts
-        final String name = editName.getText().toString();
-        final String interest = spinnerInterest.getSelectedItem().toString();
-        final String description = editDescription.getText().toString();
+        name = editName.getText().toString();
+        interest = spinnerInterest.getSelectedItem().toString();
+        description = editDescription.getText().toString();
 
 
         // Checks if the name field is empty
@@ -196,14 +197,13 @@ public class NewMeetup extends AppCompatActivity
         }
 
         // Disable button so there are no multi-posts
-        setEditingEnabled(false);
+        //setEditingEnabled(false);
         Toast.makeText(this, "Posting...", Toast.LENGTH_SHORT).show();
 
-        // Calls the createMeetup method with the strings entered
-        createMeetup(name, interest, description);
+        geocode();
 
         // Re-enables the editTexts and buttons and finishes the activity
-        setEditingEnabled(true);
+        //setEditingEnabled(true);
         finish();
     }
 
@@ -218,7 +218,7 @@ public class NewMeetup extends AppCompatActivity
             String meetupId = mDatabase.child("meetups").push().getKey();
 
             // Creating a meetup object
-            Meetup meetup = new Meetup(meetupId, n, i, d, user.getUid());
+            Meetup meetup = new Meetup(meetupId, n, i, d, user.getUid(), longitude, latitude);
 
             // Pushing the meetup to the "meetups" node using the meetupId
             mDatabase.child("meetups").child(meetupId).setValue(meetup);
@@ -304,6 +304,9 @@ public class NewMeetup extends AppCompatActivity
 
                         latitude = address.getLatitude();
                         longitude = address.getLongitude();
+
+                        // Calls the createMeetup method with the strings entered
+                        createMeetup(name, interest, description);
 
                     }
                 });

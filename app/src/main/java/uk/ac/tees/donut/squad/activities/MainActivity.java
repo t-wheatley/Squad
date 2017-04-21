@@ -9,9 +9,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
 import uk.ac.tees.donut.squad.R;
+import uk.ac.tees.donut.squad.debug.SquadDebug;
 import uk.ac.tees.donut.squad.location.GeocoderActivity;
 import uk.ac.tees.donut.squad.location.MapActivity;
 import uk.ac.tees.donut.squad.squads.Interest;
+import uk.ac.tees.donut.squad.squads.Squad;
 import uk.ac.tees.donut.squad.users.User;
 
 public class MainActivity extends AppCompatActivity {
@@ -41,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        Interest VideoGames = new Interest("id", "Video Games");
 
     }
 
@@ -73,8 +74,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void openSettings(View view) {
-        Intent intent = new Intent(this, SettingsActivity.class);
-        startActivity(intent);
+        // Sends the id to the details activity
+        Intent detail = new Intent(MainActivity.this, SquadDetail.class);
+        detail.putExtra("squadId", "-KiFnWsuYt4D_Rx0UgLJ");
+        startActivity(detail);
+
+        //Intent intent = new Intent(this, SettingsActivity.class);
+        //startActivity(intent);
     }
 
     public void openLocation(View view) {

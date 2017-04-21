@@ -119,9 +119,6 @@ public class MeetupDetail extends AppCompatActivity
         // Loads the data for the Meetup from Firebase
         loadMeetup();
 
-
-
-
     }
 
     public void loadMeetup()

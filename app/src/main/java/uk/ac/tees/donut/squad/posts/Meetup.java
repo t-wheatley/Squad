@@ -16,7 +16,7 @@ public class Meetup
             user;
 
     // Temp location variables
-    String address, postCode;
+    Double longitude, latitude;
 
     public Meetup()
     {
@@ -41,14 +41,15 @@ public class Meetup
 
 
     // Constructor with temp location variables
-    public Meetup(String i, String n, String in, String d, String a, String p)
+    public Meetup(String i, String n, String in, String d, String u, Double longi, Double lat)
     {
         id = i;
         name = n;
         interest = in;
         description = d;
-        address = a;
-        postCode = p;
+        user = u;
+        longitude = longi;
+        latitude = lat;
     }
 
     // GETTERS
@@ -73,13 +74,12 @@ public class Meetup
         return user;
     }
     // Temp location getters
-    public String getAddress()
-    {
-        return address;
+    public Double getLongitude() {
+        return longitude;
     }
-    public String getPostCode()
-    {
-        return postCode;
+
+    public Double getLatitude() {
+        return latitude;
     }
 
     // SETTERS
@@ -104,12 +104,11 @@ public class Meetup
         user = u;
     }
     // Temp location setter
-    public void setAddress(String a)
-    {
-        address = a;
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
-    public void setPostCode(String p)
-    {
-        postCode = p;
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
     }
 }
