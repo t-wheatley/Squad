@@ -31,7 +31,7 @@ import uk.ac.tees.donut.squad.R;
  * Created by jlc-1 on 21/03/2017.
  */
 
-public class SplashScreen extends AppCompatActivity implements
+public class LoginActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener, View.OnClickListener
 {
     private GoogleApiClient mGoogleApiClient;
@@ -49,7 +49,7 @@ public class SplashScreen extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash_screen);
+        setContentView(R.layout.activity_login);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -92,7 +92,7 @@ public class SplashScreen extends AppCompatActivity implements
 
                     // User is signed in, load MenuActivity
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                    Intent i = new Intent(SplashScreen.this, MenuActivity.class);
+                    Intent i = new Intent(LoginActivity.this, MenuActivity.class);
                     startActivity(i);
                     finish();
                 } else {
@@ -156,7 +156,7 @@ public class SplashScreen extends AppCompatActivity implements
                 handleSignInResult(result);
             } else {
                 // Google Sign In failed, update UI appropriately
-                Toast.makeText(SplashScreen.this, "Google Sign-In failed.",
+                Toast.makeText(LoginActivity.this, "Google Sign-In failed.",
                         Toast.LENGTH_SHORT).show();
 
                 // Hiding loading overlay
@@ -181,7 +181,7 @@ public class SplashScreen extends AppCompatActivity implements
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
                             Log.w(TAG, "signInWithCredential", task.getException());
-                            Toast.makeText(SplashScreen.this, "Firebase Authentication failed.",
+                            Toast.makeText(LoginActivity.this, "Firebase Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
 
                             // Hiding loading overlay
@@ -200,7 +200,7 @@ public class SplashScreen extends AppCompatActivity implements
         } else {
             Log.d(TAG, "GoogleSignInResult not successful");
 
-            Toast.makeText(SplashScreen.this, "GoogleSignInResult failed.",
+            Toast.makeText(LoginActivity.this, "GoogleSignInResult failed.",
                     Toast.LENGTH_SHORT).show();
 
             // Hiding loading overlay

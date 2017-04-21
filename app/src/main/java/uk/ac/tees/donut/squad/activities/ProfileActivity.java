@@ -140,8 +140,8 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
         mAuth.signOut();
         Auth.GoogleSignInApi.signOut(mGoogleApiClient);
 
-        // Loads the SplashScreen activity and closes all other activites
-        Intent intent = new Intent(ProfileActivity.this, SplashScreen.class);
+        // Loads the LoginActivity activity and closes all other activites
+        Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                 | Intent.FLAG_ACTIVITY_CLEAR_TOP
                 | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);

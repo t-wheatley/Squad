@@ -30,7 +30,7 @@ public class MenuActivity extends AppCompatActivity {
 
         if (getIntent().getBooleanExtra("EXIT", false))
         {
-            Intent intent = new Intent(this, SplashScreen.class);
+            Intent intent = new Intent(this, LoginActivity.class);
             finish();
 
             startActivity(intent);
