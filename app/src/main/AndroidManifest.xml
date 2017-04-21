@@ -34,6 +34,7 @@
         <service
             android:name=".location.FetchAddressIntentService"
             android:exported="false" />
+
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -52,7 +53,7 @@
         <activity android:name=".activities.MeetupsListActivity" />
         <activity android:name=".activities.PlaceDetailsActivity" />
         <activity android:name=".activities.NewPlaceActivity" />
-        <activity android:name=".activities.SquadDetail"></activity>
+        <activity android:name=".activities.PlacesListActivity"/>
     </application>
 
 </manifest>

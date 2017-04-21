@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void openEvents(View view) {
-        Intent intent = new Intent(this, ViewMeetups.class);
+        Intent intent = new Intent(this, MeetupsListActivity.class);
         startActivity(intent);
     }
 
@@ -73,14 +73,10 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void openSettings(View view) {
-        // Sends the id to the details activity
-        Intent detail = new Intent(MainActivity.this, SquadDetail.class);
-        detail.putExtra("squadId", "-KiFnWsuYt4D_Rx0UgLJ");
-        startActivity(detail);
-
-        //Intent intent = new Intent(this, SettingsActivity.class);
-        //startActivity(intent);
+    public void openPlaces(View view)
+    {
+        Intent intent = new Intent(this, PlacesListActivity.class);
+        startActivity(intent);
     }
 
     public void openLocation(View view) {
@@ -94,4 +90,9 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    //USE THIS WHEN YOU NEED TO DEBUG OR TEST CERTAIN THINGS WITHOUT DESTROYING THE REST OF THE APP
+    public void openMystery(View view) {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+    }
 }
