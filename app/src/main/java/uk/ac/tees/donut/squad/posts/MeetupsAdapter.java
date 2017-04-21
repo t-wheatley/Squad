@@ -59,7 +59,7 @@ public class MeetupsAdapter extends RecyclerView.Adapter<MeetupsAdapter.ViewHold
         LayoutInflater inflater = LayoutInflater.from(context);
 
         //inflate the custom layout
-        View meetupView = inflater.inflate(R.layout.item_meetup, parent, false);
+        View meetupView = inflater.inflate(R.layout.item_threeText, parent, false);
 
         //return a new holder instance
         ViewHolder viewHolder = new ViewHolder(meetupView);

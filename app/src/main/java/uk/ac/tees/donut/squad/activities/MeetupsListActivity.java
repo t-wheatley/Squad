@@ -45,7 +45,7 @@ public class MeetupsListActivity extends AppCompatActivity {
         //setting up firebase recycler adapter
         FirebaseRecyclerAdapter<Meetup,MeetupViewHolder> adapter = new FirebaseRecyclerAdapter<Meetup, MeetupViewHolder>(
                 Meetup.class,
-                R.layout.item_meetup,
+                R.layout.item_threeText,
                 MeetupViewHolder.class,
                 //referencing the node where we want the database to store the data from our Object
                 mDatabaseReference.child("meetups").getRef()
@@ -96,9 +96,9 @@ public class MeetupsListActivity extends AppCompatActivity {
         {
             super(v);
             mView = v;
-            nameField = (TextView) v.findViewById(R.id.meetupName);
-            descriptionfield = (TextView) v.findViewById(R.id.description);
-            squadField = (TextView) v.findViewById(R.id.squad);
+            nameField = (TextView) v.findViewById(R.id.text1);
+            descriptionfield = (TextView) v.findViewById(R.id.text2);
+            squadField = (TextView) v.findViewById(R.id.text3);
         }
     }
 }

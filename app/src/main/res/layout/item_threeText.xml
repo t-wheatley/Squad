@@ -11,9 +11,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="MeetupName"
+        android:text="Text 1"
         android:layout_alignParentStart="true"
-        android:id="@+id/meetupName"
+        android:id="@+id/text1"
         android:textColor="@color/tw__solid_white"
         android:layout_marginLeft="5dp"
         />
@@ -21,9 +21,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Squad"
+        android:text="Text 2"
         android:layout_alignParentEnd="true"
-        android:id="@+id/squad"
+        android:id="@+id/text2"
         android:layout_marginRight="5dp"
         style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"
         />
@@ -31,7 +31,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/meetupName"
+        android:layout_below="@+id/text1"
         android:background="@color/colorAccent"
         android:id="@+id/detailsLayout"
         android:layout_marginTop="5dp"
@@ -42,8 +42,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Description"
-            android:id="@+id/description"/>
+            android:text="Text 3"
+            android:id="@+id/text3"/>
 
     </RelativeLayout>
 
