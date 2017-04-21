@@ -21,7 +21,7 @@
         </activity>
         <activity android:name=".activities.MenuActivity" />
         <activity android:name=".location.GeocoderActivity" />
-        <activity android:name=".activities.NewMeetup" />
+        <activity android:name=".activities.NewMeetupActivity" />
         <activity android:name=".activities.ViewMeetups" />
         <activity android:name=".activities.MeetupDetailActivity" />
         <activity android:name=".activities.ProfileActivity" />

@@ -38,7 +38,7 @@ import uk.ac.tees.donut.squad.location.FetchAddressIntentService;
 import uk.ac.tees.donut.squad.location.LocContants;
 import uk.ac.tees.donut.squad.posts.Meetup;
 
-public class NewMeetup extends AppCompatActivity
+public class NewMeetupActivity extends AppCompatActivity
 {
     private static final String TAG = "Auth";
 
@@ -77,7 +77,7 @@ public class NewMeetup extends AppCompatActivity
         // Getting the reference for the Firebase Realtime Database
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        //Creating new result reciever and setting the fetch type for geocoder
+        // Creating new result reciever and setting the fetch type for geocoder
         mResultReceiver = new AddressResultReceiver(null);
         fetchType = LocContants.USE_ADDRESS_NAME;
 
@@ -127,7 +127,7 @@ public class NewMeetup extends AppCompatActivity
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
 
-                    new AlertDialog.Builder(NewMeetup.this)
+                    new AlertDialog.Builder(NewMeetupActivity.this)
                             .setTitle("Sign-in Error")
                             .setMessage("You do not appear to be signed in, please try again.")
                             .setPositiveButton("Back", new DialogInterface.OnClickListener() {
@@ -227,7 +227,7 @@ public class NewMeetup extends AppCompatActivity
             mDatabase.child("meetups").child(meetupId).setValue(meetup);
 
             // Send user to their meetup on the MeetupDetailActivity activity
-            Intent intent = new Intent(NewMeetup.this, MeetupDetailActivity.class);
+            Intent intent = new Intent(NewMeetupActivity.this, MeetupDetailActivity.class);
             intent.putExtra("meetupId", meetupId);
             startActivity(intent);
             finish();
@@ -276,7 +276,7 @@ public class NewMeetup extends AppCompatActivity
                 }
 
                 // Fill the spinner
-                ArrayAdapter<String> interestAdapter = new ArrayAdapter<String>(NewMeetup.this, android.R.layout.simple_spinner_item, interests);
+                ArrayAdapter<String> interestAdapter = new ArrayAdapter<String>(NewMeetupActivity.this, android.R.layout.simple_spinner_item, interests);
                 interestAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinnerInterest.setAdapter(interestAdapter);
 

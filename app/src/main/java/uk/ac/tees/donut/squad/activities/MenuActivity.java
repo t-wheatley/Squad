@@ -57,7 +57,7 @@ public class MenuActivity extends AppCompatActivity {
     }
 
     public void openHost(View view) {
-        Intent intent = new Intent(this, NewMeetup.class);
+        Intent intent = new Intent(this, NewMeetupActivity.class);
         startActivity(intent);
     }
 
