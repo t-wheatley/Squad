@@ -1,5 +1,7 @@
 package uk.ac.tees.donut.squad.squads;
 
+import java.util.List;
+
 /**
  * Created by Scott on 14/03/2017.
  */
@@ -9,6 +11,7 @@ public class Squad
     String name;
     Interest interest;
     String description;
+    List users;
 
     public Squad(String n, Interest i, String d)
     {
@@ -16,6 +19,8 @@ public class Squad
         interest = i;
         description = d;
     }
+
+
 
     //GETTERS
     public String getName()
@@ -30,6 +35,9 @@ public class Squad
     {
         return description;
     }
+    public List getUsers() {
+        return users;
+    }
 
     //SETTERS
     public void setName(String n)
@@ -43,5 +51,8 @@ public class Squad
     public void setDescription(String d)
     {
         description = d;
+    }
+    public void setUsers(List users) {
+        this.users = users;
     }
 }
