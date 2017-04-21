@@ -26,6 +26,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import uk.ac.tees.donut.squad.R;
+
+import uk.ac.tees.donut.squad.posts.Meetup;
+
 import uk.ac.tees.donut.squad.posts.Place;
 
 public class NewPlaceActivity extends AppCompatActivity {

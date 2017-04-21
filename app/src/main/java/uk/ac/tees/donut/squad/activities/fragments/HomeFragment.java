@@ -17,7 +17,7 @@ import uk.ac.tees.donut.squad.R;
 import uk.ac.tees.donut.squad.activities.SettingsActivity;
 import uk.ac.tees.donut.squad.activities.SquadsActivity;
 import uk.ac.tees.donut.squad.activities.ViewMeetups;
-import uk.ac.tees.donut.squad.location.LocationActivity;
+import uk.ac.tees.donut.squad.location.GeocoderActivity;
 import uk.ac.tees.donut.squad.location.MapActivity;
 
 public class HomeFragment extends Fragment

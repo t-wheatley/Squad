@@ -2,6 +2,7 @@ package uk.ac.tees.donut.squad.posts;
 
 import com.google.android.gms.maps.model.LatLng;
 
+
 /**
  * Created by q5273202 on 11/04/2017.
  */
@@ -23,6 +24,9 @@ public class Place
     public String townCity;
     public String county;
     public String postCode;
+
+    public String addressFull;
+
 
     public String userId;
 
