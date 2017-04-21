@@ -56,7 +56,6 @@ public class NewMeetup extends AppCompatActivity
 
     RelativeLayout loadingOverlay;
     TextView loadingText;
-    TextView blah;
 
     String name, interest, description;
 
@@ -96,8 +95,6 @@ public class NewMeetup extends AppCompatActivity
         spinnerInterest = (Spinner) findViewById(R.id.spinnerInterest);
         editDescription = (EditText) findViewById(R.id.textEditDescription);
         btnSubmit = (Button) findViewById(R.id.buttonSubmit);
-
-        blah = (TextView) this.findViewById(R.id.textView2);
 
 
         // onClick listener for the submit button
@@ -323,8 +320,6 @@ public class NewMeetup extends AppCompatActivity
 
                         // Calls the createMeetup method with the strings entered
                         createMeetup(name, interest, description);
-
-                        blah.setText(""+ latitude + " " + longitude);
 
                     }
                 });

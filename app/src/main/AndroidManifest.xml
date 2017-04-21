@@ -19,7 +19,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".activities.MainActivity" />
         <activity android:name=".location.GeocoderActivity" />
         <activity android:name=".activities.NewMeetup" />
@@ -27,7 +26,6 @@
         <activity android:name=".activities.MeetupDetail" />
         <activity android:name=".activities.ProfileActivity" />
         <activity android:name=".activities.SquadsActivity" />
-
         <activity
             android:name=".activities.SettingsActivity"
             android:label="@string/title_activity_settings" />
@@ -53,7 +51,8 @@
             android:label="@string/title_activity_map" />
         <activity android:name=".activities.MeetupsListActivity" />
         <activity android:name=".activities.PlaceDetailsActivity" />
-        <activity android:name=".activities.NewPlaceActivity"></activity>
+        <activity android:name=".activities.NewPlaceActivity" />
+        <activity android:name=".activities.PlacesListActivity"></activity>
     </application>
 
 </manifest>
