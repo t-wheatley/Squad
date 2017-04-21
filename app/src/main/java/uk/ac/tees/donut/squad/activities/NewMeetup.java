@@ -56,7 +56,9 @@ public class NewMeetup extends AppCompatActivity
 
     RelativeLayout loadingOverlay;
     TextView loadingText;
+    TextView blah;
 
+    String name, interest, description;
 
     private EditText editName;
     private EditText editAddress1;
@@ -77,7 +79,7 @@ public class NewMeetup extends AppCompatActivity
         // Getting the reference for the Firebase Realtime Database
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        //Creating new result reciever and setting the fetch type for Geocoder
+        //Creating new result reciever and setting the fetch type for geocoder
         mResultReceiver = new AddressResultReceiver(null);
         fetchType = LocContants.USE_ADDRESS_NAME;
 
@@ -95,13 +97,17 @@ public class NewMeetup extends AppCompatActivity
         editDescription = (EditText) findViewById(R.id.textEditDescription);
         btnSubmit = (Button) findViewById(R.id.buttonSubmit);
 
+        blah = (TextView) this.findViewById(R.id.textView2);
+
 
         // onClick listener for the submit button
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // When pressed calls the submitMeeup and geocode methods
-                geocode();
+                setEditingEnabled(true);
+
+
                 submitMeetup();
             }
         });
@@ -156,17 +162,17 @@ public class NewMeetup extends AppCompatActivity
     }
 
     private void geocode(){
-        addressFull = editAddress1.getText() +" " + editAddress2.getText() + " " + editAddressT.getText() + " " + editAddressC.getText() + " " +editAddressPC;
+        addressFull = editAddress1.getText().toString() +" " + editAddress2.getText().toString() + " " + editAddressT.getText().toString() + " " + editAddressC.getText().toString()
+                + " " +editAddressPC.getText().toString();
         Intent intent = new Intent(this, FetchAddressIntentService.class);
         intent.putExtra(LocContants.RECEIVER, mResultReceiver);
         intent.putExtra(LocContants.FETCH_TYPE_EXTRA, fetchType);
-        if(fetchType == LocContants.USE_ADDRESS_NAME) {
-            if(addressFull.length() == 0) {
-                Toast.makeText(this, "Please enter an address", Toast.LENGTH_LONG).show();
-                return;
-            }
-            intent.putExtra(LocContants.LOCATION_NAME_DATA_EXTRA, addressFull);
+        if(addressFull.length() == 0) {
+            Toast.makeText(this, "Please enter an address", Toast.LENGTH_LONG).show();
+            return;
         }
+        intent.putExtra(LocContants.LOCATION_NAME_DATA_EXTRA, addressFull);
+
 
         Log.e(TAG, "Starting Service");
         startService(intent);
@@ -175,9 +181,9 @@ public class NewMeetup extends AppCompatActivity
     private void submitMeetup()
     {
         // Gets the strings from the editTexts
-        final String name = editName.getText().toString();
-        final String interest = spinnerInterest.getSelectedItem().toString();
-        final String description = editDescription.getText().toString();
+        name = editName.getText().toString();
+        interest = spinnerInterest.getSelectedItem().toString();
+        description = editDescription.getText().toString();
 
 
         // Checks if the name field is empty
@@ -199,8 +205,9 @@ public class NewMeetup extends AppCompatActivity
         setEditingEnabled(false);
         Toast.makeText(this, "Posting...", Toast.LENGTH_SHORT).show();
 
-        // Calls the createMeetup method with the strings entered
-        createMeetup(name, interest, description);
+
+        geocode();
+
 
         // Re-enables the editTexts and buttons and finishes the activity
         setEditingEnabled(true);
@@ -218,7 +225,7 @@ public class NewMeetup extends AppCompatActivity
             String meetupId = mDatabase.child("meetups").push().getKey();
 
             // Creating a meetup object
-            Meetup meetup = new Meetup(meetupId, n, i, d, user.getUid());
+            Meetup meetup = new Meetup(meetupId, n, i, d, user.getUid(), longitude, latitude);
 
             // Pushing the meetup to the "meetups" node using the meetupId
             mDatabase.child("meetups").child(meetupId).setValue(meetup);
@@ -288,11 +295,20 @@ public class NewMeetup extends AppCompatActivity
         });
     }
 
-    //Inner Class to recieve address for Geocoder
+    protected void setLatitude(double lat){
+        latitude = lat;
+    }
+
+    protected void setLongitude(double lon){
+        longitude = lon;
+    }
+
+    //Inner Class to recieve address for geocoder
     public class AddressResultReceiver extends ResultReceiver {
         public AddressResultReceiver(Handler handler) {
             super(handler);
         }
+
 
         @Override
         protected void onReceiveResult(int resultCode, final Bundle resultData) {
@@ -302,8 +318,13 @@ public class NewMeetup extends AppCompatActivity
                     @Override
                     public void run() {
 
-                        latitude = address.getLatitude();
-                        longitude = address.getLongitude();
+                   latitude = address.getLatitude();
+                        longitude= address.getLongitude();
+
+                        // Calls the createMeetup method with the strings entered
+                        createMeetup(name, interest, description);
+
+                        blah.setText(""+ latitude + " " + longitude);
 
                     }
                 });

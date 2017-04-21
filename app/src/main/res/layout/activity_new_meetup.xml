@@ -92,7 +92,7 @@
                 android:id="@+id/textEditAddress1"
                 android:layout_below="@+id/textAddress"
                 android:layout_alignParentStart="true"
-                android:text="Address Line 1" />
+                android:hint="Address Line 1" />
 
             <EditText
                 android:layout_width="match_parent"
@@ -101,7 +101,7 @@
                 android:id="@+id/textEditAddress2"
                 android:layout_below="@+id/textEditAddress1"
                 android:layout_alignParentStart="true"
-                android:text="Address Line 2" />
+                android:hint="Address Line 2" />
 
             <EditText
                 android:layout_width="match_parent"
@@ -110,7 +110,7 @@
                 android:id="@+id/textEditAddressTC"
                 android:layout_below="@+id/textEditAddress2"
                 android:layout_alignParentStart="true"
-                android:text="Town/City" />
+                android:hint="Town/City" />
 
             <EditText
                 android:layout_width="match_parent"
@@ -119,7 +119,7 @@
                 android:id="@+id/textEditAddressCounty"
                 android:layout_below="@+id/textEditAddressTC"
                 android:layout_alignParentStart="true"
-                android:text="County" />
+                android:hint="County" />
 
             <EditText
                 android:layout_width="match_parent"
@@ -128,7 +128,7 @@
                 android:id="@+id/textEditAddressPC"
                 android:layout_below="@+id/textEditAddressCounty"
                 android:layout_alignParentStart="true"
-                android:text="Postcode" />
+                android:hint="Postcode" />
 
         </RelativeLayout>
 
@@ -147,6 +147,16 @@
                 android:id="@+id/buttonSubmit"
                 style="@style/Widget.AppCompat.Button.Colored"/>
         </RelativeLayout>
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="35dp"
+            android:id="@+id/textView2" />
+
     </RelativeLayout>
 
 
