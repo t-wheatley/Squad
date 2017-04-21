@@ -2,6 +2,7 @@ package uk.ac.tees.donut.squad.posts;
 
 import com.google.android.gms.maps.model.LatLng;
 
+
 /**
  * Created by q5273202 on 11/04/2017.
  */
