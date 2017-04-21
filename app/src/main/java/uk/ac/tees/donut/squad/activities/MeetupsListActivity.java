@@ -86,7 +86,7 @@ public class MeetupsListActivity extends AppCompatActivity {
                         String mId = model.getId();
 
                         //Sends the id to the details activity
-                        Intent detail = new Intent(MeetupsListActivity.this, MeetupDetail.class);
+                        Intent detail = new Intent(MeetupsListActivity.this, MeetupDetailActivity.class);
                         detail.putExtra("meetupId", mId);
                         startActivity(detail);
                     }
