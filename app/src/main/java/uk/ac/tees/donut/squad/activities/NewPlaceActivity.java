@@ -11,7 +11,9 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -46,6 +48,9 @@ public class NewPlaceActivity extends AppCompatActivity {
 
     private DatabaseReference mDatabase;
 
+    RelativeLayout loadingOverlay;
+    TextView loadingText;
+
     private EditText editName;
     private Spinner spinnerInterest;
     private EditText editDescription;
@@ -62,7 +67,7 @@ public class NewPlaceActivity extends AppCompatActivity {
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_place);
-        this.setTitle("New Meetup");
+        this.setTitle("New Place");
 
         // Getting the reference for the Firebase Realtime Database
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -88,6 +93,11 @@ public class NewPlaceActivity extends AppCompatActivity {
             }
         });
 
+        // Load interests and display loading overlay
+        loadingOverlay = (RelativeLayout) this.findViewById(R.id.loading_overlay);
+        loadingText = (TextView) this.findViewById(R.id.loading_overlay_text);
+        loadingText.setText("Loading...");
+        loadingOverlay.setVisibility(View.VISIBLE);
         fillSpinner();
 
         mAuth = FirebaseAuth.getInstance();
@@ -98,7 +108,6 @@ public class NewPlaceActivity extends AppCompatActivity {
                 if (user != null) {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                    Toast.makeText(NewPlaceActivity.this, "User: " + user.getUid(), Toast.LENGTH_SHORT).show();
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
@@ -190,7 +199,6 @@ public class NewPlaceActivity extends AppCompatActivity {
             mDatabase.child("places").child(placeId).setValue(place);
         } else {
             // No user is signed in
-
             Toast.makeText(this, "Something went wrong, please try again.", Toast.LENGTH_SHORT).show();
         }
 
@@ -218,17 +226,21 @@ public class NewPlaceActivity extends AppCompatActivity {
         mDatabase.child("interests").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Toast.makeText(NewPlaceActivity.this, "Loading interests...", Toast.LENGTH_SHORT).show();
                 final List<String> interests = new ArrayList<String>();
 
+                // Get all the interests
                 for (DataSnapshot interestSnapshot: dataSnapshot.getChildren()) {
                     String interest = interestSnapshot.child("name").getValue(String.class);
                     interests.add(interest);
                 }
 
+                // Fill the spinner
                 ArrayAdapter<String> interestAdapter = new ArrayAdapter<String>(NewPlaceActivity.this, android.R.layout.simple_spinner_item, interests);
                 interestAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinnerInterest.setAdapter(interestAdapter);
+
+                // Hide the loading overlay
+                loadingOverlay.setVisibility(View.GONE);
             }
 
             @Override

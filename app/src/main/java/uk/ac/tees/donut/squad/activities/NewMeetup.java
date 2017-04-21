@@ -48,14 +48,14 @@ public class NewMeetup extends AppCompatActivity
 
     private DatabaseReference mDatabase;
 
+    RelativeLayout loadingOverlay;
+    TextView loadingText;
+
     private AddressResultReceiver mResultReceiver;
     private int fetchType;
     protected double latitude;
     protected double longitude;
     protected String addressFull;
-
-    RelativeLayout loadingOverlay;
-    TextView loadingText;
 
     String name, interest, description;
 
