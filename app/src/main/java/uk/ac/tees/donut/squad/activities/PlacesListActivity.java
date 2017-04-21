@@ -65,8 +65,8 @@ public class PlacesListActivity extends AppCompatActivity {
                                                             String mId = model.getPlaceId();
 
                                                             //Sends the id to the details activity
-                                                            Intent detail = new Intent(PlacesListActivity.this, MeetupDetail.class);
-                                                            detail.putExtra("meetupId", mId);
+                                                            Intent detail = new Intent(PlacesListActivity.this, PlaceDetailsActivity.class);
+                                                            detail.putExtra("placeId", mId);
                                                             startActivity(detail);
                                                         }
                                                     }
