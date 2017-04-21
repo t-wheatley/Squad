@@ -4,7 +4,6 @@
     android:id="@+id/activity_meetups_list"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     tools:context="uk.ac.tees.donut.squad.activities.MeetupsListActivity"
     android:background="@color/cardview_dark_background">
 

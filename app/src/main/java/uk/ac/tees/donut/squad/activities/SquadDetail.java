@@ -64,7 +64,7 @@ public class SquadDetail extends AppCompatActivity {
 
         if(b != null)
         {
-            // Collects the meetupId passed from the RecyclerView
+            // Collects the squadId passed from the RecyclerView
             squadId = (String) b.get("squadId");
             this.setTitle("Squad Details");
         } else
@@ -105,10 +105,10 @@ public class SquadDetail extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
-                // Gets the data from Firebase and stores it in a Meetup class
+                // Gets the data from Firebase and stores it in a Squad class
                 squad = dataSnapshot.getValue(Squad.class);
 
-                // Displays the found meetup's attributes
+                // Displays the found squad's attributes
                 nameDisplay.setText(squad.getName());
                 descriptionDisplay.setText(squad.getDescription());
 

@@ -34,12 +34,12 @@ public class PlacesListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_meetups_list);
+        setContentView(R.layout.activity_places_list);
 
         // Display loading overlay
         loadingOverlay = (RelativeLayout) this.findViewById(R.id.loading_overlay);
         loadingText = (TextView) this.findViewById(R.id.loading_overlay_text);
-        loadingText.setText("Loading Meetups");
+        loadingText.setText("Loading Places...");
         loadingOverlay.setVisibility(View.VISIBLE);
         loadingCount = 1;
 

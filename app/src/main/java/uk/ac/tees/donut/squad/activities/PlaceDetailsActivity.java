@@ -26,7 +26,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import uk.ac.tees.donut.squad.R;
 import uk.ac.tees.donut.squad.posts.AddressPlace;
-import uk.ac.tees.donut.squad.posts.Meetup;
 
 public class PlaceDetailsActivity extends AppCompatActivity {
 
@@ -34,6 +33,9 @@ public class PlaceDetailsActivity extends AppCompatActivity {
 
     DatabaseReference mDatabase;
     FirebaseUser firebaseUser;
+
+    RelativeLayout loadingOverlay;
+    TextView loadingText;
 
     AddressPlace place;
 
@@ -51,6 +53,12 @@ public class PlaceDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_details);
+
+        // Initialising loading overlay and displaying
+        loadingOverlay = (RelativeLayout) this.findViewById(R.id.loading_overlay);
+        loadingText = (TextView) this.findViewById(R.id.loading_overlay_text);
+        loadingText.setText("Loading Place...");
+        loadingOverlay.setVisibility(View.VISIBLE);
 
         //getting UI Elements
         placeName = (TextView) findViewById(R.id.placeNameText);
@@ -110,16 +118,16 @@ public class PlaceDetailsActivity extends AppCompatActivity {
 
     public void loadPlace()
     {
-        // Reads the data from the meetupId in Firebase
+        // Reads the data from the placeId in Firebase
         mDatabase.child(placeId).addListenerForSingleValueEvent(new ValueEventListener()
         {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
-                // Gets the data from Firebase and stores it in a Meetup class
+                // Gets the data from Firebase and stores it in a Place class
                 place = dataSnapshot.getValue(AddressPlace.class);
 
-                // Displays the found meetup's attributes
+                // Displays the found place's attributes
                 placeName.setText(place.getName());
                 description.setText(place.getDescription());
                 address.setText(place.fullAddress());
@@ -132,8 +140,9 @@ public class PlaceDetailsActivity extends AppCompatActivity {
                     editMode();
                 }
                 */
+
                 // Hiding loading overlay
-                //loadingOverlay.setVisibility(View.GONE);
+                loadingOverlay.setVisibility(View.GONE);
             }
 
             @Override
