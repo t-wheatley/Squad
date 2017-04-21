@@ -72,8 +72,9 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void openSettings(View view) {
-        Intent intent = new Intent(this, SettingsActivity.class);
+    public void openPlaces(View view)
+    {
+        Intent intent = new Intent(this, PlacesListActivity.class);
         startActivity(intent);
     }
 
@@ -88,4 +89,9 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    //USE THIS WHEN YOU NEED TO DEBUG OR TEST CERTAIN THINGS WITHOUT DESTROYING THE REST OF THE APP
+    public void openMystery(View view) {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+    }
 }
