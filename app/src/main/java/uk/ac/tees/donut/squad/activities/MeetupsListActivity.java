@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -22,6 +23,12 @@ public class MeetupsListActivity extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
+    private FirebaseRecyclerAdapter mAdapter;
+
+    RelativeLayout loadingOverlay;
+    TextView loadingText;
+
+    int loadingCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -29,6 +36,12 @@ public class MeetupsListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meetups_list);
 
+        // Display loading overlay
+        loadingOverlay = (RelativeLayout) this.findViewById(R.id.loading_overlay);
+        loadingText = (TextView) this.findViewById(R.id.loading_overlay_text);
+        loadingText.setText("Loading Meetups");
+        loadingOverlay.setVisibility(View.VISIBLE);
+        loadingCount = 1;
 
         //initialising RecyclerView
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
@@ -43,7 +56,7 @@ public class MeetupsListActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         //setting up firebase recycler adapter
-        FirebaseRecyclerAdapter<Meetup,MeetupViewHolder> adapter = new FirebaseRecyclerAdapter<Meetup, MeetupViewHolder>(
+        mAdapter = new FirebaseRecyclerAdapter<Meetup, MeetupViewHolder>(
                 Meetup.class,
                 R.layout.item_three_text,
                 MeetupViewHolder.class,
@@ -77,12 +90,21 @@ public class MeetupsListActivity extends AppCompatActivity {
                         detail.putExtra("meetupId", mId);
                         startActivity(detail);
                     }
+                });
+
+                // If loading the last item
+                if (mAdapter.getItemCount() == loadingCount)
+                {
+                    // Hide the loading overlay
+                    loadingOverlay.setVisibility(View.GONE);
                 }
-                );
+
+                loadingCount++;
+
             }
         };
 
-        mRecyclerView.setAdapter(adapter);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     public static class MeetupViewHolder extends RecyclerView.ViewHolder
