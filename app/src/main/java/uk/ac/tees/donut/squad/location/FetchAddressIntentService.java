@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import uk.ac.tees.donut.squad.posts.Meetup;
+
 /**
  * Created by Anthony Ward on 17/03/2017.
  */

@@ -80,8 +80,8 @@ public class DatabaseHandler extends SQLiteOpenHelper
        // values.put(COL_INTEREST, m.getInterest());
         values.put(COL_DESCRIPTION, m.getDescription());
         //temporary location values
-        values.put(COL_ADDRESS, m.getAddress());
-        values.put(COL_POSTCODE, m.getPostCode());
+        //values.put(COL_ADDRESS, m.getAddress());
+        //values.put(COL_POSTCODE, m.getPostCode());
         //id gets autoincremented
 
         //Add record to database and get id of new record (must long integer)
