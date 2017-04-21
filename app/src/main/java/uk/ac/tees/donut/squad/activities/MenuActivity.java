@@ -2,11 +2,16 @@ package uk.ac.tees.donut.squad.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import android.support.v7.app.AppCompatActivity;
+
 import android.view.View;
 
+
+import uk.ac.tees.donut.squad.location.GeocoderActivity;
+
 import uk.ac.tees.donut.squad.R;
-import uk.ac.tees.donut.squad.location.LocationActivity;
+
 import uk.ac.tees.donut.squad.location.MapActivity;
 
 public class MenuActivity extends AppCompatActivity {
@@ -45,7 +50,7 @@ public class MenuActivity extends AppCompatActivity {
     }
 
     public void openLocation(View view) {
-    Intent intent = new Intent (this, LocationActivity.class);
+    Intent intent = new Intent (this, GeocoderActivity.class);
         startActivity(intent);
 
     }

@@ -2,6 +2,11 @@ package uk.ac.tees.donut.squad.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+
+import android.location.Address;
+import android.os.Handler;
+import android.os.ResultReceiver;
+
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -29,6 +34,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import uk.ac.tees.donut.squad.R;
+import uk.ac.tees.donut.squad.location.FetchAddressIntentService;
+import uk.ac.tees.donut.squad.location.LocContants;
 import uk.ac.tees.donut.squad.posts.Meetup;
 import uk.ac.tees.donut.squad.squads.Interest;
 
@@ -41,10 +48,22 @@ public class NewMeetup extends AppCompatActivity
 
     private DatabaseReference mDatabase;
 
+    private AddressResultReceiver mResultReceiver;
+    private int fetchType;
+    protected double latitude;
+    protected double longitude;
+    protected String addressFull;
+
     RelativeLayout loadingOverlay;
     TextView loadingText;
 
+
     private EditText editName;
+    private EditText editAddress1;
+    private EditText editAddress2;
+    private EditText editAddressT;
+    private EditText editAddressC;
+    private EditText editAddressPC;
     private Spinner spinnerInterest;
     private EditText editDescription;
     private Button btnSubmit;
@@ -58,17 +77,31 @@ public class NewMeetup extends AppCompatActivity
         // Getting the reference for the Firebase Realtime Database
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
+        //Creating new result reciever and setting the fetch type for Geocoder
+        mResultReceiver = new AddressResultReceiver(null);
+        fetchType = LocContants.USE_ADDRESS_LOCATION;
+
         // Links the variables to their layout items.
+
+
+        editAddress1 = (EditText) findViewById(R.id.textEditAddress1);
+        editAddress2 =(EditText) findViewById(R.id.textEditAddress2);
+        editAddressT = (EditText) findViewById(R.id.textEditAddressTC);
+        editAddressC = (EditText) findViewById(R.id.textEditAddressCounty);
+        editAddressPC = (EditText) findViewById(R.id.textEditAddressPC);
+
         editName = (EditText) findViewById(R.id.textEditName);
         spinnerInterest = (Spinner) findViewById(R.id.spinnerInterest);
         editDescription = (EditText) findViewById(R.id.textEditDescription);
         btnSubmit = (Button) findViewById(R.id.buttonSubmit);
 
+
         // onClick listener for the submit button
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // When pressed calls the submitMeeup method
+                // When pressed calls the submitMeeup and geocode methods
+                geocode();
                 submitMeetup();
             }
         });
@@ -120,6 +153,23 @@ public class NewMeetup extends AppCompatActivity
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
         }
+    }
+
+    private void geocode(){
+        addressFull = editAddress1.getText() +" " + editAddress2.getText() + " " + editAddressT.getText() + " " + editAddressC.getText() + " " +editAddressPC;
+        Intent intent = new Intent(this, FetchAddressIntentService.class);
+        intent.putExtra(LocContants.RECEIVER, mResultReceiver);
+        intent.putExtra(LocContants.FETCH_TYPE_EXTRA, fetchType);
+        if(fetchType == LocContants.USE_ADDRESS_NAME) {
+            if(addressFull.length() == 0) {
+                Toast.makeText(this, "Please enter an address", Toast.LENGTH_LONG).show();
+                return;
+            }
+            intent.putExtra(LocContants.LOCATION_NAME_DATA_EXTRA, addressFull);
+        }
+
+        Log.e(TAG, "Starting Service");
+        startService(intent);
     }
 
     private void submitMeetup()
@@ -192,6 +242,11 @@ public class NewMeetup extends AppCompatActivity
     private void setEditingEnabled(boolean enabled)
     {
         editName.setEnabled(enabled);
+        editAddress1.setEnabled(enabled);
+        editAddress2.setEnabled(enabled);
+        editAddressT.setEnabled(enabled);
+        editAddressC.setEnabled(enabled);
+        editAddressPC.setEnabled(enabled);
         spinnerInterest.setEnabled(enabled);
         editDescription.setEnabled(enabled);
         if (enabled)
@@ -231,5 +286,28 @@ public class NewMeetup extends AppCompatActivity
 
             }
         });
+    }
+
+    //Inner Class to recieve address for Geocoder
+    public class AddressResultReceiver extends ResultReceiver {
+        public AddressResultReceiver(Handler handler) {
+            super(handler);
+        }
+
+        @Override
+        protected void onReceiveResult(int resultCode, final Bundle resultData) {
+            if (resultCode == LocContants.SUCCESS_RESULT) {
+                final Address address = resultData.getParcelable(LocContants.RESULT_ADDRESS);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        latitude = address.getLatitude();
+                        longitude = address.getLongitude();
+
+                    }
+                });
+            }
+        }
     }
 }
