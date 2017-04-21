@@ -90,9 +90,9 @@ public class SplashScreen extends AppCompatActivity implements
                     // Hiding loading overlay
                     loadingOverlay.setVisibility(View.GONE);
 
-                    // User is signed in, load MainActivity
+                    // User is signed in, load MenuActivity
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                    Intent i = new Intent(SplashScreen.this, MainActivity.class);
+                    Intent i = new Intent(SplashScreen.this, MenuActivity.class);
                     startActivity(i);
                     finish();
                 } else {

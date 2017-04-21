@@ -3,6 +3,7 @@ package uk.ac.tees.donut.squad.activities;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v4.content.IntentCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -139,10 +140,12 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
         Auth.GoogleSignInApi.signOut(mGoogleApiClient);
 
         // Loads the SplashScreen activity and closes all other activites
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra("EXIT", true);
+        Intent intent = new Intent(ProfileActivity.this, SplashScreen.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TOP
+                | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
+        finish();
     }
 
     public void editBio()

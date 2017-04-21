@@ -5,18 +5,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.FirebaseDatabase;
-
 import uk.ac.tees.donut.squad.R;
-import uk.ac.tees.donut.squad.debug.SquadDebug;
 import uk.ac.tees.donut.squad.location.GeocoderActivity;
 import uk.ac.tees.donut.squad.location.MapActivity;
-import uk.ac.tees.donut.squad.squads.Interest;
-import uk.ac.tees.donut.squad.squads.Squad;
 import uk.ac.tees.donut.squad.users.User;
 
-public class MainActivity extends AppCompatActivity {
+public class MenuActivity extends AppCompatActivity {
     boolean firstStart = true;
 
     User user;
@@ -24,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_menu);
 
         if(firstStart)
         {
