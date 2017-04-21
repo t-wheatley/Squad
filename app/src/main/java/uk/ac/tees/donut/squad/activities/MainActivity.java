@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void openEvents(View view) {
-        Intent intent = new Intent(this, ViewMeetups.class);
+        Intent intent = new Intent(this, MeetupsListActivity.class);
         startActivity(intent);
     }
 
