@@ -96,7 +96,7 @@ public class ViewMeetups extends AppCompatActivity
                         String mId = meetup.getId();
 
                         // Sends the id to the details activity
-                        Intent detail = new Intent(ViewMeetups.this, MeetupDetail.class);
+                        Intent detail = new Intent(ViewMeetups.this, MeetupDetailActivity.class);
                         detail.putExtra("meetupId", mId);
                         startActivity(detail);
                     }
@@ -143,7 +143,7 @@ public class ViewMeetups extends AppCompatActivity
                             String mId = meetup.getId();
 
                             // Sends the id to the details activity
-                            Intent detail = new Intent(ViewMeetups.this, MeetupDetail.class);
+                            Intent detail = new Intent(ViewMeetups.this, MeetupDetailActivity.class);
                             detail.putExtra("meetupId", mId);
                             startActivity(detail);
                         }

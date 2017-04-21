@@ -28,7 +28,7 @@ import uk.ac.tees.donut.squad.R;
 import uk.ac.tees.donut.squad.posts.Meetup;
 import uk.ac.tees.donut.squad.users.User;
 
-public class MeetupDetail extends AppCompatActivity
+public class MeetupDetailActivity extends AppCompatActivity
 {
     DatabaseReference mDatabase;
     FirebaseUser firebaseUser;
@@ -97,7 +97,7 @@ public class MeetupDetail extends AppCompatActivity
             this.setTitle("Meetup Details");
         } else
         {
-            new AlertDialog.Builder(MeetupDetail.this)
+            new AlertDialog.Builder(MeetupDetailActivity.this)
                     .setTitle("Error")
                     .setMessage("The meetup went missing somewhere, please try again.")
                     .setPositiveButton("Back", new DialogInterface.OnClickListener() {

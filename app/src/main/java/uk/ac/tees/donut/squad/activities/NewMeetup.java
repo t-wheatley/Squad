@@ -37,7 +37,6 @@ import uk.ac.tees.donut.squad.R;
 import uk.ac.tees.donut.squad.location.FetchAddressIntentService;
 import uk.ac.tees.donut.squad.location.LocContants;
 import uk.ac.tees.donut.squad.posts.Meetup;
-import uk.ac.tees.donut.squad.squads.Interest;
 
 public class NewMeetup extends AppCompatActivity
 {
@@ -227,8 +226,8 @@ public class NewMeetup extends AppCompatActivity
             // Pushing the meetup to the "meetups" node using the meetupId
             mDatabase.child("meetups").child(meetupId).setValue(meetup);
 
-            // Send user to their meetup on the MeetupDetail activity
-            Intent intent = new Intent(NewMeetup.this, MeetupDetail.class);
+            // Send user to their meetup on the MeetupDetailActivity activity
+            Intent intent = new Intent(NewMeetup.this, MeetupDetailActivity.class);
             intent.putExtra("meetupId", meetupId);
             startActivity(intent);
             finish();
