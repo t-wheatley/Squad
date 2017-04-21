@@ -148,9 +148,21 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentRight="true"
                 android:text="Attend Meetup"
-                android:id="@+id/attendBtn"
+                android:id="@+id/meetupDetail_attendBtn"
                 style="@style/Widget.AppCompat.Button.Colored"
-                android:onClick="attend"/>
+                android:onClick="attendMeetup"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/meetupDetail_attendBtn"
+                android:text="Delete Meetup"
+                android:id="@+id/meetupDetail_deleteBtn"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:onClick="deleteMeetup"/>
+
         </RelativeLayout>
     </RelativeLayout>
 

@@ -40,8 +40,8 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }
 
-        Interest VideoGames = new Interest("id", "Video Games");
 
+        Interest VideoGames = new Interest("id", "Video Games");
 
     }
 

@@ -1,8 +1,6 @@
 package uk.ac.tees.donut.squad.posts;
 
-
 import com.google.android.gms.maps.model.LatLng;
-
 
 
 /**
@@ -26,7 +24,9 @@ public class Place
     public String townCity;
     public String county;
     public String postCode;
+
     public String addressFull;
+
 
     public String userId;
 
@@ -246,7 +246,4 @@ public class Place
     {
         //update the address using
     }
-
-
-
 }

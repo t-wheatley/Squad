@@ -1,6 +1,5 @@
 package uk.ac.tees.donut.squad.activities;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.content.Intent;
 import android.support.annotation.NonNull;
