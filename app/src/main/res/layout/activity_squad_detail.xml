@@ -4,7 +4,7 @@
     android:id="@+id/activity_squad_detail"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="uk.ac.tees.donut.squad.activities.SquadDetail"
+    tools:context="uk.ac.tees.donut.squad.activities.SquadDetailActivity"
     android:background="@color/cardview_dark_background">
 
     <RelativeLayout

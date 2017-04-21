@@ -21,7 +21,7 @@ import com.google.firebase.database.ValueEventListener;
 import uk.ac.tees.donut.squad.R;
 import uk.ac.tees.donut.squad.squads.Squad;
 
-public class SquadDetail extends AppCompatActivity {
+public class SquadDetailActivity extends AppCompatActivity {
 
     DatabaseReference mDatabase;
     FirebaseUser firebaseUser;
@@ -69,7 +69,7 @@ public class SquadDetail extends AppCompatActivity {
             this.setTitle("Squad Details");
         } else
         {
-            new AlertDialog.Builder(SquadDetail.this)
+            new AlertDialog.Builder(SquadDetailActivity.this)
                     .setTitle("Error")
                     .setMessage("The squad went missing somewhere, please try again.")
                     .setPositiveButton("Back", new DialogInterface.OnClickListener() {

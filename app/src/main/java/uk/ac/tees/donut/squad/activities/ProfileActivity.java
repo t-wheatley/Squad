@@ -131,6 +131,7 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
         b.putBoolean("ATT", true);
         intent.putExtras(b);
         startActivity(intent);
+        finish();
     }
 
     public void signOut()
