@@ -1,17 +1,14 @@
 package uk.ac.tees.donut.squad.activities;
 
-<<<<<<< HEAD
 import android.media.Image;
-=======
->>>>>>> master
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-<<<<<<< HEAD
+
 import android.widget.Button;
-=======
->>>>>>> master
+
 import android.widget.ImageSwitcher;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
