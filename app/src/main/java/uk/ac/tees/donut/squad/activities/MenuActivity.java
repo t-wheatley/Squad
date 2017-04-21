@@ -47,7 +47,7 @@ public class MenuActivity extends AppCompatActivity {
     }
 
     public void openSquads(View view) {
-        Intent intent = new Intent(this, SquadsActivity.class);
+        Intent intent = new Intent(this, SquadListActivity.class);
         startActivity(intent);
     }
 

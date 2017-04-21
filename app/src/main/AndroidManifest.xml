@@ -25,7 +25,7 @@
         <activity android:name=".activities.ViewMeetups" />
         <activity android:name=".activities.MeetupDetailActivity" />
         <activity android:name=".activities.ProfileActivity" />
-        <activity android:name=".activities.SquadsActivity" />
+        <activity android:name=".activities.SquadListActivity" />
         <activity android:name=".activities.SquadDetailActivity" />
         <activity
             android:name=".activities.SettingsActivity"
