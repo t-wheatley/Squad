@@ -315,7 +315,7 @@ public class NewMeetup extends AppCompatActivity
                     @Override
                     public void run() {
 
-                   latitude = address.getLatitude();
+                        latitude = address.getLatitude();
                         longitude= address.getLongitude();
 
                         // Calls the createMeetup method with the strings entered
