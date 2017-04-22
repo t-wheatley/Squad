@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.view.View;
 
 import uk.ac.tees.donut.squad.R;
+import uk.ac.tees.donut.squad.debug.SquadDebug;
 import uk.ac.tees.donut.squad.location.GeocoderActivity;
 import uk.ac.tees.donut.squad.location.MapActivity;
+import uk.ac.tees.donut.squad.squads.Squad;
 import uk.ac.tees.donut.squad.users.User;
 
 public class MenuActivity extends AppCompatActivity {
@@ -35,8 +37,6 @@ public class MenuActivity extends AppCompatActivity {
 
             startActivity(intent);
         }
-
-
 
     }
 
@@ -76,7 +76,6 @@ public class MenuActivity extends AppCompatActivity {
     public void openLocation(View view) {
         Intent intent = new Intent (this, GeocoderActivity.class);
         startActivity(intent);
-
     }
 
     public void openMap(View view){

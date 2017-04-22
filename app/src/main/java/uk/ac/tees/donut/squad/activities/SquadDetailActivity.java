@@ -18,6 +18,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
+
 import uk.ac.tees.donut.squad.R;
 import uk.ac.tees.donut.squad.squads.Squad;
 
@@ -34,6 +36,7 @@ public class SquadDetailActivity extends AppCompatActivity {
 
     TextView nameDisplay;
     TextView descriptionDisplay;
+    TextView memberDisplay;
     String squadId;
 
     Button joinBtn;
@@ -53,6 +56,7 @@ public class SquadDetailActivity extends AppCompatActivity {
         // Declaring everything
         nameDisplay = (TextView) findViewById(R.id.squadDetail_textEditName);
         descriptionDisplay = (TextView) findViewById(R.id.squadDetail_textEditDescription);
+        memberDisplay = (TextView) findViewById(R.id.squadDetail_textEditMembers);
         joinBtn = (Button) findViewById(R.id.squadDetail_joinBtn);
 
         // Gets the extra passed from the last activity
@@ -82,7 +86,7 @@ public class SquadDetailActivity extends AppCompatActivity {
         }
 
         // Getting the reference for the Firebase Realtime Database
-        mDatabase = FirebaseDatabase.getInstance().getReference("squads");
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         member = false;
         joinBtn.setText("Join Squad");
@@ -93,20 +97,38 @@ public class SquadDetailActivity extends AppCompatActivity {
 
     public void loadSquad()
     {
-        if(mDatabase.child(squadId).child("users").child(firebaseUser.getUid()).equals(true))
-        {
-            member = true;
-            joinBtn.setText("Leave Squad");
-        }
+
 
         // Reads the data from the meetupId in Firebase
-        mDatabase.child(squadId).addListenerForSingleValueEvent(new ValueEventListener()
+        mDatabase.child("squads").child(squadId).addListenerForSingleValueEvent(new ValueEventListener()
         {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
                 // Gets the data from Firebase and stores it in a Squad class
                 squad = dataSnapshot.getValue(Squad.class);
+
+                // Getting the users HashMap
+                HashMap<String, String> users = squad.getUsers();
+
+                // If the HashMap isnt empty
+                if (users != null)
+                {
+                    // Checking if the user is already in the Squad
+                    if(users.containsKey(firebaseUser.getUid()))
+                    {
+                        member = true;
+                        joinBtn.setText("Leave Squad");
+                    }
+
+                    // Displaying members of the Squad
+                    String memberList = "";
+                    for (String name : users.values())
+                    {
+                        memberList = memberList + name.trim() + "\n";
+                    }
+                    memberDisplay.setText(memberList.trim());
+                }
 
                 // Displays the found squad's attributes
                 nameDisplay.setText(squad.getName());
@@ -140,14 +162,16 @@ public class SquadDetailActivity extends AppCompatActivity {
 
     public void joinSquad()
     {
-        mDatabase.child(squadId).child("users").child(firebaseUser.getUid()).setValue(true);
+        mDatabase.child("users").child(firebaseUser.getUid()).child("squads").child(squadId).setValue(true);
+        mDatabase.child("squads").child(squadId).child("users").child(firebaseUser.getUid()).setValue(firebaseUser.getDisplayName());
         member = true;
         joinBtn.setText("Leave Squad");
     }
 
     public void leaveSquad()
     {
-        mDatabase.child(squadId).child("users").child(firebaseUser.getUid()).setValue(false);
+        mDatabase.child("users").child(firebaseUser.getUid()).child("squads").child(squadId).removeValue();
+        mDatabase.child("squads").child(squadId).child("users").child(firebaseUser.getUid()).removeValue();
         member = false;
         joinBtn.setText("Join Squad");
     }
