@@ -1,5 +1,6 @@
 package uk.ac.tees.donut.squad.activities;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -24,8 +25,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import uk.ac.tees.donut.squad.R;
+import uk.ac.tees.donut.squad.users.FBUser;
 
 /**
  * Created by jlc-1 on 21/03/2017.
@@ -40,6 +47,7 @@ public class LoginActivity extends AppCompatActivity implements
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private DatabaseReference mDatabase;
     private GoogleSignInAccount googleSignInAccount;
 
     RelativeLayout loadingOverlay;
@@ -57,6 +65,9 @@ public class LoginActivity extends AppCompatActivity implements
         loadingOverlay = (RelativeLayout) this.findViewById(R.id.loading_overlay);
         loadingText = (TextView) this.findViewById(R.id.loading_overlay_text);
         loadingText.setText("Logging in...");
+
+        // Getting the reference for the Firebase Realtime Database
+        mDatabase = FirebaseDatabase.getInstance().getReference("users");
 
         findViewById(R.id.sign_in_button).setOnClickListener(this);
 
@@ -210,12 +221,39 @@ public class LoginActivity extends AppCompatActivity implements
 
     private void updateDetails(FirebaseUser fUser)
     {
+        final String uId = fUser.getUid();
+        final String newName = googleSignInAccount.getDisplayName();
+        final Uri newPic = googleSignInAccount.getPhotoUrl();
+
+        // Creating a UserProfileChangeRequest
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                .setDisplayName(googleSignInAccount.getDisplayName())
-                .setPhotoUri(googleSignInAccount.getPhotoUrl())
+                .setDisplayName(newName)
+                .setPhotoUri(newPic)
                 .build();
 
+        // Sending the UserProfileChangeRequest
         fUser.updateProfile(profileUpdates);
+
+        // Sending the new data to the Firebase Database
+        mDatabase.child(uId).addListenerForSingleValueEvent(new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                // Gets the data from Firebase and stores it in a Squad class
+                FBUser user = dataSnapshot.getValue(FBUser.class);
+                user.setPicture(newPic.toString());
+                user.setName(newName);
+
+                mDatabase.child(uId).setValue(user);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError)
+            {
+
+            }
+        });
     }
 
 }
