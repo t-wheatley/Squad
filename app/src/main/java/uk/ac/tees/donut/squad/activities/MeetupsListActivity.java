@@ -44,7 +44,7 @@ public class MeetupsListActivity extends AppCompatActivity {
         loadingCount = 1;
 
         //initialising RecyclerView
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        mRecyclerView = (RecyclerView) findViewById(R.id.meetupsList_recyclerView);
 
         if(mRecyclerView != null)
         {

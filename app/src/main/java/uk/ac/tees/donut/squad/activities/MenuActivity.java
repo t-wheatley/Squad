@@ -38,8 +38,6 @@ public class MenuActivity extends AppCompatActivity {
             startActivity(intent);
         }
 
-        //SquadDebug.addSquad("test", "test");
-
     }
 
     //Click functionality
@@ -78,7 +76,6 @@ public class MenuActivity extends AppCompatActivity {
     public void openLocation(View view) {
         Intent intent = new Intent (this, GeocoderActivity.class);
         startActivity(intent);
-
     }
 
     public void openMap(View view){
@@ -88,12 +85,7 @@ public class MenuActivity extends AppCompatActivity {
 
     //USE THIS WHEN YOU NEED TO DEBUG OR TEST CERTAIN THINGS WITHOUT DESTROYING THE REST OF THE APP
     public void openMystery(View view) {
-        //Sends the id to the details activity
-        Intent detail = new Intent(MenuActivity.this, SquadDetailActivity.class);
-        detail.putExtra("squadId", "-KiFnWsuYt4D_Rx0UgLJ");
-        startActivity(detail);
-
-        //Intent intent = new Intent(this, SettingsActivity.class);
-        //startActivity(intent);
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
     }
 }
