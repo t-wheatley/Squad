@@ -1,6 +1,8 @@
 package uk.ac.tees.donut.squad.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,8 +12,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import uk.ac.tees.donut.squad.R;
 import uk.ac.tees.donut.squad.posts.Meetup;
@@ -24,6 +29,7 @@ public class MeetupsListActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
     private FirebaseRecyclerAdapter mAdapter;
+    DatabaseReference mDatabase;
 
     RelativeLayout loadingOverlay;
     TextView loadingText;
@@ -42,6 +48,9 @@ public class MeetupsListActivity extends AppCompatActivity {
         loadingText.setText("Loading Meetups");
         loadingOverlay.setVisibility(View.VISIBLE);
         loadingCount = 1;
+
+        // Getting the reference for the Firebase Realtime Database
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         //initialising RecyclerView
         mRecyclerView = (RecyclerView) findViewById(R.id.meetupsList_recyclerView);
@@ -64,7 +73,7 @@ public class MeetupsListActivity extends AppCompatActivity {
                 mDatabaseReference.child("meetups").getRef()
         ) {
             @Override
-            protected void populateViewHolder(MeetupViewHolder viewHolder,final Meetup model, int position) {
+            protected void populateViewHolder(final MeetupViewHolder viewHolder, final Meetup model, int position) {
 
                 viewHolder.nameField.setText(model.getName());
 
@@ -76,7 +85,22 @@ public class MeetupsListActivity extends AppCompatActivity {
                 String shortDesc = description.substring(0, Math.min(description.length(), 54)) + elipsis;
 
                 viewHolder.descriptionfield.setText(shortDesc);
-                viewHolder.squadField.setText(model.getInterest());
+
+                // Get Squad name from id
+                mDatabase.child("squads").child(model.getSquad()).addListenerForSingleValueEvent(new ValueEventListener()
+                {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot)
+                    {
+                        viewHolder.squadField.setText(dataSnapshot.child("name").getValue(String.class));
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError)
+                    {
+
+                    }
+                });
 
                 viewHolder.mView.setOnClickListener(new View.OnClickListener()
                 {
@@ -92,15 +116,13 @@ public class MeetupsListActivity extends AppCompatActivity {
                     }
                 });
 
-                // If loading the last item
-                if (mAdapter.getItemCount() == loadingCount)
+                // If loading the last item or empty
+                if ((mAdapter.getItemCount() == loadingCount))
                 {
                     // Hide the loading overlay
                     loadingOverlay.setVisibility(View.GONE);
                 }
-
                 loadingCount++;
-
             }
         };
 

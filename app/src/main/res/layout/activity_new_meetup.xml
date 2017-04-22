@@ -40,20 +40,20 @@
                 android:layout_alignParentEnd="true"/>
 
             <TextView
-                android:text="Interest:"
+                android:text="Squad:"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/newMeetup_textEditName"
                 android:layout_alignParentStart="true"
-                android:id="@+id/newMeetup_textInterest"
+                android:id="@+id/newMeetup_textSquad"
                 style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
 
             <Spinner
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_below="@+id/newMeetup_textInterest"
+                android:layout_below="@+id/newMeetup_textSquad"
                 android:layout_alignParentStart="true"
-                android:id="@+id/newMeetup_spinnerInterest"
+                android:id="@+id/newMeetup_spinnerSquad"
                 android:layout_alignParentEnd="true"
                 style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
 
@@ -62,7 +62,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/newMeetup_textDescription"
-                android:layout_below="@+id/newMeetup_spinnerInterest"
+                android:layout_below="@+id/newMeetup_spinnerSquad"
                 android:layout_alignParentStart="true"
                 style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
 

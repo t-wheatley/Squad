@@ -31,12 +31,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import uk.ac.tees.donut.squad.R;
 import uk.ac.tees.donut.squad.location.FetchAddressIntentService;
 import uk.ac.tees.donut.squad.location.LocContants;
 import uk.ac.tees.donut.squad.posts.Meetup;
+import uk.ac.tees.donut.squad.squads.Squad;
 
 public class NewMeetupActivity extends AppCompatActivity
 {
@@ -56,7 +58,8 @@ public class NewMeetupActivity extends AppCompatActivity
     protected double longitude;
     protected String addressFull;
 
-    String name, interest, description;
+    String name, description, squadId;
+    HashMap<String, String> squads;
 
     private EditText editName;
     private EditText editAddress1;
@@ -64,7 +67,7 @@ public class NewMeetupActivity extends AppCompatActivity
     private EditText editAddressT;
     private EditText editAddressC;
     private EditText editAddressPC;
-    private Spinner spinnerInterest;
+    private Spinner spinnerSquad;
     private EditText editDescription;
     private Button btnSubmit;
     @Override
@@ -89,7 +92,7 @@ public class NewMeetupActivity extends AppCompatActivity
         editAddressPC = (EditText) findViewById(R.id.newMeetup_textEditAddressPC);
 
         editName = (EditText) findViewById(R.id.newMeetup_textEditName);
-        spinnerInterest = (Spinner) findViewById(R.id.newMeetup_spinnerInterest);
+        spinnerSquad = (Spinner) findViewById(R.id.newMeetup_spinnerSquad);
         editDescription = (EditText) findViewById(R.id.newMeetup_textEditDescription);
         btnSubmit = (Button) findViewById(R.id.newMeetup_buttonSubmit);
 
@@ -179,8 +182,8 @@ public class NewMeetupActivity extends AppCompatActivity
 
         // Gets the strings from the editTexts
         name = editName.getText().toString();
-        interest = spinnerInterest.getSelectedItem().toString();
         description = editDescription.getText().toString();
+        squadId = squads.get(spinnerSquad.getSelectedItem().toString().trim());
         addressFull = editAddress1.getText().toString() + " " + editAddress2.getText().toString()
                 + " " + editAddressT.getText().toString() + " " + editAddressC.getText().toString()
                 + " " +editAddressPC.getText().toString();
@@ -189,7 +192,7 @@ public class NewMeetupActivity extends AppCompatActivity
     }
 
     // Takes a meetup and pushes it to the Firebase Realtime Database (Without extras)
-    public void createMeetup(String n, String i, String d)
+    public void createMeetup(String name,  String desc, String squadId)
     {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null)
@@ -199,7 +202,7 @@ public class NewMeetupActivity extends AppCompatActivity
             String meetupId = mDatabase.child("meetups").push().getKey();
 
             // Creating a meetup object
-            Meetup meetup = new Meetup(meetupId, n, i, d, user.getUid(), longitude, latitude);
+            Meetup meetup = new Meetup(meetupId, name, desc, squadId, user.getUid(), longitude, latitude);
 
             // Pushing the meetup to the "meetups" node using the meetupId
             mDatabase.child("meetups").child(meetupId).setValue(meetup);
@@ -222,21 +225,27 @@ public class NewMeetupActivity extends AppCompatActivity
     // Fill's the spinner with all of the interests stored in FireBase
     private void fillSpinner()
     {
-        mDatabase.child("interests").addValueEventListener(new ValueEventListener() {
+        mDatabase.child("squads").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                final List<String> interests = new ArrayList<String>();
+                squads = new HashMap<String, String>();
 
                 // Get all the interests
-                for (DataSnapshot interestSnapshot: dataSnapshot.getChildren()) {
-                    String interest = interestSnapshot.child("name").getValue(String.class);
-                    interests.add(interest);
+                for (DataSnapshot squadsSnapshot: dataSnapshot.getChildren()) {
+                    Squad squad = squadsSnapshot.getValue(Squad.class);
+                    squads.put(squad.getName(), squad.getId());
+                }
+
+                final List<String> squadNames = new ArrayList<String>();
+                for (String name : squads.keySet())
+                {
+                    squadNames.add(name);
                 }
 
                 // Fill the spinner
-                ArrayAdapter<String> interestAdapter = new ArrayAdapter<String>(NewMeetupActivity.this, android.R.layout.simple_spinner_item, interests);
+                ArrayAdapter<String> interestAdapter = new ArrayAdapter<String>(NewMeetupActivity.this, android.R.layout.simple_spinner_item, squadNames);
                 interestAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spinnerInterest.setAdapter(interestAdapter);
+                spinnerSquad.setAdapter(interestAdapter);
 
                 // Hide the loading overlay
                 loadingOverlay.setVisibility(View.GONE);
@@ -315,7 +324,7 @@ public class NewMeetupActivity extends AppCompatActivity
                         longitude= address.getLongitude();
 
                         // Calls the createMeetup method with the strings entered
-                        createMeetup(name, interest, description);
+                        createMeetup(name, description, squadId);
 
                     }
                 });
