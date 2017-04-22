@@ -8,6 +8,7 @@ public class FBUser
     private String bio;
     private String picture;
     private HashMap<String, Boolean> squads;
+    private HashMap<String, Boolean> meetups;
 
     public FBUser()
     {
@@ -38,6 +39,10 @@ public class FBUser
     {
         return squads;
     }
+    public HashMap<String, Boolean> getMeetups()
+    {
+        return meetups;
+    }
 
     // Setters
     public void setName(String name)
@@ -55,5 +60,9 @@ public class FBUser
     public void setSquads(HashMap<String, Boolean> squads)
     {
         this.squads = squads;
+    }
+    public void setMeetups(HashMap<String, Boolean> meetups)
+    {
+        this.meetups = meetups;
     }
 }

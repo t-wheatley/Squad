@@ -85,7 +85,7 @@ public class ViewMeetups extends AppCompatActivity
             {
                 // Gets the current meetups data and creates a meetupViewHolder
                 meetupViewHolder.setName(meetup.getName());
-                meetupViewHolder.setInterest(meetup.getInterest());
+                meetupViewHolder.setInterest(meetup.getSquad());
 
                 // OnClickListener for the item, displays a details page for the meetup
                 meetupViewHolder.mView.setOnClickListener(new View.OnClickListener() {
@@ -131,7 +131,7 @@ public class ViewMeetups extends AppCompatActivity
                 {
                     // Gets the current meetups data and creates a meetupViewHolder
                     meetupViewHolder.setName(meetup.getName());
-                    meetupViewHolder.setInterest(meetup.getInterest());
+                    meetupViewHolder.setInterest(meetup.getSquad());
 
                     // OnClickListener for the item, displays a details page for the meetup
                     meetupViewHolder.mView.setOnClickListener(new View.OnClickListener()

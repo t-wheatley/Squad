@@ -137,9 +137,9 @@ public class SquadDetailActivity extends AppCompatActivity {
                     }
 
                     // Displaying members of the Squad
-                    for (String uid : users.keySet())
+                    for (String uId : users.keySet())
                     {
-                        mDatabase.child("users").child(uid).addListenerForSingleValueEvent(new ValueEventListener()
+                        mDatabase.child("users").child(uId).addListenerForSingleValueEvent(new ValueEventListener()
                         {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot)

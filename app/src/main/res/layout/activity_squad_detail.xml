@@ -34,7 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="110dp"
             android:background="@color/colorPrimary"
-            android:id="@+id/detailsLayout"
+            android:id="@+id/squadDetail_detailsLayout"
             android:layout_toRightOf="@+id/squadDetail_picture"
             android:padding="5dp">
             <TextView
@@ -64,11 +64,11 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/detailsLayout"
+            android:layout_below="@+id/squadDetail_detailsLayout"
             android:background="@color/colorPrimary"
             android:padding="5dp"
             android:layout_marginTop="10dp"
-            android:id="@+id/descriptionLayout"
+            android:id="@+id/squadDetail_descriptionLayout"
             >
 
             <TextView
@@ -90,13 +90,25 @@
                 android:layout_alignParentEnd="true"
                 android:textColor="@color/tw__solid_white"/>
 
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/squadDetail_descriptionLayout"
+            android:background="@color/colorPrimary"
+            android:padding="5dp"
+            android:layout_marginTop="10dp"
+            android:id="@+id/squadDetail_memberLayout"
+            >
+
             <TextView
                 android:text="Members:"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:id="@+id/squadDetail_textViewMembers"
-                android:layout_below="@+id/squadDetail_textEditDescription"
                 style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
 
             <TextView
@@ -116,8 +128,8 @@
             android:layout_width="200dp"
             android:layout_centerHorizontal="true"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/descriptionLayout"
-            android:id="@+id/buttonLayout"
+            android:layout_below="@+id/squadDetail_memberLayout"
+            android:id="@+id/squadDetail_buttonLayout"
             android:background="@color/colorPrimary"
             android:padding="5dp"
             android:layout_marginTop="10dp">
