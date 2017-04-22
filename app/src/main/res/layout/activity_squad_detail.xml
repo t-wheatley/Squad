@@ -90,6 +90,26 @@
                 android:layout_alignParentEnd="true"
                 android:textColor="@color/tw__solid_white"/>
 
+            <TextView
+                android:text="Members:"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:id="@+id/squadDetail_textViewMembers"
+                android:layout_below="@+id/squadDetail_textEditDescription"
+                style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:ems="10"
+                android:layout_below="@+id/squadDetail_textViewMembers"
+                android:layout_alignParentStart="true"
+                android:id="@+id/squadDetail_textEditMembers"
+                android:layout_alignParentEnd="true"
+                android:textColor="@color/tw__solid_white"/>
+
         </RelativeLayout>
 
         <RelativeLayout
