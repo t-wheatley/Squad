@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -18,9 +19,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import uk.ac.tees.donut.squad.R;
+import uk.ac.tees.donut.squad.UserGridViewAdapter;
 import uk.ac.tees.donut.squad.squads.Squad;
 import uk.ac.tees.donut.squad.users.FBUser;
 
@@ -39,6 +43,12 @@ public class SquadDetailActivity extends AppCompatActivity {
     TextView descriptionDisplay;
     TextView memberDisplay;
     String squadId;
+
+    // Members display
+    GridView membersGrid;
+    List<String> userNames;
+    List<String> userPics;
+    List<String> userIds;
 
     String memberList;
     int memberCount;
@@ -61,6 +71,7 @@ public class SquadDetailActivity extends AppCompatActivity {
         nameDisplay = (TextView) findViewById(R.id.squadDetail_textEditName);
         descriptionDisplay = (TextView) findViewById(R.id.squadDetail_textEditDescription);
         memberDisplay = (TextView) findViewById(R.id.squadDetail_textEditMembers);
+        membersGrid = (GridView)findViewById(R.id.squadDetail_userGrid);
         joinBtn = (Button) findViewById(R.id.squadDetail_joinBtn);
 
         // Gets the extra passed from the last activity
@@ -132,6 +143,13 @@ public class SquadDetailActivity extends AppCompatActivity {
 
     public void loadUsers()
     {
+        // Array of names
+        userNames = new ArrayList<String>();
+        // Array of pictures
+        userPics = new ArrayList<String>();
+        // Array of uIds
+        userIds = new ArrayList<String>();
+
         // Setting the loading text
         loadingText.setText("Getting the Squad's members...");
 
@@ -155,7 +173,7 @@ public class SquadDetailActivity extends AppCompatActivity {
             }
 
             // Displaying members of the Squad
-            for (String uId : users.keySet())
+            for (final String uId : users.keySet())
             {
                 mDatabase.child("users").child(uId).addListenerForSingleValueEvent(new ValueEventListener()
                 {
@@ -164,10 +182,12 @@ public class SquadDetailActivity extends AppCompatActivity {
                     {
                         // Getting each member and adding their name to the memberList
                         FBUser user = dataSnapshot.getValue(FBUser.class);
-                        memberList = memberList + user.getName().trim() + "\n";
+                        userNames.add(user.getName());
+                        userPics.add(user.getPicture());
+                        userIds.add(uId);
+
+
                         memberCount++;
-
-
                         // If all members added
                         if(usersSize == memberCount)
                         {
@@ -176,6 +196,9 @@ public class SquadDetailActivity extends AppCompatActivity {
 
                             // Hiding loading overlay
                             loadingOverlay.setVisibility(View.GONE);
+
+                            UserGridViewAdapter gridAdapter = new UserGridViewAdapter(SquadDetailActivity.this, userNames, userPics, userIds);
+                            membersGrid.setAdapter(gridAdapter);
                         }
                     }
 
