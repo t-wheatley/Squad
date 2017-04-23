@@ -29,32 +29,36 @@ import java.util.HashMap;
 import uk.ac.tees.donut.squad.R;
 import uk.ac.tees.donut.squad.posts.Meetup;
 import uk.ac.tees.donut.squad.users.FBUser;
-import uk.ac.tees.donut.squad.users.User;
 
 public class MeetupDetailActivity extends AppCompatActivity
 {
+    // Firebase
     DatabaseReference mDatabase;
     FirebaseUser firebaseUser;
 
+    // Loading Overlay
     RelativeLayout loadingOverlay;
     TextView loadingText;
 
+    // Activity UI
     TextView nameDisplay;
     TextView squadDisplay;
+    TextView hostDisplay;
     TextView descriptionDisplay;
     TextView attendingDisplay;
-    String meetupId;
+    ImageButton editName;
+    ImageButton editDesc;
+    Button attendBtn;
+    Button deleteBtn;
 
+    // Variables
+    String meetupId;
     Meetup meetup;
     Boolean attending;
 
     String memberList;
     int memberCount;
 
-    ImageButton editName;
-    ImageButton editDesc;
-    Button attendBtn;
-    Button deleteBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -71,6 +75,7 @@ public class MeetupDetailActivity extends AppCompatActivity
         // Declaring everything
         nameDisplay = (TextView) findViewById(R.id.meetupDetail_textEditName);
         squadDisplay = (TextView) findViewById(R.id.meetupDetail_textEditSquad);
+        hostDisplay = (TextView) findViewById(R.id.meetupDetail_textEditHost);
         descriptionDisplay = (TextView) findViewById(R.id.meetupDetail_textEditDescription);
         attendBtn = (Button) findViewById(R.id.meetupDetail_attendBtn);
         deleteBtn = (Button) findViewById(R.id.meetupDetail_deleteBtn);
@@ -119,15 +124,15 @@ public class MeetupDetailActivity extends AppCompatActivity
         // Getting the reference for the Firebase Realtime Database
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        // Defaults to not attending
+        // Defaults
         attending = false;
         attendBtn.setText("Attend Meetup");
-
-        // Loads the data for the Meetup from Firebase
         memberList = "";
         memberCount = 0;
-        loadMeetup();
 
+        // Starts the loading chain
+        // loadMeetup -> loadSquad -> loadHost -> loadUsers
+        loadMeetup();
     }
 
     public void loadMeetup()
@@ -145,87 +150,14 @@ public class MeetupDetailActivity extends AppCompatActivity
                 nameDisplay.setText(meetup.getName());
                 descriptionDisplay.setText(meetup.getDescription());
 
-                // Get Squad name from id
-                mDatabase.child("squads").child(meetup.getSquad()).addListenerForSingleValueEvent(new ValueEventListener()
-                {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot)
-                    {
-                        squadDisplay.setText(dataSnapshot.child("name").getValue(String.class));
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError)
-                    {
-
-                    }
-                });
-
                 // If user is the host
                 if(firebaseUser.getUid().equals(meetup.getHost()))
                 {
                     editMode();
                 }
 
-                // Getting the users HashMap
-                final HashMap<String, Boolean> users = meetup.getUsers();
-
-                // If the HashMap isnt empty
-                if (users != null)
-                {
-                    // Changing the loading text
-                    loadingText.setText("Getting the Meetup's attendees...");
-
-                    // Getting the amount of users
-                    final int usersSize = users.size();
-
-                    // Checking if the user is already in the Meetup
-                    if(users.containsKey(firebaseUser.getUid()))
-                    {
-                        attending = true;
-                        attendBtn.setText("Leave Meetup");
-                    }
-
-                    // Displaying members of the Meetup
-                    for (String uId : users.keySet())
-                    {
-                        mDatabase.child("users").child(uId).addListenerForSingleValueEvent(new ValueEventListener()
-                        {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot)
-                            {
-                                // Getting each member and adding their name to the memberList
-                                FBUser user = dataSnapshot.getValue(FBUser.class);
-                                memberList = memberList + user.getName().trim() + "\n";
-                                memberCount++;
-
-
-                                // If all members added
-                                if(usersSize == memberCount)
-                                {
-                                    // Display the members
-                                    attendingDisplay.setText(memberList.trim());
-
-                                    // Hiding loading overlay
-                                    loadingOverlay.setVisibility(View.GONE);
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError)
-                            {
-
-                            }
-                        });
-                    }
-                } else
-                {
-                    // If the squad has no members
-                    attendingDisplay.setText("This Meetup has no one attending!");
-
-                    // Hiding loading overlay
-                    loadingOverlay.setVisibility(View.GONE);
-                }
+                // Load the name of the Squad
+                loadSquad();
             }
 
             @Override
@@ -234,6 +166,120 @@ public class MeetupDetailActivity extends AppCompatActivity
 
             }
         });
+    }
+
+    public void loadSquad()
+    {
+        // Setting the loading text
+        loadingText.setText("Getting the Meetup's Squad...");
+
+        // Get Squad name from id
+        mDatabase.child("squads").child(meetup.getSquad()).addListenerForSingleValueEvent(new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                squadDisplay.setText(dataSnapshot.child("name").getValue(String.class));
+
+                // Load the name of the Host
+                loadHost();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError)
+            {
+
+            }
+        });
+    }
+
+    public void loadHost()
+    {
+        // Setting the loading text
+        loadingText.setText("Getting the Meetup's Host...");
+
+        // Get Host name from id
+        mDatabase.child("users").child(meetup.getHost()).addListenerForSingleValueEvent(new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                hostDisplay.setText(dataSnapshot.child("name").getValue(String.class));
+
+                // Load the attendees of the Meetup
+                loadUsers();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError)
+            {
+
+            }
+        });
+    }
+
+    public void loadUsers()
+    {
+        // Setting the loading text
+        loadingText.setText("Getting the Meetup's attendees...");
+
+        // Getting the users HashMap
+        HashMap<String, Boolean> users = meetup.getUsers();
+
+        // If the HashMap isnt empty
+        if (users != null)
+        {
+
+            // Getting the amount of users
+            final int usersSize = users.size();
+
+            // Checking if the user is already in the Meetup
+            if(users.containsKey(firebaseUser.getUid()))
+            {
+                attending = true;
+                attendBtn.setText("Leave Meetup");
+            }
+
+            // Displaying members of the Meetup
+            for (String uId : users.keySet())
+            {
+                mDatabase.child("users").child(uId).addListenerForSingleValueEvent(new ValueEventListener()
+                {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot)
+                    {
+                        // Getting each member and adding their name to the memberList
+                        FBUser user = dataSnapshot.getValue(FBUser.class);
+                        memberList = memberList + user.getName().trim() + "\n";
+                        memberCount++;
+
+
+                        // If all members added
+                        if(usersSize == memberCount)
+                        {
+                            // Display the members
+                            attendingDisplay.setText(memberList.trim());
+
+                            // Hiding loading overlay
+                            loadingOverlay.setVisibility(View.GONE);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError)
+                    {
+
+                    }
+                });
+            }
+        } else
+        {
+            // If the squad has no members
+            attendingDisplay.setText("This Meetup has no one attending!");
+
+            // Hiding loading overlay
+            loadingOverlay.setVisibility(View.GONE);
+        }
     }
 
     public void deleteMeetupPrompt()
@@ -274,6 +320,10 @@ public class MeetupDetailActivity extends AppCompatActivity
             }
         }
 
+        // Removing the meetup from the user's hosting
+        mDatabase.child("users").child(firebaseUser.getUid()).child("hosting").child(meetupId).removeValue();
+
+        // Removing the meetup
         mDatabase.child("meetups").child(meetupId).removeValue();
         finish();
     }

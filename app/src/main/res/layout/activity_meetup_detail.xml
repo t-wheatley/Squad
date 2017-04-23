@@ -143,11 +143,31 @@
             >
 
             <TextView
+                android:text="Host:"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:id="@+id/meetupDetail_textViewHost"
+                style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:ems="10"
+                android:layout_below="@+id/meetupDetail_textViewHost"
+                android:layout_alignParentStart="true"
+                android:id="@+id/meetupDetail_textEditHost"
+                android:layout_alignParentEnd="true"
+                android:textColor="@color/tw__solid_white"/>
+
+            <TextView
                 android:text="Members:"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:id="@+id/meetupDetail_textViewAttendees"
+                android:layout_below="@+id/meetupDetail_textEditHost"
                 style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
 
             <TextView

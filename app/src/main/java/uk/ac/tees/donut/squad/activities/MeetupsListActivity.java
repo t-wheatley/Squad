@@ -31,6 +31,7 @@ public class MeetupsListActivity extends AppCompatActivity {
 
     String userId;
     Boolean member;
+    Boolean host;
 
     RelativeLayout loadingOverlay;
     TextView loadingText;
@@ -54,6 +55,7 @@ public class MeetupsListActivity extends AppCompatActivity {
         mRecyclerView = (RecyclerView) findViewById(R.id.meetupsList_recyclerView);
 
         member = false;
+        host = false;
 
         // Gets the extra passed from the last activity
         Intent detail = getIntent();
@@ -62,7 +64,13 @@ public class MeetupsListActivity extends AppCompatActivity {
         {
             // Collects the userId passed from the RecyclerView
             userId = (String) b.get("userId");
-            member = true;
+            if((Boolean) b.get("host") == true)
+            {
+                host = true;
+            } else
+            {
+                member = true;
+            }
         }
 
         // Getting the reference for the Firebase Realtime Database
@@ -78,11 +86,13 @@ public class MeetupsListActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // If came from 'View Meetups' button on profile
-        if(member)
+        if(host)
+        {
+            getHosted(userId);
+        } else if(member)
         {
             getUsers(userId);
-        }
-        else
+        } else
         {
             getAll();
         }
@@ -162,6 +172,70 @@ public class MeetupsListActivity extends AppCompatActivity {
                 MeetupViewHolder.class,
                 // Referencing the node where we want the database to store the data from our Object
                 mDatabase.orderByChild("users/" + userId).equalTo(true)
+        ) {
+            @Override
+            protected void populateViewHolder(final MeetupViewHolder viewHolder, final Meetup model, int position) {
+
+                viewHolder.nameField.setText(model.getName());
+
+                String description = model.getDescription().replace("\n", "");
+                String elipsis = "";
+                if(description.length() > 54)
+                    elipsis = "...";
+
+                String shortDesc = description.substring(0, Math.min(description.length(), 54)) + elipsis;
+
+                viewHolder.descriptionfield.setText(shortDesc);
+
+                // Get Squad name from id
+                mDatabase.child("squads").child(model.getSquad()).addListenerForSingleValueEvent(new ValueEventListener()
+                {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot)
+                    {
+                        viewHolder.squadField.setText(dataSnapshot.child("name").getValue(String.class));
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError)
+                    {
+
+                    }
+                });
+
+                viewHolder.mView.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v) {
+                        //Stores the current item's key in a string
+                        String mId = model.getId();
+
+                        //Sends the id to the details activity
+                        Intent detail = new Intent(MeetupsListActivity.this, MeetupDetailActivity.class);
+                        detail.putExtra("meetupId", mId);
+                        startActivity(detail);
+                    }
+                });
+
+                // If loading the last item or empty
+                if ((mAdapter.getItemCount() == loadingCount))
+                {
+                    // Hide the loading overlay
+                    loadingOverlay.setVisibility(View.GONE);
+                }
+                loadingCount++;
+            }
+        };
+    }
+
+    public void getHosted(String userId)
+    {
+        mAdapter = new FirebaseRecyclerAdapter<Meetup, MeetupViewHolder>(
+                Meetup.class,
+                R.layout.item_three_text,
+                MeetupViewHolder.class,
+                // Referencing the node where we want the database to store the data from our Object
+                mDatabase.orderByChild("host").equalTo(userId)
         ) {
             @Override
             protected void populateViewHolder(final MeetupViewHolder viewHolder, final Meetup model, int position) {

@@ -92,13 +92,14 @@ public class SquadDetailActivity extends AppCompatActivity {
         // Getting the reference for the Firebase Realtime Database
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        // Defaults to not a member
+        // Defaults
         member = false;
         joinBtn.setText("Join Squad");
-
-        // Loads the data for the Squad from Firebase
         memberList = "";
         memberCount = 0;
+
+        // Starts the loading chain
+        // loadSquad -> loadUsers
         loadSquad();
     }
 
@@ -117,65 +118,8 @@ public class SquadDetailActivity extends AppCompatActivity {
                 nameDisplay.setText(squad.getName());
                 descriptionDisplay.setText(squad.getDescription());
 
-                // Getting the users HashMap
-                final HashMap<String, Boolean> users = squad.getUsers();
-
-                // If the HashMap isnt empty
-                if (users != null)
-                {
-                    // Changing the loading text
-                    loadingText.setText("Getting the Squad's members...");
-
-                    // Getting the amount of users
-                    final int usersSize = users.size();
-
-                    // Checking if the user is already in the Squad
-                    if(users.containsKey(firebaseUser.getUid()))
-                    {
-                        member = true;
-                        joinBtn.setText("Leave Squad");
-                    }
-
-                    // Displaying members of the Squad
-                    for (String uId : users.keySet())
-                    {
-                        mDatabase.child("users").child(uId).addListenerForSingleValueEvent(new ValueEventListener()
-                        {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot)
-                            {
-                                // Getting each member and adding their name to the memberList
-                                FBUser user = dataSnapshot.getValue(FBUser.class);
-                                memberList = memberList + user.getName().trim() + "\n";
-                                memberCount++;
-
-
-                                // If all members added
-                                if(usersSize == memberCount)
-                                {
-                                    // Display the members
-                                    memberDisplay.setText(memberList.trim());
-
-                                    // Hiding loading overlay
-                                    loadingOverlay.setVisibility(View.GONE);
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError)
-                            {
-
-                            }
-                        });
-                    }
-                } else
-                {
-                    // If the squad has no members
-                    memberDisplay.setText("This Squad has no members yet!");
-
-                    // Hiding loading overlay
-                    loadingOverlay.setVisibility(View.GONE);
-                }
+                // Load the members of the Squad
+                loadUsers();
             }
 
             @Override
@@ -184,6 +128,72 @@ public class SquadDetailActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void loadUsers()
+    {
+        // Setting the loading text
+        loadingText.setText("Getting the Squad's members...");
+
+        // Getting the users HashMap
+        HashMap<String, Boolean> users = squad.getUsers();
+
+        // If the HashMap isnt empty
+        if (users != null)
+        {
+            // Changing the loading text
+            loadingText.setText("Getting the Squad's members...");
+
+            // Getting the amount of users
+            final int usersSize = users.size();
+
+            // Checking if the user is already in the Squad
+            if(users.containsKey(firebaseUser.getUid()))
+            {
+                member = true;
+                joinBtn.setText("Leave Squad");
+            }
+
+            // Displaying members of the Squad
+            for (String uId : users.keySet())
+            {
+                mDatabase.child("users").child(uId).addListenerForSingleValueEvent(new ValueEventListener()
+                {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot)
+                    {
+                        // Getting each member and adding their name to the memberList
+                        FBUser user = dataSnapshot.getValue(FBUser.class);
+                        memberList = memberList + user.getName().trim() + "\n";
+                        memberCount++;
+
+
+                        // If all members added
+                        if(usersSize == memberCount)
+                        {
+                            // Display the members
+                            memberDisplay.setText(memberList.trim());
+
+                            // Hiding loading overlay
+                            loadingOverlay.setVisibility(View.GONE);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError)
+                    {
+
+                    }
+                });
+            }
+        } else
+        {
+            // If the squad has no members
+            memberDisplay.setText("This Squad has no members yet!");
+
+            // Hiding loading overlay
+            loadingOverlay.setVisibility(View.GONE);
+        }
     }
 
     public void squadButton(View view)

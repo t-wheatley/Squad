@@ -207,6 +207,9 @@ public class NewMeetupActivity extends AppCompatActivity
             // Pushing the meetup to the "meetups" node using the meetupId
             mDatabase.child("meetups").child(meetupId).setValue(meetup);
 
+            // Adding the Meetup to the user's hosted
+            mDatabase.child("users").child(user.getUid()).child("hosting").child(meetupId).setValue(true);
+
             // Send user to their meetup on the MeetupDetailActivity activity
             Intent intent = new Intent(NewMeetupActivity.this, MeetupDetailActivity.class);
             intent.putExtra("meetupId", meetupId);
@@ -230,7 +233,7 @@ public class NewMeetupActivity extends AppCompatActivity
             public void onDataChange(DataSnapshot dataSnapshot) {
                 squads = new HashMap<String, String>();
 
-                // Get all the interests
+                // Get all the squads
                 for (DataSnapshot squadsSnapshot: dataSnapshot.getChildren()) {
                     Squad squad = squadsSnapshot.getValue(Squad.class);
                     squads.put(squad.getName(), squad.getId());

@@ -40,29 +40,34 @@ import uk.ac.tees.donut.squad.users.FBUser;
 
 public class ProfileActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener
 {
+    // Firebase + Google
     FirebaseAuth mAuth;
     FirebaseUser firebaseUser;
     GoogleApiClient mGoogleApiClient;
     DatabaseReference mDatabase;
 
+    // Loading Overlay
     RelativeLayout loadingOverlay;
     TextView loadingText;
 
-    Boolean personal;
-    String uId;
-    String userName;
-    String userBio;
-    String userPic;
-    Boolean hasMeetup;
-    Boolean hasSquad;
-
+    // Activity UI
     TextView profileName;
     TextView bio;
     Button squadBtn;
     Button attendingBtn;
+    Button hostingBtn;
     Button signOutBtn;
     ImageButton editBioBtn;
     ImageView profileImage;
+
+    // Variables
+    Boolean personal;
+    String uId;
+    FBUser user;
+    Boolean hasSquad;
+    Boolean hasMeetup;
+    Boolean hasHost;
+
 
 
     @Override
@@ -117,6 +122,15 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
             }
         });
 
+        hostingBtn = (Button) findViewById(R.id.profile_hostingBtn);
+        hostingBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showHosted();
+            }
+        });
+        hostingBtn.setVisibility(View.GONE);
+
         signOutBtn = (Button) findViewById(R.id.profile_signOutBtn);
         signOutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,15 +144,15 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
         editBioBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Load Dialog to edit Bio
                 editBio();
             }
         });
         editBioBtn.setVisibility(View.GONE);
 
         // Setting defaults
-        hasMeetup = false;
         hasSquad = false;
+        hasMeetup = false;
+        hasHost = false;
 
         // Gets the extra passed from the last activity
         Intent detail = getIntent();
@@ -176,100 +190,6 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
         loadInfo();
     }
 
-    public void showAttending()
-    {
-        // If a user has meetups
-        if(hasMeetup)
-        {
-            // Loads the MeetupsList activity displaying the Meetups that the user has attended
-            Intent intent = new Intent(this, MeetupsListActivity.class);
-            intent.putExtra("userId", uId);
-            startActivity(intent);
-        } else
-        {
-            Toast.makeText(getApplicationContext(), userName +
-                    " has no meetups!", Toast.LENGTH_SHORT).show();
-        }
-    }
-    public void showSquads()
-    {
-        // If a user has squads
-        if(hasSquad)
-        {
-            // Loads the SquadList activity displaying the Squads that the user has joined
-            Intent intent = new Intent(this, SquadListActivity.class);
-            intent.putExtra("userId", uId);
-            startActivity(intent);
-        } else
-        {
-            Toast.makeText(getApplicationContext(), userName +
-                    " has no squads!", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    public void signOut()
-    {
-        // Signs the user out of Firebase Auth and then Google Sign In
-        mAuth.signOut();
-        Auth.GoogleSignInApi.signOut(mGoogleApiClient);
-
-        // Loads the LoginActivity activity and closes all other activites
-        Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                | Intent.FLAG_ACTIVITY_CLEAR_TOP
-                | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        finish();
-    }
-
-    public void editBio()
-    {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Bio:");
-
-        // EditText for input
-        final EditText editTextBio = new EditText(this);
-        // Sets the expected input types, text, long message, auto correct and multi line
-        editTextBio.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_LONG_MESSAGE |
-                InputType.TYPE_TEXT_FLAG_AUTO_COMPLETE | InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE);
-        // Sets the maximum characters to 120
-        editTextBio.setFilters(new InputFilter[] { new InputFilter.LengthFilter(120) });
-        builder.setView(editTextBio);
-
-        // Buttons on the Dialog
-        builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                userBio = editTextBio.getText().toString();
-                bio.setText(userBio);
-                updateBio(userBio);
-            }
-        });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-
-        // Displays the Dialog
-        builder.show();
-    }
-
-    public void updateBio(String bio)
-    {
-        if (firebaseUser != null)
-        {
-            // Pushing the new bio to the bio field of the User's data
-            mDatabase.child(firebaseUser.getUid()).child("bio").setValue(bio);
-
-        } else
-        {
-            // No user is signed in
-            Toast.makeText(this, "Something went wrong, please try again.", Toast.LENGTH_SHORT).show();
-        }
-    }
-
     public void loadInfo()
     {
         if (firebaseUser != null)
@@ -281,12 +201,16 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
                 public void onDataChange(DataSnapshot dataSnapshot)
                 {
                     // Gets the data from Firebase and stores it in a FBUser class
-                    FBUser user = dataSnapshot.getValue(FBUser.class);
+                    user = dataSnapshot.getValue(FBUser.class);
 
-                    // Storing the user info
-                    userName = user.getName();
-                    userBio = user.getBio();
-                    userPic = user.getPicture();
+                    // Checking if user has Squads
+                    if(user.getSquads() != null)
+                    {
+                        hasSquad = true;
+                    } else
+                    {
+                        hasSquad = false;
+                    }
 
                     // Checking if user has Meetups
                     if(user.getMeetups() != null)
@@ -298,22 +222,23 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
                     }
 
                     // Checking if user has Squads
-                    if(user.getSquads() != null)
+                    if(user.getHosting() != null)
                     {
-                        hasSquad = true;
+                        hasHost = true;
                     } else
                     {
-                        hasSquad = false;
+                        hasHost = false;
                     }
 
+
                     // Displays the user's name in the editText
-                    profileName.setText(userName);
+                    profileName.setText(user.getName());
 
                     // If user has created a bio
-                    if(userBio != null)
+                    if(user.getBio().trim() != null)
                     {
                         // Displays the user's bio in the editText
-                        bio.setText(userBio);
+                        bio.setText(user.getBio().trim());
                     } else
                     {
                         // Default bio
@@ -322,7 +247,7 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
 
                     // Displays the photo in the ImageView
                     Glide.with(ProfileActivity.this)
-                            .load(userPic)
+                            .load(user.getPicture().trim())
                             .diskCacheStrategy(DiskCacheStrategy.NONE)
                             .skipMemoryCache(true)
                             .listener(new RequestListener<String, GlideDrawable>() {
@@ -361,9 +286,125 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
         }
     }
 
+    public void showSquads()
+    {
+        // If a user has squads
+        if(hasSquad)
+        {
+            // Loads the SquadList activity displaying the Squads that the user has joined
+            Intent intent = new Intent(this, SquadListActivity.class);
+            intent.putExtra("userId", uId);
+            startActivity(intent);
+        } else
+        {
+            Toast.makeText(getApplicationContext(), user.getName().trim() +
+                    " has no squads!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void showAttending()
+    {
+        // If a user has meetups
+        if(hasMeetup)
+        {
+            // Loads the MeetupsList activity displaying the Meetups that the user has attended
+            Intent intent = new Intent(this, MeetupsListActivity.class);
+            intent.putExtra("userId", uId);
+            startActivity(intent);
+        } else
+        {
+            Toast.makeText(getApplicationContext(), user.getName().trim() +
+                    " has no meetups!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void showHosted()
+    {
+        // If a user is hosting meetups
+        if(hasHost)
+        {
+            // Loads the MeetupsList activity displaying the Meetups that the user is hosting
+            Intent intent = new Intent(this, MeetupsListActivity.class);
+            intent.putExtra("userId", uId);
+            intent.putExtra("host", true);
+            startActivity(intent);
+        } else
+        {
+            Toast.makeText(getApplicationContext(), user.getName().trim() +
+                    " is hosting no meetups!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void signOut()
+    {
+        // Signs the user out of Firebase Auth and then Google Sign In
+        mAuth.signOut();
+        Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+
+        // Loads the LoginActivity activity and closes all other activites
+        Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TOP
+                | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
+
+    public void editBio()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Bio:");
+
+        // EditText for input
+        final EditText editTextBio = new EditText(this);
+        // Sets the expected input types, text, long message, auto correct and multi line
+        editTextBio.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_LONG_MESSAGE |
+                InputType.TYPE_TEXT_FLAG_AUTO_COMPLETE | InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE);
+        // Sets the maximum characters to 120
+        editTextBio.setFilters(new InputFilter[] { new InputFilter.LengthFilter(120) });
+        builder.setView(editTextBio);
+
+        // Buttons on the Dialog
+        builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String newBio = editTextBio.getText().toString();
+                user.setBio(newBio);
+                bio.setText(newBio);
+                updateBio(newBio);
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        // Displays the Dialog
+        builder.show();
+    }
+
+    public void updateBio(String bio)
+    {
+        if (firebaseUser != null)
+        {
+            // Pushing the new bio to the bio field of the User's data
+            mDatabase.child(firebaseUser.getUid()).child("bio").setValue(bio);
+
+        } else
+        {
+            // No user is signed in
+            Toast.makeText(this, "Something went wrong, please try again.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     public void personalMode()
     {
         // Displaying what the user should see on their own profile
+        squadBtn.setText("My Squads");
+        attendingBtn.setText("My Meetups");
+        hostingBtn.setVisibility(View.VISIBLE);
         signOutBtn.setVisibility(View.VISIBLE);
         editBioBtn.setVisibility(View.VISIBLE);
     }
