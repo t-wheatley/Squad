@@ -19,6 +19,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
@@ -131,11 +135,11 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
         hasSquad = false;
 
         // Load info and display loading overlay
-        loadInfo();
         loadingOverlay = (RelativeLayout) this.findViewById(R.id.loading_overlay);
         loadingText = (TextView) this.findViewById(R.id.loading_overlay_text);
         loadingText.setText("Loading profile info...");
         loadingOverlay.setVisibility(View.VISIBLE);
+        loadInfo();
     }
 
     public void showAttending()
@@ -236,12 +240,6 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
     {
         if (firebaseUser != null)
         {
-            // Gets the photo from the Firebase User and displays it in the ImageView
-            Glide.with(this)
-                    .load(mAuth.getCurrentUser().getPhotoUrl())
-                    .fitCenter()
-                    .error(R.drawable.com_facebook_profile_picture_blank_portrait)
-                    .into(profileImage);
 
             // Gets the user's displayname and displays it in the editText
             profileName.setText(mAuth.getCurrentUser().getDisplayName());
@@ -254,6 +252,27 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
                 {
                     // Gets the data from Firebase and stores it in a FBUser class
                     FBUser user = dataSnapshot.getValue(FBUser.class);
+
+                    // Gets the photo from the Firebase User and displays it in the ImageView
+                    Glide.with(ProfileActivity.this)
+                            .load(user.getPicture())
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .skipMemoryCache(true)
+                            .listener(new RequestListener<String, GlideDrawable>() {
+                                @Override
+                                public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                                    return false;
+                                }
+
+                                @Override
+                                public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                                    return false;
+                                }
+                            })
+                            .fitCenter()
+                            .error(R.drawable.com_facebook_profile_picture_blank_portrait)
+                            .into(profileImage);
+
 
                     // If user has created a bio
                     if(user.getBio() != null)
