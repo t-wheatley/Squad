@@ -24,6 +24,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -93,13 +94,8 @@ public class LoginActivity extends AppCompatActivity implements
                 if (user != null) {
                     loadingOverlay.setVisibility(View.VISIBLE);
 
-                    // Try to update details
-                    if (googleSignInAccount != null)
-                    {
-                        updateDetails(user);
-                    }
-                    // Hiding loading overlay
-                    loadingOverlay.setVisibility(View.GONE);
+                    // Update the users details
+                    tryUpdate();
 
                     // User is signed in, load MenuActivity
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
@@ -219,22 +215,50 @@ public class LoginActivity extends AppCompatActivity implements
         }
     }
 
-    private void updateDetails(FirebaseUser fUser)
+    private void tryUpdate()
     {
-        final String uId = fUser.getUid();
-        final String newName = googleSignInAccount.getDisplayName();
-        final Uri newPic = googleSignInAccount.getPhotoUrl();
+        String uId = null;
+        String name = null;
+        Uri photoUrl = null;
 
-        // Creating a UserProfileChangeRequest
-        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                .setDisplayName(newName)
-                .setPhotoUri(newPic)
-                .build();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null)
+        {
+            for (UserInfo profile : user.getProviderData())
+            {
+                uId = user.getUid();
 
-        // Sending the UserProfileChangeRequest
-        fUser.updateProfile(profileUpdates);
+                // Name and profile photo Url
+                name = profile.getDisplayName();
+                photoUrl = profile.getPhotoUrl();
 
-        // Sending the new data to the Firebase Database
+                // Creating a UserProfileChangeRequest
+                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                        .setDisplayName(name)
+                        .setPhotoUri(photoUrl)
+                        .build();
+
+                // Sending the UserProfileChangeRequest
+                user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>()
+                {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task)
+                    {
+                        Log.d(TAG, "Firebase Auth Profile Updated");
+                    }
+                });
+
+            }
+        }
+
+        if((uId != null) && (name != null) &&(photoUrl != null))
+        {
+            updateFBUser(uId, name, photoUrl);
+        }
+    }
+
+    public void updateFBUser(final String uId, final String name, final Uri photoUrl)
+    {
         mDatabase.child(uId).addListenerForSingleValueEvent(new ValueEventListener()
         {
             @Override
@@ -242,8 +266,8 @@ public class LoginActivity extends AppCompatActivity implements
             {
                 // Gets the data from Firebase and stores it in a Squad class
                 FBUser user = dataSnapshot.getValue(FBUser.class);
-                user.setPicture(newPic.toString());
-                user.setName(newName);
+                user.setPicture(photoUrl.toString());
+                user.setName(name);
 
                 mDatabase.child(uId).setValue(user);
             }
@@ -254,6 +278,6 @@ public class LoginActivity extends AppCompatActivity implements
 
             }
         });
-    }
 
+    }
 }
