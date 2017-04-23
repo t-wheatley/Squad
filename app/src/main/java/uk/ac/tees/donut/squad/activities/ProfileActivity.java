@@ -247,7 +247,7 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
             profileName.setText(mAuth.getCurrentUser().getDisplayName());
 
             // Get the user's Bio
-            mDatabase.child(firebaseUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener()
+            mDatabase.child(firebaseUser.getUid()).addValueEventListener(new ValueEventListener()
             {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot)
@@ -268,12 +268,18 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
                     if(user.getMeetups() != null)
                     {
                         hasMeetup = true;
+                    } else
+                    {
+                        hasMeetup = false;
                     }
 
                     // Checking if user has Squads
                     if(user.getSquads() != null)
                     {
                         hasSquad = true;
+                    } else
+                    {
+                        hasSquad = false;
                     }
 
                     // If profileName != default and profileImage isnt null

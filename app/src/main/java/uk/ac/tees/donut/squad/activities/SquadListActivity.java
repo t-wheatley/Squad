@@ -22,7 +22,7 @@ import uk.ac.tees.donut.squad.squads.Squad;
 
 public class SquadListActivity extends AppCompatActivity {
 
-    DatabaseReference mDatabase;
+    private DatabaseReference mDatabase;
 
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
@@ -37,13 +37,15 @@ public class SquadListActivity extends AppCompatActivity {
     int loadingCount;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_squad_list);
 
         // Display loading overlay
         loadingOverlay = (RelativeLayout) this.findViewById(R.id.loading_overlay);
         loadingText = (TextView) this.findViewById(R.id.loading_overlay_text);
+        loadingText.setText("Loading Squads...");
         loadingOverlay.setVisibility(View.VISIBLE);
         loadingCount = 1;
 
@@ -62,25 +64,9 @@ public class SquadListActivity extends AppCompatActivity {
             member = true;
         }
 
+        // Getting the reference for the Firebase Realtime Database
         mDatabase = FirebaseDatabase.getInstance().getReference("squads");
 
-        // If came from 'Your Squads' button on profile
-        if(member)
-        {
-            loadingText.setText("Loading your Squads...");
-            getUsers(userId);
-        }
-        else
-        {
-            loadingText.setText("Loading Squads...");
-            getAll();
-        }
-
-        mRecyclerView.setAdapter(mAdapter);
-    }
-
-    public void getAll()
-    {
         if(mRecyclerView != null)
         {
             mRecyclerView.setHasFixedSize(true);
@@ -90,12 +76,26 @@ public class SquadListActivity extends AppCompatActivity {
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        // Setting up Firebase recycler adapter
+        // If came from 'View Squads' button on profile
+        if(member)
+        {
+            getUsers(userId);
+        }
+        else
+        {
+            getAll();
+        }
+
+        mRecyclerView.setAdapter(mAdapter);
+    }
+
+    public void getAll()
+    {
         mAdapter = new FirebaseRecyclerAdapter<Squad, SquadViewHolder>(
                 Squad.class,
                 R.layout.item_three_text,
                 SquadViewHolder.class,
-                //referencing the node where we want the database to store the data from our Object
+                // Referencing the node where we want the database to store the data from our Object
                 mDatabase
         ) {
             @Override
@@ -140,21 +140,11 @@ public class SquadListActivity extends AppCompatActivity {
 
     public void getUsers(String userId)
     {
-        if(mRecyclerView != null)
-        {
-            mRecyclerView.setHasFixedSize(true);
-        }
-
-        // Setting up the layout manager
-        mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-
-        // Setting up Firebase recycler adapter
         mAdapter = new FirebaseRecyclerAdapter<Squad, SquadViewHolder>(
                 Squad.class,
                 R.layout.item_three_text,
                 SquadViewHolder.class,
-                //referencing the node where we want the database to store the data from our Object
+                // Referencing the node where we want the database to store the data from our Object
                 mDatabase.orderByChild("users/" + userId).equalTo(true)
         ) {
             @Override
@@ -196,8 +186,6 @@ public class SquadListActivity extends AppCompatActivity {
                 loadingCount++;
             }
         };
-
-
     }
 
     public static class SquadViewHolder extends RecyclerView.ViewHolder
