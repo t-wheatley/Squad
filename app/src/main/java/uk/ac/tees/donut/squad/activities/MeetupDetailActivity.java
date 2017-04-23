@@ -91,13 +91,12 @@ public class MeetupDetailActivity extends AppCompatActivity
         squadDisplay.setEnabled(false);
         descriptionDisplay.setEnabled(false);
 
-        // Gets the extra passed from the last activity
-        Intent detail = getIntent();
-        Bundle b = detail.getExtras();
-
         // Getting the current user
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
+        // Gets the extra passed from the last activity
+        Intent detail = getIntent();
+        Bundle b = detail.getExtras();
         if(b != null)
         {
             // Collects the meetupId passed from the RecyclerView

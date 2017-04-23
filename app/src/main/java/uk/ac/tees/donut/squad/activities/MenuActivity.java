@@ -5,6 +5,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import uk.ac.tees.donut.squad.R;
 import uk.ac.tees.donut.squad.debug.SquadDebug;
 import uk.ac.tees.donut.squad.location.GeocoderActivity;
@@ -37,6 +46,30 @@ public class MenuActivity extends AppCompatActivity {
 
             startActivity(intent);
         }
+
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("squads");
+
+        mDatabase.orderByChild("users/" + "Gk3J3QMMT9OOnn6ytN23DpIwMKQ2").equalTo(true).addListenerForSingleValueEvent(new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
+                    Squad squad = messageSnapshot.getValue(Squad.class);
+                    squad.getName();
+                }
+
+                Intent detail = new Intent(MenuActivity.this, SquadDetailActivity.class);
+                //detail.putExtra("squadId", squad.getId());
+                //startActivity(detail);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError)
+            {
+
+            }
+        });
 
     }
 
