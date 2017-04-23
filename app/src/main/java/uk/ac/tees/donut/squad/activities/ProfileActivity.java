@@ -45,9 +45,12 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
     TextView loadingText;
 
     private String bioText;
+    Boolean hasMeetup;
+    Boolean hasSquad;
 
     TextView profileName;
     TextView bio;
+    Button squadBtn;
     Button attendingBtn;
     Button signOutBtn;
     ImageButton editBioBtn;
@@ -86,11 +89,19 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
         // Getting ui elements
         profileImage = (ImageView)findViewById(R.id.profileImage_ImageView);
 
-        profileName = (TextView) findViewById(R.id.profileName);
+        profileName = (TextView) findViewById(R.id.profile_name);
 
         bio = (TextView) findViewById(R.id.bio);
 
-        attendingBtn = (Button) findViewById(R.id.attendingBtn);
+        squadBtn = (Button) findViewById(R.id.profile_squadsBtn);
+        squadBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSquads();
+            }
+        });
+
+        attendingBtn = (Button) findViewById(R.id.profile_attendingBtn);
         attendingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -98,7 +109,7 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
             }
         });
 
-        signOutBtn = (Button) findViewById(R.id.signOutBtn);
+        signOutBtn = (Button) findViewById(R.id.profile_signOutBtn);
         signOutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,6 +126,10 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
             }
         });
 
+        // Setting defaults
+        hasMeetup = false;
+        hasSquad = false;
+
         // Load info and display loading overlay
         loadInfo();
         loadingOverlay = (RelativeLayout) this.findViewById(R.id.loading_overlay);
@@ -125,13 +140,33 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
 
     public void showAttending()
     {
-        // Loads the ViewMeetups acitivty displaying the meetups that the user has attended
-        Intent intent = new Intent(this, ViewMeetups.class);
-        Bundle b = new Bundle();
-        b.putBoolean("ATT", true);
-        intent.putExtras(b);
-        startActivity(intent);
-        finish();
+        // If a user has meetups
+        if(hasMeetup)
+        {
+            // Loads the MeetupsList activity displaying the Meetups that the user has attended
+            Intent intent = new Intent(this, MeetupsListActivity.class);
+            intent.putExtra("userId", firebaseUser.getUid());
+            startActivity(intent);
+        } else
+        {
+            Toast.makeText(getApplicationContext(), mAuth.getCurrentUser().getDisplayName() +
+                    " has no meetups!", Toast.LENGTH_SHORT).show();
+        }
+    }
+    public void showSquads()
+    {
+        // If a user has squads
+        if(hasSquad)
+        {
+            // Loads the SquadList activity displaying the Squads that the user has joined
+            Intent intent = new Intent(this, SquadListActivity.class);
+            intent.putExtra("userId", firebaseUser.getUid());
+            startActivity(intent);
+        } else
+        {
+            Toast.makeText(getApplicationContext(), mAuth.getCurrentUser().getDisplayName() +
+                    " has no squads!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void signOut()
@@ -217,18 +252,30 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot)
                 {
-                    // If user has created a bio
-                    if(dataSnapshot.hasChild("bio"))
-                    {
-                        // Gets the data from Firebase and stores it in a FBUser class
-                        FBUser user = dataSnapshot.getValue(FBUser.class);
+                    // Gets the data from Firebase and stores it in a FBUser class
+                    FBUser user = dataSnapshot.getValue(FBUser.class);
 
-                        // Displays the found meetup's attributes
+                    // If user has created a bio
+                    if(user.getBio() != null)
+                    {
                         bio.setText(user.getBio());
                     } else
                     {
-                        bio.setText("Write something about yourself!");
+                        bio.setText("This user has no bio!");
                     }
+
+                    // Checking if user has Meetups
+                    if(user.getMeetups() != null)
+                    {
+                        hasMeetup = true;
+                    }
+
+                    // Checking if user has Squads
+                    if(user.getSquads() != null)
+                    {
+                        hasSquad = true;
+                    }
+
                     // If profileName != default and profileImage isnt null
                     if ((!profileName.getText().equals("'Users Profile")) && (profileImage != null))
                     {
