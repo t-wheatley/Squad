@@ -64,7 +64,7 @@ public class NewMeetupActivity extends AppCompatActivity
     private EditText editName;
     private EditText editAddress1;
     private EditText editAddress2;
-    private EditText editAddressT;
+    private EditText editAddressTC;
     private EditText editAddressC;
     private EditText editAddressPC;
     private Spinner spinnerSquad;
@@ -87,7 +87,7 @@ public class NewMeetupActivity extends AppCompatActivity
         // Links the variables to their layout items.
         editAddress1 = (EditText) findViewById(R.id.newMeetup_textEditAddress1);
         editAddress2 =(EditText) findViewById(R.id.newMeetup_textEditAddress2);
-        editAddressT = (EditText) findViewById(R.id.newMeetup_textEditAddressTC);
+        editAddressTC = (EditText) findViewById(R.id.newMeetup_textEditAddressTC);
         editAddressC = (EditText) findViewById(R.id.newMeetup_textEditAddressCounty);
         editAddressPC = (EditText) findViewById(R.id.newMeetup_textEditAddressPC);
 
@@ -108,8 +108,8 @@ public class NewMeetupActivity extends AppCompatActivity
                 }
                 else
                 {
-                    Toast.makeText(NewMeetupActivity.this, "Please provide a name, interest, " +
-                            "description and location"
+                    Toast.makeText(NewMeetupActivity.this, "Please provide a Name, Squad, " +
+                            "Description and Location"
                             , Toast.LENGTH_SHORT).show();
                 }
             }
@@ -185,7 +185,7 @@ public class NewMeetupActivity extends AppCompatActivity
         description = editDescription.getText().toString();
         squadId = squads.get(spinnerSquad.getSelectedItem().toString().trim());
         addressFull = editAddress1.getText().toString() + " " + editAddress2.getText().toString()
-                + " " + editAddressT.getText().toString() + " " + editAddressC.getText().toString()
+                + " " + editAddressTC.getText().toString() + " " + editAddressC.getText().toString()
                 + " " +editAddressPC.getText().toString();
 
         geocode();
@@ -285,7 +285,7 @@ public class NewMeetupActivity extends AppCompatActivity
         } else if(editAddress2.getText().toString().trim().length() > 0)
         {
             return true;
-        } else if(editAddressT.getText().toString().trim().length() > 0)
+        } else if(editAddressTC.getText().toString().trim().length() > 0)
         {
             return true;
         } else if(editAddressC.getText().toString().trim().length() > 0)

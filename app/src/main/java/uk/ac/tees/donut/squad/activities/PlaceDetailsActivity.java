@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.ImageSwitcher;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -44,6 +45,8 @@ public class PlaceDetailsActivity extends AppCompatActivity {
     TextView noPic;
     TextView address;
     TextView squad;
+    Button mapBtn;
+    Button directionsBtn;
 
     ImageSwitcher gallery;
     RelativeLayout galleryLayout;
@@ -66,6 +69,26 @@ public class PlaceDetailsActivity extends AppCompatActivity {
         noPic = (TextView) findViewById(R.id.noPic);
         address = (TextView) findViewById(R.id.address);
         squad = (TextView) findViewById(R.id.squadText);
+
+        mapBtn = (Button) findViewById(R.id.mapButton);
+        mapBtn.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                openMapLocation();
+            }
+        });
+
+        directionsBtn = (Button) findViewById(R.id.directionsButton);
+        directionsBtn.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                openMapDirections();
+            }
+        });
 
         gallery = (ImageSwitcher) findViewById(R.id.placeGallery);
         galleryLayout = (RelativeLayout) findViewById(R.id.galleryLayout);
@@ -153,13 +176,13 @@ public class PlaceDetailsActivity extends AppCompatActivity {
         });
     }
 
-    private void openMapLocation(View view)
+    private void openMapLocation()
     {
-
+        Toast.makeText(PlaceDetailsActivity.this, "Nothing here yet", Toast.LENGTH_LONG).show();
     }
 
-    private void openMapDirections(View view)
+    private void openMapDirections()
     {
-
+        Toast.makeText(PlaceDetailsActivity.this, "Nothing here yet", Toast.LENGTH_LONG).show();
     }
 }

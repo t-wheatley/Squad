@@ -1,6 +1,7 @@
 package uk.ac.tees.donut.squad.activities;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -51,16 +52,16 @@ public class NewPlaceActivity extends AppCompatActivity {
     RelativeLayout loadingOverlay;
     TextView loadingText;
 
-    private EditText editName;
     private Spinner spinnerInterest;
-    private EditText editDescription;
     private Button btnSubmit;
 
-    private EditText editA1;
-    private EditText editA2;
-    private EditText editTC;
-    private EditText editC;
-    private EditText editPC;
+    private EditText editName;
+    private EditText editDescription;
+    private EditText editAddress1;
+    private EditText editAddress2;
+    private EditText editAddressTC;
+    private EditText editAddressC;
+    private EditText editAddressPC;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -78,18 +79,29 @@ public class NewPlaceActivity extends AppCompatActivity {
         editDescription = (EditText) findViewById(R.id.textEditDescription);
         btnSubmit = (Button) findViewById(R.id.buttonSubmit);
 
-        editA1 = (EditText) findViewById(R.id.textEditAddress1);
-        editA2 = (EditText) findViewById(R.id.textEditAddress2);
-        editTC = (EditText) findViewById(R.id.textEditAddressTC);
-        editC = (EditText) findViewById(R.id.textEditAddressCounty);
-        editPC = (EditText) findViewById(R.id.textEditAddressPC);
+        editAddress1 = (EditText) findViewById(R.id.textEditAddress1);
+        editAddress2 = (EditText) findViewById(R.id.textEditAddress2);
+        editAddressTC = (EditText) findViewById(R.id.textEditAddressTC);
+        editAddressC = (EditText) findViewById(R.id.textEditAddressCounty);
+        editAddressPC = (EditText) findViewById(R.id.textEditAddressPC);
 
         // onClick listener for the submit button
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // When pressed calls the submitMeeup method
-                submitPlace();
+                // When pressed calls the submitPlace method
+                if(checkEditTexts())
+                {
+                    submitPlace();
+                }
+                else
+                {
+                    Toast.makeText(NewPlaceActivity.this, "Please provide a Name, Squad, " +
+                                    "Description and Location"
+                            , Toast.LENGTH_SHORT).show();
+                }
+
+
             }
         });
 
@@ -144,16 +156,20 @@ public class NewPlaceActivity extends AppCompatActivity {
     }
 
     private void submitPlace(){
+        // Display loading overlay
+        loadingText.setText("Posting your Place...");
+        loadingOverlay.setVisibility(View.VISIBLE);
+
         // Gets the strings from the editTexts
         final String name = editName.getText().toString();
         final String interest = spinnerInterest.getSelectedItem().toString();
         final String description = editDescription.getText().toString();
 
-        final String a1 = editA1.getText().toString();
-        final String a2 = editA2.getText().toString();
-        final String tc = editTC.getText().toString();
-        final String c = editC.getText().toString();
-        final String pc = editPC.getText().toString();
+        final String a1 = editAddress1.getText().toString();
+        final String a2 = editAddress1.getText().toString();
+        final String tc = editAddressTC.getText().toString();
+        final String c = editAddressC.getText().toString();
+        final String pc = editAddressPC.getText().toString();
 
 
         // Checks if the name field is empty
@@ -173,7 +189,6 @@ public class NewPlaceActivity extends AppCompatActivity {
 
         // Disable button so there are no multi-posts
         setEditingEnabled(false);
-        Toast.makeText(this, "Posting...", Toast.LENGTH_SHORT).show();
 
         // Calls the createMeetup method with the strings entered
         createPlace(name, interest, description, a1, a2, tc, c, pc);
@@ -188,7 +203,6 @@ public class NewPlaceActivity extends AppCompatActivity {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             // User is signed in
-
             // Creating a new meetup node and getting the key value
             String placeId = mDatabase.child("places").push().getKey();
 
@@ -197,7 +211,14 @@ public class NewPlaceActivity extends AppCompatActivity {
 
             // Pushing the meetup to the "meetups" node using the placeId
             mDatabase.child("places").child(placeId).setValue(place);
-        } else {
+
+            // Send user to their meetup on the MeetupDetailActivity activity
+            Intent intent = new Intent(NewPlaceActivity.this, PlaceDetailsActivity.class);
+            intent.putExtra("placeId", placeId);
+            startActivity(intent);
+            finish();
+        } else
+        {
             // No user is signed in
             Toast.makeText(this, "Something went wrong, please try again.", Toast.LENGTH_SHORT).show();
         }
@@ -248,5 +269,44 @@ public class NewPlaceActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    // Checks at least one of the location fields has a value and name + desc have a value
+    public boolean checkEditTexts()
+    {
+        // Checks if the name field is empty
+        if (editName.getText().toString().trim().length() == 0)
+        {
+            editName.setError("Required");
+            return false;
+        }
+
+        // Checks if the desc field is empty
+        if (editDescription.getText().toString().trim().length() == 0)
+        {
+            editDescription.setError("Required");
+            return false;
+        }
+
+        // Checks a location field has been entered
+        if(editAddress1.getText().toString().trim().length() > 0)
+        {
+            return true;
+        } else if(editAddress2.getText().toString().trim().length() > 0)
+        {
+            return true;
+        } else if(editAddressTC.getText().toString().trim().length() > 0)
+        {
+            return true;
+        } else if(editAddressC.getText().toString().trim().length() > 0)
+        {
+            return true;
+        } else if(editAddressPC.getText().toString().trim().length() > 0)
+        {
+            return true;
+        } else
+        {
+            return false;
+        }
     }
 }

@@ -87,41 +87,51 @@ public class LoginActivity extends AppCompatActivity implements
                 .build();
 
         // AuthListener used to check if the user has previously signed in
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
+        mAuthListener = new FirebaseAuth.AuthStateListener()
+        {
             @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth)
+            {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    loadingOverlay.setVisibility(View.VISIBLE);
-
-                    // Update the users details
-                    tryUpdate();
-
+                if (user != null)
+                {
                     // User is signed in, load MenuActivity
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                    Intent i = new Intent(LoginActivity.this, MenuActivity.class);
-                    startActivity(i);
-                    finish();
-                } else {
+
+                    // Display loading overlay
+                    loadingOverlay.setVisibility(View.VISIBLE);
+
+                    if (googleSignInAccount != null)
+                    {
+                        updateGuarantee(user);
+                    } else
+                    {
+                        // Update the users details
+                        tryUpdate(user);
+                    }
+                } else
+                {
                     // User is not signed in, nothing
                     Log.d(TAG, "onAuthStateChanged:signed_out");
                 }
-                // ...
             }
         };
 
     }
 
     @Override
-    public void onStart() {
+    public void onStart()
+    {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
     }
 
     @Override
-    public void onStop() {
+    public void onStop()
+    {
         super.onStop();
-        if (mAuthListener != null) {
+        if (mAuthListener != null)
+        {
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
@@ -133,35 +143,43 @@ public class LoginActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
+    public void onClick(View v)
+    {
+        switch (v.getId())
+        {
             case R.id.sign_in_button:
                 signIn();
                 break;
             // ...
         }
     }
-    private void signIn() {
+
+    private void signIn()
+    {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
         super.onActivityResult(requestCode, resultCode, data);
 
         // Display loading overlay
         loadingOverlay.setVisibility(View.VISIBLE);
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN) {
+        if (requestCode == RC_SIGN_IN)
+        {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            if (result.isSuccess()) {
+            if (result.isSuccess())
+            {
                 // Google Sign In was successful, authenticate with Firebase
                 googleSignInAccount = result.getSignInAccount();
                 firebaseAuthWithGoogle(googleSignInAccount);
                 handleSignInResult(result);
-            } else {
+            } else
+            {
                 // Google Sign In failed, update UI appropriately
                 Toast.makeText(LoginActivity.this, "Google Sign-In failed.",
                         Toast.LENGTH_SHORT).show();
@@ -178,15 +196,18 @@ public class LoginActivity extends AppCompatActivity implements
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
+                {
                     @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
+                    public void onComplete(@NonNull Task<AuthResult> task)
+                    {
                         Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
 
                         // If sign in fails, display a message to the user. If sign in succeeds
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
-                        if (!task.isSuccessful()) {
+                        if (!task.isSuccessful())
+                        {
                             Log.w(TAG, "signInWithCredential", task.getException());
                             Toast.makeText(LoginActivity.this, "Firebase Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
@@ -199,12 +220,15 @@ public class LoginActivity extends AppCompatActivity implements
                 });
     }
 
-    private void handleSignInResult(GoogleSignInResult result) {
+    private void handleSignInResult(GoogleSignInResult result)
+    {
         Log.d(TAG, "handleSignInResult:" + result.isSuccess());
-        if (result.isSuccess()) {
+        if (result.isSuccess())
+        {
             // Signed in successfully, update profile info, show authenticated UI.
             Log.d(TAG, "GoogleSignInResult successful");
-        } else {
+        } else
+        {
             Log.d(TAG, "GoogleSignInResult not successful");
 
             Toast.makeText(LoginActivity.this, "GoogleSignInResult failed.",
@@ -215,28 +239,24 @@ public class LoginActivity extends AppCompatActivity implements
         }
     }
 
-    private void tryUpdate()
+    // Method to try update from getProviderData
+    private void tryUpdate(FirebaseUser firebaseUser)
     {
-        String uId = null;
-        String name = null;
-        Uri photoUrl = null;
-
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        final FirebaseUser user = firebaseUser;
         if (user != null)
         {
             for (UserInfo profile : user.getProviderData())
             {
-                uId = user.getUid();
-
                 // Name and profile photo Url
-                name = profile.getDisplayName();
-                photoUrl = profile.getPhotoUrl();
+                final String name = profile.getDisplayName();
+                final Uri photoUrl = profile.getPhotoUrl();
 
                 // Creating a UserProfileChangeRequest
                 UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                         .setDisplayName(name)
                         .setPhotoUri(photoUrl)
                         .build();
+
 
                 // Sending the UserProfileChangeRequest
                 user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>()
@@ -245,39 +265,79 @@ public class LoginActivity extends AppCompatActivity implements
                     public void onComplete(@NonNull Task<Void> task)
                     {
                         Log.d(TAG, "Firebase Auth Profile Updated");
+                        updateFBUser(user.getUid(), name, photoUrl);
                     }
                 });
 
             }
         }
+    }
 
-        if((uId != null) && (name != null) &&(photoUrl != null))
+    // Method for guaranteed update using GoogleSignInAccount
+    public void updateGuarantee(FirebaseUser firebaseUser)
+    {
+        // GoogleSignInAccount update
+        final String uId = firebaseUser.getUid();
+        final String newName = googleSignInAccount.getDisplayName();
+        final Uri newPic = googleSignInAccount.getPhotoUrl();
+
+        // Creating a UserProfileChangeRequest
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                .setDisplayName(newName)
+                .setPhotoUri(newPic)
+                .build();
+
+        // Sending the UserProfileChangeRequest
+        firebaseUser.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>()
         {
-            updateFBUser(uId, name, photoUrl);
-        }
+            @Override
+            public void onComplete(@NonNull Task<Void> task)
+            {
+                Log.d(TAG, "Firebase Auth Profile Updated");
+                updateFBUser(uId, newName, newPic);
+            }
+        });
     }
 
     public void updateFBUser(final String uId, final String name, final Uri photoUrl)
     {
-        mDatabase.child(uId).addListenerForSingleValueEvent(new ValueEventListener()
+        if (uId != null)
         {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot)
+            mDatabase.child(uId).addListenerForSingleValueEvent(new ValueEventListener()
             {
-                // Gets the data from Firebase and stores it in a Squad class
-                FBUser user = dataSnapshot.getValue(FBUser.class);
-                user.setPicture(photoUrl.toString());
-                user.setName(name);
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot)
+                {
+                    // Gets the data from Firebase and stores it in a Squad class
+                    FBUser user = dataSnapshot.getValue(FBUser.class);
 
-                mDatabase.child(uId).setValue(user);
-            }
+                    // If the user does not exist(first time)
+                    if(user == null)
+                    {
+                        user = new FBUser();
+                    }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError)
-            {
+                    if (photoUrl != null)
+                    {
+                        user.setPicture(photoUrl.toString());
+                    }
+                    if (name != null)
+                    {
+                        user.setName(name);
+                    }
+                    mDatabase.child(uId).setValue(user);
+                }
 
-            }
-        });
+                @Override
+                public void onCancelled(DatabaseError databaseError)
+                {
 
+                }
+            });
+        }
+
+        Intent i = new Intent(LoginActivity.this, MenuActivity.class);
+        startActivity(i);
+        finish();
     }
 }
