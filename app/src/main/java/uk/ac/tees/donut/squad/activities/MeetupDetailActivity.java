@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -24,9 +25,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import uk.ac.tees.donut.squad.R;
+import uk.ac.tees.donut.squad.UserGridViewAdapter;
 import uk.ac.tees.donut.squad.posts.Meetup;
 import uk.ac.tees.donut.squad.users.FBUser;
 
@@ -56,7 +60,12 @@ public class MeetupDetailActivity extends AppCompatActivity
     Meetup meetup;
     Boolean attending;
 
-    String memberList;
+    // Members display
+    GridView attendeesGrid;
+    List<String> userNames;
+    List<String> userPics;
+    List<String> userIds;
+
     int memberCount;
 
 
@@ -77,6 +86,7 @@ public class MeetupDetailActivity extends AppCompatActivity
         squadDisplay = (TextView) findViewById(R.id.meetupDetail_textEditSquad);
         hostDisplay = (TextView) findViewById(R.id.meetupDetail_textEditHost);
         descriptionDisplay = (TextView) findViewById(R.id.meetupDetail_textEditDescription);
+        attendeesGrid = (GridView)findViewById(R.id.meetupDetail_userGrid);
         attendBtn = (Button) findViewById(R.id.meetupDetail_attendBtn);
         deleteBtn = (Button) findViewById(R.id.meetupDetail_deleteBtn);
         editName = (ImageButton) findViewById(R.id.meetupDetail_imageButtonEditName);
@@ -127,7 +137,6 @@ public class MeetupDetailActivity extends AppCompatActivity
         // Defaults
         attending = false;
         attendBtn.setText("Attend Meetup");
-        memberList = "";
         memberCount = 0;
 
         // Starts the loading chain
@@ -220,6 +229,13 @@ public class MeetupDetailActivity extends AppCompatActivity
 
     public void loadUsers()
     {
+        // Array of names
+        userNames = new ArrayList<String>();
+        // Array of pictures
+        userPics = new ArrayList<String>();
+        // Array of uIds
+        userIds = new ArrayList<String>();
+
         // Setting the loading text
         loadingText.setText("Getting the Meetup's attendees...");
 
@@ -241,7 +257,7 @@ public class MeetupDetailActivity extends AppCompatActivity
             }
 
             // Displaying members of the Meetup
-            for (String uId : users.keySet())
+            for (final String uId : users.keySet())
             {
                 mDatabase.child("users").child(uId).addListenerForSingleValueEvent(new ValueEventListener()
                 {
@@ -250,15 +266,18 @@ public class MeetupDetailActivity extends AppCompatActivity
                     {
                         // Getting each member and adding their name to the memberList
                         FBUser user = dataSnapshot.getValue(FBUser.class);
-                        memberList = memberList + user.getName().trim() + "\n";
+                        userNames.add(user.getName());
+                        userPics.add(user.getPicture());
+                        userIds.add(uId);
+
+
                         memberCount++;
-
-
                         // If all members added
                         if(usersSize == memberCount)
                         {
                             // Display the members
-                            attendingDisplay.setText(memberList.trim());
+                            UserGridViewAdapter gridAdapter = new UserGridViewAdapter(MeetupDetailActivity.this, userNames, userPics, userIds);
+                            attendeesGrid.setAdapter(gridAdapter);
 
                             // Hiding loading overlay
                             loadingOverlay.setVisibility(View.GONE);

@@ -50,7 +50,6 @@ public class SquadDetailActivity extends AppCompatActivity {
     List<String> userPics;
     List<String> userIds;
 
-    String memberList;
     int memberCount;
 
     Button joinBtn;
@@ -106,7 +105,6 @@ public class SquadDetailActivity extends AppCompatActivity {
         // Defaults
         member = false;
         joinBtn.setText("Join Squad");
-        memberList = "";
         memberCount = 0;
 
         // Starts the loading chain
@@ -192,13 +190,11 @@ public class SquadDetailActivity extends AppCompatActivity {
                         if(usersSize == memberCount)
                         {
                             // Display the members
-                            memberDisplay.setText(memberList.trim());
+                            UserGridViewAdapter gridAdapter = new UserGridViewAdapter(SquadDetailActivity.this, userNames, userPics, userIds);
+                            membersGrid.setAdapter(gridAdapter);
 
                             // Hiding loading overlay
                             loadingOverlay.setVisibility(View.GONE);
-
-                            UserGridViewAdapter gridAdapter = new UserGridViewAdapter(SquadDetailActivity.this, userNames, userPics, userIds);
-                            membersGrid.setAdapter(gridAdapter);
                         }
                     }
 
