@@ -1,5 +1,6 @@
 package uk.ac.tees.donut.squad.activities;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -23,15 +24,22 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import uk.ac.tees.donut.squad.R;
+import uk.ac.tees.donut.squad.users.FBUser;
 
 /**
  * Created by jlc-1 on 21/03/2017.
  */
 
-public class SplashScreen extends AppCompatActivity implements
+public class LoginActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener, View.OnClickListener
 {
     private GoogleApiClient mGoogleApiClient;
@@ -40,6 +48,7 @@ public class SplashScreen extends AppCompatActivity implements
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private DatabaseReference mDatabase;
     private GoogleSignInAccount googleSignInAccount;
 
     RelativeLayout loadingOverlay;
@@ -49,7 +58,7 @@ public class SplashScreen extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash_screen);
+        setContentView(R.layout.activity_login);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -57,6 +66,9 @@ public class SplashScreen extends AppCompatActivity implements
         loadingOverlay = (RelativeLayout) this.findViewById(R.id.loading_overlay);
         loadingText = (TextView) this.findViewById(R.id.loading_overlay_text);
         loadingText.setText("Logging in...");
+
+        // Getting the reference for the Firebase Realtime Database
+        mDatabase = FirebaseDatabase.getInstance().getReference("users");
 
         findViewById(R.id.sign_in_button).setOnClickListener(this);
 
@@ -82,17 +94,12 @@ public class SplashScreen extends AppCompatActivity implements
                 if (user != null) {
                     loadingOverlay.setVisibility(View.VISIBLE);
 
-                    // Try to update details
-                    if (googleSignInAccount != null)
-                    {
-                        updateDetails(user);
-                    }
-                    // Hiding loading overlay
-                    loadingOverlay.setVisibility(View.GONE);
+                    // Update the users details
+                    tryUpdate();
 
-                    // User is signed in, load MainActivity
+                    // User is signed in, load MenuActivity
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                    Intent i = new Intent(SplashScreen.this, MainActivity.class);
+                    Intent i = new Intent(LoginActivity.this, MenuActivity.class);
                     startActivity(i);
                     finish();
                 } else {
@@ -156,7 +163,7 @@ public class SplashScreen extends AppCompatActivity implements
                 handleSignInResult(result);
             } else {
                 // Google Sign In failed, update UI appropriately
-                Toast.makeText(SplashScreen.this, "Google Sign-In failed.",
+                Toast.makeText(LoginActivity.this, "Google Sign-In failed.",
                         Toast.LENGTH_SHORT).show();
 
                 // Hiding loading overlay
@@ -181,7 +188,7 @@ public class SplashScreen extends AppCompatActivity implements
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
                             Log.w(TAG, "signInWithCredential", task.getException());
-                            Toast.makeText(SplashScreen.this, "Firebase Authentication failed.",
+                            Toast.makeText(LoginActivity.this, "Firebase Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
 
                             // Hiding loading overlay
@@ -200,7 +207,7 @@ public class SplashScreen extends AppCompatActivity implements
         } else {
             Log.d(TAG, "GoogleSignInResult not successful");
 
-            Toast.makeText(SplashScreen.this, "GoogleSignInResult failed.",
+            Toast.makeText(LoginActivity.this, "GoogleSignInResult failed.",
                     Toast.LENGTH_SHORT).show();
 
             // Hiding loading overlay
@@ -208,14 +215,69 @@ public class SplashScreen extends AppCompatActivity implements
         }
     }
 
-    private void updateDetails(FirebaseUser fUser)
+    private void tryUpdate()
     {
-        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                .setDisplayName(googleSignInAccount.getDisplayName())
-                .setPhotoUri(googleSignInAccount.getPhotoUrl())
-                .build();
+        String uId = null;
+        String name = null;
+        Uri photoUrl = null;
 
-        fUser.updateProfile(profileUpdates);
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null)
+        {
+            for (UserInfo profile : user.getProviderData())
+            {
+                uId = user.getUid();
+
+                // Name and profile photo Url
+                name = profile.getDisplayName();
+                photoUrl = profile.getPhotoUrl();
+
+                // Creating a UserProfileChangeRequest
+                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                        .setDisplayName(name)
+                        .setPhotoUri(photoUrl)
+                        .build();
+
+                // Sending the UserProfileChangeRequest
+                user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>()
+                {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task)
+                    {
+                        Log.d(TAG, "Firebase Auth Profile Updated");
+                    }
+                });
+
+            }
+        }
+
+        if((uId != null) && (name != null) &&(photoUrl != null))
+        {
+            updateFBUser(uId, name, photoUrl);
+        }
     }
 
+    public void updateFBUser(final String uId, final String name, final Uri photoUrl)
+    {
+        mDatabase.child(uId).addListenerForSingleValueEvent(new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                // Gets the data from Firebase and stores it in a Squad class
+                FBUser user = dataSnapshot.getValue(FBUser.class);
+                user.setPicture(photoUrl.toString());
+                user.setName(name);
+
+                mDatabase.child(uId).setValue(user);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError)
+            {
+
+            }
+        });
+
+    }
 }

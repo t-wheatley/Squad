@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_view_meetups"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_squads"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="uk.ac.tees.donut.squad.activities.ViewMeetups"
+    tools:context="uk.ac.tees.donut.squad.activities.SquadListActivity"
     android:background="@color/cardview_dark_background">
 
     <RelativeLayout
@@ -18,8 +18,10 @@
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/viewMeetups_recyclerView"
-            android:layout_alignParentStart="true"/>
+            android:scrollbars="vertical"
+            android:id="@+id/squadList_recyclerView">
+
+        </android.support.v7.widget.RecyclerView>
     </RelativeLayout>
 
     <!-- Loading overlay; -->
