@@ -235,7 +235,7 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
                     profileName.setText(user.getName());
 
                     // If user has created a bio
-                    if(user.getBio().trim() != null)
+                    if(user.getBio() != null)
                     {
                         // Displays the user's bio in the editText
                         bio.setText(user.getBio().trim());
