@@ -166,7 +166,7 @@ public class NewPlaceActivity extends AppCompatActivity {
         final String description = editDescription.getText().toString();
 
         final String a1 = editAddress1.getText().toString();
-        final String a2 = editAddress1.getText().toString();
+        final String a2 = editAddress2.getText().toString();
         final String tc = editAddressTC.getText().toString();
         final String c = editAddressC.getText().toString();
         final String pc = editAddressPC.getText().toString();
