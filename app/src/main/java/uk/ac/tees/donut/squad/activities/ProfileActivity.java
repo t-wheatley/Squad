@@ -40,25 +40,34 @@ import uk.ac.tees.donut.squad.users.FBUser;
 
 public class ProfileActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener
 {
+    // Firebase + Google
     FirebaseAuth mAuth;
     FirebaseUser firebaseUser;
     GoogleApiClient mGoogleApiClient;
     DatabaseReference mDatabase;
 
+    // Loading Overlay
     RelativeLayout loadingOverlay;
     TextView loadingText;
 
-    private String bioText;
-    Boolean hasMeetup;
-    Boolean hasSquad;
-
+    // Activity UI
     TextView profileName;
     TextView bio;
     Button squadBtn;
     Button attendingBtn;
+    Button hostingBtn;
     Button signOutBtn;
     ImageButton editBioBtn;
     ImageView profileImage;
+
+    // Variables
+    Boolean personal;
+    String uId;
+    FBUser user;
+    Boolean hasSquad;
+    Boolean hasMeetup;
+    Boolean hasHost;
+
 
 
     @Override
@@ -113,6 +122,15 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
             }
         });
 
+        hostingBtn = (Button) findViewById(R.id.profile_hostingBtn);
+        hostingBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showHosted();
+            }
+        });
+        hostingBtn.setVisibility(View.GONE);
+
         signOutBtn = (Button) findViewById(R.id.profile_signOutBtn);
         signOutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,19 +138,49 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
                 signOut();
             }
         });
+        signOutBtn.setVisibility(View.GONE);
 
         editBioBtn = (ImageButton) findViewById(R.id.profile_imageButtonProfileBioEdit);
         editBioBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Load Dialog to edit Bio
                 editBio();
             }
         });
+        editBioBtn.setVisibility(View.GONE);
 
         // Setting defaults
-        hasMeetup = false;
         hasSquad = false;
+        hasMeetup = false;
+        hasHost = false;
+
+        // Gets the extra passed from the last activity
+        Intent detail = getIntent();
+        Bundle b = detail.getExtras();
+        if(b != null)
+        {
+            // Collects the uId passed into the activity
+            uId = (String) b.get("uId");
+
+            // If the user is looking at their own profile
+            if(uId.equals(firebaseUser.getUid()))
+            {
+                personal = true;
+                personalMode();
+            }
+        } else
+        {
+            new AlertDialog.Builder(ProfileActivity.this)
+                    .setTitle("Error")
+                    .setMessage("The user went missing somewhere, please try again.")
+                    .setPositiveButton("Back", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+        }
 
         // Load info and display loading overlay
         loadingOverlay = (RelativeLayout) this.findViewById(R.id.loading_overlay);
@@ -142,21 +190,102 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
         loadInfo();
     }
 
-    public void showAttending()
+    public void loadInfo()
     {
-        // If a user has meetups
-        if(hasMeetup)
+        if (firebaseUser != null)
         {
-            // Loads the MeetupsList activity displaying the Meetups that the user has attended
-            Intent intent = new Intent(this, MeetupsListActivity.class);
-            intent.putExtra("userId", firebaseUser.getUid());
-            startActivity(intent);
+            // Get the user's info
+            mDatabase.child(uId).addListenerForSingleValueEvent(new ValueEventListener()
+            {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot)
+                {
+                    // Gets the data from Firebase and stores it in a FBUser class
+                    user = dataSnapshot.getValue(FBUser.class);
+
+                    // Checking if user has Squads
+                    if(user.getSquads() != null)
+                    {
+                        hasSquad = true;
+                    } else
+                    {
+                        hasSquad = false;
+                    }
+
+                    // Checking if user has Meetups
+                    if(user.getMeetups() != null)
+                    {
+                        hasMeetup = true;
+                    } else
+                    {
+                        hasMeetup = false;
+                    }
+
+                    // Checking if user has Squads
+                    if(user.getHosting() != null)
+                    {
+                        hasHost = true;
+                    } else
+                    {
+                        hasHost = false;
+                    }
+
+
+                    // Displays the user's name in the editText
+                    profileName.setText(user.getName());
+
+                    // If user has created a bio
+                    if(user.getBio().trim() != null)
+                    {
+                        // Displays the user's bio in the editText
+                        bio.setText(user.getBio().trim());
+                    } else
+                    {
+                        // Default bio
+                        bio.setText("This user has no bio!");
+                    }
+
+                    // Displays the photo in the ImageView
+                    Glide.with(ProfileActivity.this)
+                            .load(user.getPicture().trim())
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .skipMemoryCache(true)
+                            .listener(new RequestListener<String, GlideDrawable>() {
+                                @Override
+                                public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                                    return false;
+                                }
+
+                                @Override
+                                public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                                    // If profileName != default and profileImage isnt null
+                                    if ((!profileName.getText().equals("'Users Profile")) && (profileImage != null))
+                                    {
+                                        // Hiding loading overlay
+                                        loadingOverlay.setVisibility(View.GONE);
+                                    }
+                                    return false;
+                                }
+                            })
+                            .dontAnimate()
+                            .fitCenter()
+                            .error(R.drawable.com_facebook_profile_picture_blank_portrait)
+                            .into(profileImage);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError)
+                {
+
+                }
+            });
         } else
         {
-            Toast.makeText(getApplicationContext(), mAuth.getCurrentUser().getDisplayName() +
-                    " has no meetups!", Toast.LENGTH_SHORT).show();
+            // No user is signed in
+            Toast.makeText(this, "Something went wrong, please try again.", Toast.LENGTH_SHORT).show();
         }
     }
+
     public void showSquads()
     {
         // If a user has squads
@@ -164,12 +293,45 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
         {
             // Loads the SquadList activity displaying the Squads that the user has joined
             Intent intent = new Intent(this, SquadListActivity.class);
-            intent.putExtra("userId", firebaseUser.getUid());
+            intent.putExtra("userId", uId);
             startActivity(intent);
         } else
         {
-            Toast.makeText(getApplicationContext(), mAuth.getCurrentUser().getDisplayName() +
+            Toast.makeText(getApplicationContext(), user.getName().trim() +
                     " has no squads!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void showAttending()
+    {
+        // If a user has meetups
+        if(hasMeetup)
+        {
+            // Loads the MeetupsList activity displaying the Meetups that the user has attended
+            Intent intent = new Intent(this, MeetupsListActivity.class);
+            intent.putExtra("userId", uId);
+            startActivity(intent);
+        } else
+        {
+            Toast.makeText(getApplicationContext(), user.getName().trim() +
+                    " has no meetups!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void showHosted()
+    {
+        // If a user is hosting meetups
+        if(hasHost)
+        {
+            // Loads the MeetupsList activity displaying the Meetups that the user is hosting
+            Intent intent = new Intent(this, MeetupsListActivity.class);
+            intent.putExtra("userId", uId);
+            intent.putExtra("host", true);
+            startActivity(intent);
+        } else
+        {
+            Toast.makeText(getApplicationContext(), user.getName().trim() +
+                    " is hosting no meetups!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -206,9 +368,10 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
         builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                bioText = editTextBio.getText().toString();
-                bio.setText(bioText);
-                updateBio(bioText);
+                String newBio = editTextBio.getText().toString();
+                user.setBio(newBio);
+                bio.setText(newBio);
+                updateBio(newBio);
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -236,90 +399,14 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
         }
     }
 
-    public void loadInfo()
+    public void personalMode()
     {
-        if (firebaseUser != null)
-        {
-
-            // Gets the user's displayname and displays it in the editText
-            profileName.setText(mAuth.getCurrentUser().getDisplayName());
-
-            // Get the user's Bio
-            mDatabase.child(firebaseUser.getUid()).addValueEventListener(new ValueEventListener()
-            {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot)
-                {
-                    // Gets the data from Firebase and stores it in a FBUser class
-                    FBUser user = dataSnapshot.getValue(FBUser.class);
-
-                    // Gets the photo from the Firebase User and displays it in the ImageView
-                    Glide.with(ProfileActivity.this)
-                            .load(user.getPicture())
-                            .diskCacheStrategy(DiskCacheStrategy.NONE)
-                            .skipMemoryCache(true)
-                            .listener(new RequestListener<String, GlideDrawable>() {
-                                @Override
-                                public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                                    return false;
-                                }
-
-                                @Override
-                                public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                                    return false;
-                                }
-                            })
-                            .fitCenter()
-                            .error(R.drawable.com_facebook_profile_picture_blank_portrait)
-                            .into(profileImage);
-
-
-                    // If user has created a bio
-                    if(user.getBio() != null)
-                    {
-                        bio.setText(user.getBio());
-                    } else
-                    {
-                        bio.setText("This user has no bio!");
-                    }
-
-                    // Checking if user has Meetups
-                    if(user.getMeetups() != null)
-                    {
-                        hasMeetup = true;
-                    } else
-                    {
-                        hasMeetup = false;
-                    }
-
-                    // Checking if user has Squads
-                    if(user.getSquads() != null)
-                    {
-                        hasSquad = true;
-                    } else
-                    {
-                        hasSquad = false;
-                    }
-
-                    // If profileName != default and profileImage isnt null
-                    if ((!profileName.getText().equals("'Users Profile")) && (profileImage != null))
-                    {
-                        // Hiding loading overlay
-                        loadingOverlay.setVisibility(View.GONE);
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError)
-                {
-
-                }
-            });
-        } else
-        {
-            // No user is signed in
-            Toast.makeText(this, "Something went wrong, please try again.", Toast.LENGTH_SHORT).show();
-        }
+        // Displaying what the user should see on their own profile
+        squadBtn.setText("My Squads");
+        attendingBtn.setText("My Meetups");
+        hostingBtn.setVisibility(View.VISIBLE);
+        signOutBtn.setVisibility(View.VISIBLE);
+        editBioBtn.setVisibility(View.VISIBLE);
     }
 
     @Override

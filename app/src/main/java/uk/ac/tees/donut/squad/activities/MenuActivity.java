@@ -3,8 +3,11 @@ package uk.ac.tees.donut.squad.activities;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.View;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,6 +28,7 @@ public class MenuActivity extends AppCompatActivity {
     boolean firstStart = true;
 
     User user;
+    FirebaseUser firebaseUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,36 +51,18 @@ public class MenuActivity extends AppCompatActivity {
             startActivity(intent);
         }
 
-        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("squads");
-
-        mDatabase.orderByChild("users/" + "Gk3J3QMMT9OOnn6ytN23DpIwMKQ2").equalTo(true).addListenerForSingleValueEvent(new ValueEventListener()
-        {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot)
-            {
-                for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
-                    Squad squad = messageSnapshot.getValue(Squad.class);
-                    squad.getName();
-                }
-
-                Intent detail = new Intent(MenuActivity.this, SquadDetailActivity.class);
-                //detail.putExtra("squadId", squad.getId());
-                //startActivity(detail);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError)
-            {
-
-            }
-        });
-
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
     }
 
     //Click functionality
     public void openProfile(View view) {
-        Intent intent = new Intent(this, ProfileActivity.class);
-        startActivity(intent);
+        if(firebaseUser != null)
+        {
+            //Sends the user's id to the profile activity
+            Intent detail = new Intent(MenuActivity.this, ProfileActivity.class);
+            detail.putExtra("uId", firebaseUser.getUid());
+            startActivity(detail);
+        }
     }
 
     public void openSquads(View view) {

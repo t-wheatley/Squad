@@ -97,6 +97,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/squadDetail_descriptionLayout"
+            android:layout_above="@+id/squadDetail_buttonLayout"
             android:background="@color/colorPrimary"
             android:padding="5dp"
             android:layout_marginTop="10dp"
@@ -110,6 +111,15 @@
                 android:layout_alignParentStart="true"
                 android:id="@+id/squadDetail_textViewMembers"
                 style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
+
+            <GridView
+                android:id="@+id/squadDetail_userGrid"
+                android:layout_below="@+id/squadDetail_textViewMembers"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:columnWidth="110dp"
+                android:gravity="center"
+                android:numColumns="auto_fit" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -128,7 +138,7 @@
             android:layout_width="200dp"
             android:layout_centerHorizontal="true"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/squadDetail_memberLayout"
+            android:layout_alignParentBottom="true"
             android:id="@+id/squadDetail_buttonLayout"
             android:background="@color/colorPrimary"
             android:padding="5dp"

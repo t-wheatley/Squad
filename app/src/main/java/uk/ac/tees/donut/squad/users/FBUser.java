@@ -9,6 +9,7 @@ public class FBUser
     private String picture;
     private HashMap<String, Boolean> squads;
     private HashMap<String, Boolean> meetups;
+    private HashMap<String, Boolean> hosting;
 
     public FBUser()
     {
@@ -43,6 +44,10 @@ public class FBUser
     {
         return meetups;
     }
+    public HashMap<String, Boolean> getHosting()
+    {
+        return hosting;
+    }
 
     // Setters
     public void setName(String name)
@@ -64,5 +69,9 @@ public class FBUser
     public void setMeetups(HashMap<String, Boolean> meetups)
     {
         this.meetups = meetups;
+    }
+    public void setHosting(HashMap<String, Boolean> hosting)
+    {
+        this.hosting = hosting;
     }
 }
