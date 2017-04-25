@@ -134,7 +134,7 @@
 
         </RelativeLayout>
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="200dp"
             android:layout_centerHorizontal="true"
             android:layout_height="wrap_content"
@@ -142,20 +142,37 @@
             android:id="@+id/squadDetail_buttonLayout"
             android:background="@color/colorPrimary"
             android:padding="5dp"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="10dp"
+            android:orientation="vertical">
 
             <Button
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentRight="true"
                 android:text="Join Squad"
                 android:id="@+id/squadDetail_joinBtn"
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:onClick="squadButton"/>
 
-        </RelativeLayout>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Meetups"
+                android:id="@+id/squadDetail_meetupsBtn"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:onClick="viewMeetups" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Places"
+                android:id="@+id/squadDetail_placesBtn"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:onClick="viewPlaces"
+                />
+
+        </LinearLayout>
     </RelativeLayout>
+
 
     <!-- Loading overlay; -->
     <include layout="@layout/loading_overlay"/>
