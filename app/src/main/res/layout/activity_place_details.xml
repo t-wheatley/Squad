@@ -44,7 +44,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/placeNameLayout"
             android:background="@color/colorPrimary"
             android:padding="10dp"
