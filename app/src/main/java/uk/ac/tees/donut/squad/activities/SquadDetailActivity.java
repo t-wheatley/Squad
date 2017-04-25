@@ -248,13 +248,13 @@ public class SquadDetailActivity extends AppCompatActivity {
         finish();
     }
 
-    public void viewMeetups()
+    public void viewMeetups(View view)
     {
         Intent intent = new Intent(this, MeetupsListActivity.class);
         startActivity(intent);
     }
 
-    public void viewPlaces()
+    public void viewPlaces(View view)
     {
         Intent intent = new Intent(this, PlacesListActivity.class);
         startActivity(intent);
