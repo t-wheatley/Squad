@@ -103,7 +103,6 @@ public class MeetupDetailActivity extends AppCompatActivity
 
         // Disabling the editTexts
         nameDisplay.setEnabled(false);
-        squadDisplay.setEnabled(false);
         descriptionDisplay.setEnabled(false);
 
         // Getting the current user
@@ -202,6 +201,15 @@ public class MeetupDetailActivity extends AppCompatActivity
         });
     }
 
+    public void viewSquad(View view)
+    {
+        //Sends the id to the details activity
+        Intent detail = new Intent(MeetupDetailActivity.this, SquadDetailActivity.class);
+        detail.putExtra("squadId", meetup.getSquad());
+        startActivity(detail);
+    }
+
+
     public void loadHost()
     {
         // Setting the loading text
@@ -226,6 +234,15 @@ public class MeetupDetailActivity extends AppCompatActivity
             }
         });
     }
+
+    public void viewHost(View view)
+    {
+        //Sends the id to the details activity
+        Intent detail = new Intent(MeetupDetailActivity.this, ProfileActivity.class);
+        detail.putExtra("uId", meetup.getHost());
+        startActivity(detail);
+    }
+
 
     public void loadUsers()
     {

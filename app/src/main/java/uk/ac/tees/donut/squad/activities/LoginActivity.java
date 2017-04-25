@@ -54,6 +54,8 @@ public class LoginActivity extends AppCompatActivity implements
     RelativeLayout loadingOverlay;
     TextView loadingText;
 
+    Boolean startedActivity;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -85,6 +87,8 @@ public class LoginActivity extends AppCompatActivity implements
                 .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
+
+        startedActivity = false;
 
         // AuthListener used to check if the user has previously signed in
         mAuthListener = new FirebaseAuth.AuthStateListener()
@@ -336,8 +340,12 @@ public class LoginActivity extends AppCompatActivity implements
             });
         }
 
-        Intent i = new Intent(LoginActivity.this, MenuActivity.class);
-        startActivity(i);
-        finish();
+        if(startedActivity == false)
+        {
+            startedActivity = true;
+            Intent i = new Intent(LoginActivity.this, MenuActivity.class);
+            startActivity(i);
+            finish();
+        } 
     }
 }
