@@ -48,7 +48,8 @@
         <activity
             android:name=".location.MapActivity"
             android:label="@string/title_activity_map" />
-        <activity android:name=".activities.MeetupsListActivity"></activity>
+        <activity android:name=".activities.MeetupsListActivity" />
+        <activity android:name=".activities.fragments.SquadPostActivity"></activity>
     </application>
 
 </manifest>
