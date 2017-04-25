@@ -250,7 +250,9 @@ public class SquadDetailActivity extends AppCompatActivity {
 
     public void viewMeetups(View view)
     {
+        // Loads the MeetupsList activity displaying the Meetups that the user is hosting
         Intent intent = new Intent(this, MeetupsListActivity.class);
+        intent.putExtra("squadId", squadId);
         startActivity(intent);
     }
 
