@@ -247,4 +247,16 @@ public class SquadDetailActivity extends AppCompatActivity {
         joinBtn.setText("Join Squad");
         finish();
     }
+
+    public void viewMeetups(View view)
+    {
+        Intent intent = new Intent(this, MeetupsListActivity.class);
+        startActivity(intent);
+    }
+
+    public void viewPlaces(View view)
+    {
+        Intent intent = new Intent(this, PlacesListActivity.class);
+        startActivity(intent);
+    }
 }
