@@ -53,6 +53,8 @@ public class PlaceDetailsActivity extends AppCompatActivity {
     ImageSwitcher gallery;
     RelativeLayout galleryLayout;
 
+    Intent detail;
+
     String id;
 
 
@@ -112,7 +114,7 @@ public class PlaceDetailsActivity extends AppCompatActivity {
 
 
         //gets extras passd from last activity
-        Intent detail = getIntent();
+        detail = getIntent();
         Bundle b = detail.getExtras();
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
