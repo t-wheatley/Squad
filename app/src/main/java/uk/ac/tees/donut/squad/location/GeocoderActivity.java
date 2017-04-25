@@ -20,18 +20,19 @@ import android.widget.Toast;
 
 import uk.ac.tees.donut.squad.R;
 
-public class LocationActivity extends AppCompatActivity {
+/**
+ * Created by Anthony Ward
+ */
+public class GeocoderActivity extends AppCompatActivity {
 
     AddressResultReceiver mResultReceiver;
 
-    EditText latitudeEdit, longitudeEdit, addressEdit;
+    EditText addressEdit;
     ProgressBar progressBar;
     TextView infoText;
-    CheckBox checkBox;
-
     boolean fetchAddress;
     int fetchType = LocContants.USE_ADDRESS_LOCATION;
-    private static final String TAG = "LOCATION_ACTIVITY";
+    private static final String TAG = "GEOCODER";
 
 
     @Override
@@ -39,42 +40,17 @@ public class LocationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_locating);
 
-        longitudeEdit = (EditText) findViewById(R.id.longitudeEdit);
-        latitudeEdit = (EditText) findViewById(R.id.latitudeEdit);
         addressEdit = (EditText) findViewById(R.id.addressEdit);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         infoText = (TextView) findViewById(R.id.infoText);
-        checkBox = (CheckBox) findViewById(R.id.checkbox);
+        fetchType = LocContants.USE_ADDRESS_NAME;
+        addressEdit.setEnabled(true);
+        addressEdit.requestFocus();
 
         mResultReceiver = new AddressResultReceiver(null);
     }
 
-    public void onRadioButtonClicked(View view) {
-        boolean checked = ((RadioButton) view).isChecked();
 
-        switch(view.getId()) {
-            case R.id.radioAddress:
-                if (checked) {
-                    fetchAddress = false;
-                    fetchType = LocContants.USE_ADDRESS_NAME;
-                    longitudeEdit.setEnabled(false);
-                    latitudeEdit.setEnabled(false);
-                    addressEdit.setEnabled(true);
-                    addressEdit.requestFocus();
-                }
-                break;
-            case R.id.radioLocation:
-                if (checked) {
-                    fetchAddress = true;
-                    fetchType = LocContants.USE_ADDRESS_LOCATION;
-                    latitudeEdit.setEnabled(true);
-                    latitudeEdit.requestFocus();
-                    longitudeEdit.setEnabled(true);
-                    addressEdit.setEnabled(false);
-                }
-                break;
-        }
-    }
 
 
 
@@ -89,25 +65,14 @@ public class LocationActivity extends AppCompatActivity {
             }
             intent.putExtra(LocContants.LOCATION_NAME_DATA_EXTRA, addressEdit.getText().toString());
         }
-        else {
-            if(latitudeEdit.getText().length() == 0 || longitudeEdit.getText().length() == 0) {
-                Toast.makeText(this,
-                        "Please enter both latitude and longitude",
-                        Toast.LENGTH_LONG).show();
-                return;
-            }
-            intent.putExtra(LocContants.LOCATION_LATITUDE_DATA_EXTRA,
-                    Double.parseDouble(latitudeEdit.getText().toString()));
-            intent.putExtra(LocContants.LOCATION_LONGITUDE_DATA_EXTRA,
-                    Double.parseDouble(longitudeEdit.getText().toString()));
-        }
+
         infoText.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.VISIBLE);
         Log.e(TAG, "Starting Service");
         startService(intent);
     }
 
-    class AddressResultReceiver extends ResultReceiver {
+    public class AddressResultReceiver extends ResultReceiver {
         public AddressResultReceiver(Handler handler) {
             super(handler);
         }
@@ -124,6 +89,7 @@ public class LocationActivity extends AppCompatActivity {
                         infoText.setText("Latitude: " + address.getLatitude() + "\n" +
                                 "Longitude: " + address.getLongitude() + "\n" +
                                 "Address: " + resultData.getString(LocContants.RESULT_DATA_KEY));
+
                     }
                 });
             }

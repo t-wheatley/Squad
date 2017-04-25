@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
             android:padding="10dp"
-            android:id="@+id/pictureLayout"
+            android:id="@+id/profile_pictureLayout"
             android:layout_marginRight="10dp"
             >
 
@@ -41,10 +41,10 @@
             android:layout_height="110dp"
             android:background="@color/colorPrimary"
             android:padding="10dp"
-            android:layout_toRightOf="@+id/pictureLayout">
+            android:layout_toRightOf="@+id/profile_pictureLayout">
 
             <TextView
-                android:id="@+id/profileName"
+                android:id="@+id/profile_name"
                 android:text="'Users Profile"
                 android:textColor="#FFFFFF"
                 android:layout_width="wrap_content"
@@ -57,7 +57,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/profileName"
+                android:layout_below="@+id/profile_name"
                 android:id="@+id/bio"
                 android:textColor="@color/tw__solid_white"/>
 
@@ -76,34 +76,43 @@
         <LinearLayout
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/pictureLayout"
+            android:layout_below="@+id/profile_pictureLayout"
             android:background="@color/colorPrimary"
             android:layout_centerHorizontal="true"
             android:padding="5dp"
             android:layout_marginTop="10dp"
-            android:id="@+id/buttonLayout"
+            android:id="@+id/profile_buttonLayout"
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/mySquads"
+                android:id="@+id/profile_squadsBtn"
                 android:layout_width="190dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentLeft="true"
                 style="@style/Base.Widget.AppCompat.Button.Colored"
-                android:text="My Squads"/>
+                android:text="View Squads"/>
 
             <Button
-                android:id="@+id/attendingBtn"
+                android:id="@+id/profile_attendingBtn"
                 android:layout_width="190dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentLeft="true"
                 style="@style/Base.Widget.AppCompat.Button.Colored"
-                android:text="My Meetups"/>
+                android:text="View Meetups"/>
 
             <Button
-                android:id="@+id/signOutBtn"
+                android:id="@+id/profile_hostingBtn"
+                android:layout_width="190dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentLeft="true"
+                style="@style/Base.Widget.AppCompat.Button.Colored"
+                android:text="My Hosted"/>
+
+            <Button
+                android:id="@+id/profile_signOutBtn"
                 android:layout_width="190dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"

@@ -2,6 +2,11 @@ package uk.ac.tees.donut.squad.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+
+import android.location.Address;
+import android.os.Handler;
+import android.os.ResultReceiver;
+
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -24,24 +29,19 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.JsonObject;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import uk.ac.tees.donut.squad.R;
-
-import uk.ac.tees.donut.squad.posts.AddressPlace;
-
+import uk.ac.tees.donut.squad.location.FetchAddressIntentService;
+import uk.ac.tees.donut.squad.location.LocContants;
 import uk.ac.tees.donut.squad.posts.Meetup;
+import uk.ac.tees.donut.squad.squads.Squad;
 
-import uk.ac.tees.donut.squad.posts.Place;
-
-public class NewPlaceActivity extends AppCompatActivity {
-
+public class NewMeetupActivity extends AppCompatActivity
+{
     private static final String TAG = "Auth";
 
     private FirebaseAuth mAuth;
@@ -52,56 +52,66 @@ public class NewPlaceActivity extends AppCompatActivity {
     RelativeLayout loadingOverlay;
     TextView loadingText;
 
-    private Spinner spinnerInterest;
-    private Button btnSubmit;
+    private AddressResultReceiver mResultReceiver;
+    private int fetchType;
+    protected double latitude;
+    protected double longitude;
+    protected String addressFull;
+
+    String name, description, squadId;
+    HashMap<String, String> squads;
 
     private EditText editName;
-    private EditText editDescription;
     private EditText editAddress1;
     private EditText editAddress2;
     private EditText editAddressTC;
     private EditText editAddressC;
     private EditText editAddressPC;
-
+    private Spinner spinnerSquad;
+    private EditText editDescription;
+    private Button btnSubmit;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_place);
-        this.setTitle("New Place");
+        setContentView(R.layout.activity_new_meetup);
+        this.setTitle("New Meetup");
 
         // Getting the reference for the Firebase Realtime Database
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        // Links the variables to their layout items.
-        editName = (EditText) findViewById(R.id.textEditName);
-        spinnerInterest = (Spinner) findViewById(R.id.spinnerInterest);
-        editDescription = (EditText) findViewById(R.id.textEditDescription);
-        btnSubmit = (Button) findViewById(R.id.buttonSubmit);
+        // Creating new result reciever and setting the fetch type for geocoder
+        mResultReceiver = new AddressResultReceiver(null);
+        fetchType = LocContants.USE_ADDRESS_NAME;
 
-        editAddress1 = (EditText) findViewById(R.id.textEditAddress1);
-        editAddress2 = (EditText) findViewById(R.id.textEditAddress2);
-        editAddressTC = (EditText) findViewById(R.id.textEditAddressTC);
-        editAddressC = (EditText) findViewById(R.id.textEditAddressCounty);
-        editAddressPC = (EditText) findViewById(R.id.textEditAddressPC);
+        // Links the variables to their layout items.
+        editAddress1 = (EditText) findViewById(R.id.newMeetup_textEditAddress1);
+        editAddress2 =(EditText) findViewById(R.id.newMeetup_textEditAddress2);
+        editAddressTC = (EditText) findViewById(R.id.newMeetup_textEditAddressTC);
+        editAddressC = (EditText) findViewById(R.id.newMeetup_textEditAddressCounty);
+        editAddressPC = (EditText) findViewById(R.id.newMeetup_textEditAddressPC);
+
+        editName = (EditText) findViewById(R.id.newMeetup_textEditName);
+        spinnerSquad = (Spinner) findViewById(R.id.newMeetup_spinnerSquad);
+        editDescription = (EditText) findViewById(R.id.newMeetup_textEditDescription);
+        btnSubmit = (Button) findViewById(R.id.newMeetup_buttonSubmit);
+
 
         // onClick listener for the submit button
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // When pressed calls the submitPlace method
+                // If at least one location field is filled
                 if(checkEditTexts())
                 {
-                    submitPlace();
+                    submitMeetup();
                 }
                 else
                 {
-                    Toast.makeText(NewPlaceActivity.this, "Please provide a Name, Squad, " +
-                                    "Description and Location"
+                    Toast.makeText(NewMeetupActivity.this, "Please provide a Name, Squad, " +
+                            "Description and Location"
                             , Toast.LENGTH_SHORT).show();
                 }
-
-
             }
         });
 
@@ -123,9 +133,8 @@ public class NewPlaceActivity extends AppCompatActivity {
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
-                    Toast.makeText(NewPlaceActivity.this, "No User", Toast.LENGTH_SHORT).show();
 
-                    new AlertDialog.Builder(NewPlaceActivity.this)
+                    new AlertDialog.Builder(NewMeetupActivity.this)
                             .setTitle("Sign-in Error")
                             .setMessage("You do not appear to be signed in, please try again.")
                             .setPositiveButton("Back", new DialogInterface.OnClickListener() {
@@ -155,68 +164,58 @@ public class NewPlaceActivity extends AppCompatActivity {
         }
     }
 
-    private void submitPlace(){
+    private void geocode(){
+        Intent intent = new Intent(this, FetchAddressIntentService.class);
+        intent.putExtra(LocContants.RECEIVER, mResultReceiver);
+        intent.putExtra(LocContants.FETCH_TYPE_EXTRA, fetchType);
+        intent.putExtra(LocContants.LOCATION_NAME_DATA_EXTRA, addressFull);
+
+        Log.e(TAG, "Starting Service");
+        startService(intent);
+    }
+
+    private void submitMeetup()
+    {
         // Display loading overlay
-        loadingText.setText("Posting your Place...");
+        loadingText.setText("Posting your Meetup...");
         loadingOverlay.setVisibility(View.VISIBLE);
 
         // Gets the strings from the editTexts
-        final String name = editName.getText().toString();
-        final String interest = spinnerInterest.getSelectedItem().toString();
-        final String description = editDescription.getText().toString();
+        name = editName.getText().toString();
+        description = editDescription.getText().toString();
+        squadId = squads.get(spinnerSquad.getSelectedItem().toString().trim());
+        addressFull = editAddress1.getText().toString() + " " + editAddress2.getText().toString()
+                + " " + editAddressTC.getText().toString() + " " + editAddressC.getText().toString()
+                + " " +editAddressPC.getText().toString();
 
-        final String a1 = editAddress1.getText().toString();
-        final String a2 = editAddress2.getText().toString();
-        final String tc = editAddressTC.getText().toString();
-        final String c = editAddressC.getText().toString();
-        final String pc = editAddressPC.getText().toString();
-
-
-        // Checks if the name field is empty
-        if (TextUtils.isEmpty(name))
-        {
-            // If no string is found an error is output
-            editName.setError("Required");
-            return;
-        }
-
-        // Description is required
-        if (TextUtils.isEmpty(description))
-        {
-            editDescription.setError("Required");
-            return;
-        }
-
-        // Disable button so there are no multi-posts
-        setEditingEnabled(false);
-
-        // Calls the createMeetup method with the strings entered
-        createPlace(name, interest, description, a1, a2, tc, c, pc);
-
-        // Re-enables the editTexts and buttons and finishes the activity
-        setEditingEnabled(true);
-        finish();
+        geocode();
     }
 
     // Takes a meetup and pushes it to the Firebase Realtime Database (Without extras)
-    public void createPlace(String n, String i, String d, String a1, String a2, String tc, String c, String pc){
+    public void createMeetup(String name,  String desc, String squadId)
+    {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
+        if (user != null)
+        {
             // User is signed in
             // Creating a new meetup node and getting the key value
-            String placeId = mDatabase.child("places").push().getKey();
+            String meetupId = mDatabase.child("meetups").push().getKey();
 
-            // Creating a place object
-            Place place = new AddressPlace(placeId, n, i, d, user.getUid(), a1, a2, tc, c, pc);
+            // Creating a meetup object
+            Meetup meetup = new Meetup(meetupId, name, desc, squadId, user.getUid(), longitude, latitude);
 
-            // Pushing the meetup to the "meetups" node using the placeId
-            mDatabase.child("places").child(placeId).setValue(place);
+            // Pushing the meetup to the "meetups" node using the meetupId
+            mDatabase.child("meetups").child(meetupId).setValue(meetup);
+
+            // Adding the Meetup to the user's hosted
+            mDatabase.child("users").child(user.getUid()).child("hosting").child(meetupId).setValue(true);
 
             // Send user to their meetup on the MeetupDetailActivity activity
-            Intent intent = new Intent(NewPlaceActivity.this, PlaceDetailsActivity.class);
-            intent.putExtra("placeId", placeId);
+            Intent intent = new Intent(NewMeetupActivity.this, MeetupDetailActivity.class);
+            intent.putExtra("meetupId", meetupId);
             startActivity(intent);
             finish();
+
         } else
         {
             // No user is signed in
@@ -226,39 +225,30 @@ public class NewPlaceActivity extends AppCompatActivity {
 
     }
 
-    // Takes a boolean value to either enable or disable the UI elements, this is used to avoid multiple posts
-    private void setEditingEnabled(boolean enabled)
-    {
-        editName.setEnabled(enabled);
-        spinnerInterest.setEnabled(enabled);
-        editDescription.setEnabled(enabled);
-        if (enabled)
-        {
-            btnSubmit.setVisibility(View.VISIBLE);
-        } else
-        {
-            btnSubmit.setVisibility(View.GONE);
-        }
-    }
-
     // Fill's the spinner with all of the interests stored in FireBase
     private void fillSpinner()
     {
-        mDatabase.child("interests").addValueEventListener(new ValueEventListener() {
+        mDatabase.child("squads").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                final List<String> interests = new ArrayList<String>();
+                squads = new HashMap<String, String>();
 
-                // Get all the interests
-                for (DataSnapshot interestSnapshot: dataSnapshot.getChildren()) {
-                    String interest = interestSnapshot.child("name").getValue(String.class);
-                    interests.add(interest);
+                // Get all the squads
+                for (DataSnapshot squadsSnapshot: dataSnapshot.getChildren()) {
+                    Squad squad = squadsSnapshot.getValue(Squad.class);
+                    squads.put(squad.getName(), squad.getId());
+                }
+
+                final List<String> squadNames = new ArrayList<String>();
+                for (String name : squads.keySet())
+                {
+                    squadNames.add(name);
                 }
 
                 // Fill the spinner
-                ArrayAdapter<String> interestAdapter = new ArrayAdapter<String>(NewPlaceActivity.this, android.R.layout.simple_spinner_item, interests);
+                ArrayAdapter<String> interestAdapter = new ArrayAdapter<String>(NewMeetupActivity.this, android.R.layout.simple_spinner_item, squadNames);
                 interestAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spinnerInterest.setAdapter(interestAdapter);
+                spinnerSquad.setAdapter(interestAdapter);
 
                 // Hide the loading overlay
                 loadingOverlay.setVisibility(View.GONE);
@@ -307,6 +297,41 @@ public class NewPlaceActivity extends AppCompatActivity {
         } else
         {
             return false;
+        }
+    }
+
+    protected void setLatitude(double lat){
+        latitude = lat;
+    }
+
+    protected void setLongitude(double lon){
+        longitude = lon;
+    }
+
+    //Inner Class to receive address for geocoder
+    public class AddressResultReceiver extends ResultReceiver {
+        public AddressResultReceiver(Handler handler) {
+            super(handler);
+        }
+
+
+        @Override
+        protected void onReceiveResult(int resultCode, final Bundle resultData) {
+            if (resultCode == LocContants.SUCCESS_RESULT) {
+                final Address address = resultData.getParcelable(LocContants.RESULT_ADDRESS);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        latitude = address.getLatitude();
+                        longitude= address.getLongitude();
+
+                        // Calls the createMeetup method with the strings entered
+                        createMeetup(name, description, squadId);
+
+                    }
+                });
+            }
         }
     }
 }
