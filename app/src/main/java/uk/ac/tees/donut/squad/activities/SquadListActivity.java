@@ -12,10 +12,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import org.w3c.dom.Text;
+
+import java.util.HashMap;
 
 import uk.ac.tees.donut.squad.R;
 import uk.ac.tees.donut.squad.squads.Squad;
@@ -28,6 +32,7 @@ public class SquadListActivity extends AppCompatActivity {
     private LinearLayoutManager mLayoutManager;
     private FirebaseRecyclerAdapter mAdapter;
 
+    FirebaseUser firebaseUser;
     String userId;
     Boolean member;
 
@@ -52,6 +57,7 @@ public class SquadListActivity extends AppCompatActivity {
         // Initialising RecyclerView
         mRecyclerView = (RecyclerView) findViewById(R.id.squadList_recyclerView);
 
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         member = false;
 
         // Gets the extra passed from the last activity
@@ -111,7 +117,20 @@ public class SquadListActivity extends AppCompatActivity {
                 String shortDesc = description.substring(0, Math.min(description.length(), 54)) + elipsis;
 
                 viewHolder.descriptionfield.setText(shortDesc);
-                viewHolder.placeHolder.setText("Placeholder");
+
+                // Getting the users HashMap
+                HashMap<String, Boolean> users = model.getUsers();
+
+                // If the HashMap isnt empty
+                if (users != null) {
+                    // Checking if the user is already in the Squad
+                    if (users.containsKey(firebaseUser.getUid())) {
+                        viewHolder.placeHolder.setText("✓️");
+                    } else
+                    {
+                        viewHolder.placeHolder.setText("×");
+                    }
+                }
 
                 viewHolder.mView.setOnClickListener(new View.OnClickListener()
                 {
@@ -160,7 +179,21 @@ public class SquadListActivity extends AppCompatActivity {
                 String shortDesc = description.substring(0, Math.min(description.length(), 54)) + elipsis;
 
                 viewHolder.descriptionfield.setText(shortDesc);
-                viewHolder.placeHolder.setText("Placeholder");
+
+                // Getting the users HashMap
+                HashMap<String, Boolean> users = model.getUsers();
+
+                // If the HashMap isnt empty
+                if (users != null) {
+                    // Checking if the user is already in the Squad
+                    if (users.containsKey(firebaseUser.getUid())) {
+                        viewHolder.placeHolder.setText("✓");
+                    } else
+                    {
+                        viewHolder.placeHolder.setText("×");
+                    }
+                }
+
 
                 viewHolder.mView.setOnClickListener(new View.OnClickListener()
                 {
