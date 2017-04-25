@@ -1,21 +1,20 @@
 package uk.ac.tees.donut.squad.posts;
 
-import uk.ac.tees.donut.squad.squads.Interest;
-import uk.ac.tees.donut.squad.users.User;
-
-/**
- * Created by Scott Taylor, Thomas Wheatley
- */
+import java.util.HashMap;
 
 public class Meetup
 {
+    // Info
     String id,
             name,
             description,
-            interest,
-            user;
+            squad,
+            host;
 
-    // Temp location variables
+    // Attendees
+    HashMap<String, Boolean> users;
+
+    // Location
     Double longitude, latitude;
 
     public Meetup()
@@ -24,29 +23,30 @@ public class Meetup
     }
 
     // Constructor for meetup to be post to Firebase
-    public Meetup(String i, String n, String in, String d, String u)
+    public Meetup(String i, String n, String d, String s, String h)
     {
         id = i;
         name = n;
-        interest = in;
         description = d;
-        user = u;
+        squad = s;
+        host = h;
     }
 
     // Constructor for meetup lists
-    public Meetup(String i, String n, String in)
+    public Meetup(String i, String n, String s)
     {
-        id = i; name = n; interest = in;
+        id = i; name = n; squad = s;
     }
 
 
-    // Constructor with temp location variables
-    public Meetup(String i, String n, String in, String d, String u, double longi, double lat)
+    // Constructor with location
+    public Meetup(String i, String n, String d, String s, String h, double longi, double lat)
     {
         id = i;
         name = n;
-        interest = in;
         description = d;
+        squad = s;
+        host = h;
         longitude = longi;
         latitude = lat;
     }
@@ -60,25 +60,25 @@ public class Meetup
     {
         return name;
     }
-    public String getInterest()
-    {
-        return interest;
-    }
     public String getDescription()
     {
         return description;
     }
-    public String getUser()
+    public String getSquad()
     {
-        return user;
+        return squad;
     }
-    // Temp location getters
-
-
+    public String getHost()
+    {
+        return host;
+    }
+    public HashMap<String, Boolean> getUsers()
+    {
+        return users;
+    }
     public Double getLongitude() {
         return longitude;
     }
-
     public Double getLatitude() {
         return latitude;
     }
@@ -86,30 +86,31 @@ public class Meetup
     // SETTERS
     public void setId(String i)
     {
-        id = i;
+        this.id = i;
     }
     public void setName(String n)
     {
-        name = n;
-    }
-    public void setInterest(String in)
-    {
-        interest = in;
+        this.name = n;
     }
     public void setDescription(String d)
     {
-        description = d;
+        this.description = d;
     }
-    public void setUser(String u)
+    public void setSquad(String s)
     {
-        user = u;
+        this.squad = s;
     }
-    // Temp location setter
-
+    public void setHost(String h)
+    {
+        this.host = h;
+    }
+    public void setAttendees(HashMap<String, Boolean> users)
+    {
+        this.users = users;
+    }
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
-
     public void setLatitude(Double latitude) {
         this.latitude = latitude;
     }
