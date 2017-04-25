@@ -26,7 +26,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import uk.ac.tees.donut.squad.R;
+import uk.ac.tees.donut.squad.location.PlaceMapsActivity;
 import uk.ac.tees.donut.squad.posts.AddressPlace;
+import uk.ac.tees.donut.squad.posts.LocPlace;
 
 public class PlaceDetailsActivity extends AppCompatActivity {
 
@@ -38,7 +40,7 @@ public class PlaceDetailsActivity extends AppCompatActivity {
     RelativeLayout loadingOverlay;
     TextView loadingText;
 
-    AddressPlace place;
+    LocPlace place;
 
     TextView placeName;
     TextView description;
@@ -148,7 +150,7 @@ public class PlaceDetailsActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot)
             {
                 // Gets the data from Firebase and stores it in a Place class
-                place = dataSnapshot.getValue(AddressPlace.class);
+                place = dataSnapshot.getValue(LocPlace.class);
 
                 // Displays the found place's attributes
                 placeName.setText(place.getName());
@@ -178,7 +180,10 @@ public class PlaceDetailsActivity extends AppCompatActivity {
 
     private void openMapLocation()
     {
-        Toast.makeText(PlaceDetailsActivity.this, "Nothing here yet", Toast.LENGTH_LONG).show();
+
+        Intent detail = new Intent(PlaceDetailsActivity.this, PlaceMapsActivity.class);
+        detail.putExtra("placeId", mId);
+        startActivity(detail);
     }
 
     private void openMapDirections()

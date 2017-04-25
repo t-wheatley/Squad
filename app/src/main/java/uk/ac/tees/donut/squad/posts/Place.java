@@ -17,6 +17,7 @@ public class Place {
     public String userId;
 
 
+
     public Place() {
         //empty constructor
     }
@@ -29,6 +30,8 @@ public class Place {
         description = d;
 
         userId = u;
+
+
 
     }
 
@@ -53,6 +56,9 @@ public class Place {
         return userId;
     }
 
+
+
+
     //SETTERS
     public void setPlaceId(String pi) {
         placeId = pi;
@@ -70,7 +76,7 @@ public class Place {
         description = d;
     }
 
-    public void setUserId(String u) {
-        userId = u;
-    }
+    public void setUserId(String u) {userId = u;}
+
+
 }
