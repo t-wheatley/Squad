@@ -21,11 +21,11 @@ public class AddressPlace extends Place
     public AddressPlace(String pi, String n, String i, String d, String u, String a1, String a2, String tc, String c, String pc)
     {
         super(pi, n, i, d, u);
-        address1 = a1;
-        address2 = a2;
-        townCity = tc;
-        county = c;
-        postCode = pc;
+        address1 = a1.trim();
+        address2 = a2.trim();
+        townCity = tc.trim();
+        county = c.trim();
+        postCode = pc.trim().toUpperCase();
     }
 
     //GETTERS
@@ -51,15 +51,15 @@ public class AddressPlace extends Place
 
     public String fullAddress() {
         String a = "";
-        if (address1 != null)
+        if (address1.length() != 0)
             a = a + address1;
-        if (address2 != null)
+        if (address2.length() != 0)
             a = a + ", " + address2;
-        if (townCity != null)
+        if (townCity.length() != 0)
             a = a + ", " + townCity;
-        if (county != null)
+        if (county.length() != 0)
             a = a + ", " + county;
-        if (postCode != null)
+        if (postCode.length() != 0)
             a = a + ", " + postCode;
 
         return a;
@@ -67,22 +67,22 @@ public class AddressPlace extends Place
 
     //SETTERS
     public void setAddress1(String a1) {
-        address1 = a1;
+        address1 = a1.trim();
     }
 
     public void setAddress2(String a2) {
-        address2 = a2;
+        address2 = a2.trim();
     }
 
     public void setTownCity(String tc) {
-        townCity = tc;
+        townCity = tc.trim();
     }
 
     public void setCounty(String c) {
-        county = c;
+        county = c.trim();
     }
 
     public void setPostCode(String pc) {
-        postCode = pc;
+        postCode = pc.trim().toUpperCase();
     }
 }

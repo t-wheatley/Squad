@@ -30,8 +30,10 @@ public class MeetupsListActivity extends AppCompatActivity {
     private FirebaseRecyclerAdapter mAdapter;
 
     String userId;
-    Boolean member;
+    String squadId;
     Boolean host;
+    Boolean member;
+    Boolean squad;
 
     RelativeLayout loadingOverlay;
     TextView loadingText;
@@ -56,23 +58,34 @@ public class MeetupsListActivity extends AppCompatActivity {
 
         member = false;
         host = false;
+        squad = false;
 
         // Gets the extra passed from the last activity
         Intent detail = getIntent();
         Bundle b = detail.getExtras();
         if(b != null)
         {
-            // Collects the userId passed from the RecyclerView
-            userId = (String) b.get("userId");
-            if(b.get("host") != null)
+            if(b.get("squadId") != null)
             {
-                if((Boolean) b.get("host"))
+                // Squad mode
+                squadId = (String) b.get("squadId");
+                squad = true;
+            } else if(b.get("userId") != null)
+            {
+                // Collects the userId passed from the RecyclerView
+                userId = (String) b.get("userId");
+                if(b.get("host") != null)
                 {
-                    host = true;
+                    if((Boolean) b.get("host"))
+                    {
+                        // Host mode
+                        host = true;
+                    }
+                }else
+                {
+                    // Member mode
+                    member = true;
                 }
-            }else
-            {
-                member = true;
             }
         }
 
@@ -95,6 +108,9 @@ public class MeetupsListActivity extends AppCompatActivity {
         } else if(member)
         {
             getUsers(userId);
+        } else if(squad)
+        {
+            getSquad(squadId);
         } else
         {
             getAll();
@@ -114,55 +130,7 @@ public class MeetupsListActivity extends AppCompatActivity {
         ) {
             @Override
             protected void populateViewHolder(final MeetupViewHolder viewHolder, final Meetup model, int position) {
-
-                viewHolder.nameField.setText(model.getName());
-
-                String description = model.getDescription().replace("\n", "");
-                String elipsis = "";
-                if(description.length() > 54)
-                    elipsis = "...";
-
-                String shortDesc = description.substring(0, Math.min(description.length(), 54)) + elipsis;
-
-                viewHolder.descriptionfield.setText(shortDesc);
-
-                // Get Squad name from id
-                mDatabase.child("squads").child(model.getSquad()).addListenerForSingleValueEvent(new ValueEventListener()
-                {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot)
-                    {
-                        viewHolder.squadField.setText(dataSnapshot.child("name").getValue(String.class));
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError)
-                    {
-
-                    }
-                });
-
-                viewHolder.mView.setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v) {
-                        //Stores the current item's key in a string
-                        String mId = model.getId();
-
-                        //Sends the id to the details activity
-                        Intent detail = new Intent(MeetupsListActivity.this, MeetupDetailActivity.class);
-                        detail.putExtra("meetupId", mId);
-                        startActivity(detail);
-                    }
-                });
-
-                // If loading the last item or empty
-                if ((mAdapter.getItemCount() == loadingCount))
-                {
-                    // Hide the loading overlay
-                    loadingOverlay.setVisibility(View.GONE);
-                }
-                loadingCount++;
+                populateMeetupViewHolder(viewHolder, model, position);
             }
         };
     }
@@ -178,55 +146,7 @@ public class MeetupsListActivity extends AppCompatActivity {
         ) {
             @Override
             protected void populateViewHolder(final MeetupViewHolder viewHolder, final Meetup model, int position) {
-
-                viewHolder.nameField.setText(model.getName());
-
-                String description = model.getDescription().replace("\n", "");
-                String elipsis = "";
-                if(description.length() > 54)
-                    elipsis = "...";
-
-                String shortDesc = description.substring(0, Math.min(description.length(), 54)) + elipsis;
-
-                viewHolder.descriptionfield.setText(shortDesc);
-
-                // Get Squad name from id
-                mDatabase.child("squads").child(model.getSquad()).addListenerForSingleValueEvent(new ValueEventListener()
-                {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot)
-                    {
-                        viewHolder.squadField.setText(dataSnapshot.child("name").getValue(String.class));
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError)
-                    {
-
-                    }
-                });
-
-                viewHolder.mView.setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v) {
-                        //Stores the current item's key in a string
-                        String mId = model.getId();
-
-                        //Sends the id to the details activity
-                        Intent detail = new Intent(MeetupsListActivity.this, MeetupDetailActivity.class);
-                        detail.putExtra("meetupId", mId);
-                        startActivity(detail);
-                    }
-                });
-
-                // If loading the last item or empty
-                if ((mAdapter.getItemCount() == loadingCount))
-                {
-                    // Hide the loading overlay
-                    loadingOverlay.setVisibility(View.GONE);
-                }
-                loadingCount++;
+                populateMeetupViewHolder(viewHolder, model, position);
             }
         };
     }
@@ -242,57 +162,78 @@ public class MeetupsListActivity extends AppCompatActivity {
         ) {
             @Override
             protected void populateViewHolder(final MeetupViewHolder viewHolder, final Meetup model, int position) {
-
-                viewHolder.nameField.setText(model.getName());
-
-                String description = model.getDescription().replace("\n", "");
-                String elipsis = "";
-                if(description.length() > 54)
-                    elipsis = "...";
-
-                String shortDesc = description.substring(0, Math.min(description.length(), 54)) + elipsis;
-
-                viewHolder.descriptionfield.setText(shortDesc);
-
-                // Get Squad name from id
-                mDatabase.child("squads").child(model.getSquad()).addListenerForSingleValueEvent(new ValueEventListener()
-                {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot)
-                    {
-                        viewHolder.squadField.setText(dataSnapshot.child("name").getValue(String.class));
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError)
-                    {
-
-                    }
-                });
-
-                viewHolder.mView.setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v) {
-                        //Stores the current item's key in a string
-                        String mId = model.getId();
-
-                        //Sends the id to the details activity
-                        Intent detail = new Intent(MeetupsListActivity.this, MeetupDetailActivity.class);
-                        detail.putExtra("meetupId", mId);
-                        startActivity(detail);
-                    }
-                });
-
-                // If loading the last item or empty
-                if ((mAdapter.getItemCount() == loadingCount))
-                {
-                    // Hide the loading overlay
-                    loadingOverlay.setVisibility(View.GONE);
-                }
-                loadingCount++;
+                populateMeetupViewHolder(viewHolder, model, position);
             }
         };
+    }
+
+    public void getSquad(String squadId)
+    {
+        mAdapter = new FirebaseRecyclerAdapter<Meetup, MeetupViewHolder>(
+                Meetup.class,
+                R.layout.item_three_text,
+                MeetupViewHolder.class,
+                // Referencing the node where we want the database to store the data from our Object
+                mDatabase.orderByChild("squad").equalTo(squadId)
+        ) {
+            @Override
+            protected void populateViewHolder(final MeetupViewHolder viewHolder, final Meetup model, int position) {
+                populateMeetupViewHolder(viewHolder, model, position);
+            }
+        };
+    }
+
+    public void populateMeetupViewHolder(final MeetupViewHolder viewHolder, final Meetup model, int position)
+    {
+
+        viewHolder.nameField.setText(model.getName());
+
+        String description = model.getDescription().replace("\n", "");
+        String elipsis = "";
+        if(description.length() > 54)
+            elipsis = "...";
+
+        String shortDesc = description.substring(0, Math.min(description.length(), 54)) + elipsis;
+
+        viewHolder.descriptionfield.setText(shortDesc);
+
+        // Get Squad name from id
+        mDatabase.child("squads").child(model.getSquad()).addListenerForSingleValueEvent(new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                viewHolder.squadField.setText(dataSnapshot.child("name").getValue(String.class));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError)
+            {
+
+            }
+        });
+
+        viewHolder.mView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v) {
+                //Stores the current item's key in a string
+                String mId = model.getId();
+
+                //Sends the id to the details activity
+                Intent detail = new Intent(MeetupsListActivity.this, MeetupDetailActivity.class);
+                detail.putExtra("meetupId", mId);
+                startActivity(detail);
+            }
+        });
+
+        // If loading the last item or empty
+        if ((mAdapter.getItemCount() == loadingCount))
+        {
+            // Hide the loading overlay
+            loadingOverlay.setVisibility(View.GONE);
+        }
+        loadingCount++;
     }
 
     public static class MeetupViewHolder extends RecyclerView.ViewHolder
