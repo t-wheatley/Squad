@@ -1,47 +1,59 @@
 package uk.ac.tees.donut.squad.squads;
 
-/**
- * Created by Scott on 14/03/2017.
- */
+import java.util.HashMap;
 
 public class Squad
 {
+    String id;
     String name;
-    Interest interest;
     String description;
+    HashMap<String, Boolean> users;
 
-    public Squad(String n, Interest i, String d)
+    public Squad()
     {
+
+    }
+
+    public Squad(String i, String n, String d)
+    {
+        id = i;
         name = n;
-        interest = i;
         description = d;
     }
 
     //GETTERS
+    public String getId()
+    {
+        return id;
+    }
     public String getName()
     {
         return name;
-    }
-    public Interest getInterest()
-    {
-        return interest;
     }
     public String getDescription()
     {
         return description;
     }
+    public void setUsers(HashMap<String, Boolean> users)
+    {
+        this.users = users;
+    }
 
     //SETTERS
+    public void setId(String id)
+    {
+        this.id = id;
+    }
     public void setName(String n)
     {
-        name = n;
-    }
-    public void setInterest(Interest in)
-    {
-        interest = in;
+        this.name = n;
     }
     public void setDescription(String d)
     {
-        description = d;
+        this.description = d;
+    }
+    public HashMap<String, Boolean> getUsers()
+    {
+        return users;
     }
 }

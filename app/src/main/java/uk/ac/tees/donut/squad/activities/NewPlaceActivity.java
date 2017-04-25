@@ -1,6 +1,7 @@
 package uk.ac.tees.donut.squad.activities;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -11,7 +12,9 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -46,23 +49,26 @@ public class NewPlaceActivity extends AppCompatActivity {
 
     private DatabaseReference mDatabase;
 
-    private EditText editName;
+    RelativeLayout loadingOverlay;
+    TextView loadingText;
+
     private Spinner spinnerInterest;
-    private EditText editDescription;
     private Button btnSubmit;
 
-    private EditText editA1;
-    private EditText editA2;
-    private EditText editTC;
-    private EditText editC;
-    private EditText editPC;
+    private EditText editName;
+    private EditText editDescription;
+    private EditText editAddress1;
+    private EditText editAddress2;
+    private EditText editAddressTC;
+    private EditText editAddressC;
+    private EditText editAddressPC;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_place);
-        this.setTitle("New Meetup");
+        this.setTitle("New Place");
 
         // Getting the reference for the Firebase Realtime Database
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -73,21 +79,37 @@ public class NewPlaceActivity extends AppCompatActivity {
         editDescription = (EditText) findViewById(R.id.textEditDescription);
         btnSubmit = (Button) findViewById(R.id.buttonSubmit);
 
-        editA1 = (EditText) findViewById(R.id.textEditAddress1);
-        editA2 = (EditText) findViewById(R.id.textEditAddress2);
-        editTC = (EditText) findViewById(R.id.textEditAddressTC);
-        editC = (EditText) findViewById(R.id.textEditAddressCounty);
-        editPC = (EditText) findViewById(R.id.textEditAddressPC);
+        editAddress1 = (EditText) findViewById(R.id.textEditAddress1);
+        editAddress2 = (EditText) findViewById(R.id.textEditAddress2);
+        editAddressTC = (EditText) findViewById(R.id.textEditAddressTC);
+        editAddressC = (EditText) findViewById(R.id.textEditAddressCounty);
+        editAddressPC = (EditText) findViewById(R.id.textEditAddressPC);
 
         // onClick listener for the submit button
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // When pressed calls the submitMeeup method
-                submitPlace();
+                // When pressed calls the submitPlace method
+                if(checkEditTexts())
+                {
+                    submitPlace();
+                }
+                else
+                {
+                    Toast.makeText(NewPlaceActivity.this, "Please provide a Name, Squad, " +
+                                    "Description and Location"
+                            , Toast.LENGTH_SHORT).show();
+                }
+
+
             }
         });
 
+        // Load interests and display loading overlay
+        loadingOverlay = (RelativeLayout) this.findViewById(R.id.loading_overlay);
+        loadingText = (TextView) this.findViewById(R.id.loading_overlay_text);
+        loadingText.setText("Loading...");
+        loadingOverlay.setVisibility(View.VISIBLE);
         fillSpinner();
 
         mAuth = FirebaseAuth.getInstance();
@@ -98,7 +120,6 @@ public class NewPlaceActivity extends AppCompatActivity {
                 if (user != null) {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                    Toast.makeText(NewPlaceActivity.this, "User: " + user.getUid(), Toast.LENGTH_SHORT).show();
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
@@ -135,16 +156,20 @@ public class NewPlaceActivity extends AppCompatActivity {
     }
 
     private void submitPlace(){
+        // Display loading overlay
+        loadingText.setText("Posting your Place...");
+        loadingOverlay.setVisibility(View.VISIBLE);
+
         // Gets the strings from the editTexts
         final String name = editName.getText().toString();
         final String interest = spinnerInterest.getSelectedItem().toString();
         final String description = editDescription.getText().toString();
 
-        final String a1 = editA1.getText().toString();
-        final String a2 = editA2.getText().toString();
-        final String tc = editTC.getText().toString();
-        final String c = editC.getText().toString();
-        final String pc = editPC.getText().toString();
+        final String a1 = editAddress1.getText().toString();
+        final String a2 = editAddress2.getText().toString();
+        final String tc = editAddressTC.getText().toString();
+        final String c = editAddressC.getText().toString();
+        final String pc = editAddressPC.getText().toString();
 
 
         // Checks if the name field is empty
@@ -164,7 +189,6 @@ public class NewPlaceActivity extends AppCompatActivity {
 
         // Disable button so there are no multi-posts
         setEditingEnabled(false);
-        Toast.makeText(this, "Posting...", Toast.LENGTH_SHORT).show();
 
         // Calls the createMeetup method with the strings entered
         createPlace(name, interest, description, a1, a2, tc, c, pc);
@@ -179,7 +203,6 @@ public class NewPlaceActivity extends AppCompatActivity {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             // User is signed in
-
             // Creating a new meetup node and getting the key value
             String placeId = mDatabase.child("places").push().getKey();
 
@@ -188,9 +211,15 @@ public class NewPlaceActivity extends AppCompatActivity {
 
             // Pushing the meetup to the "meetups" node using the placeId
             mDatabase.child("places").child(placeId).setValue(place);
-        } else {
-            // No user is signed in
 
+            // Send user to their meetup on the MeetupDetailActivity activity
+            Intent intent = new Intent(NewPlaceActivity.this, PlaceDetailsActivity.class);
+            intent.putExtra("placeId", placeId);
+            startActivity(intent);
+            finish();
+        } else
+        {
+            // No user is signed in
             Toast.makeText(this, "Something went wrong, please try again.", Toast.LENGTH_SHORT).show();
         }
 
@@ -218,17 +247,21 @@ public class NewPlaceActivity extends AppCompatActivity {
         mDatabase.child("interests").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Toast.makeText(NewPlaceActivity.this, "Loading interests...", Toast.LENGTH_SHORT).show();
                 final List<String> interests = new ArrayList<String>();
 
+                // Get all the interests
                 for (DataSnapshot interestSnapshot: dataSnapshot.getChildren()) {
                     String interest = interestSnapshot.child("name").getValue(String.class);
                     interests.add(interest);
                 }
 
+                // Fill the spinner
                 ArrayAdapter<String> interestAdapter = new ArrayAdapter<String>(NewPlaceActivity.this, android.R.layout.simple_spinner_item, interests);
                 interestAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinnerInterest.setAdapter(interestAdapter);
+
+                // Hide the loading overlay
+                loadingOverlay.setVisibility(View.GONE);
             }
 
             @Override
@@ -236,5 +269,44 @@ public class NewPlaceActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    // Checks at least one of the location fields has a value and name + desc have a value
+    public boolean checkEditTexts()
+    {
+        // Checks if the name field is empty
+        if (editName.getText().toString().trim().length() == 0)
+        {
+            editName.setError("Required");
+            return false;
+        }
+
+        // Checks if the desc field is empty
+        if (editDescription.getText().toString().trim().length() == 0)
+        {
+            editDescription.setError("Required");
+            return false;
+        }
+
+        // Checks a location field has been entered
+        if(editAddress1.getText().toString().trim().length() > 0)
+        {
+            return true;
+        } else if(editAddress2.getText().toString().trim().length() > 0)
+        {
+            return true;
+        } else if(editAddressTC.getText().toString().trim().length() > 0)
+        {
+            return true;
+        } else if(editAddressC.getText().toString().trim().length() > 0)
+        {
+            return true;
+        } else if(editAddressPC.getText().toString().trim().length() > 0)
+        {
+            return true;
+        } else
+        {
+            return false;
+        }
     }
 }
