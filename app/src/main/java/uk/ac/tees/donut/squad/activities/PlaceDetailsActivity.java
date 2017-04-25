@@ -50,6 +50,10 @@ public class PlaceDetailsActivity extends AppCompatActivity {
     Button mapBtn;
     Button directionsBtn;
 
+    double latitude;
+    double longitude;
+
+
     ImageSwitcher gallery;
     RelativeLayout galleryLayout;
 
@@ -162,6 +166,8 @@ public class PlaceDetailsActivity extends AppCompatActivity {
                 description.setText(place.getDescription());
                 address.setText(place.fullAddress());
                 squad.setText(place.getInterest());
+                longitude = place.getLocLong();
+                latitude = place.getLocLat();
 
                 /*
                 // If user is the host
@@ -186,9 +192,12 @@ public class PlaceDetailsActivity extends AppCompatActivity {
     private void openMapLocation()
     {
 
-        Intent detail = new Intent(PlaceDetailsActivity.this, PlaceMapsActivity.class);
-        detail.putExtra("placeId", id);
-        startActivity(detail);
+        Intent newDetail = new Intent(PlaceDetailsActivity.this, PlaceMapsActivity.class);
+        newDetail.putExtra("latitude", latitude);
+        newDetail.putExtra("longitude", longitude);
+        newDetail.putExtra("placeName",placeName.getText().toString());
+        newDetail.putExtra("placeDescription", description.getText().toString());
+        startActivity(newDetail);
     }
 
     private void openMapDirections()

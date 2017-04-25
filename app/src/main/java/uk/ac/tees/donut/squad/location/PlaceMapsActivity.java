@@ -74,11 +74,9 @@ public class PlaceMapsActivity extends AppCompatActivity implements OnMapReadyCa
     private LatLng destination;
     private double longitude;
     private double latitude;
+    private String placeName;
+    private String placeDetails;
 
-    DatabaseReference mDatabase;
-    FirebaseUser firebaseUser;
-    LocPlace place;
-    String placeId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,15 +90,28 @@ public class PlaceMapsActivity extends AppCompatActivity implements OnMapReadyCa
         mapFrag = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFrag.getMapAsync(this);
 
+
+
+
+    }
+
+    public void setDestination(double lat, double lng){
+        destination = new LatLng(lat, lng);
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
         //gets extras passd from last activity
         Intent detail = getIntent();
         Bundle b = detail.getExtras();
 
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         if(b != null)
         {
-            placeId = (String) b.get("placeId");
+            longitude = (Double) b.get("longitude");
+            latitude = (Double)  b.get("latitude");
+            placeName = (String) b.get("placeName");
+            placeDetails = (String) b.get("placeDescription");
 
             this.setTitle("Place Details");
         }
@@ -119,18 +130,10 @@ public class PlaceMapsActivity extends AppCompatActivity implements OnMapReadyCa
                     .show();
         }
 
-        mDatabase = FirebaseDatabase.getInstance().getReference("places");
 
-        loadPlace();
 
-    }
+        setDestination(latitude, longitude);
 
-    public void setDestination(double lat, double lng){
-        destination = new LatLng(lat, lng);
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
         mMap=googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         //Initialize Google Play Services
@@ -154,40 +157,15 @@ public class PlaceMapsActivity extends AppCompatActivity implements OnMapReadyCa
 
         // Add a marker at home
         LatLng Home = new LatLng(54.6993131, -1.5103871);
-
-        mMap.addMarker(new MarkerOptions().position(destination).snippet("I live here").title("My house"));
-
-
-
-    }
-
-    public void loadPlace()
-    {
-        // Reads the data from the placeId in Firebase
-        mDatabase.child(placeId).addListenerForSingleValueEvent(new ValueEventListener()
-        {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot)
-            {
-                // Gets the data from Firebase and stores it in a Place class
-                place = dataSnapshot.getValue(LocPlace.class);
-
-                // Displays the found place's attributes
-                longitude = place.getLocLong();
-                latitude = place.getLocLat();
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError)
-            {
-
-            }
-
-
-        });
         setDestination(latitude, longitude);
+
+        mMap.addMarker(new MarkerOptions().position(destination).snippet(placeDetails).title(placeName));
+
+
+
     }
+
+
 
     public void onClick(View v){
         int id = v.getId();
