@@ -2,6 +2,7 @@ package uk.ac.tees.donut.squad.location;
 
 import android.Manifest;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -49,6 +50,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 import uk.ac.tees.donut.squad.R;
+import uk.ac.tees.donut.squad.activities.PlaceDetailsActivity;
 import uk.ac.tees.donut.squad.posts.LocPlace;
 
 /**
@@ -76,6 +78,7 @@ public class PlaceMapsActivity extends AppCompatActivity implements OnMapReadyCa
     DatabaseReference mDatabase;
     FirebaseUser firebaseUser;
     LocPlace place;
+    String placeId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,8 +92,36 @@ public class PlaceMapsActivity extends AppCompatActivity implements OnMapReadyCa
         mapFrag = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFrag.getMapAsync(this);
 
+        //gets extras passd from last activity
+        Intent detail = getIntent();
+        Bundle b = detail.getExtras();
+
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        if(b != null)
+        {
+            placeId = (String) b.get("placeId");
+
+            this.setTitle("Place Details");
+        }
+        else
+        {
+            new AlertDialog.Builder(PlaceMapsActivity.this)
+                    .setTitle("Error")
+                    .setMessage("The place went missing somewhere, please try again")
+                    .setPositiveButton("Back", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+        }
+
         mDatabase = FirebaseDatabase.getInstance().getReference("places");
+
+        loadPlace();
 
     }
 
@@ -123,8 +154,8 @@ public class PlaceMapsActivity extends AppCompatActivity implements OnMapReadyCa
 
         // Add a marker at home
         LatLng Home = new LatLng(54.6993131, -1.5103871);
-        destination = Home;
-        mMap.addMarker(new MarkerOptions().position(Home).snippet("I live here").title("My house"));
+
+        mMap.addMarker(new MarkerOptions().position(destination).snippet("I live here").title("My house"));
 
 
 
@@ -152,7 +183,10 @@ public class PlaceMapsActivity extends AppCompatActivity implements OnMapReadyCa
             {
 
             }
+
+
         });
+        setDestination(latitude, longitude);
     }
 
     public void onClick(View v){

@@ -53,6 +53,8 @@ public class PlaceDetailsActivity extends AppCompatActivity {
     ImageSwitcher gallery;
     RelativeLayout galleryLayout;
 
+    String id;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,6 +120,7 @@ public class PlaceDetailsActivity extends AppCompatActivity {
         if(b != null)
         {
             placeId = (String) b.get("placeId");
+
             this.setTitle("Place Details");
         }
         else
@@ -182,7 +185,7 @@ public class PlaceDetailsActivity extends AppCompatActivity {
     {
 
         Intent detail = new Intent(PlaceDetailsActivity.this, PlaceMapsActivity.class);
-        detail.putExtra("placeId", mId);
+        detail.putExtra("placeId", id);
         startActivity(detail);
     }
 
