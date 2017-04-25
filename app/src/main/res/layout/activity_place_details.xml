@@ -133,9 +133,7 @@
                 android:layout_height="wrap_content"
                 android:text="Map Location"
                 style="@style/Base.Widget.AppCompat.Button.Colored"
-                android:id="@+id/mapButton"
-                android:onClick="openMapLocation"
-                />
+                android:id="@+id/mapButton"/>
 
             <Button
                 android:layout_width="match_parent"
@@ -143,9 +141,7 @@
                 android:text="Directions"
                 style="@style/Base.Widget.AppCompat.Button.Colored"
                 android:id="@+id/directionsButton"
-                android:layout_below="@+id/mapButton"
-                android:onClick="openMapDirections"
-                />
+                android:layout_below="@+id/mapButton"/>
         </RelativeLayout>
     </RelativeLayout>
 

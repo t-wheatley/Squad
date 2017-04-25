@@ -64,10 +64,13 @@ public class MeetupsListActivity extends AppCompatActivity {
         {
             // Collects the userId passed from the RecyclerView
             userId = (String) b.get("userId");
-            if((Boolean) b.get("host") == true)
+            if(b.get("host") != null)
             {
-                host = true;
-            } else
+                if((Boolean) b.get("host"))
+                {
+                    host = true;
+                }
+            }else
             {
                 member = true;
             }
