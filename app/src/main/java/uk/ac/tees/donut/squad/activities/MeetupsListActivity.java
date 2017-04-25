@@ -114,55 +114,7 @@ public class MeetupsListActivity extends AppCompatActivity {
         ) {
             @Override
             protected void populateViewHolder(final MeetupViewHolder viewHolder, final Meetup model, int position) {
-
-                viewHolder.nameField.setText(model.getName());
-
-                String description = model.getDescription().replace("\n", "");
-                String elipsis = "";
-                if(description.length() > 54)
-                    elipsis = "...";
-
-                String shortDesc = description.substring(0, Math.min(description.length(), 54)) + elipsis;
-
-                viewHolder.descriptionfield.setText(shortDesc);
-
-                // Get Squad name from id
-                mDatabase.child("squads").child(model.getSquad()).addListenerForSingleValueEvent(new ValueEventListener()
-                {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot)
-                    {
-                        viewHolder.squadField.setText(dataSnapshot.child("name").getValue(String.class));
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError)
-                    {
-
-                    }
-                });
-
-                viewHolder.mView.setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v) {
-                        //Stores the current item's key in a string
-                        String mId = model.getId();
-
-                        //Sends the id to the details activity
-                        Intent detail = new Intent(MeetupsListActivity.this, MeetupDetailActivity.class);
-                        detail.putExtra("meetupId", mId);
-                        startActivity(detail);
-                    }
-                });
-
-                // If loading the last item or empty
-                if ((mAdapter.getItemCount() == loadingCount))
-                {
-                    // Hide the loading overlay
-                    loadingOverlay.setVisibility(View.GONE);
-                }
-                loadingCount++;
+                populateMeetupViewHolder(viewHolder, model, position);
             }
         };
     }
@@ -178,55 +130,7 @@ public class MeetupsListActivity extends AppCompatActivity {
         ) {
             @Override
             protected void populateViewHolder(final MeetupViewHolder viewHolder, final Meetup model, int position) {
-
-                viewHolder.nameField.setText(model.getName());
-
-                String description = model.getDescription().replace("\n", "");
-                String elipsis = "";
-                if(description.length() > 54)
-                    elipsis = "...";
-
-                String shortDesc = description.substring(0, Math.min(description.length(), 54)) + elipsis;
-
-                viewHolder.descriptionfield.setText(shortDesc);
-
-                // Get Squad name from id
-                mDatabase.child("squads").child(model.getSquad()).addListenerForSingleValueEvent(new ValueEventListener()
-                {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot)
-                    {
-                        viewHolder.squadField.setText(dataSnapshot.child("name").getValue(String.class));
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError)
-                    {
-
-                    }
-                });
-
-                viewHolder.mView.setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v) {
-                        //Stores the current item's key in a string
-                        String mId = model.getId();
-
-                        //Sends the id to the details activity
-                        Intent detail = new Intent(MeetupsListActivity.this, MeetupDetailActivity.class);
-                        detail.putExtra("meetupId", mId);
-                        startActivity(detail);
-                    }
-                });
-
-                // If loading the last item or empty
-                if ((mAdapter.getItemCount() == loadingCount))
-                {
-                    // Hide the loading overlay
-                    loadingOverlay.setVisibility(View.GONE);
-                }
-                loadingCount++;
+                populateMeetupViewHolder(viewHolder, model, position);
             }
         };
     }
@@ -242,57 +146,62 @@ public class MeetupsListActivity extends AppCompatActivity {
         ) {
             @Override
             protected void populateViewHolder(final MeetupViewHolder viewHolder, final Meetup model, int position) {
-
-                viewHolder.nameField.setText(model.getName());
-
-                String description = model.getDescription().replace("\n", "");
-                String elipsis = "";
-                if(description.length() > 54)
-                    elipsis = "...";
-
-                String shortDesc = description.substring(0, Math.min(description.length(), 54)) + elipsis;
-
-                viewHolder.descriptionfield.setText(shortDesc);
-
-                // Get Squad name from id
-                mDatabase.child("squads").child(model.getSquad()).addListenerForSingleValueEvent(new ValueEventListener()
-                {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot)
-                    {
-                        viewHolder.squadField.setText(dataSnapshot.child("name").getValue(String.class));
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError)
-                    {
-
-                    }
-                });
-
-                viewHolder.mView.setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v) {
-                        //Stores the current item's key in a string
-                        String mId = model.getId();
-
-                        //Sends the id to the details activity
-                        Intent detail = new Intent(MeetupsListActivity.this, MeetupDetailActivity.class);
-                        detail.putExtra("meetupId", mId);
-                        startActivity(detail);
-                    }
-                });
-
-                // If loading the last item or empty
-                if ((mAdapter.getItemCount() == loadingCount))
-                {
-                    // Hide the loading overlay
-                    loadingOverlay.setVisibility(View.GONE);
-                }
-                loadingCount++;
+                populateMeetupViewHolder(viewHolder, model, position);
             }
         };
+    }
+
+    public void populateMeetupViewHolder(final MeetupViewHolder viewHolder, final Meetup model, int position)
+    {
+
+        viewHolder.nameField.setText(model.getName());
+
+        String description = model.getDescription().replace("\n", "");
+        String elipsis = "";
+        if(description.length() > 54)
+            elipsis = "...";
+
+        String shortDesc = description.substring(0, Math.min(description.length(), 54)) + elipsis;
+
+        viewHolder.descriptionfield.setText(shortDesc);
+
+        // Get Squad name from id
+        mDatabase.child("squads").child(model.getSquad()).addListenerForSingleValueEvent(new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                viewHolder.squadField.setText(dataSnapshot.child("name").getValue(String.class));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError)
+            {
+
+            }
+        });
+
+        viewHolder.mView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v) {
+                //Stores the current item's key in a string
+                String mId = model.getId();
+
+                //Sends the id to the details activity
+                Intent detail = new Intent(MeetupsListActivity.this, MeetupDetailActivity.class);
+                detail.putExtra("meetupId", mId);
+                startActivity(detail);
+            }
+        });
+
+        // If loading the last item or empty
+        if ((mAdapter.getItemCount() == loadingCount))
+        {
+            // Hide the loading overlay
+            loadingOverlay.setVisibility(View.GONE);
+        }
+        loadingCount++;
     }
 
     public static class MeetupViewHolder extends RecyclerView.ViewHolder
