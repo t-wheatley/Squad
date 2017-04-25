@@ -505,6 +505,7 @@ public class MeetupDetailActivity extends AppCompatActivity
         mDatabase.child("meetups").child(meetupId).child("users").child(firebaseUser.getUid()).removeValue();
         attending = false;
         attendBtn.setText("Attend Meetup");
+        finish();
     }
 
 

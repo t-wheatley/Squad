@@ -245,5 +245,6 @@ public class SquadDetailActivity extends AppCompatActivity {
         mDatabase.child("squads").child(squadId).child("users").child(firebaseUser.getUid()).removeValue();
         member = false;
         joinBtn.setText("Join Squad");
+        finish();
     }
 }
