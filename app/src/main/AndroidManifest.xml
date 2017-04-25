@@ -51,6 +51,7 @@
         <activity android:name=".activities.MeetupsListActivity" />
         <activity android:name=".activities.PlaceDetailsActivity" />
         <activity android:name=".activities.NewPlaceActivity" />
+        <activity android:name=".activities.SquadPostActivity"></activity>
         <activity android:name=".activities.SquadsActivity2"></activity>
     </application>
 

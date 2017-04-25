@@ -1,4 +1,4 @@
-package uk.ac.tees.donut.squad.activities.fragments;
+package uk.ac.tees.donut.squad.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

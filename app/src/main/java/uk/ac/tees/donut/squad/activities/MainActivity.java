@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void openSquads(View view) {
-        Intent intent = new Intent(this, SquadsActivity2.class);
+        Intent intent = new Intent(this, SquadPostActivity.class);
         startActivity(intent);
     }
 
