@@ -247,4 +247,18 @@ public class SquadDetailActivity extends AppCompatActivity {
         joinBtn.setText("Join Squad");
         finish();
     }
+
+    public void viewMeetups(View view)
+    {
+        // Loads the MeetupsList activity displaying the Meetups that the user is hosting
+        Intent intent = new Intent(this, MeetupsListActivity.class);
+        intent.putExtra("squadId", squadId);
+        startActivity(intent);
+    }
+
+    public void viewPlaces(View view)
+    {
+        Intent intent = new Intent(this, PlacesListActivity.class);
+        startActivity(intent);
+    }
 }

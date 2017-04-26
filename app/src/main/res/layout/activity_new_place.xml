@@ -6,6 +6,9 @@
     android:layout_height="match_parent"
     tools:context="uk.ac.tees.donut.squad.activities.NewPlaceActivity"
     android:background="@color/cardview_dark_background">
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -143,8 +146,9 @@
                 style="@style/Widget.AppCompat.Button.Colored"/>
         </RelativeLayout>
     </RelativeLayout>
-
+</ScrollView>
     <!-- Loading overlay; -->
     <include layout="@layout/loading_overlay"/>
+
 
 </RelativeLayout>

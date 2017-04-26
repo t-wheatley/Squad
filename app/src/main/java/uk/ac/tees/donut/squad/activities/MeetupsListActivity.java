@@ -30,8 +30,10 @@ public class MeetupsListActivity extends AppCompatActivity {
     private FirebaseRecyclerAdapter mAdapter;
 
     String userId;
-    Boolean member;
+    String squadId;
     Boolean host;
+    Boolean member;
+    Boolean squad;
 
     RelativeLayout loadingOverlay;
     TextView loadingText;
@@ -56,23 +58,34 @@ public class MeetupsListActivity extends AppCompatActivity {
 
         member = false;
         host = false;
+        squad = false;
 
         // Gets the extra passed from the last activity
         Intent detail = getIntent();
         Bundle b = detail.getExtras();
         if(b != null)
         {
-            // Collects the userId passed from the RecyclerView
-            userId = (String) b.get("userId");
-            if(b.get("host") != null)
+            if(b.get("squadId") != null)
             {
-                if((Boolean) b.get("host"))
+                // Squad mode
+                squadId = (String) b.get("squadId");
+                squad = true;
+            } else if(b.get("userId") != null)
+            {
+                // Collects the userId passed from the RecyclerView
+                userId = (String) b.get("userId");
+                if(b.get("host") != null)
                 {
-                    host = true;
+                    if((Boolean) b.get("host"))
+                    {
+                        // Host mode
+                        host = true;
+                    }
+                }else
+                {
+                    // Member mode
+                    member = true;
                 }
-            }else
-            {
-                member = true;
             }
         }
 
@@ -95,6 +108,9 @@ public class MeetupsListActivity extends AppCompatActivity {
         } else if(member)
         {
             getUsers(userId);
+        } else if(squad)
+        {
+            getSquad(squadId);
         } else
         {
             getAll();
@@ -143,6 +159,22 @@ public class MeetupsListActivity extends AppCompatActivity {
                 MeetupViewHolder.class,
                 // Referencing the node where we want the database to store the data from our Object
                 mDatabase.orderByChild("host").equalTo(userId)
+        ) {
+            @Override
+            protected void populateViewHolder(final MeetupViewHolder viewHolder, final Meetup model, int position) {
+                populateMeetupViewHolder(viewHolder, model, position);
+            }
+        };
+    }
+
+    public void getSquad(String squadId)
+    {
+        mAdapter = new FirebaseRecyclerAdapter<Meetup, MeetupViewHolder>(
+                Meetup.class,
+                R.layout.item_three_text,
+                MeetupViewHolder.class,
+                // Referencing the node where we want the database to store the data from our Object
+                mDatabase.orderByChild("squad").equalTo(squadId)
         ) {
             @Override
             protected void populateViewHolder(final MeetupViewHolder viewHolder, final Meetup model, int position) {
