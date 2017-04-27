@@ -35,7 +35,9 @@ public class Meetup
     // Constructor for meetup lists
     public Meetup(String i, String n, String s)
     {
-        id = i; name = n; squad = s;
+        id = i;
+        name = n;
+        squad = s;
     }
 
 
@@ -56,30 +58,39 @@ public class Meetup
     {
         return id;
     }
+
     public String getName()
     {
         return name;
     }
+
     public String getDescription()
     {
         return description;
     }
+
     public String getSquad()
     {
         return squad;
     }
+
     public String getHost()
     {
         return host;
     }
+
     public HashMap<String, Boolean> getUsers()
     {
         return users;
     }
-    public Double getLongitude() {
+
+    public Double getLongitude()
+    {
         return longitude;
     }
-    public Double getLatitude() {
+
+    public Double getLatitude()
+    {
         return latitude;
     }
 
@@ -88,30 +99,39 @@ public class Meetup
     {
         this.id = i;
     }
+
     public void setName(String n)
     {
         this.name = n;
     }
+
     public void setDescription(String d)
     {
         this.description = d;
     }
+
     public void setSquad(String s)
     {
         this.squad = s;
     }
+
     public void setHost(String h)
     {
         this.host = h;
     }
+
     public void setAttendees(HashMap<String, Boolean> users)
     {
         this.users = users;
     }
-    public void setLongitude(Double longitude) {
+
+    public void setLongitude(Double longitude)
+    {
         this.longitude = longitude;
     }
-    public void setLatitude(Double latitude) {
+
+    public void setLatitude(Double latitude)
+    {
         this.latitude = latitude;
     }
 }

@@ -2,16 +2,12 @@ package uk.ac.tees.donut.squad.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.Image;
-
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.Button;
-
 import android.widget.ImageSwitcher;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -28,7 +24,8 @@ import com.google.firebase.database.ValueEventListener;
 import uk.ac.tees.donut.squad.R;
 import uk.ac.tees.donut.squad.posts.AddressPlace;
 
-public class PlaceDetailsActivity extends AppCompatActivity {
+public class PlaceDetailsActivity extends AppCompatActivity
+{
 
     String placeId;
 
@@ -53,7 +50,8 @@ public class PlaceDetailsActivity extends AppCompatActivity {
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_details);
 
@@ -95,14 +93,13 @@ public class PlaceDetailsActivity extends AppCompatActivity {
 
         //if there are no pictures
         boolean pics = false; //TEMPORARY TILL WE CAN ATTEMPT AT LOADING PICS
-        if(pics)
+        if (pics)
         {
             //keeps the noPic text, and changes the height of the layout so it's not too big
             ViewGroup.LayoutParams params = galleryLayout.getLayoutParams();
             params.height = 35;
             galleryLayout.setLayoutParams(params);
-        }
-        else
+        } else
             //gets rid of the noPic text
             noPic.setVisibility(View.GONE);
 
@@ -113,19 +110,20 @@ public class PlaceDetailsActivity extends AppCompatActivity {
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        if(b != null)
+        if (b != null)
         {
             placeId = (String) b.get("placeId");
             this.setTitle("Place Details");
-        }
-        else
+        } else
         {
             new AlertDialog.Builder(PlaceDetailsActivity.this)
                     .setTitle("Error")
                     .setMessage("The place went missing somewhere, please try again")
-                    .setPositiveButton("Back", new DialogInterface.OnClickListener() {
+                    .setPositiveButton("Back", new DialogInterface.OnClickListener()
+                    {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
+                        public void onClick(DialogInterface dialog, int which)
+                        {
                             finish();
                         }
                     })
@@ -133,16 +131,17 @@ public class PlaceDetailsActivity extends AppCompatActivity {
                     .show();
         }
 
-        mDatabase = FirebaseDatabase.getInstance().getReference("places");
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
+        // Starts the loading chain
+        // loadMeetup -> loadSquad
         loadPlace();
-
     }
 
     public void loadPlace()
     {
         // Reads the data from the placeId in Firebase
-        mDatabase.child(placeId).addListenerForSingleValueEvent(new ValueEventListener()
+        mDatabase.child("places").child(placeId).addListenerForSingleValueEvent(new ValueEventListener()
         {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
@@ -154,15 +153,31 @@ public class PlaceDetailsActivity extends AppCompatActivity {
                 placeName.setText(place.getName());
                 description.setText(place.getDescription());
                 address.setText(place.fullAddress());
-                squad.setText(place.getInterest());
 
-                /*
-                // If user is the host
-                if(firebaseUser.getUid().equals(place.getUser()))
-                {
-                    editMode();
-                }
-                */
+                loadSquad();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError)
+            {
+
+            }
+        });
+    }
+
+    public void loadSquad()
+    {
+        // Setting the loading text
+        loadingText.setText("Getting the Place's Squad...");
+
+
+        // Get Squad name from id
+        mDatabase.child("squads").child(place.getSquad()).addListenerForSingleValueEvent(new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                squad.setText(dataSnapshot.child("name").getValue(String.class));
 
                 // Hiding loading overlay
                 loadingOverlay.setVisibility(View.GONE);

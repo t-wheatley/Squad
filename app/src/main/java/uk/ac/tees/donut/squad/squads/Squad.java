@@ -26,14 +26,17 @@ public class Squad
     {
         return id;
     }
+
     public String getName()
     {
         return name;
     }
+
     public String getDescription()
     {
         return description;
     }
+
     public void setUsers(HashMap<String, Boolean> users)
     {
         this.users = users;
@@ -44,14 +47,17 @@ public class Squad
     {
         this.id = id;
     }
+
     public void setName(String n)
     {
         this.name = n;
     }
+
     public void setDescription(String d)
     {
         this.description = d;
     }
+
     public HashMap<String, Boolean> getUsers()
     {
         return users;

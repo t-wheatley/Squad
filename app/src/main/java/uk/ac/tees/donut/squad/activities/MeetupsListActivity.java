@@ -1,10 +1,8 @@
 package uk.ac.tees.donut.squad.activities;
 
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -22,7 +20,8 @@ import com.google.firebase.database.ValueEventListener;
 import uk.ac.tees.donut.squad.R;
 import uk.ac.tees.donut.squad.posts.Meetup;
 
-public class MeetupsListActivity extends AppCompatActivity {
+public class MeetupsListActivity extends AppCompatActivity
+{
 
     private DatabaseReference mDatabase;
 
@@ -67,25 +66,25 @@ public class MeetupsListActivity extends AppCompatActivity {
         // Gets the extra passed from the last activity
         Intent detail = getIntent();
         Bundle b = detail.getExtras();
-        if(b != null)
+        if (b != null)
         {
-            if(b.get("squadId") != null)
+            if (b.get("squadId") != null)
             {
                 // Squad mode
                 squadId = (String) b.get("squadId");
                 squad = true;
-            } else if(b.get("userId") != null)
+            } else if (b.get("userId") != null)
             {
                 // Collects the userId passed from the RecyclerView
                 userId = (String) b.get("userId");
-                if(b.get("host") != null)
+                if (b.get("host") != null)
                 {
-                    if((Boolean) b.get("host"))
+                    if ((Boolean) b.get("host"))
                     {
                         // Host mode
                         host = true;
                     }
-                }else
+                } else
                 {
                     // Member mode
                     member = true;
@@ -94,9 +93,9 @@ public class MeetupsListActivity extends AppCompatActivity {
         }
 
         // Base database reference
-        mDatabase = FirebaseDatabase.getInstance().getReference("meetups");
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        if(mRecyclerView != null)
+        if (mRecyclerView != null)
         {
             mRecyclerView.setHasFixedSize(true);
         }
@@ -106,13 +105,13 @@ public class MeetupsListActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // If came from 'View Meetups' button on profile
-        if(host)
+        if (host)
         {
             getHosted(userId);
-        } else if(member)
+        } else if (member)
         {
             getUsers(userId);
-        } else if(squad)
+        } else if (squad)
         {
             getSquad(squadId);
         } else
@@ -126,7 +125,7 @@ public class MeetupsListActivity extends AppCompatActivity {
     public void getAll()
     {
         // Database reference to get all Meetups
-        Query allQuery = mDatabase;
+        Query allQuery = mDatabase.child("meetups");
 
         // Check to see if any Meetups exist
         checkForEmpty(allQuery);
@@ -136,9 +135,11 @@ public class MeetupsListActivity extends AppCompatActivity {
                 R.layout.item_three_text,
                 MeetupViewHolder.class,
                 allQuery
-        ) {
+        )
+        {
             @Override
-            protected void populateViewHolder(final MeetupViewHolder viewHolder, final Meetup model, int position) {
+            protected void populateViewHolder(final MeetupViewHolder viewHolder, final Meetup model, int position)
+            {
                 populateMeetupViewHolder(viewHolder, model, position);
             }
         };
@@ -148,7 +149,7 @@ public class MeetupsListActivity extends AppCompatActivity {
     public void getUsers(String userId)
     {
         // Database reference to get a User's Meetups
-        Query userQuery = mDatabase.orderByChild("users/" + userId).equalTo(true);
+        Query userQuery = mDatabase.child("meetups").orderByChild("users/" + userId).equalTo(true);
 
         // Check to see if any Meetups exist
         checkForEmpty(userQuery);
@@ -158,9 +159,11 @@ public class MeetupsListActivity extends AppCompatActivity {
                 R.layout.item_three_text,
                 MeetupViewHolder.class,
                 userQuery
-        ) {
+        )
+        {
             @Override
-            protected void populateViewHolder(final MeetupViewHolder viewHolder, final Meetup model, int position) {
+            protected void populateViewHolder(final MeetupViewHolder viewHolder, final Meetup model, int position)
+            {
                 populateMeetupViewHolder(viewHolder, model, position);
             }
         };
@@ -170,7 +173,7 @@ public class MeetupsListActivity extends AppCompatActivity {
     public void getHosted(String userId)
     {
         // Database reference to get a Host's Meetups
-        Query hostQuery = mDatabase.orderByChild("host").equalTo(userId);
+        Query hostQuery = mDatabase.child("meetups").orderByChild("host").equalTo(userId);
 
         // Check to see if any Meetups exist
         checkForEmpty(hostQuery);
@@ -180,9 +183,11 @@ public class MeetupsListActivity extends AppCompatActivity {
                 R.layout.item_three_text,
                 MeetupViewHolder.class,
                 hostQuery
-        ) {
+        )
+        {
             @Override
-            protected void populateViewHolder(final MeetupViewHolder viewHolder, final Meetup model, int position) {
+            protected void populateViewHolder(final MeetupViewHolder viewHolder, final Meetup model, int position)
+            {
                 populateMeetupViewHolder(viewHolder, model, position);
             }
         };
@@ -193,7 +198,7 @@ public class MeetupsListActivity extends AppCompatActivity {
     public void getSquad(String squadId)
     {
         // Database reference to get a Squad's Meetups
-        Query squadQuery = mDatabase.orderByChild("squad").equalTo(squadId);
+        Query squadQuery = mDatabase.child("meetups").orderByChild("squad").equalTo(squadId);
 
         // Check to see if any Meetups exist
         checkForEmpty(squadQuery);
@@ -203,9 +208,11 @@ public class MeetupsListActivity extends AppCompatActivity {
                 R.layout.item_three_text,
                 MeetupViewHolder.class,
                 squadQuery
-        ) {
+        )
+        {
             @Override
-            protected void populateViewHolder(final MeetupViewHolder viewHolder, final Meetup model, int position) {
+            protected void populateViewHolder(final MeetupViewHolder viewHolder, final Meetup model, int position)
+            {
                 populateMeetupViewHolder(viewHolder, model, position);
             }
         };
@@ -214,14 +221,16 @@ public class MeetupsListActivity extends AppCompatActivity {
     // Checks if Meetups in the selected query exist
     public void checkForEmpty(Query query)
     {
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        query.addListenerForSingleValueEvent(new ValueEventListener()
+        {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
                 // Hide the loading screen
                 loadingOverlay.setVisibility(View.GONE);
 
                 // Checks if Meetups will be found
-                if(dataSnapshot.hasChildren())
+                if (dataSnapshot.hasChildren())
                 {
                     listText.setVisibility(View.GONE);
                 } else
@@ -234,7 +243,8 @@ public class MeetupsListActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(DatabaseError databaseError)
+            {
 
             }
         });
@@ -243,10 +253,12 @@ public class MeetupsListActivity extends AppCompatActivity {
     // An observer on the RecyclerView to check if empty on changes
     public void adapterObserver()
     {
-        mObserver = new RecyclerView.AdapterDataObserver() {
+        mObserver = new RecyclerView.AdapterDataObserver()
+        {
             @Override
-            public void onItemRangeInserted(int positionStart, int itemCount) {
-                if(mAdapter.getItemCount() == 0)
+            public void onItemRangeInserted(int positionStart, int itemCount)
+            {
+                if (mAdapter.getItemCount() == 0)
                 {
                     listText.setVisibility(View.VISIBLE);
                 } else
@@ -256,8 +268,9 @@ public class MeetupsListActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onItemRangeRemoved(int positionStart, int itemCount) {
-                if(mAdapter.getItemCount() == 0)
+            public void onItemRangeRemoved(int positionStart, int itemCount)
+            {
+                if (mAdapter.getItemCount() == 0)
                 {
                     listText.setVisibility(View.VISIBLE);
                 } else
@@ -277,7 +290,7 @@ public class MeetupsListActivity extends AppCompatActivity {
 
         String description = model.getDescription().replace("\n", "");
         String elipsis = "";
-        if(description.length() > 54)
+        if (description.length() > 54)
             elipsis = "...";
 
         String shortDesc = description.substring(0, Math.min(description.length(), 54)) + elipsis;
@@ -303,7 +316,8 @@ public class MeetupsListActivity extends AppCompatActivity {
         viewHolder.mView.setOnClickListener(new View.OnClickListener()
         {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 //Stores the current item's key in a string
                 String mId = model.getId();
 

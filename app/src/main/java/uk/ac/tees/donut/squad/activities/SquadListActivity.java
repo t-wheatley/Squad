@@ -1,10 +1,8 @@
 package uk.ac.tees.donut.squad.activities;
 
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -21,14 +19,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import org.w3c.dom.Text;
-
 import java.util.HashMap;
 
 import uk.ac.tees.donut.squad.R;
 import uk.ac.tees.donut.squad.squads.Squad;
 
-public class SquadListActivity extends AppCompatActivity {
+public class SquadListActivity extends AppCompatActivity
+{
 
     private DatabaseReference mDatabase;
 
@@ -70,7 +67,7 @@ public class SquadListActivity extends AppCompatActivity {
         // Gets the extra passed from the last activity
         Intent detail = getIntent();
         Bundle b = detail.getExtras();
-        if(b != null)
+        if (b != null)
         {
             // Collects the userId passed from the RecyclerView
             userId = (String) b.get("userId");
@@ -78,9 +75,9 @@ public class SquadListActivity extends AppCompatActivity {
         }
 
         // Getting the reference for the Firebase Realtime Database
-        mDatabase = FirebaseDatabase.getInstance().getReference("squads");
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        if(mRecyclerView != null)
+        if (mRecyclerView != null)
         {
             mRecyclerView.setHasFixedSize(true);
         }
@@ -90,11 +87,10 @@ public class SquadListActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // If came from 'View Squads' button on profile
-        if(member)
+        if (member)
         {
             getUsers(userId);
-        }
-        else
+        } else
         {
             getAll();
         }
@@ -105,7 +101,7 @@ public class SquadListActivity extends AppCompatActivity {
     public void getAll()
     {
         // Database reference to get a Squad's Meetups
-        Query allQuery = mDatabase;
+        Query allQuery = mDatabase.child("squads");
 
         // Check to see if any Meetups exist
         checkForEmpty(allQuery);
@@ -115,9 +111,11 @@ public class SquadListActivity extends AppCompatActivity {
                 R.layout.item_three_text,
                 SquadViewHolder.class,
                 allQuery
-        ) {
+        )
+        {
             @Override
-            protected void populateViewHolder(SquadViewHolder viewHolder, final Squad model, int position) {
+            protected void populateViewHolder(SquadViewHolder viewHolder, final Squad model, int position)
+            {
                 populateSquadViewHolder(viewHolder, model, position);
             }
         };
@@ -126,7 +124,7 @@ public class SquadListActivity extends AppCompatActivity {
     public void getUsers(String userId)
     {
         // Database reference to get a Squad's Meetups
-        Query userQuery = mDatabase.orderByChild("users/" + userId).equalTo(true);
+        Query userQuery = mDatabase.child("squads").orderByChild("users/" + userId).equalTo(true);
 
         // Check to see if any Meetups exist
         checkForEmpty(userQuery);
@@ -136,9 +134,11 @@ public class SquadListActivity extends AppCompatActivity {
                 R.layout.item_three_text,
                 SquadViewHolder.class,
                 userQuery
-        ) {
+        )
+        {
             @Override
-            protected void populateViewHolder(SquadViewHolder viewHolder, final Squad model, int position) {
+            protected void populateViewHolder(SquadViewHolder viewHolder, final Squad model, int position)
+            {
                 populateSquadViewHolder(viewHolder, model, position);
             }
         };
@@ -147,14 +147,16 @@ public class SquadListActivity extends AppCompatActivity {
     // Checks if Squads in the selected query exist
     public void checkForEmpty(Query query)
     {
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        query.addListenerForSingleValueEvent(new ValueEventListener()
+        {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
                 // Hide the loading screen
                 loadingOverlay.setVisibility(View.GONE);
 
                 // Checks if Squads will be found
-                if(dataSnapshot.hasChildren())
+                if (dataSnapshot.hasChildren())
                 {
                     listText.setVisibility(View.GONE);
                 } else
@@ -167,7 +169,8 @@ public class SquadListActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(DatabaseError databaseError)
+            {
 
             }
         });
@@ -176,10 +179,12 @@ public class SquadListActivity extends AppCompatActivity {
     // An observer on the RecyclerView to check if empty on changes
     public void adapterObserver()
     {
-        mObserver = new RecyclerView.AdapterDataObserver() {
+        mObserver = new RecyclerView.AdapterDataObserver()
+        {
             @Override
-            public void onItemRangeInserted(int positionStart, int itemCount) {
-                if(mAdapter.getItemCount() == 0)
+            public void onItemRangeInserted(int positionStart, int itemCount)
+            {
+                if (mAdapter.getItemCount() == 0)
                 {
                     listText.setVisibility(View.VISIBLE);
                 } else
@@ -189,8 +194,9 @@ public class SquadListActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onItemRangeRemoved(int positionStart, int itemCount) {
-                if(mAdapter.getItemCount() == 0)
+            public void onItemRangeRemoved(int positionStart, int itemCount)
+            {
+                if (mAdapter.getItemCount() == 0)
                 {
                     listText.setVisibility(View.VISIBLE);
                 } else
@@ -208,7 +214,7 @@ public class SquadListActivity extends AppCompatActivity {
 
         String description = model.getDescription().replace("\n", "");
         String elipsis = "";
-        if(description.length() > 54)
+        if (description.length() > 54)
             elipsis = "...";
 
         String shortDesc = description.substring(0, Math.min(description.length(), 54)) + elipsis;
@@ -219,9 +225,11 @@ public class SquadListActivity extends AppCompatActivity {
         HashMap<String, Boolean> users = model.getUsers();
 
         // If the HashMap isnt empty
-        if (users != null) {
+        if (users != null)
+        {
             // Checking if the user is already in the Squad
-            if (users.containsKey(firebaseUser.getUid())) {
+            if (users.containsKey(firebaseUser.getUid()))
+            {
                 viewHolder.placeHolder.setText("✓");
             } else
             {
