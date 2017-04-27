@@ -346,6 +346,6 @@ public class LoginActivity extends AppCompatActivity implements
             Intent i = new Intent(LoginActivity.this, MenuActivity.class);
             startActivity(i);
             finish();
-        } 
+        }
     }
 }

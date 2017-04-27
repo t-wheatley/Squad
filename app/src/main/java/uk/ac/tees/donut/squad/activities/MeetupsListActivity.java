@@ -16,6 +16,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import uk.ac.tees.donut.squad.R;
@@ -28,6 +29,7 @@ public class MeetupsListActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
     private FirebaseRecyclerAdapter mAdapter;
+    private RecyclerView.AdapterDataObserver mObserver;
 
     String userId;
     String squadId;
@@ -37,6 +39,7 @@ public class MeetupsListActivity extends AppCompatActivity {
 
     RelativeLayout loadingOverlay;
     TextView loadingText;
+    TextView listText;
 
     int loadingCount;
 
@@ -55,6 +58,7 @@ public class MeetupsListActivity extends AppCompatActivity {
 
         // Initialising RecyclerView
         mRecyclerView = (RecyclerView) findViewById(R.id.meetupsList_recyclerView);
+        listText = (TextView) findViewById(R.id.meetupsList_textView);
 
         member = false;
         host = false;
@@ -89,7 +93,7 @@ public class MeetupsListActivity extends AppCompatActivity {
             }
         }
 
-        // Getting the reference for the Firebase Realtime Database
+        // Base database reference
         mDatabase = FirebaseDatabase.getInstance().getReference("meetups");
 
         if(mRecyclerView != null)
@@ -121,44 +125,84 @@ public class MeetupsListActivity extends AppCompatActivity {
 
     public void getAll()
     {
+        // Database reference to get all Meetups
+        Query allQuery = mDatabase;
+
+        // Check to see if any Meetups exist
+        checkForEmpty(allQuery);
+
         mAdapter = new FirebaseRecyclerAdapter<Meetup, MeetupViewHolder>(
                 Meetup.class,
                 R.layout.item_three_text,
                 MeetupViewHolder.class,
-                // Referencing the node where we want the database to store the data from our Object
-                mDatabase
+                allQuery
         ) {
             @Override
             protected void populateViewHolder(final MeetupViewHolder viewHolder, final Meetup model, int position) {
                 populateMeetupViewHolder(viewHolder, model, position);
             }
         };
+
     }
 
     public void getUsers(String userId)
     {
+        // Database reference to get a User's Meetups
+        Query userQuery = mDatabase.orderByChild("users/" + userId).equalTo(true);
+
+        // Check to see if any Meetups exist
+        checkForEmpty(userQuery);
+
         mAdapter = new FirebaseRecyclerAdapter<Meetup, MeetupViewHolder>(
                 Meetup.class,
                 R.layout.item_three_text,
                 MeetupViewHolder.class,
-                // Referencing the node where we want the database to store the data from our Object
-                mDatabase.orderByChild("users/" + userId).equalTo(true)
+                userQuery
         ) {
             @Override
             protected void populateViewHolder(final MeetupViewHolder viewHolder, final Meetup model, int position) {
                 populateMeetupViewHolder(viewHolder, model, position);
             }
         };
+
     }
 
     public void getHosted(String userId)
     {
+        // Database reference to get a Host's Meetups
+        Query hostQuery = mDatabase.orderByChild("host").equalTo(userId);
+
+        // Check to see if any Meetups exist
+        checkForEmpty(hostQuery);
+
         mAdapter = new FirebaseRecyclerAdapter<Meetup, MeetupViewHolder>(
                 Meetup.class,
                 R.layout.item_three_text,
                 MeetupViewHolder.class,
-                // Referencing the node where we want the database to store the data from our Object
-                mDatabase.orderByChild("host").equalTo(userId)
+                hostQuery
+        ) {
+            @Override
+            protected void populateViewHolder(final MeetupViewHolder viewHolder, final Meetup model, int position) {
+                populateMeetupViewHolder(viewHolder, model, position);
+            }
+        };
+
+
+    }
+
+    public void getSquad(String squadId)
+    {
+        // Database reference to get a Squad's Meetups
+        Query squadQuery = mDatabase.orderByChild("squad").equalTo(squadId);
+
+        // Check to see if any Meetups exist
+        checkForEmpty(squadQuery);
+
+        mAdapter = new FirebaseRecyclerAdapter<Meetup, MeetupViewHolder>(
+                Meetup.class,
+                R.layout.item_three_text,
+                MeetupViewHolder.class,
+                squadQuery
         ) {
             @Override
             protected void populateViewHolder(final MeetupViewHolder viewHolder, final Meetup model, int position) {
@@ -167,21 +211,64 @@ public class MeetupsListActivity extends AppCompatActivity {
         };
     }
 
-    public void getSquad(String squadId)
+    // Checks if Meetups in the selected query exist
+    public void checkForEmpty(Query query)
     {
-        mAdapter = new FirebaseRecyclerAdapter<Meetup, MeetupViewHolder>(
-                Meetup.class,
-                R.layout.item_three_text,
-                MeetupViewHolder.class,
-                // Referencing the node where we want the database to store the data from our Object
-                mDatabase.orderByChild("squad").equalTo(squadId)
-        ) {
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            protected void populateViewHolder(final MeetupViewHolder viewHolder, final Meetup model, int position) {
-                populateMeetupViewHolder(viewHolder, model, position);
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Hide the loading screen
+                loadingOverlay.setVisibility(View.GONE);
+
+                // Checks if Meetups will be found
+                if(dataSnapshot.hasChildren())
+                {
+                    listText.setVisibility(View.GONE);
+                } else
+                {
+                    listText.setVisibility(View.VISIBLE);
+                }
+
+                // Add an Observer to the RecyclerView
+                adapterObserver();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    // An observer on the RecyclerView to check if empty on changes
+    public void adapterObserver()
+    {
+        mObserver = new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                if(mAdapter.getItemCount() == 0)
+                {
+                    listText.setVisibility(View.VISIBLE);
+                } else
+                {
+                    listText.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onItemRangeRemoved(int positionStart, int itemCount) {
+                if(mAdapter.getItemCount() == 0)
+                {
+                    listText.setVisibility(View.VISIBLE);
+                } else
+                {
+                    listText.setVisibility(View.GONE);
+                }
             }
         };
+        mAdapter.registerAdapterDataObserver(mObserver);
     }
+
 
     public void populateMeetupViewHolder(final MeetupViewHolder viewHolder, final Meetup model, int position)
     {
@@ -228,12 +315,14 @@ public class MeetupsListActivity extends AppCompatActivity {
         });
 
         // If loading the last item or empty
+        /*
         if ((mAdapter.getItemCount() == loadingCount))
         {
             // Hide the loading overlay
             loadingOverlay.setVisibility(View.GONE);
         }
         loadingCount++;
+        */
     }
 
     public static class MeetupViewHolder extends RecyclerView.ViewHolder

@@ -259,6 +259,7 @@ public class SquadDetailActivity extends AppCompatActivity {
     public void viewPlaces(View view)
     {
         Intent intent = new Intent(this, PlacesListActivity.class);
+        intent.putExtra("squadId", squadId);
         startActivity(intent);
     }
 }

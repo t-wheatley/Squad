@@ -203,74 +203,89 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
                     // Gets the data from Firebase and stores it in a FBUser class
                     user = dataSnapshot.getValue(FBUser.class);
 
-                    // Checking if user has Squads
-                    if(user.getSquads() != null)
+                    if(user != null)
                     {
-                        hasSquad = true;
-                    } else
-                    {
-                        hasSquad = false;
-                    }
+                        // Checking if user has Squads
+                        if(user.getSquads() != null)
+                        {
+                            hasSquad = true;
+                        } else
+                        {
+                            hasSquad = false;
+                        }
 
-                    // Checking if user has Meetups
-                    if(user.getMeetups() != null)
-                    {
-                        hasMeetup = true;
-                    } else
-                    {
-                        hasMeetup = false;
-                    }
+                        // Checking if user has Meetups
+                        if(user.getMeetups() != null)
+                        {
+                            hasMeetup = true;
+                        } else
+                        {
+                            hasMeetup = false;
+                        }
 
-                    // Checking if user has Squads
-                    if(user.getHosting() != null)
-                    {
-                        hasHost = true;
-                    } else
-                    {
-                        hasHost = false;
-                    }
+                        // Checking if user has Squads
+                        if(user.getHosting() != null)
+                        {
+                            hasHost = true;
+                        } else
+                        {
+                            hasHost = false;
+                        }
 
 
-                    // Displays the user's name in the editText
-                    profileName.setText(user.getName());
+                        // Displays the user's name in the editText
+                        profileName.setText(user.getName());
 
-                    // If user has created a bio
-                    if(user.getBio() != null)
-                    {
-                        // Displays the user's bio in the editText
-                        bio.setText(user.getBio().trim());
-                    } else
-                    {
-                        // Default bio
-                        bio.setText("This user has no bio!");
-                    }
+                        // If user has created a bio
+                        if(user.getBio() != null)
+                        {
+                            // Displays the user's bio in the editText
+                            bio.setText(user.getBio().trim());
+                        } else
+                        {
+                            // Default bio
+                            bio.setText("This user has no bio!");
+                        }
 
-                    // Displays the photo in the ImageView
-                    Glide.with(ProfileActivity.this)
-                            .load(user.getPicture().trim())
-                            .diskCacheStrategy(DiskCacheStrategy.NONE)
-                            .skipMemoryCache(true)
-                            .listener(new RequestListener<String, GlideDrawable>() {
-                                @Override
-                                public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                                    return false;
-                                }
-
-                                @Override
-                                public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                                    // If profileName != default and profileImage isnt null
-                                    if ((!profileName.getText().equals("'Users Profile")) && (profileImage != null))
-                                    {
-                                        // Hiding loading overlay
-                                        loadingOverlay.setVisibility(View.GONE);
+                        // Displays the photo in the ImageView
+                        Glide.with(ProfileActivity.this)
+                                .load(user.getPicture().trim())
+                                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                .skipMemoryCache(true)
+                                .listener(new RequestListener<String, GlideDrawable>() {
+                                    @Override
+                                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                                        return false;
                                     }
-                                    return false;
-                                }
-                            })
-                            .dontAnimate()
-                            .fitCenter()
-                            .error(R.drawable.com_facebook_profile_picture_blank_portrait)
-                            .into(profileImage);
+
+                                    @Override
+                                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                                        // If profileName != default and profileImage isnt null
+                                        if ((!profileName.getText().equals("'Users Profile")) && (profileImage != null))
+                                        {
+                                            // Hiding loading overlay
+                                            loadingOverlay.setVisibility(View.GONE);
+                                        }
+                                        return false;
+                                    }
+                                })
+                                .dontAnimate()
+                                .fitCenter()
+                                .error(R.drawable.com_facebook_profile_picture_blank_portrait)
+                                .into(profileImage);
+                    } else
+                    {
+                        new AlertDialog.Builder(ProfileActivity.this)
+                                .setTitle("Something went wrong!")
+                                .setMessage("We do not appear to be able to find this user, please try again.")
+                                .setPositiveButton("Back", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        finish();
+                                    }
+                                })
+                                .setCancelable(false)
+                                .show();
+                    }
                 }
 
                 @Override
