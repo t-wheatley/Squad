@@ -1,10 +1,8 @@
 package uk.ac.tees.donut.squad.activities;
 
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -22,7 +20,8 @@ import com.google.firebase.database.ValueEventListener;
 import uk.ac.tees.donut.squad.R;
 import uk.ac.tees.donut.squad.posts.AddressPlace;
 
-public class PlacesListActivity extends AppCompatActivity {
+public class PlacesListActivity extends AppCompatActivity
+{
 
     private DatabaseReference mDatabase;
 
@@ -61,7 +60,7 @@ public class PlacesListActivity extends AppCompatActivity {
         // Gets the extra passed from the last activity
         Intent detail = getIntent();
         Bundle b = detail.getExtras();
-        if(b != null)
+        if (b != null)
         {
             // Collects the userId passed from the RecyclerView
             squadId = (String) b.get("squadId");
@@ -69,9 +68,9 @@ public class PlacesListActivity extends AppCompatActivity {
         }
 
         // Getting the reference for the Firebase Realtime Database
-        mDatabase = FirebaseDatabase.getInstance().getReference("places");
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        if(mRecyclerView != null)
+        if (mRecyclerView != null)
         {
             mRecyclerView.setHasFixedSize(true);
         }
@@ -82,11 +81,10 @@ public class PlacesListActivity extends AppCompatActivity {
 
 
         // If came from 'View Places' button on Squad
-        if(squad)
+        if (squad)
         {
             getSquad(squadId);
-        }
-        else
+        } else
         {
             getAll();
         }
@@ -97,7 +95,7 @@ public class PlacesListActivity extends AppCompatActivity {
     public void getAll()
     {
         // Database reference to get a Squad's Meetups
-        Query allQuery = mDatabase;
+        Query allQuery = mDatabase.child("places");
 
         // Check to see if any Meetups exist
         checkForEmpty(allQuery);
@@ -107,9 +105,11 @@ public class PlacesListActivity extends AppCompatActivity {
                 R.layout.item_three_text,
                 PlacesListActivity.PlaceViewHolder.class,
                 allQuery
-        ) {
+        )
+        {
             @Override
-            protected void populateViewHolder(PlacesListActivity.PlaceViewHolder viewHolder, final AddressPlace model, int position) {
+            protected void populateViewHolder(PlacesListActivity.PlaceViewHolder viewHolder, final AddressPlace model, int position)
+            {
                 listText.setVisibility(View.GONE);
                 populatePlaceViewHolder(viewHolder, model, position);
             }
@@ -119,7 +119,7 @@ public class PlacesListActivity extends AppCompatActivity {
     public void getSquad(String squadId)
     {
         // Database reference to get a Squad's Meetups
-        Query squadQuery = mDatabase.orderByChild("squad").equalTo(squadId);
+        Query squadQuery = mDatabase.child("places").orderByChild("squad").equalTo(squadId);
 
         // Check to see if any Meetups exist
         checkForEmpty(squadQuery);
@@ -129,25 +129,30 @@ public class PlacesListActivity extends AppCompatActivity {
                 R.layout.item_three_text,
                 PlacesListActivity.PlaceViewHolder.class,
                 squadQuery
-        ) {
+        )
+        {
             @Override
-            protected void populateViewHolder(PlacesListActivity.PlaceViewHolder viewHolder, final AddressPlace model, int position) {
+            protected void populateViewHolder(PlacesListActivity.PlaceViewHolder viewHolder, final AddressPlace model, int position)
+            {
                 listText.setVisibility(View.GONE);
                 populatePlaceViewHolder(viewHolder, model, position);
             }
         };
     }
 
+    // Checks if Places in the selected query exist
     public void checkForEmpty(Query query)
     {
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        query.addListenerForSingleValueEvent(new ValueEventListener()
+        {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
                 // Hide the loading screen
                 loadingOverlay.setVisibility(View.GONE);
 
                 // Checks if Places will be found
-                if(dataSnapshot.hasChildren())
+                if (dataSnapshot.hasChildren())
                 {
                     listText.setVisibility(View.GONE);
                 } else
@@ -160,7 +165,8 @@ public class PlacesListActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(DatabaseError databaseError)
+            {
 
             }
         });
@@ -169,10 +175,12 @@ public class PlacesListActivity extends AppCompatActivity {
     // An observer on the RecyclerView to check if empty on changes
     public void adapterObserver()
     {
-        mObserver = new RecyclerView.AdapterDataObserver() {
+        mObserver = new RecyclerView.AdapterDataObserver()
+        {
             @Override
-            public void onItemRangeInserted(int positionStart, int itemCount) {
-                if(mAdapter.getItemCount() == 0)
+            public void onItemRangeInserted(int positionStart, int itemCount)
+            {
+                if (mAdapter.getItemCount() == 0)
                 {
                     listText.setVisibility(View.VISIBLE);
                 } else
@@ -182,8 +190,9 @@ public class PlacesListActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onItemRangeRemoved(int positionStart, int itemCount) {
-                if(mAdapter.getItemCount() == 0)
+            public void onItemRangeRemoved(int positionStart, int itemCount)
+            {
+                if (mAdapter.getItemCount() == 0)
                 {
                     listText.setVisibility(View.VISIBLE);
                 } else
@@ -195,12 +204,27 @@ public class PlacesListActivity extends AppCompatActivity {
         mAdapter.registerAdapterDataObserver(mObserver);
     }
 
-    public void populatePlaceViewHolder(PlacesListActivity.PlaceViewHolder viewHolder, final AddressPlace model, int position)
+    public void populatePlaceViewHolder(final PlacesListActivity.PlaceViewHolder viewHolder, final AddressPlace model, int position)
     {
 
         viewHolder.nameField.setText(model.getName());
         viewHolder.addressField.setText(model.fullAddress());
-        viewHolder.squadField.setText(model.getInterest());
+
+        // Get Squad name from id
+        mDatabase.child("squads").child(model.getSquad()).addListenerForSingleValueEvent(new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                viewHolder.squadField.setText(dataSnapshot.child("name").getValue(String.class));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError)
+            {
+
+            }
+        });
 
         viewHolder.mView.setOnClickListener(new View.OnClickListener()
         {
