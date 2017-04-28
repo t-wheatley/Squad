@@ -8,18 +8,22 @@ import android.support.v4.app.FragmentStatePagerAdapter;
  * Created by jlc-1 on 31/03/2017.
  */
 
-public class FragmentsAdapter extends FragmentStatePagerAdapter {
+public class FragmentsAdapter extends FragmentStatePagerAdapter
+{
     int mNumOfTabs;
 
-    public FragmentsAdapter(FragmentManager fm, int NumTabs) {
+    public FragmentsAdapter(FragmentManager fm, int NumTabs)
+    {
         super(fm);
         this.mNumOfTabs = NumTabs;
     }
 
     @Override
-    public Fragment getItem(int position) {
+    public Fragment getItem(int position)
+    {
 
-        switch(position){
+        switch (position)
+        {
             case 0:
                 HomeFragment tab1 = new HomeFragment();
                 return tab1;
@@ -38,7 +42,8 @@ public class FragmentsAdapter extends FragmentStatePagerAdapter {
     }
 
     @Override
-    public int getCount() {
+    public int getCount()
+    {
         return mNumOfTabs;
     }
 }

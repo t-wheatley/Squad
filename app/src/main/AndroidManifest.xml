@@ -55,6 +55,9 @@
         <activity android:name=".activities.SquadPostActivity"></activity>
         <activity android:name=".activities.SquadsActivity2"></activity>
         <activity android:name=".activities.PlacesListActivity"/>
+        <activity
+            android:name=".location.PlaceMapsActivity"
+            android:label="@string/title_activity_place_maps"></activity>
     </application>
 
 </manifest>
