@@ -98,19 +98,15 @@ public class PlaceDetailsActivity extends AppCompatActivity
 
         //if there are no pictures
         boolean pics = false; //TEMPORARY TILL WE CAN ATTEMPT AT LOADING PICS
-        if (pics == false)
+        if (pics)
         {
             //keeps the noPic text, and changes the height of the layout so it's not too big
             ViewGroup.LayoutParams params = galleryLayout.getLayoutParams();
-            params.height = 50;
+            params.height = 35;
             galleryLayout.setLayoutParams(params);
-            galleryLayout.setVisibility(View.GONE);
         } else
-        {
             //gets rid of the noPic text
             noPic.setVisibility(View.GONE);
-        }
-
 
 
         //gets extras passd from last activity
