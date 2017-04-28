@@ -29,18 +29,18 @@
                     android:text="Post"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/button3"
-                    android:layout_below="@+id/multiAutoCompleteTextView"
+                    android:id="@+id/btnPost"
+                    android:layout_below="@+id/txtboxPost"
                     android:layout_alignParentStart="true" />
 
                 <MultiAutoCompleteTextView
                     android:layout_width="wrap_content"
                     android:layout_height="100dp"
-                    android:id="@+id/multiAutoCompleteTextView"
+                    android:id="@+id/txtboxPost"
+                    android:hint="Writing something here"
                     android:layout_alignParentTop="true"
-                    android:layout_alignParentEnd="true"
                     android:layout_alignParentStart="true"
-                    android:hint="Writing something here" />
+                    android:layout_alignParentEnd="true" />
             </RelativeLayout>
 
         </LinearLayout>
