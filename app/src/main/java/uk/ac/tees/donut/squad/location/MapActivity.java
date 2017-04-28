@@ -67,7 +67,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-
+        setContentView(R.layout.home_fragment);
         btnRequest = (Button) findViewById(R.id.btn_request_direction);
         btnRequest.setOnClickListener(this);
 

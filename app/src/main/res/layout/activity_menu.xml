@@ -122,6 +122,13 @@
             android:layout_centerHorizontal="true"
             style="@style/Widget.AppCompat.Button.Colored" />
 
+        <android.support.design.widget.BottomNavigationView
+            android:id="@+id/navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            app:menu="@menu/bottom_nav_items" />
+
     </RelativeLayout>
 
 
