@@ -22,7 +22,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import uk.ac.tees.donut.squad.R;
+import uk.ac.tees.donut.squad.location.PlaceMapsActivity;
 import uk.ac.tees.donut.squad.posts.AddressPlace;
+import uk.ac.tees.donut.squad.posts.LocPlace;
 
 public class PlaceDetailsActivity extends AppCompatActivity
 {
@@ -35,7 +37,7 @@ public class PlaceDetailsActivity extends AppCompatActivity
     RelativeLayout loadingOverlay;
     TextView loadingText;
 
-    AddressPlace place;
+    LocPlace place;
 
     TextView placeName;
     TextView description;
@@ -45,8 +47,16 @@ public class PlaceDetailsActivity extends AppCompatActivity
     Button mapBtn;
     Button directionsBtn;
 
+    double latitude;
+    double longitude;
+
+
     ImageSwitcher gallery;
     RelativeLayout galleryLayout;
+
+    Intent detail;
+
+    String id;
 
 
     @Override
@@ -105,7 +115,7 @@ public class PlaceDetailsActivity extends AppCompatActivity
 
 
         //gets extras passd from last activity
-        Intent detail = getIntent();
+        detail = getIntent();
         Bundle b = detail.getExtras();
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -113,6 +123,7 @@ public class PlaceDetailsActivity extends AppCompatActivity
         if (b != null)
         {
             placeId = (String) b.get("placeId");
+
             this.setTitle("Place Details");
         } else
         {
@@ -147,12 +158,23 @@ public class PlaceDetailsActivity extends AppCompatActivity
             public void onDataChange(DataSnapshot dataSnapshot)
             {
                 // Gets the data from Firebase and stores it in a Place class
-                place = dataSnapshot.getValue(AddressPlace.class);
+                place = dataSnapshot.getValue(LocPlace.class);
 
                 // Displays the found place's attributes
                 placeName.setText(place.getName());
                 description.setText(place.getDescription());
                 address.setText(place.fullAddress());
+                squad.setText(place.getSquad());
+                longitude = place.getLocLong();
+                latitude = place.getLocLat();
+
+                /*
+                // If user is the host
+                if(firebaseUser.getUid().equals(place.getUser()))
+                {
+                    editMode();
+                }
+                */
 
                 loadSquad();
             }
@@ -179,6 +201,7 @@ public class PlaceDetailsActivity extends AppCompatActivity
             {
                 squad.setText(dataSnapshot.child("name").getValue(String.class));
 
+
                 // Hiding loading overlay
                 loadingOverlay.setVisibility(View.GONE);
             }
@@ -193,7 +216,13 @@ public class PlaceDetailsActivity extends AppCompatActivity
 
     private void openMapLocation()
     {
-        Toast.makeText(PlaceDetailsActivity.this, "Nothing here yet", Toast.LENGTH_LONG).show();
+
+        Intent newDetail = new Intent(PlaceDetailsActivity.this, PlaceMapsActivity.class);
+        newDetail.putExtra("latitude", latitude);
+        newDetail.putExtra("longitude", longitude);
+        newDetail.putExtra("placeName",placeName.getText().toString());
+        newDetail.putExtra("placeDescription", description.getText().toString());
+        startActivity(newDetail);
     }
 
     private void openMapDirections()

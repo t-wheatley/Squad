@@ -313,15 +313,7 @@ public class NewMeetupActivity extends AppCompatActivity
         }
     }
 
-    protected void setLatitude(double lat)
-    {
-        latitude = lat;
-    }
 
-    protected void setLongitude(double lon)
-    {
-        longitude = lon;
-    }
 
     //Inner Class to receive address for geocoder
     public class AddressResultReceiver extends ResultReceiver

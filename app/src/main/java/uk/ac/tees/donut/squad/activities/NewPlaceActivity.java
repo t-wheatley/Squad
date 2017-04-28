@@ -2,6 +2,10 @@ package uk.ac.tees.donut.squad.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+
+import android.location.Address;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -30,7 +34,11 @@ import java.util.HashMap;
 import java.util.List;
 
 import uk.ac.tees.donut.squad.R;
-import uk.ac.tees.donut.squad.posts.AddressPlace;
+
+import uk.ac.tees.donut.squad.location.FetchAddressIntentService;
+import uk.ac.tees.donut.squad.location.LocContants;
+
+import uk.ac.tees.donut.squad.posts.LocPlace;
 import uk.ac.tees.donut.squad.posts.Place;
 import uk.ac.tees.donut.squad.squads.Squad;
 
@@ -52,6 +60,13 @@ public class NewPlaceActivity extends AppCompatActivity
     private Spinner spinnerSquad;
     private Button btnSubmit;
 
+    private AddressResultReceiver mResultReceiver;
+    private int fetchType;
+    protected double latitude;
+    protected double longitude;
+    protected String addressFull;
+
+
     private EditText editName;
     private EditText editDescription;
     private EditText editAddress1;
@@ -59,6 +74,15 @@ public class NewPlaceActivity extends AppCompatActivity
     private EditText editAddressTC;
     private EditText editAddressC;
     private EditText editAddressPC;
+
+    protected String name;
+    protected String description;
+    protected String interest;
+    protected String a1;
+    protected String a2;
+    protected String pc;
+    protected String tc;
+    protected String c;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -69,6 +93,10 @@ public class NewPlaceActivity extends AppCompatActivity
 
         // Getting the reference for the Firebase Realtime Database
         mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        // Creating new result reciever and setting the fetch type for geocoder
+        mResultReceiver = new AddressResultReceiver(null);
+        fetchType = LocContants.USE_ADDRESS_NAME;
 
         // Links the variables to their layout items.
         editName = (EditText) findViewById(R.id.textEditName);
@@ -162,22 +190,42 @@ public class NewPlaceActivity extends AppCompatActivity
         }
     }
 
+    private void geocode(){
+        Intent intent = new Intent(this, FetchAddressIntentService.class);
+        intent.putExtra(LocContants.RECEIVER, mResultReceiver);
+        intent.putExtra(LocContants.FETCH_TYPE_EXTRA, fetchType);
+        intent.putExtra(LocContants.LOCATION_NAME_DATA_EXTRA, addressFull);
+
+        Log.e(TAG, "Starting Service");
+        startService(intent);
+    }
+
     private void submitPlace()
     {
+
         // Display loading overlay
         loadingText.setText("Posting your Place...");
         loadingOverlay.setVisibility(View.VISIBLE);
 
         // Gets the strings from the editTexts
-        final String name = editName.getText().toString();
-        final String description = editDescription.getText().toString();
+
+         name = editName.getText().toString();
+         interest = spinnerSquad.getSelectedItem().toString();
+         description = editDescription.getText().toString();
+
+         a1 = editAddress1.getText().toString();
+         a2 = editAddress2.getText().toString();
+         tc = editAddressTC.getText().toString();
+         c = editAddressC.getText().toString();
+         pc = editAddressPC.getText().toString();
+
+        addressFull = editAddress1.getText().toString() + " " + editAddress2.getText().toString()
+                + " " + editAddressTC.getText().toString() + " " + editAddressC.getText().toString()
+                + " " +editAddressPC.getText().toString();
+
         final String squadId = squads.get(spinnerSquad.getSelectedItem().toString().trim());
 
-        final String a1 = editAddress1.getText().toString();
-        final String a2 = editAddress2.getText().toString();
-        final String tc = editAddressTC.getText().toString();
-        final String c = editAddressC.getText().toString();
-        final String pc = editAddressPC.getText().toString();
+
 
 
         // Checks if the name field is empty
@@ -194,12 +242,11 @@ public class NewPlaceActivity extends AppCompatActivity
             editDescription.setError("Required");
             return;
         }
+        geocode();
 
         // Disable button so there are no multi-posts
         setEditingEnabled(false);
 
-        // Calls the createMeetup method with the strings entered
-        createPlace(name, description, squadId, a1, a2, tc, c, pc);
 
         // Re-enables the editTexts and buttons and finishes the activity
         setEditingEnabled(true);
@@ -207,8 +254,9 @@ public class NewPlaceActivity extends AppCompatActivity
     }
 
     // Takes a meetup and pushes it to the Firebase Realtime Database (Without extras)
-    public void createPlace(String n, String d, String s, String a1, String a2, String tc, String c, String pc)
-    {
+
+    public void createPlace(String n, String i, String d, String a1, String a2, String tc, String c, String pc, Double lat, Double lon){
+
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null)
         {
@@ -217,7 +265,9 @@ public class NewPlaceActivity extends AppCompatActivity
             String placeId = mDatabase.child("places").push().getKey();
 
             // Creating a place object
-            Place place = new AddressPlace(placeId, n, d, s, user.getUid(), a1, a2, tc, c, pc);
+
+            Place place = new LocPlace(placeId, n, i, d, user.getUid(), a1, a2, tc, c, pc, latitude, longitude);
+
 
             // Pushing the meetup to the "meetups" node using the placeId
             mDatabase.child("places").child(placeId).setValue(place);
@@ -327,6 +377,35 @@ public class NewPlaceActivity extends AppCompatActivity
         } else
         {
             return false;
+        }
+    }
+
+    //Inner Class to receive address for geocoder
+    public class AddressResultReceiver extends ResultReceiver {
+        public AddressResultReceiver(Handler handler) {
+            super(handler);
+        }
+
+
+        @Override
+        protected void onReceiveResult(int resultCode, final Bundle resultData) {
+            if (resultCode == LocContants.SUCCESS_RESULT) {
+                final Address address = resultData.getParcelable(LocContants.RESULT_ADDRESS);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        latitude = address.getLatitude();
+                        longitude= address.getLongitude();
+
+
+                        // Calls the createPlace method with the strings entered
+                        createPlace(name, interest, description, a1, a2, tc, c, pc, longitude, latitude);
+
+
+                    }
+                });
+            }
         }
     }
 }
