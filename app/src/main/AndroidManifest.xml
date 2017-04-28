@@ -52,10 +52,7 @@
         <activity android:name=".activities.MeetupsListActivity" />
         <activity android:name=".activities.PlaceDetailsActivity" />
         <activity android:name=".activities.NewPlaceActivity" />
-        <activity android:name=".activities.PlacesListActivity" />
-        <activity
-            android:name=".location.PlaceMapsActivity"
-            android:label="@string/title_activity_place_maps"></activity>
+        <activity android:name=".activities.PlacesListActivity"/>
     </application>
 
 </manifest>

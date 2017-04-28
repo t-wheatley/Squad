@@ -8,13 +8,10 @@ public class Place
     public String description;
     public String squad;
     public String host;
-    public String userId;
-
 
 
     public Place()
     {
-
         //empty constructor
     }
 
@@ -25,8 +22,6 @@ public class Place
         description = d;
         squad = s;
         host = h;
-
-
 
     }
 
@@ -56,9 +51,6 @@ public class Place
         return host;
     }
 
-
-
-
     //SETTERS
     public void setPlaceId(String pi)
     {
@@ -80,11 +72,8 @@ public class Place
         this.squad = squad;
     }
 
-    public void setUserId(String u) {userId = u;}
-
     public void setHost(String host)
     {
         this.host = host;
     }
-
 }
