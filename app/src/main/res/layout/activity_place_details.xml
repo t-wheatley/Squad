@@ -7,6 +7,9 @@
     tools:context="uk.ac.tees.donut.squad.activities.PlaceDetailsActivity"
     android:background="@color/cardview_dark_background">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -145,7 +148,7 @@
                 android:layout_below="@+id/mapButton"/>
         </RelativeLayout>
     </RelativeLayout>
-
+</ScrollView>
     <!-- Loading overlay; -->
     <include layout="@layout/loading_overlay"/>
 
