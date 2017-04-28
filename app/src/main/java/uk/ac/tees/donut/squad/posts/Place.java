@@ -1,82 +1,90 @@
 package uk.ac.tees.donut.squad.posts;
 
-import com.google.android.gms.maps.model.LatLng;
+public class Place
+{
 
-
-/**
- * Created by q5273202 on 11/04/2017.
- */
-
-public class Place {
     public String placeId;
-
     public String name;
-    public String interest;
     public String description;
-
+    public String squad;
+    public String host;
     public String userId;
 
 
 
-    public Place() {
+    public Place()
+    {
+
         //empty constructor
     }
 
-    public Place(String pi, String n, String i, String d, String u) {
+    public Place(String pi, String n, String d, String s, String h)
+    {
         placeId = pi;
-
         name = n;
-        interest = i;
         description = d;
-
-        userId = u;
+        squad = s;
+        host = h;
 
 
 
     }
 
     //GETTERS
-    public String getPlaceId() {
+    public String getPlaceId()
+    {
         return placeId;
     }
 
-    public String getName() {
+    public String getName()
+    {
         return name;
     }
 
-    public String getInterest() {
-        return interest;
-    }
-
-    public String getDescription() {
+    public String getDescription()
+    {
         return description;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getSquad()
+    {
+        return squad;
+    }
+
+    public String getHost()
+    {
+        return host;
     }
 
 
 
 
     //SETTERS
-    public void setPlaceId(String pi) {
-        placeId = pi;
+    public void setPlaceId(String pi)
+    {
+        this.placeId = pi;
     }
 
-    public void setName(String n) {
-        name = n;
+    public void setName(String n)
+    {
+        this.name = n;
     }
 
-    public void setInterest(String i) {
-        interest = i;
+    public void setDescription(String d)
+    {
+        this.description = d;
     }
 
-    public void setDescription(String d) {
-        description = d;
+    public void setSquad(String squad)
+    {
+        this.squad = squad;
     }
 
     public void setUserId(String u) {userId = u;}
 
+    public void setHost(String host)
+    {
+        this.host = host;
+    }
 
 }

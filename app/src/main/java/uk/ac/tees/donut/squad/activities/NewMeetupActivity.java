@@ -2,16 +2,13 @@ package uk.ac.tees.donut.squad.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-
 import android.location.Address;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
-
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -70,6 +67,7 @@ public class NewMeetupActivity extends AppCompatActivity
     private Spinner spinnerSquad;
     private EditText editDescription;
     private Button btnSubmit;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -86,7 +84,7 @@ public class NewMeetupActivity extends AppCompatActivity
 
         // Links the variables to their layout items.
         editAddress1 = (EditText) findViewById(R.id.newMeetup_textEditAddress1);
-        editAddress2 =(EditText) findViewById(R.id.newMeetup_textEditAddress2);
+        editAddress2 = (EditText) findViewById(R.id.newMeetup_textEditAddress2);
         editAddressTC = (EditText) findViewById(R.id.newMeetup_textEditAddressTC);
         editAddressC = (EditText) findViewById(R.id.newMeetup_textEditAddressCounty);
         editAddressPC = (EditText) findViewById(R.id.newMeetup_textEditAddressPC);
@@ -98,18 +96,19 @@ public class NewMeetupActivity extends AppCompatActivity
 
 
         // onClick listener for the submit button
-        btnSubmit.setOnClickListener(new View.OnClickListener() {
+        btnSubmit.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 // If at least one location field is filled
-                if(checkEditTexts())
+                if (checkEditTexts())
                 {
                     submitMeetup();
-                }
-                else
+                } else
                 {
                     Toast.makeText(NewMeetupActivity.this, "Please provide a Name, Squad, " +
-                            "Description and Location"
+                                    "Description and Location"
                             , Toast.LENGTH_SHORT).show();
                 }
             }
@@ -123,22 +122,28 @@ public class NewMeetupActivity extends AppCompatActivity
         fillSpinner();
 
         mAuth = FirebaseAuth.getInstance();
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
+        mAuthListener = new FirebaseAuth.AuthStateListener()
+        {
             @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth)
+            {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
+                if (user != null)
+                {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                } else {
+                } else
+                {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
 
                     new AlertDialog.Builder(NewMeetupActivity.this)
                             .setTitle("Sign-in Error")
                             .setMessage("You do not appear to be signed in, please try again.")
-                            .setPositiveButton("Back", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
+                            .setPositiveButton("Back", new DialogInterface.OnClickListener()
+                            {
+                                public void onClick(DialogInterface dialog, int which)
+                                {
                                     finish();
                                 }
                             })
@@ -151,20 +156,24 @@ public class NewMeetupActivity extends AppCompatActivity
     }
 
     @Override
-    public void onStart() {
+    public void onStart()
+    {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
     }
 
     @Override
-    public void onStop() {
+    public void onStop()
+    {
         super.onStop();
-        if (mAuthListener != null) {
+        if (mAuthListener != null)
+        {
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
 
-    private void geocode(){
+    private void geocode()
+    {
         Intent intent = new Intent(this, FetchAddressIntentService.class);
         intent.putExtra(LocContants.RECEIVER, mResultReceiver);
         intent.putExtra(LocContants.FETCH_TYPE_EXTRA, fetchType);
@@ -186,13 +195,13 @@ public class NewMeetupActivity extends AppCompatActivity
         squadId = squads.get(spinnerSquad.getSelectedItem().toString().trim());
         addressFull = editAddress1.getText().toString() + " " + editAddress2.getText().toString()
                 + " " + editAddressTC.getText().toString() + " " + editAddressC.getText().toString()
-                + " " +editAddressPC.getText().toString();
+                + " " + editAddressPC.getText().toString();
 
         geocode();
     }
 
     // Takes a meetup and pushes it to the Firebase Realtime Database (Without extras)
-    public void createMeetup(String name,  String desc, String squadId)
+    public void createMeetup(String name, String desc, String squadId)
     {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null)
@@ -225,16 +234,19 @@ public class NewMeetupActivity extends AppCompatActivity
 
     }
 
-    // Fill's the spinner with all of the interests stored in FireBase
+    // Fill's the spinner with all of the squads stored in FireBase
     private void fillSpinner()
     {
-        mDatabase.child("squads").addValueEventListener(new ValueEventListener() {
+        mDatabase.child("squads").addValueEventListener(new ValueEventListener()
+        {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
                 squads = new HashMap<String, String>();
 
                 // Get all the squads
-                for (DataSnapshot squadsSnapshot: dataSnapshot.getChildren()) {
+                for (DataSnapshot squadsSnapshot : dataSnapshot.getChildren())
+                {
                     Squad squad = squadsSnapshot.getValue(Squad.class);
                     squads.put(squad.getName(), squad.getId());
                 }
@@ -246,16 +258,17 @@ public class NewMeetupActivity extends AppCompatActivity
                 }
 
                 // Fill the spinner
-                ArrayAdapter<String> interestAdapter = new ArrayAdapter<String>(NewMeetupActivity.this, android.R.layout.simple_spinner_item, squadNames);
-                interestAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spinnerSquad.setAdapter(interestAdapter);
+                ArrayAdapter<String> squadAdapter = new ArrayAdapter<String>(NewMeetupActivity.this, android.R.layout.simple_spinner_item, squadNames);
+                squadAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinnerSquad.setAdapter(squadAdapter);
 
                 // Hide the loading overlay
                 loadingOverlay.setVisibility(View.GONE);
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(DatabaseError databaseError)
+            {
 
             }
         });
@@ -279,19 +292,19 @@ public class NewMeetupActivity extends AppCompatActivity
         }
 
         // Checks a location field has been entered
-        if(editAddress1.getText().toString().trim().length() > 0)
+        if (editAddress1.getText().toString().trim().length() > 0)
         {
             return true;
-        } else if(editAddress2.getText().toString().trim().length() > 0)
+        } else if (editAddress2.getText().toString().trim().length() > 0)
         {
             return true;
-        } else if(editAddressTC.getText().toString().trim().length() > 0)
+        } else if (editAddressTC.getText().toString().trim().length() > 0)
         {
             return true;
-        } else if(editAddressC.getText().toString().trim().length() > 0)
+        } else if (editAddressC.getText().toString().trim().length() > 0)
         {
             return true;
-        } else if(editAddressPC.getText().toString().trim().length() > 0)
+        } else if (editAddressPC.getText().toString().trim().length() > 0)
         {
             return true;
         } else
@@ -301,23 +314,30 @@ public class NewMeetupActivity extends AppCompatActivity
     }
 
 
+
     //Inner Class to receive address for geocoder
-    public class AddressResultReceiver extends ResultReceiver {
-        public AddressResultReceiver(Handler handler) {
+    public class AddressResultReceiver extends ResultReceiver
+    {
+        public AddressResultReceiver(Handler handler)
+        {
             super(handler);
         }
 
 
         @Override
-        protected void onReceiveResult(int resultCode, final Bundle resultData) {
-            if (resultCode == LocContants.SUCCESS_RESULT) {
+        protected void onReceiveResult(int resultCode, final Bundle resultData)
+        {
+            if (resultCode == LocContants.SUCCESS_RESULT)
+            {
                 final Address address = resultData.getParcelable(LocContants.RESULT_ADDRESS);
-                runOnUiThread(new Runnable() {
+                runOnUiThread(new Runnable()
+                {
                     @Override
-                    public void run() {
+                    public void run()
+                    {
 
                         latitude = address.getLatitude();
-                        longitude= address.getLongitude();
+                        longitude = address.getLongitude();
 
                         // Calls the createMeetup method with the strings entered
                         createMeetup(name, description, squadId);

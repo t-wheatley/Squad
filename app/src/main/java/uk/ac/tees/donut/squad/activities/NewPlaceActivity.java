@@ -2,13 +2,14 @@ package uk.ac.tees.donut.squad.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+
 import android.location.Address;
 import android.os.Handler;
 import android.os.ResultReceiver;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -27,26 +28,22 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.JsonObject;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import uk.ac.tees.donut.squad.R;
 
 import uk.ac.tees.donut.squad.location.FetchAddressIntentService;
 import uk.ac.tees.donut.squad.location.LocContants;
-import uk.ac.tees.donut.squad.posts.AddressPlace;
 
 import uk.ac.tees.donut.squad.posts.LocPlace;
-import uk.ac.tees.donut.squad.posts.Meetup;
-
 import uk.ac.tees.donut.squad.posts.Place;
+import uk.ac.tees.donut.squad.squads.Squad;
 
-public class NewPlaceActivity extends AppCompatActivity {
+public class NewPlaceActivity extends AppCompatActivity
+{
 
     private static final String TAG = "Auth";
 
@@ -58,7 +55,9 @@ public class NewPlaceActivity extends AppCompatActivity {
     RelativeLayout loadingOverlay;
     TextView loadingText;
 
-    private Spinner spinnerInterest;
+    HashMap<String, String> squads;
+
+    private Spinner spinnerSquad;
     private Button btnSubmit;
 
     private AddressResultReceiver mResultReceiver;
@@ -101,7 +100,7 @@ public class NewPlaceActivity extends AppCompatActivity {
 
         // Links the variables to their layout items.
         editName = (EditText) findViewById(R.id.textEditName);
-        spinnerInterest = (Spinner) findViewById(R.id.spinnerInterest);
+        spinnerSquad = (Spinner) findViewById(R.id.spinnerSquad);
         editDescription = (EditText) findViewById(R.id.textEditDescription);
         btnSubmit = (Button) findViewById(R.id.buttonSubmit);
 
@@ -112,15 +111,16 @@ public class NewPlaceActivity extends AppCompatActivity {
         editAddressPC = (EditText) findViewById(R.id.textEditAddressPC);
 
         // onClick listener for the submit button
-        btnSubmit.setOnClickListener(new View.OnClickListener() {
+        btnSubmit.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 // When pressed calls the submitPlace method
-                if(checkEditTexts())
+                if (checkEditTexts())
                 {
                     submitPlace();
-                }
-                else
+                } else
                 {
                     Toast.makeText(NewPlaceActivity.this, "Please provide a Name, Squad, " +
                                     "Description and Location"
@@ -139,14 +139,18 @@ public class NewPlaceActivity extends AppCompatActivity {
         fillSpinner();
 
         mAuth = FirebaseAuth.getInstance();
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
+        mAuthListener = new FirebaseAuth.AuthStateListener()
+        {
             @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth)
+            {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
+                if (user != null)
+                {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                } else {
+                } else
+                {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
                     Toast.makeText(NewPlaceActivity.this, "No User", Toast.LENGTH_SHORT).show();
@@ -154,8 +158,10 @@ public class NewPlaceActivity extends AppCompatActivity {
                     new AlertDialog.Builder(NewPlaceActivity.this)
                             .setTitle("Sign-in Error")
                             .setMessage("You do not appear to be signed in, please try again.")
-                            .setPositiveButton("Back", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
+                            .setPositiveButton("Back", new DialogInterface.OnClickListener()
+                            {
+                                public void onClick(DialogInterface dialog, int which)
+                                {
                                     finish();
                                 }
                             })
@@ -168,15 +174,18 @@ public class NewPlaceActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onStart() {
+    public void onStart()
+    {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
     }
 
     @Override
-    public void onStop() {
+    public void onStop()
+    {
         super.onStop();
-        if (mAuthListener != null) {
+        if (mAuthListener != null)
+        {
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
@@ -191,14 +200,17 @@ public class NewPlaceActivity extends AppCompatActivity {
         startService(intent);
     }
 
-    private void submitPlace(){
+    private void submitPlace()
+    {
+
         // Display loading overlay
         loadingText.setText("Posting your Place...");
         loadingOverlay.setVisibility(View.VISIBLE);
 
         // Gets the strings from the editTexts
+
          name = editName.getText().toString();
-         interest = spinnerInterest.getSelectedItem().toString();
+         interest = spinnerSquad.getSelectedItem().toString();
          description = editDescription.getText().toString();
 
          a1 = editAddress1.getText().toString();
@@ -210,6 +222,9 @@ public class NewPlaceActivity extends AppCompatActivity {
         addressFull = editAddress1.getText().toString() + " " + editAddress2.getText().toString()
                 + " " + editAddressTC.getText().toString() + " " + editAddressC.getText().toString()
                 + " " +editAddressPC.getText().toString();
+
+        final String squadId = squads.get(spinnerSquad.getSelectedItem().toString().trim());
+
 
 
 
@@ -233,16 +248,18 @@ public class NewPlaceActivity extends AppCompatActivity {
         setEditingEnabled(false);
 
 
-
         // Re-enables the editTexts and buttons and finishes the activity
         setEditingEnabled(true);
         finish();
     }
 
     // Takes a meetup and pushes it to the Firebase Realtime Database (Without extras)
+
     public void createPlace(String n, String i, String d, String a1, String a2, String tc, String c, String pc, Double lat, Double lon){
+
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
+        if (user != null)
+        {
             // User is signed in
             // Creating a new meetup node and getting the key value
             String placeId = mDatabase.child("places").push().getKey();
@@ -250,6 +267,7 @@ public class NewPlaceActivity extends AppCompatActivity {
             // Creating a place object
 
             Place place = new LocPlace(placeId, n, i, d, user.getUid(), a1, a2, tc, c, pc, latitude, longitude);
+
 
             // Pushing the meetup to the "meetups" node using the placeId
             mDatabase.child("places").child(placeId).setValue(place);
@@ -272,7 +290,7 @@ public class NewPlaceActivity extends AppCompatActivity {
     private void setEditingEnabled(boolean enabled)
     {
         editName.setEnabled(enabled);
-        spinnerInterest.setEnabled(enabled);
+        spinnerSquad.setEnabled(enabled);
         editDescription.setEnabled(enabled);
         if (enabled)
         {
@@ -286,28 +304,38 @@ public class NewPlaceActivity extends AppCompatActivity {
     // Fill's the spinner with all of the interests stored in FireBase
     private void fillSpinner()
     {
-        mDatabase.child("interests").addValueEventListener(new ValueEventListener() {
+        mDatabase.child("squads").addValueEventListener(new ValueEventListener()
+        {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                final List<String> interests = new ArrayList<String>();
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                squads = new HashMap<String, String>();
 
-                // Get all the interests
-                for (DataSnapshot interestSnapshot: dataSnapshot.getChildren()) {
-                    String interest = interestSnapshot.child("name").getValue(String.class);
-                    interests.add(interest);
+                // Get all the squads
+                for (DataSnapshot squadsSnapshot : dataSnapshot.getChildren())
+                {
+                    Squad squad = squadsSnapshot.getValue(Squad.class);
+                    squads.put(squad.getName(), squad.getId());
+                }
+
+                final List<String> squadNames = new ArrayList<String>();
+                for (String name : squads.keySet())
+                {
+                    squadNames.add(name);
                 }
 
                 // Fill the spinner
-                ArrayAdapter<String> interestAdapter = new ArrayAdapter<String>(NewPlaceActivity.this, android.R.layout.simple_spinner_item, interests);
-                interestAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spinnerInterest.setAdapter(interestAdapter);
+                ArrayAdapter<String> squadAdapter = new ArrayAdapter<String>(NewPlaceActivity.this, android.R.layout.simple_spinner_item, squadNames);
+                squadAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinnerSquad.setAdapter(squadAdapter);
 
                 // Hide the loading overlay
                 loadingOverlay.setVisibility(View.GONE);
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(DatabaseError databaseError)
+            {
 
             }
         });
@@ -331,19 +359,19 @@ public class NewPlaceActivity extends AppCompatActivity {
         }
 
         // Checks a location field has been entered
-        if(editAddress1.getText().toString().trim().length() > 0)
+        if (editAddress1.getText().toString().trim().length() > 0)
         {
             return true;
-        } else if(editAddress2.getText().toString().trim().length() > 0)
+        } else if (editAddress2.getText().toString().trim().length() > 0)
         {
             return true;
-        } else if(editAddressTC.getText().toString().trim().length() > 0)
+        } else if (editAddressTC.getText().toString().trim().length() > 0)
         {
             return true;
-        } else if(editAddressC.getText().toString().trim().length() > 0)
+        } else if (editAddressC.getText().toString().trim().length() > 0)
         {
             return true;
-        } else if(editAddressPC.getText().toString().trim().length() > 0)
+        } else if (editAddressPC.getText().toString().trim().length() > 0)
         {
             return true;
         } else

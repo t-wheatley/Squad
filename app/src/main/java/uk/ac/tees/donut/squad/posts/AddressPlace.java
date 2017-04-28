@@ -18,9 +18,9 @@ public class AddressPlace extends Place
         //Empty Constructor
     }
 
-    public AddressPlace(String pi, String n, String i, String d, String u, String a1, String a2, String tc, String c, String pc)
+    public AddressPlace(String pi, String n, String d, String s, String u, String a1, String a2, String tc, String c, String pc)
     {
-        super(pi, n, i, d, u);
+        super(pi, n, d, s, u);
         address1 = a1.trim();
         address2 = a2.trim();
         townCity = tc.trim();
@@ -29,27 +29,33 @@ public class AddressPlace extends Place
     }
 
     //GETTERS
-    public String getAddress1() {
+    public String getAddress1()
+    {
         return address1;
     }
 
-    public String getAddress2() {
+    public String getAddress2()
+    {
         return address2;
     }
 
-    public String getTownCity() {
+    public String getTownCity()
+    {
         return townCity;
     }
 
-    public String getCounty() {
+    public String getCounty()
+    {
         return county;
     }
 
-    public String getPostCode() {
+    public String getPostCode()
+    {
         return postCode;
     }
 
-    public String fullAddress() {
+    public String fullAddress()
+    {
         String a = "";
         if (address1.length() != 0)
             a = a + address1;
@@ -66,23 +72,28 @@ public class AddressPlace extends Place
     }
 
     //SETTERS
-    public void setAddress1(String a1) {
-        address1 = a1.trim();
+    public void setAddress1(String a1)
+    {
+        this.address1 = a1.trim();
     }
 
-    public void setAddress2(String a2) {
-        address2 = a2.trim();
+    public void setAddress2(String a2)
+    {
+        this.address2 = a2.trim();
     }
 
-    public void setTownCity(String tc) {
-        townCity = tc.trim();
+    public void setTownCity(String tc)
+    {
+        this.townCity = tc.trim();
     }
 
-    public void setCounty(String c) {
-        county = c.trim();
+    public void setCounty(String c)
+    {
+        this.county = c.trim();
     }
 
-    public void setPostCode(String pc) {
-        postCode = pc.trim().toUpperCase();
+    public void setPostCode(String pc)
+    {
+        this.postCode = pc.trim().toUpperCase();
     }
 }
