@@ -210,6 +210,14 @@ public class PlaceDetailsActivity extends AppCompatActivity
         startActivity(newDetail);
     }
 
+    public void viewSquad(View view)
+    {
+        //Sends the id to the details activity
+        Intent detail = new Intent(PlaceDetailsActivity.this, SquadDetailActivity.class);
+        detail.putExtra("squadId", place.getSquad());
+        startActivity(detail);
+    }
+
     private void openMapDirections()
     {
         Toast.makeText(PlaceDetailsActivity.this, "Nothing here yet", Toast.LENGTH_LONG).show();
