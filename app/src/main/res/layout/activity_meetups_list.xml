@@ -15,6 +15,17 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:layout_centerInParent = "true"
+            android:id="@+id/meetupsList_textView"
+            android:textColor="@color/tw__solid_white"
+            android:visibility="gone"
+            android:text="There are no Meetups here!"/>
+
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"

@@ -2,9 +2,9 @@ package uk.ac.tees.donut.squad.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
@@ -28,7 +28,8 @@ import uk.ac.tees.donut.squad.UserGridViewAdapter;
 import uk.ac.tees.donut.squad.squads.Squad;
 import uk.ac.tees.donut.squad.users.FBUser;
 
-public class SquadDetailActivity extends AppCompatActivity {
+public class SquadDetailActivity extends AppCompatActivity
+{
 
     DatabaseReference mDatabase;
     FirebaseUser firebaseUser;
@@ -55,7 +56,8 @@ public class SquadDetailActivity extends AppCompatActivity {
     Button joinBtn;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_squad_detail);
 
@@ -70,7 +72,7 @@ public class SquadDetailActivity extends AppCompatActivity {
         nameDisplay = (TextView) findViewById(R.id.squadDetail_textEditName);
         descriptionDisplay = (TextView) findViewById(R.id.squadDetail_textEditDescription);
         memberDisplay = (TextView) findViewById(R.id.squadDetail_textEditMembers);
-        membersGrid = (GridView)findViewById(R.id.squadDetail_userGrid);
+        membersGrid = (GridView) findViewById(R.id.squadDetail_userGrid);
         joinBtn = (Button) findViewById(R.id.squadDetail_joinBtn);
 
         // Gets the extra passed from the last activity
@@ -80,7 +82,7 @@ public class SquadDetailActivity extends AppCompatActivity {
         // Getting the current user
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        if(b != null)
+        if (b != null)
         {
             // Collects the squadId passed from the RecyclerView
             squadId = (String) b.get("squadId");
@@ -90,8 +92,10 @@ public class SquadDetailActivity extends AppCompatActivity {
             new AlertDialog.Builder(SquadDetailActivity.this)
                     .setTitle("Error")
                     .setMessage("The squad went missing somewhere, please try again.")
-                    .setPositiveButton("Back", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
+                    .setPositiveButton("Back", new DialogInterface.OnClickListener()
+                    {
+                        public void onClick(DialogInterface dialog, int which)
+                        {
                             finish();
                         }
                     })
@@ -164,7 +168,7 @@ public class SquadDetailActivity extends AppCompatActivity {
             final int usersSize = users.size();
 
             // Checking if the user is already in the Squad
-            if(users.containsKey(firebaseUser.getUid()))
+            if (users.containsKey(firebaseUser.getUid()))
             {
                 member = true;
                 joinBtn.setText("Leave Squad");
@@ -187,7 +191,7 @@ public class SquadDetailActivity extends AppCompatActivity {
 
                         memberCount++;
                         // If all members added
-                        if(usersSize == memberCount)
+                        if (usersSize == memberCount)
                         {
                             // Display the members
                             UserGridViewAdapter gridAdapter = new UserGridViewAdapter(SquadDetailActivity.this, userNames, userPics, userIds);
@@ -217,12 +221,11 @@ public class SquadDetailActivity extends AppCompatActivity {
 
     public void squadButton(View view)
     {
-        if(member)
+        if (member)
         {
             // User is in the Squad
             leaveSquad();
-        }
-        else
+        } else
         {
             // User is not in the squad
             joinSquad();
@@ -245,5 +248,21 @@ public class SquadDetailActivity extends AppCompatActivity {
         mDatabase.child("squads").child(squadId).child("users").child(firebaseUser.getUid()).removeValue();
         member = false;
         joinBtn.setText("Join Squad");
+        finish();
+    }
+
+    public void viewMeetups(View view)
+    {
+        // Loads the MeetupsList activity displaying the Meetups that the user is hosting
+        Intent intent = new Intent(this, MeetupsListActivity.class);
+        intent.putExtra("squadId", squadId);
+        startActivity(intent);
+    }
+
+    public void viewPlaces(View view)
+    {
+        Intent intent = new Intent(this, PlacesListActivity.class);
+        intent.putExtra("squadId", squadId);
+        startActivity(intent);
     }
 }

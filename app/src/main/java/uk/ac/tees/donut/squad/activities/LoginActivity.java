@@ -1,8 +1,8 @@
 package uk.ac.tees.donut.squad.activities;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -54,6 +54,8 @@ public class LoginActivity extends AppCompatActivity implements
     RelativeLayout loadingOverlay;
     TextView loadingText;
 
+    Boolean startedActivity;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -85,6 +87,8 @@ public class LoginActivity extends AppCompatActivity implements
                 .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
+
+        startedActivity = false;
 
         // AuthListener used to check if the user has previously signed in
         mAuthListener = new FirebaseAuth.AuthStateListener()
@@ -312,7 +316,7 @@ public class LoginActivity extends AppCompatActivity implements
                     FBUser user = dataSnapshot.getValue(FBUser.class);
 
                     // If the user does not exist(first time)
-                    if(user == null)
+                    if (user == null)
                     {
                         user = new FBUser();
                     }
@@ -336,8 +340,12 @@ public class LoginActivity extends AppCompatActivity implements
             });
         }
 
-        Intent i = new Intent(LoginActivity.this, MenuActivity.class);
-        startActivity(i);
-        finish();
+        if (startedActivity == false)
+        {
+            startedActivity = true;
+            Intent i = new Intent(LoginActivity.this, MenuActivity.class);
+            startActivity(i);
+            finish();
+        }
     }
 }

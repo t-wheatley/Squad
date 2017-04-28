@@ -12,10 +12,12 @@ import android.view.ViewGroup;
 
 import uk.ac.tees.donut.squad.R;
 
-public class SquadsFragment extends Fragment {
+public class SquadsFragment extends Fragment
+{
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
         return inflater.inflate(R.layout.squads_fragment, container, false);
     }
 }

@@ -14,13 +14,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import uk.ac.tees.donut.squad.posts.Meetup;
-
 /**
  * Created by Anthony Ward on 17/03/2017.
  */
 
-public class FetchAddressIntentService extends IntentService {
+public class FetchAddressIntentService extends IntentService
+{
     protected ResultReceiver mReceiver;
     private static final String TAG = "FetchAddyIntentService";
 
@@ -31,7 +30,8 @@ public class FetchAddressIntentService extends IntentService {
     }
 
     @Override
-    protected void onHandleIntent(Intent intent) {
+    protected void onHandleIntent(Intent intent)
+    {
         Log.e(TAG, "onHandleIntent");
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         String errorMessage = "";
@@ -40,47 +40,58 @@ public class FetchAddressIntentService extends IntentService {
         int fetchType = intent.getIntExtra(LocContants.FETCH_TYPE_EXTRA, 0);
         Log.e(TAG, "fetchType == " + fetchType);
 
-        if(fetchType == LocContants.USE_ADDRESS_NAME) {
+        if (fetchType == LocContants.USE_ADDRESS_NAME)
+        {
             String name = intent.getStringExtra(LocContants.LOCATION_NAME_DATA_EXTRA);
-            try {
+            try
+            {
                 addresses = geocoder.getFromLocationName(name, 1);
-            } catch (IOException e) {
+            } catch (IOException e)
+            {
                 errorMessage = "Service not available";
                 Log.e(TAG, errorMessage, e);
             }
-        }
-        else if(fetchType == LocContants.USE_ADDRESS_LOCATION) {
+        } else if (fetchType == LocContants.USE_ADDRESS_LOCATION)
+        {
             double latitude = intent.getDoubleExtra(LocContants.LOCATION_LATITUDE_DATA_EXTRA, 0);
             double longitude = intent.getDoubleExtra(LocContants.LOCATION_LONGITUDE_DATA_EXTRA, 0);
 
-            try {
+            try
+            {
                 addresses = geocoder.getFromLocation(latitude, longitude, 1);
-            } catch (IOException ioException) {
+            } catch (IOException ioException)
+            {
                 errorMessage = "Service Not Available";
                 Log.e(TAG, errorMessage, ioException);
-            } catch (IllegalArgumentException illegalArgumentException) {
+            } catch (IllegalArgumentException illegalArgumentException)
+            {
                 errorMessage = "Invalid Latitude or Longitude Used";
                 Log.e(TAG, errorMessage + ". " +
                         "Latitude = " + latitude + ", Longitude = " +
                         longitude, illegalArgumentException);
             }
-        }
-        else {
+        } else
+        {
             errorMessage = "Unknown Type";
             Log.e(TAG, errorMessage);
         }
 
         mReceiver = intent.getParcelableExtra(LocContants.RECEIVER);
-        if (addresses == null || addresses.size()  == 0) {
-            if (errorMessage.isEmpty()) {
+        if (addresses == null || addresses.size() == 0)
+        {
+            if (errorMessage.isEmpty())
+            {
                 errorMessage = "Not Found";
                 Log.e(TAG, errorMessage);
             }
             deliverResultToReceiver(LocContants.FAILURE_RESULT, errorMessage, null);
-        } else {
-            for(Address address : addresses) {
+        } else
+        {
+            for (Address address : addresses)
+            {
                 String outputAddress = "";
-                for(int i = 0; i < address.getMaxAddressLineIndex(); i++) {
+                for (int i = 0; i < address.getMaxAddressLineIndex(); i++)
+                {
                     outputAddress += " --- " + address.getAddressLine(i);
                 }
                 Log.e(TAG, outputAddress);
@@ -88,7 +99,8 @@ public class FetchAddressIntentService extends IntentService {
             Address address = addresses.get(0);
             ArrayList<String> addressFragments = new ArrayList<>();
 
-            for(int i = 0; i < address.getMaxAddressLineIndex(); i++) {
+            for (int i = 0; i < address.getMaxAddressLineIndex(); i++)
+            {
                 addressFragments.add(address.getAddressLine(i));
             }
             Log.i(TAG, "Address Found");
@@ -98,7 +110,8 @@ public class FetchAddressIntentService extends IntentService {
         }
     }
 
-    private void deliverResultToReceiver(int resultCode, String message, Address address) {
+    private void deliverResultToReceiver(int resultCode, String message, Address address)
+    {
         Bundle bundle = new Bundle();
         bundle.putParcelable(LocContants.RESULT_ADDRESS, address);
         bundle.putString(LocContants.RESULT_DATA_KEY, message);
