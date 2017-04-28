@@ -2,14 +2,13 @@ package uk.ac.tees.donut.squad.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
-
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
@@ -86,7 +85,7 @@ public class MeetupDetailActivity extends AppCompatActivity
         squadDisplay = (TextView) findViewById(R.id.meetupDetail_textEditSquad);
         hostDisplay = (TextView) findViewById(R.id.meetupDetail_textEditHost);
         descriptionDisplay = (TextView) findViewById(R.id.meetupDetail_textEditDescription);
-        attendeesGrid = (GridView)findViewById(R.id.meetupDetail_userGrid);
+        attendeesGrid = (GridView) findViewById(R.id.meetupDetail_userGrid);
         attendBtn = (Button) findViewById(R.id.meetupDetail_attendBtn);
         deleteBtn = (Button) findViewById(R.id.meetupDetail_deleteBtn);
         editName = (ImageButton) findViewById(R.id.meetupDetail_imageButtonEditName);
@@ -111,7 +110,7 @@ public class MeetupDetailActivity extends AppCompatActivity
         // Gets the extra passed from the last activity
         Intent detail = getIntent();
         Bundle b = detail.getExtras();
-        if(b != null)
+        if (b != null)
         {
             // Collects the meetupId passed from the RecyclerView
             meetupId = (String) b.get("meetupId");
@@ -121,8 +120,10 @@ public class MeetupDetailActivity extends AppCompatActivity
             new AlertDialog.Builder(MeetupDetailActivity.this)
                     .setTitle("Error")
                     .setMessage("The meetup went missing somewhere, please try again.")
-                    .setPositiveButton("Back", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
+                    .setPositiveButton("Back", new DialogInterface.OnClickListener()
+                    {
+                        public void onClick(DialogInterface dialog, int which)
+                        {
                             finish();
                         }
                     })
@@ -159,7 +160,7 @@ public class MeetupDetailActivity extends AppCompatActivity
                 descriptionDisplay.setText(meetup.getDescription());
 
                 // If user is the host
-                if(firebaseUser.getUid().equals(meetup.getHost()))
+                if (firebaseUser.getUid().equals(meetup.getHost()))
                 {
                     editMode();
                 }
@@ -267,7 +268,7 @@ public class MeetupDetailActivity extends AppCompatActivity
             final int usersSize = users.size();
 
             // Checking if the user is already in the Meetup
-            if(users.containsKey(firebaseUser.getUid()))
+            if (users.containsKey(firebaseUser.getUid()))
             {
                 attending = true;
                 attendBtn.setText("Leave Meetup");
@@ -290,7 +291,7 @@ public class MeetupDetailActivity extends AppCompatActivity
 
                         memberCount++;
                         // If all members added
-                        if(usersSize == memberCount)
+                        if (usersSize == memberCount)
                         {
                             // Display the members
                             UserGridViewAdapter gridAdapter = new UserGridViewAdapter(MeetupDetailActivity.this, userNames, userPics, userIds);
@@ -324,13 +325,17 @@ public class MeetupDetailActivity extends AppCompatActivity
                 .setTitle("Delete Meetup")
                 .setMessage("Are you sure you want to delete this Meetup?" +
                         "\nYou will not be able to get it back!")
-                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int which)
+                    {
                         deleteMeetup();
                     }
                 })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int which)
+                    {
                         // Do nothing
                     }
                 })
@@ -369,9 +374,11 @@ public class MeetupDetailActivity extends AppCompatActivity
         // Enabling the edit ImageButtons
         editName.setEnabled(true);
         editName.setVisibility(View.VISIBLE);
-        editName.setOnClickListener(new View.OnClickListener() {
+        editName.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 // Load Dialog to edit Name
                 editName();
             }
@@ -379,9 +386,11 @@ public class MeetupDetailActivity extends AppCompatActivity
 
         editDesc.setEnabled(true);
         editDesc.setVisibility(View.VISIBLE);
-        editDesc.setOnClickListener(new View.OnClickListener() {
+        editDesc.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 // Load Dialog to edit Description
                 editDesc();
             }
@@ -389,9 +398,11 @@ public class MeetupDetailActivity extends AppCompatActivity
 
         deleteBtn.setEnabled(true);
         deleteBtn.setVisibility(View.VISIBLE);
-        deleteBtn.setOnClickListener(new View.OnClickListener() {
+        deleteBtn.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 // Load Dialog to confirm deletion of Meetup
                 deleteMeetupPrompt();
             }
@@ -409,21 +420,25 @@ public class MeetupDetailActivity extends AppCompatActivity
         editTextDesc.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_LONG_MESSAGE |
                 InputType.TYPE_TEXT_FLAG_AUTO_COMPLETE | InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE);
         // Sets the maximum characters to 120
-        editTextDesc.setFilters(new InputFilter[] { new InputFilter.LengthFilter(120) });
+        editTextDesc.setFilters(new InputFilter[]{new InputFilter.LengthFilter(120)});
         builder.setView(editTextDesc);
 
         // Buttons on the Dialog
-        builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Submit", new DialogInterface.OnClickListener()
+        {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(DialogInterface dialog, int which)
+            {
                 String desc = editTextDesc.getText().toString();
                 descriptionDisplay.setText(desc);
                 updateDesc(desc);
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
+        {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(DialogInterface dialog, int which)
+            {
                 dialog.cancel();
             }
         });
@@ -456,21 +471,25 @@ public class MeetupDetailActivity extends AppCompatActivity
         editTextName.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_LONG_MESSAGE |
                 InputType.TYPE_TEXT_FLAG_AUTO_COMPLETE | InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE);
         // Sets the maximum characters to 25
-        editTextName.setFilters(new InputFilter[] { new InputFilter.LengthFilter(25) });
+        editTextName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(25)});
         builder.setView(editTextName);
 
         // Buttons on the Dialog
-        builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Submit", new DialogInterface.OnClickListener()
+        {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(DialogInterface dialog, int which)
+            {
                 String name = editTextName.getText().toString();
                 nameDisplay.setText(name);
                 updateName(name);
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
+        {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(DialogInterface dialog, int which)
+            {
                 dialog.cancel();
             }
         });
@@ -494,12 +513,11 @@ public class MeetupDetailActivity extends AppCompatActivity
 
     public void attendButton(View view)
     {
-        if(attending)
+        if (attending)
         {
             // User is in the Squad
             leaveMeetup();
-        }
-        else
+        } else
         {
             // User is not in the squad
             attendMeetup();

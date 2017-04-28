@@ -28,22 +28,27 @@ public class FBUser
     {
         return name;
     }
+
     public String getBio()
     {
         return bio;
     }
+
     public String getPicture()
     {
         return picture;
     }
+
     public HashMap<String, Boolean> getSquads()
     {
         return squads;
     }
+
     public HashMap<String, Boolean> getMeetups()
     {
         return meetups;
     }
+
     public HashMap<String, Boolean> getHosting()
     {
         return hosting;
@@ -54,22 +59,27 @@ public class FBUser
     {
         this.name = name;
     }
+
     public void setBio(String bio)
     {
         this.bio = bio;
     }
+
     public void setPicture(String picture)
     {
         this.picture = picture;
     }
+
     public void setSquads(HashMap<String, Boolean> squads)
     {
         this.squads = squads;
     }
+
     public void setMeetups(HashMap<String, Boolean> meetups)
     {
         this.meetups = meetups;
     }
+
     public void setHosting(HashMap<String, Boolean> hosting)
     {
         this.hosting = hosting;
