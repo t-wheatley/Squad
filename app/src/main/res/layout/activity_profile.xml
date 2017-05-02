@@ -112,6 +112,15 @@
                 android:text="My Hosted"/>
 
             <Button
+                android:id="@+id/profile_secretBtn"
+                android:layout_width="190dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentLeft="true"
+                style="@style/Base.Widget.AppCompat.Button.Colored"
+                android:text="Enable Secret Mode"/>
+
+            <Button
                 android:id="@+id/profile_signOutBtn"
                 android:layout_width="190dp"
                 android:layout_height="wrap_content"

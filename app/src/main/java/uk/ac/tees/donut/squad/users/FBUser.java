@@ -10,6 +10,7 @@ public class FBUser
     private HashMap<String, Boolean> squads;
     private HashMap<String, Boolean> meetups;
     private HashMap<String, Boolean> hosting;
+    private Boolean secret;
 
     public FBUser()
     {
@@ -54,6 +55,12 @@ public class FBUser
         return hosting;
     }
 
+    public Boolean getSecret()
+    {
+        return secret;
+    }
+
+
     // Setters
     public void setName(String name)
     {
@@ -83,5 +90,10 @@ public class FBUser
     public void setHosting(HashMap<String, Boolean> hosting)
     {
         this.hosting = hosting;
+    }
+
+    public void setSecret(Boolean secret)
+    {
+        this.secret = secret;
     }
 }
