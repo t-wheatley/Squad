@@ -66,6 +66,8 @@ public class NewPlaceActivity extends AppCompatActivity
     protected double latitude;
     protected double longitude;
     protected String addressFull;
+    protected String geocodeAddress;
+    private AlertDialog alertDialog;
 
 
     private EditText editName;
@@ -380,6 +382,30 @@ public class NewPlaceActivity extends AppCompatActivity
         }
     }
 
+    public void AlertDiolog(){
+        new AlertDialog.Builder(NewPlaceActivity.this)
+                .setTitle("Confirm Address")
+                .setMessage("" + geocodeAddress + "\n" + "is this the correct Address")
+                .setPositiveButton("Confirm Address", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i)
+                    {
+                        // Calls the createPlace method with the strings entered
+                        createPlace(name, description, squadId, a1, a2, tc, c, pc, longitude, latitude);
+
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i){
+                        return;
+                    }
+                })
+                .create()
+                .show();
+    }
+
     //Inner Class to receive address for geocoder
     public class AddressResultReceiver extends ResultReceiver {
         public AddressResultReceiver(Handler handler) {
@@ -397,10 +423,10 @@ public class NewPlaceActivity extends AppCompatActivity
 
                         latitude = address.getLatitude();
                         longitude= address.getLongitude();
+                        geocodeAddress = resultData.getString(LocContants.RESULT_DATA_KEY);
 
+                        AlertDiolog();
 
-                        // Calls the createPlace method with the strings entered
-                        createPlace(name, description, squadId, a1, a2, tc, c, pc, longitude, latitude);
 
 
                     }
