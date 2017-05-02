@@ -61,51 +61,44 @@ public class SquadPostActivity extends AppCompatActivity {
         }
 
         mAuth = FirebaseAuth.getInstance();
-        mAuthListener = new FirebaseAuth.AuthStateListener()
-        {
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth)
-            {
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null)
-                {
+                if (user != null) {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                } else
-                {
+                } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
 
                     new AlertDialog.Builder(SquadPostActivity.this)
                             .setTitle("Sign-in Error")
                             .setMessage("You do not appear to be signed in, please try again.")
-                            .setPositiveButton("Back", new DialogInterface.OnClickListener()
-                            {
-                                public void onClick(DialogInterface dialog, int which)
-                                {
+                            .setPositiveButton("Back", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
                                     finish();
                                 }
                             })
                             .setIcon(android.R.drawable.ic_dialog_alert)
                             .show();
                 }
-
-        // onClick listener for the post button
-        btnPost.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // When pressed calls the submitPost method
-                if (sTxtbox != "") {
-                    submitPost();
-                } else {
-                    Toast.makeText(SquadPostActivity.this, "Please provide a Name, Squad, " +
-                                    "Description and Location"
-                            , Toast.LENGTH_SHORT).show();
-                }
-
             }
-        });
+        };
+
+                // onClick listener for the post button
+                btnPost.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // When pressed calls the submitPost method
+                        if (sTxtbox != "") {
+                            submitPost();
+                        } else {
+                            Toast.makeText(SquadPostActivity.this, "Please provide a Name, Squad, " +
+                                            "Description and Location"
+                                    , Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
-
-
 }
