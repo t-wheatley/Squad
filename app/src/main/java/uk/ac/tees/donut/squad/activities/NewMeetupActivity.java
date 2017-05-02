@@ -359,7 +359,6 @@ public class NewMeetupActivity extends AppCompatActivity
             long fromUnix = fromDateTime.getTimeInMillis() / 1000L;
             long untilUnix = untilDateTime.getTimeInMillis() / 1000L;
 
-
             // Creating a meetup object
             Meetup meetup = new Meetup(meetupId, name, desc, squadId, user.getUid(), fromUnix, untilUnix, longitude, latitude);
 
