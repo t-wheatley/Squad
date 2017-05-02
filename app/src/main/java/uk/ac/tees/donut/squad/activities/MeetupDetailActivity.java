@@ -24,6 +24,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,6 +49,7 @@ public class MeetupDetailActivity extends AppCompatActivity
     TextView squadDisplay;
     TextView hostDisplay;
     TextView descriptionDisplay;
+    TextView dateDisplay;
     TextView attendingDisplay;
     TextView memberCountDisplay;
     ImageButton editName;
@@ -86,6 +88,7 @@ public class MeetupDetailActivity extends AppCompatActivity
         squadDisplay = (TextView) findViewById(R.id.meetupDetail_textEditSquad);
         hostDisplay = (TextView) findViewById(R.id.meetupDetail_textEditHost);
         descriptionDisplay = (TextView) findViewById(R.id.meetupDetail_textEditDescription);
+        dateDisplay = (TextView) findViewById(R.id.meetupDetail_textEditDateTime);
         attendeesGrid = (GridView) findViewById(R.id.meetupDetail_userGrid);
         attendBtn = (Button) findViewById(R.id.meetupDetail_attendBtn);
         deleteBtn = (Button) findViewById(R.id.meetupDetail_deleteBtn);
@@ -161,6 +164,11 @@ public class MeetupDetailActivity extends AppCompatActivity
                 // Displays the found meetup's attributes
                 nameDisplay.setText(meetup.getName());
                 descriptionDisplay.setText(meetup.getDescription());
+
+                SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy 'at' h:mm a");
+                String startDate = sdf.format(meetup.getStartDateTime() * 1000L);
+                String endDate = sdf.format(meetup.getEndDateTime() * 1000L);
+                dateDisplay.setText("Start: " + startDate + "\nEnd: " + endDate);
 
                 // If user is the host
                 if (firebaseUser.getUid().equals(meetup.getHost()))
