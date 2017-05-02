@@ -1,5 +1,7 @@
 package uk.ac.tees.donut.squad.activities;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
@@ -13,10 +15,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,6 +32,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -57,6 +63,9 @@ public class NewMeetupActivity extends AppCompatActivity
 
     String name, description, squadId;
     HashMap<String, String> squads;
+    Calendar unchangedTime;
+    Calendar fromDateTime;
+    Calendar untilDateTime;
 
     private EditText editName;
     private EditText editAddress1;
@@ -67,6 +76,10 @@ public class NewMeetupActivity extends AppCompatActivity
     private Spinner spinnerSquad;
     private EditText editDescription;
     private Button btnSubmit;
+    private Button btnFromDate;
+    private Button btnFromTime;
+    private Button btnUntilDate;
+    private Button btnUntilTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -82,6 +95,10 @@ public class NewMeetupActivity extends AppCompatActivity
         mResultReceiver = new AddressResultReceiver(null);
         fetchType = LocContants.USE_ADDRESS_NAME;
 
+        // DateTime defaults
+        fromDateTime = Calendar.getInstance();
+        untilDateTime = Calendar.getInstance();
+
         // Links the variables to their layout items.
         editAddress1 = (EditText) findViewById(R.id.newMeetup_textEditAddress1);
         editAddress2 = (EditText) findViewById(R.id.newMeetup_textEditAddress2);
@@ -93,7 +110,10 @@ public class NewMeetupActivity extends AppCompatActivity
         spinnerSquad = (Spinner) findViewById(R.id.newMeetup_spinnerSquad);
         editDescription = (EditText) findViewById(R.id.newMeetup_textEditDescription);
         btnSubmit = (Button) findViewById(R.id.newMeetup_buttonSubmit);
-
+        btnFromDate = (Button) findViewById(R.id.newMeetup_buttonFromDate);
+        btnFromTime = (Button) findViewById(R.id.newMeetup_buttonFromTime);
+        btnUntilDate = (Button) findViewById(R.id.newMeetup_buttonUntilDate);
+        btnUntilTime = (Button) findViewById(R.id.newMeetup_buttonUntilTime);
 
         // onClick listener for the submit button
         btnSubmit.setOnClickListener(new View.OnClickListener()
@@ -104,13 +124,137 @@ public class NewMeetupActivity extends AppCompatActivity
                 // If at least one location field is filled
                 if (checkEditTexts())
                 {
-                    submitMeetup();
+                    if(fromDateTime != null)
+                    {
+                        Toast.makeText(NewMeetupActivity.this, "Please provide a start date and time"
+                                , Toast.LENGTH_SHORT).show();
+                    } else if(untilDateTime != null)
+                    {
+                        Toast.makeText(NewMeetupActivity.this, "Please provide an end date and time"
+                                , Toast.LENGTH_SHORT).show();
+                    } else
+                    {
+                        submitMeetup();
+                    }
                 } else
                 {
                     Toast.makeText(NewMeetupActivity.this, "Please provide a Name, Squad, " +
                                     "Description and Location"
                             , Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        btnFromDate.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                // Get Current Date
+                final Calendar c = Calendar.getInstance();
+                int mYear = c.get(Calendar.YEAR);
+                int mMonth = c.get(Calendar.MONTH);
+                int mDay = c.get(Calendar.DAY_OF_MONTH);
+
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(NewMeetupActivity.this,
+                        new DatePickerDialog.OnDateSetListener() {
+
+                            @Override
+                            public void onDateSet(DatePicker view, int year,
+                                                  int monthOfYear, int dayOfMonth) {
+
+                                btnFromDate.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
+                                fromDateTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                                fromDateTime.set(Calendar.MONTH, monthOfYear);
+                                fromDateTime.set(Calendar.YEAR, year);
+                            }
+                        }, mYear, mMonth, mDay);
+                datePickerDialog.show();
+            }
+        });
+
+        btnFromTime.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                // Get Current Time
+                final Calendar c = Calendar.getInstance();
+                int mHour = c.get(Calendar.HOUR_OF_DAY);
+                int mMinute = c.get(Calendar.MINUTE);
+
+                // Launch Time Picker Dialog
+                TimePickerDialog timePickerDialog = new TimePickerDialog(NewMeetupActivity.this,
+                        new TimePickerDialog.OnTimeSetListener() {
+
+                            @Override
+                            public void onTimeSet(TimePicker view, int hourOfDay,
+                                                  int minute) {
+
+                                btnFromTime.setText(hourOfDay + ":" + minute);
+                                fromDateTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                                fromDateTime.set(Calendar.MINUTE, minute);
+                            }
+                        }, mHour, mMinute, true);
+                timePickerDialog.show();
+            }
+        });
+
+        btnUntilDate.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                // Get Current Date
+                final Calendar c = Calendar.getInstance();
+                int mYear = c.get(Calendar.YEAR);
+                int mMonth = c.get(Calendar.MONTH);
+                int mDay = c.get(Calendar.DAY_OF_MONTH);
+
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(NewMeetupActivity.this,
+                        new DatePickerDialog.OnDateSetListener() {
+
+                            @Override
+                            public void onDateSet(DatePicker view, int year,
+                                                  int monthOfYear, int dayOfMonth) {
+
+                                btnUntilDate.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
+                                untilDateTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                                untilDateTime.set(Calendar.MONTH, monthOfYear);
+                                untilDateTime.set(Calendar.YEAR, year);
+
+                            }
+                        }, mYear, mMonth, mDay);
+                datePickerDialog.show();
+            }
+        });
+
+        btnUntilTime.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                // Get Current Time
+                final Calendar c = Calendar.getInstance();
+                int mHour = c.get(Calendar.HOUR_OF_DAY);
+                int mMinute = c.get(Calendar.MINUTE);
+
+                // Launch Time Picker Dialog
+                TimePickerDialog timePickerDialog = new TimePickerDialog(NewMeetupActivity.this,
+                        new TimePickerDialog.OnTimeSetListener() {
+
+                            @Override
+                            public void onTimeSet(TimePicker view, int hourOfDay,
+                                                  int minute) {
+
+                                btnUntilTime.setText(hourOfDay + ":" + minute);
+                                untilDateTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                                untilDateTime.set(Calendar.MINUTE, minute);
+                            }
+                        }, mHour, mMinute, true);
+                timePickerDialog.show();
             }
         });
 
@@ -210,8 +354,12 @@ public class NewMeetupActivity extends AppCompatActivity
             // Creating a new meetup node and getting the key value
             String meetupId = mDatabase.child("meetups").push().getKey();
 
+            long fromUnix = fromDateTime.getTimeInMillis() / 1000L;
+            long untilUnix = untilDateTime.getTimeInMillis() / 1000L;
+
+
             // Creating a meetup object
-            Meetup meetup = new Meetup(meetupId, name, desc, squadId, user.getUid(), longitude, latitude);
+            Meetup meetup = new Meetup(meetupId, name, desc, squadId, user.getUid(), fromUnix, untilUnix, longitude, latitude);
 
             // Pushing the meetup to the "meetups" node using the meetupId
             mDatabase.child("meetups").child(meetupId).setValue(meetup);

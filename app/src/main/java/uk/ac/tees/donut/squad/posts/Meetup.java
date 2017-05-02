@@ -14,6 +14,9 @@ public class Meetup
     // Attendees
     HashMap<String, Boolean> users;
 
+    // DateTime
+    Long startDateTime, endDateTime;
+
     // Location
     Double longitude, latitude;
 
@@ -41,14 +44,16 @@ public class Meetup
     }
 
 
-    // Constructor with location
-    public Meetup(String i, String n, String d, String s, String h, double longi, double lat)
+    // Constructor with datetime and location
+    public Meetup(String i, String n, String d, String s, String h, long sd, long ed, double longi, double lat)
     {
         id = i;
         name = n;
         description = d;
         squad = s;
         host = h;
+        startDateTime = sd;
+        endDateTime = ed;
         longitude = longi;
         latitude = lat;
     }
@@ -82,6 +87,16 @@ public class Meetup
     public HashMap<String, Boolean> getUsers()
     {
         return users;
+    }
+
+    public Long getStartDateTime()
+    {
+        return startDateTime;
+    }
+
+    public Long getEndDateTime()
+    {
+        return endDateTime;
     }
 
     public Double getLongitude()
@@ -120,9 +135,19 @@ public class Meetup
         this.host = h;
     }
 
-    public void setAttendees(HashMap<String, Boolean> users)
+    public void setUsers(HashMap<String, Boolean> users)
     {
         this.users = users;
+    }
+
+    public void setStartDateTime(Long startDateTime)
+    {
+        this.startDateTime = startDateTime;
+    }
+
+    public void setEndDateTime(Long endDateTime)
+    {
+        this.endDateTime = endDateTime;
     }
 
     public void setLongitude(Double longitude)
