@@ -14,8 +14,11 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import uk.ac.tees.donut.squad.R;
+import uk.ac.tees.donut.squad.posts.Meetup;
 
 public class SquadPostActivity extends AppCompatActivity {
 
@@ -26,6 +29,7 @@ public class SquadPostActivity extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener mAuthListener;
     private String squadId;
     private FirebaseUser firebaseUser;
+    private DatabaseReference mDatabase;
     private String sTxtbox;
 
     @Override
@@ -36,6 +40,9 @@ public class SquadPostActivity extends AppCompatActivity {
         Txtbox = (MultiAutoCompleteTextView) findViewById(R.id.txtboxPost);
         btnPost = (Button) findViewById(R.id.btnPost);
         sTxtbox = Txtbox.getText().toString();
+
+        // Getting the reference for the Firebase Realtime Database
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         // Getting the current user
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -92,13 +99,60 @@ public class SquadPostActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         // When pressed calls the submitPost method
                         if (sTxtbox != "") {
-                            submitPost();
-                        } else {
-                            Toast.makeText(SquadPostActivity.this, "Please provide a Name, Squad, " +
-                                            "Description and Location"
-                                    , Toast.LENGTH_SHORT).show();
+                            createPost();
                         }
                     }
                 });
+    }
+
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    public void onStop()
+    {
+        super.onStop();
+        if (mAuthListener != null)
+        {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
+    }
+
+    // Takes a meetup and pushes it to the Firebase Realtime Database (Without extras)
+    public void createMeetup(String name, String desc, String squadId)
+    {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null)
+        {
+            // User is signed in
+            // Creating a new meetup node and getting the key value
+            String meetupId = mDatabase.child("meetups").push().getKey();
+
+            // Creating a meetup object
+            Meetup meetup = new Meetup(meetupId, name, desc, squadId, user.getUid(), longitude, latitude);
+
+            // Pushing the meetup to the "meetups" node using the meetupId
+            mDatabase.child("meetups").child(meetupId).setValue(meetup);
+
+            // Adding the Meetup to the user's hosted
+            mDatabase.child("users").child(user.getUid()).child("hosting").child(meetupId).setValue(true);
+
+            // Send user to their meetup on the MeetupDetailActivity activity
+            Intent intent = new Intent(NewMeetupActivity.this, MeetupDetailActivity.class);
+            intent.putExtra("meetupId", meetupId);
+            startActivity(intent);
+            finish();
+
+        } else
+        {
+            // No user is signed in
+            Toast.makeText(this, "Something went wrong, please try again.", Toast.LENGTH_SHORT).show();
+        }
+
+
     }
 }
