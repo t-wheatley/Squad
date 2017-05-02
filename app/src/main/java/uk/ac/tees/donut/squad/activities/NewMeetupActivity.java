@@ -124,11 +124,11 @@ public class NewMeetupActivity extends AppCompatActivity
                 // If at least one location field is filled
                 if (checkEditTexts())
                 {
-                    if(fromDateTime != null)
+                    if(fromDateTime == null)
                     {
                         Toast.makeText(NewMeetupActivity.this, "Please provide a start date and time"
                                 , Toast.LENGTH_SHORT).show();
-                    } else if(untilDateTime != null)
+                    } else if(untilDateTime == null)
                     {
                         Toast.makeText(NewMeetupActivity.this, "Please provide an end date and time"
                                 , Toast.LENGTH_SHORT).show();
