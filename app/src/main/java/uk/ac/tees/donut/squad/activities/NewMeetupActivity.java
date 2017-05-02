@@ -60,6 +60,7 @@ public class NewMeetupActivity extends AppCompatActivity
     protected double latitude;
     protected double longitude;
     protected String addressFull;
+    protected String geocodeAddress;
 
     String name, description, squadId;
     HashMap<String, String> squads;
@@ -94,6 +95,7 @@ public class NewMeetupActivity extends AppCompatActivity
         // Creating new result reciever and setting the fetch type for geocoder
         mResultReceiver = new AddressResultReceiver(null);
         fetchType = LocContants.USE_ADDRESS_NAME;
+
 
         // DateTime defaults
         fromDateTime = Calendar.getInstance();
@@ -461,14 +463,32 @@ public class NewMeetupActivity extends AppCompatActivity
         }
     }
 
-    protected void setLatitude(double lat)
-    {
-        latitude = lat;
-    }
+    public void CreateAlertDiolog(){
+        new AlertDialog.Builder(NewMeetupActivity.this)
+                .setTitle("Confirm Address")
+                .setMessage("" + geocodeAddress + "\n" + "Is this the correct address?")
+                .setIcon(android.R.drawable.ic_dialog_info)
+                .setPositiveButton("Confirm Address", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i)
+                    {
 
-    protected void setLongitude(double lon)
-    {
-        longitude = lon;
+                        // Calls the createMeetup method with the strings entered
+                        createMeetup(name, description, squadId);
+                        
+
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i){
+                        loadingOverlay.setVisibility(View.INVISIBLE);
+                        return;
+                    }
+                })
+                .create()
+                .show();
     }
 
     //Inner Class to receive address for geocoder
@@ -495,8 +515,9 @@ public class NewMeetupActivity extends AppCompatActivity
                         latitude = address.getLatitude();
                         longitude = address.getLongitude();
 
-                        // Calls the createMeetup method with the strings entered
-                        createMeetup(name, description, squadId);
+                        geocodeAddress = resultData.getString(LocContants.RESULT_DATA_KEY);
+
+                        CreateAlertDiolog();
 
                     }
                 });
