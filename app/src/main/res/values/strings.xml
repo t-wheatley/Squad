@@ -77,4 +77,5 @@
 
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="title_activity_map">Map</string>
+    <string name="title_activity_place_maps">Map</string>
 </resources>

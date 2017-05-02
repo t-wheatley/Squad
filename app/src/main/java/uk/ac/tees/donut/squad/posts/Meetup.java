@@ -14,6 +14,9 @@ public class Meetup
     // Attendees
     HashMap<String, Boolean> users;
 
+    // DateTime
+    Long startDateTime, endDateTime;
+
     // Location
     Double longitude, latitude;
 
@@ -35,18 +38,22 @@ public class Meetup
     // Constructor for meetup lists
     public Meetup(String i, String n, String s)
     {
-        id = i; name = n; squad = s;
+        id = i;
+        name = n;
+        squad = s;
     }
 
 
-    // Constructor with location
-    public Meetup(String i, String n, String d, String s, String h, double longi, double lat)
+    // Constructor with datetime and location
+    public Meetup(String i, String n, String d, String s, String h, long sd, long ed, double longi, double lat)
     {
         id = i;
         name = n;
         description = d;
         squad = s;
         host = h;
+        startDateTime = sd;
+        endDateTime = ed;
         longitude = longi;
         latitude = lat;
     }
@@ -56,30 +63,49 @@ public class Meetup
     {
         return id;
     }
+
     public String getName()
     {
         return name;
     }
+
     public String getDescription()
     {
         return description;
     }
+
     public String getSquad()
     {
         return squad;
     }
+
     public String getHost()
     {
         return host;
     }
+
     public HashMap<String, Boolean> getUsers()
     {
         return users;
     }
-    public Double getLongitude() {
+
+    public Long getStartDateTime()
+    {
+        return startDateTime;
+    }
+
+    public Long getEndDateTime()
+    {
+        return endDateTime;
+    }
+
+    public Double getLongitude()
+    {
         return longitude;
     }
-    public Double getLatitude() {
+
+    public Double getLatitude()
+    {
         return latitude;
     }
 
@@ -88,30 +114,49 @@ public class Meetup
     {
         this.id = i;
     }
+
     public void setName(String n)
     {
         this.name = n;
     }
+
     public void setDescription(String d)
     {
         this.description = d;
     }
+
     public void setSquad(String s)
     {
         this.squad = s;
     }
+
     public void setHost(String h)
     {
         this.host = h;
     }
-    public void setAttendees(HashMap<String, Boolean> users)
+
+    public void setUsers(HashMap<String, Boolean> users)
     {
         this.users = users;
     }
-    public void setLongitude(Double longitude) {
+
+    public void setStartDateTime(Long startDateTime)
+    {
+        this.startDateTime = startDateTime;
+    }
+
+    public void setEndDateTime(Long endDateTime)
+    {
+        this.endDateTime = endDateTime;
+    }
+
+    public void setLongitude(Double longitude)
+    {
         this.longitude = longitude;
     }
-    public void setLatitude(Double latitude) {
+
+    public void setLatitude(Double latitude)
+    {
         this.latitude = latitude;
     }
 }

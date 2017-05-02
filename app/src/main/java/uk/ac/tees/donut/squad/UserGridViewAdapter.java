@@ -8,10 +8,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
@@ -65,14 +63,17 @@ public class UserGridViewAdapter extends BaseAdapter
             // Display picture
             Glide.with(mContext)
                     .load(userPics.get(i))
-                    .listener(new RequestListener<String, GlideDrawable>() {
+                    .listener(new RequestListener<String, GlideDrawable>()
+                    {
                         @Override
-                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource)
+                        {
                             return false;
                         }
 
                         @Override
-                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource)
+                        {
                             return false;
                         }
                     })
@@ -94,7 +95,8 @@ public class UserGridViewAdapter extends BaseAdapter
                 }
             });
 
-        } else {
+        } else
+        {
             view = (View) convertView;
         }
 
@@ -102,17 +104,20 @@ public class UserGridViewAdapter extends BaseAdapter
     }
 
     @Override
-    public int getCount() {
+    public int getCount()
+    {
         return userNames.size();
     }
 
     @Override
-    public Object getItem(int position) {
+    public Object getItem(int position)
+    {
         return null;
     }
 
     @Override
-    public long getItemId(int position) {
+    public long getItemId(int position)
+    {
         return position;
     }
 }

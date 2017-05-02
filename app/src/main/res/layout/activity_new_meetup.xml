@@ -7,6 +7,10 @@
     tools:context="uk.ac.tees.donut.squad.activities.NewMeetupActivity"
     android:background="@color/cardview_dark_background">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -58,11 +62,66 @@
                 style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
 
             <TextView
+                android:text="From:"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/newMeetup_spinnerSquad"
+                android:layout_alignParentStart="true"
+                android:id="@+id/newMeetup_textFrom"
+                style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
+
+            <Button
+                android:text="00/00/0000"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/newMeetup_textFrom"
+                android:layout_alignParentLeft="true"
+                android:id="@+id/newMeetup_buttonFromDate"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="wrap_content"/>
+
+            <Button
+                android:text="00:00"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/newMeetup_textFrom"
+                android:layout_alignParentRight="true"
+                android:id="@+id/newMeetup_buttonFromTime"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="wrap_content"/>
+
+            <TextView
+                android:text="Until:"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/newMeetup_buttonFromDate"
+                android:layout_alignParentStart="true"
+                android:id="@+id/newMeetup_textUntil"
+                style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
+
+            <Button
+                android:text="00/00/0000"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/newMeetup_textUntil"
+                android:layout_alignParentLeft="true"
+                android:id="@+id/newMeetup_buttonUntilDate"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="wrap_content"/>
+
+            <Button
+                android:text="00:00"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/newMeetup_textUntil"
+                android:layout_alignParentRight="true"
+                android:id="@+id/newMeetup_buttonUntilTime"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="wrap_content"/>
+
+
+            <TextView
                 android:text="Description:"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/newMeetup_textDescription"
-                android:layout_below="@+id/newMeetup_spinnerSquad"
+                android:layout_below="@+id/newMeetup_buttonUntilDate"
                 android:layout_alignParentStart="true"
                 style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
 
@@ -143,7 +202,7 @@
                 style="@style/Widget.AppCompat.Button.Colored"/>
         </RelativeLayout>
     </RelativeLayout>
-
+    </ScrollView>
     <!-- Loading overlay; -->
     <include layout="@layout/loading_overlay"/>
 

@@ -2,11 +2,11 @@ package uk.ac.tees.donut.squad.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.IntentCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.view.View;
@@ -56,6 +56,7 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
     Button squadBtn;
     Button attendingBtn;
     Button hostingBtn;
+    Button secretBtn;
     Button signOutBtn;
     ImageButton editBioBtn;
     ImageView profileImage;
@@ -67,7 +68,6 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
     Boolean hasSquad;
     Boolean hasMeetup;
     Boolean hasHost;
-
 
 
     @Override
@@ -100,50 +100,71 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         // Getting ui elements
-        profileImage = (ImageView)findViewById(R.id.profileImage_ImageView);
+        profileImage = (ImageView) findViewById(R.id.profileImage_ImageView);
 
         profileName = (TextView) findViewById(R.id.profile_name);
 
         bio = (TextView) findViewById(R.id.bio);
 
         squadBtn = (Button) findViewById(R.id.profile_squadsBtn);
-        squadBtn.setOnClickListener(new View.OnClickListener() {
+        squadBtn.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 showSquads();
             }
         });
 
         attendingBtn = (Button) findViewById(R.id.profile_attendingBtn);
-        attendingBtn.setOnClickListener(new View.OnClickListener() {
+        attendingBtn.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 showAttending();
             }
         });
 
         hostingBtn = (Button) findViewById(R.id.profile_hostingBtn);
-        hostingBtn.setOnClickListener(new View.OnClickListener() {
+        hostingBtn.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 showHosted();
             }
         });
         hostingBtn.setVisibility(View.GONE);
 
-        signOutBtn = (Button) findViewById(R.id.profile_signOutBtn);
-        signOutBtn.setOnClickListener(new View.OnClickListener() {
+        secretBtn = (Button) findViewById(R.id.profile_secretBtn);
+        secretBtn.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
+                secretMode();
+            }
+        });
+        secretBtn.setVisibility(View.GONE);
+
+        signOutBtn = (Button) findViewById(R.id.profile_signOutBtn);
+        signOutBtn.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
                 signOut();
             }
         });
         signOutBtn.setVisibility(View.GONE);
 
         editBioBtn = (ImageButton) findViewById(R.id.profile_imageButtonProfileBioEdit);
-        editBioBtn.setOnClickListener(new View.OnClickListener() {
+        editBioBtn.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 editBio();
             }
         });
@@ -157,24 +178,29 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
         // Gets the extra passed from the last activity
         Intent detail = getIntent();
         Bundle b = detail.getExtras();
-        if(b != null)
+        if (b != null)
         {
             // Collects the uId passed into the activity
             uId = (String) b.get("uId");
 
             // If the user is looking at their own profile
-            if(uId.equals(firebaseUser.getUid()))
+            if (uId.equals(firebaseUser.getUid()))
             {
                 personal = true;
                 personalMode();
+            }  else
+            {
+                personal = false;
             }
         } else
         {
             new AlertDialog.Builder(ProfileActivity.this)
                     .setTitle("Error")
                     .setMessage("The user went missing somewhere, please try again.")
-                    .setPositiveButton("Back", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
+                    .setPositiveButton("Back", new DialogInterface.OnClickListener()
+                    {
+                        public void onClick(DialogInterface dialog, int which)
+                        {
                             finish();
                         }
                     })
@@ -187,10 +213,12 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
         loadingText = (TextView) this.findViewById(R.id.loading_overlay_text);
         loadingText.setText("Loading profile info...");
         loadingOverlay.setVisibility(View.VISIBLE);
-        loadInfo();
+        // Starts the loading chain
+        // secretCheck -> loadInfo
+        secretCheck();
     }
 
-    public void loadInfo()
+    public void secretCheck()
     {
         if (firebaseUser != null)
         {
@@ -203,74 +231,53 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
                     // Gets the data from Firebase and stores it in a FBUser class
                     user = dataSnapshot.getValue(FBUser.class);
 
-                    // Checking if user has Squads
-                    if(user.getSquads() != null)
+                    if (user != null)
                     {
-                        hasSquad = true;
+                        // If not secret
+                        if (user.getSecret() == null || user.getSecret() == false)
+                        {
+                            // Load user info
+                            loadInfo();
+                        } else
+                        {
+                            // User is secret
+                            if (!personal)
+                            {
+                                // User is trying to view a secret profile which is not theirs
+                                new AlertDialog.Builder(ProfileActivity.this)
+                                        .setTitle("Secret User!")
+                                        .setMessage("Sorry, we cant show you this user's profile!")
+                                        .setPositiveButton("Back", new DialogInterface.OnClickListener()
+                                        {
+                                            public void onClick(DialogInterface dialog, int which)
+                                            {
+                                                finish();
+                                            }
+                                        })
+                                        .setCancelable(false)
+                                        .show();
+                            } else
+                            {
+                                // User viewing their own profile
+                                secretBtn.setText("Disable Secret Mode");
+                                loadInfo();
+                            }
+                        }
                     } else
                     {
-                        hasSquad = false;
-                    }
-
-                    // Checking if user has Meetups
-                    if(user.getMeetups() != null)
-                    {
-                        hasMeetup = true;
-                    } else
-                    {
-                        hasMeetup = false;
-                    }
-
-                    // Checking if user has Squads
-                    if(user.getHosting() != null)
-                    {
-                        hasHost = true;
-                    } else
-                    {
-                        hasHost = false;
-                    }
-
-
-                    // Displays the user's name in the editText
-                    profileName.setText(user.getName());
-
-                    // If user has created a bio
-                    if(user.getBio() != null)
-                    {
-                        // Displays the user's bio in the editText
-                        bio.setText(user.getBio().trim());
-                    } else
-                    {
-                        // Default bio
-                        bio.setText("This user has no bio!");
-                    }
-
-                    // Displays the photo in the ImageView
-                    Glide.with(ProfileActivity.this)
-                            .load(user.getPicture().trim())
-                            .diskCacheStrategy(DiskCacheStrategy.NONE)
-                            .skipMemoryCache(true)
-                            .listener(new RequestListener<String, GlideDrawable>() {
-                                @Override
-                                public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                                    return false;
-                                }
-
-                                @Override
-                                public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                                    // If profileName != default and profileImage isnt null
-                                    if ((!profileName.getText().equals("'Users Profile")) && (profileImage != null))
+                        new AlertDialog.Builder(ProfileActivity.this)
+                                .setTitle("Something went wrong!")
+                                .setMessage("We do not appear to be able to find this user, please try again.")
+                                .setPositiveButton("Back", new DialogInterface.OnClickListener()
+                                {
+                                    public void onClick(DialogInterface dialog, int which)
                                     {
-                                        // Hiding loading overlay
-                                        loadingOverlay.setVisibility(View.GONE);
+                                        finish();
                                     }
-                                    return false;
-                                }
-                            })
-                            .dontAnimate()
-                            .fitCenter()
-                            .error(R.drawable.com_facebook_profile_picture_blank_portrait)
-                            .into(profileImage);
+                                })
+                                .setCancelable(false)
+                                .show();
+                    }
                 }
 
                 @Override
@@ -281,7 +288,89 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
             });
         } else
         {
-            // No user is signed in
+            // No user found
+            Toast.makeText(this, "Something went wrong, please try again.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    public void loadInfo()
+    {
+        if (user != null)
+        {
+            // Checking if user has Squads
+            if (user.getSquads() != null)
+            {
+                hasSquad = true;
+            } else
+            {
+                hasSquad = false;
+            }
+
+            // Checking if user has Meetups
+            if (user.getMeetups() != null)
+            {
+                hasMeetup = true;
+            } else
+            {
+                hasMeetup = false;
+            }
+
+            // Checking if user has Squads
+            if (user.getHosting() != null)
+            {
+                hasHost = true;
+            } else
+            {
+                hasHost = false;
+            }
+
+            // Displays the user's name in the editText
+            profileName.setText(user.getName());
+
+            // If user has created a bio
+            if (user.getBio() != null)
+            {
+                // Displays the user's bio in the editText
+                bio.setText(user.getBio().trim());
+            } else
+            {
+                // Default bio
+                bio.setText("This user has no bio!");
+            }
+
+            // Displays the photo in the ImageView
+            Glide.with(ProfileActivity.this)
+                    .load(user.getPicture().trim())
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                    .listener(new RequestListener<String, GlideDrawable>()
+                    {
+                        @Override
+                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource)
+                        {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource)
+                        {
+                            // If profileName != default and profileImage isnt null
+                            if ((!profileName.getText().equals("'Users Profile")) && (profileImage != null))
+                            {
+                                // Hiding loading overlay
+                                loadingOverlay.setVisibility(View.GONE);
+                            }
+                            return false;
+                        }
+                    })
+                    .dontAnimate()
+                    .fitCenter()
+                    .error(R.drawable.com_facebook_profile_picture_blank_portrait)
+                    .into(profileImage);
+        } else
+        {
+            // No user found
             Toast.makeText(this, "Something went wrong, please try again.", Toast.LENGTH_SHORT).show();
         }
     }
@@ -289,7 +378,7 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
     public void showSquads()
     {
         // If a user has squads
-        if(hasSquad)
+        if (hasSquad)
         {
             // Loads the SquadList activity displaying the Squads that the user has joined
             Intent intent = new Intent(this, SquadListActivity.class);
@@ -305,7 +394,7 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
     public void showAttending()
     {
         // If a user has meetups
-        if(hasMeetup)
+        if (hasMeetup)
         {
             // Loads the MeetupsList activity displaying the Meetups that the user has attended
             Intent intent = new Intent(this, MeetupsListActivity.class);
@@ -321,7 +410,7 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
     public void showHosted()
     {
         // If a user is hosting meetups
-        if(hasHost)
+        if (hasHost)
         {
             // Loads the MeetupsList activity displaying the Meetups that the user is hosting
             Intent intent = new Intent(this, MeetupsListActivity.class);
@@ -333,6 +422,34 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
             Toast.makeText(getApplicationContext(), user.getName().trim() +
                     " is hosting no meetups!", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void secretMode()
+    {
+        // If user not secret
+        if (user.getSecret() == null || user.getSecret() == false)
+        {
+            enableSecret();
+        } else
+        {
+            disableSecret();
+        }
+    }
+
+    public void enableSecret()
+    {
+        // Sets the user to secret and changes the button
+        mDatabase.child(firebaseUser.getUid()).child("secret").setValue(true);
+        user.setSecret(true);
+        secretBtn.setText("Disable Secret Mode");
+    }
+
+    public void disableSecret()
+    {
+        // Disables the user's secret mode and changes the button
+        mDatabase.child(firebaseUser.getUid()).child("secret").setValue(false);
+        user.setSecret(false);
+        secretBtn.setText("Enable Secret Mode");
     }
 
     public void signOut()
@@ -361,22 +478,26 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
         editTextBio.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_LONG_MESSAGE |
                 InputType.TYPE_TEXT_FLAG_AUTO_COMPLETE | InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE);
         // Sets the maximum characters to 120
-        editTextBio.setFilters(new InputFilter[] { new InputFilter.LengthFilter(120) });
+        editTextBio.setFilters(new InputFilter[]{new InputFilter.LengthFilter(120)});
         builder.setView(editTextBio);
 
         // Buttons on the Dialog
-        builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Submit", new DialogInterface.OnClickListener()
+        {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(DialogInterface dialog, int which)
+            {
                 String newBio = editTextBio.getText().toString();
                 user.setBio(newBio);
                 bio.setText(newBio);
                 updateBio(newBio);
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
+        {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(DialogInterface dialog, int which)
+            {
                 dialog.cancel();
             }
         });
@@ -405,6 +526,7 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
         squadBtn.setText("My Squads");
         attendingBtn.setText("My Meetups");
         hostingBtn.setVisibility(View.VISIBLE);
+        secretBtn.setVisibility(View.VISIBLE);
         signOutBtn.setVisibility(View.VISIBLE);
         editBioBtn.setVisibility(View.VISIBLE);
     }
