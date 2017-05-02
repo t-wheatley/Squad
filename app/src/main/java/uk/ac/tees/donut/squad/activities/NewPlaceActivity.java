@@ -405,6 +405,14 @@ public class NewPlaceActivity extends AppCompatActivity
                         return;
                     }
                 })
+                .setOnDismissListener(new DialogInterface.OnDismissListener(){
+
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        loadingOverlay.setVisibility(View.INVISIBLE);
+                        return;
+                    }
+                })
                 .create()
                 .show();
     }
