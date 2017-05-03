@@ -485,7 +485,7 @@ public class MeetupsListActivity extends AppCompatActivity
 
     public void populateMeetupViewHolder(final MeetupViewHolder viewHolder, final Meetup model, int position)
     {
-
+        // Displaying the name
         viewHolder.nameField.setText(model.getName());
 
         String description = model.getDescription().replace("\n", "");
@@ -513,10 +513,17 @@ public class MeetupsListActivity extends AppCompatActivity
             }
         });
 
-        //need an easy way to count all of the attendees
-        //???
+        // Displaying the number of attendees
+        if( model.getUsers() != null)
+        {
+            int attendees = model.getUsers().size();
+            viewHolder.attendingField.setText(attendees + " attendees");
+        } else
+        {
+            viewHolder.attendingField.setText("0 attendees");
+        }
 
-        //getting status
+        // Getting status
         model.updateStatus();
         int status = model.gimmeStatus();
         if(status == 0)
@@ -737,10 +744,17 @@ public class MeetupsListActivity extends AppCompatActivity
                 }
             });
 
-            //need an easy way to count all of the attendees
-            //???
+            // Displaying the number of attendees
+            if( meetup.getUsers() != null)
+            {
+                int attendees = meetup.getUsers().size();
+                holder.attendingField.setText(attendees + " attendees");
+            } else
+            {
+                holder.attendingField.setText("0 attendees");
+            }
 
-            //getting status
+            // Getting status
             meetup.updateStatus();
             int status = meetup.gimmeStatus();
             if(status == 0)
