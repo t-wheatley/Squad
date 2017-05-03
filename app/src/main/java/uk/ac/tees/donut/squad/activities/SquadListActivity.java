@@ -235,6 +235,9 @@ public class SquadListActivity extends AppCompatActivity
             {
                 viewHolder.placeHolder.setText("×");
             }
+        }else
+        {
+            viewHolder.placeHolder.setText("×");
         }
 
 
