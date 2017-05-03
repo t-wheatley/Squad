@@ -173,7 +173,7 @@ public class MeetupsListActivity extends AppCompatActivity
 
         mAdapter = new FirebaseRecyclerAdapter<Meetup, MeetupViewHolder>(
                 Meetup.class,
-                R.layout.item_three_text,
+                R.layout.item_five_text,
                 MeetupViewHolder.class,
                 allQuery
         )
@@ -222,7 +222,7 @@ public class MeetupsListActivity extends AppCompatActivity
 
         mAdapter = new FirebaseRecyclerAdapter<Meetup, MeetupViewHolder>(
                 Meetup.class,
-                R.layout.item_three_text,
+                R.layout.item_five_text,
                 MeetupViewHolder.class,
                 userQuery
         )
@@ -271,7 +271,7 @@ public class MeetupsListActivity extends AppCompatActivity
 
         mAdapter = new FirebaseRecyclerAdapter<Meetup, MeetupViewHolder>(
                 Meetup.class,
-                R.layout.item_three_text,
+                R.layout.item_five_text,
                 MeetupViewHolder.class,
                 hostQuery
         )
@@ -322,7 +322,7 @@ public class MeetupsListActivity extends AppCompatActivity
 
         mAdapter = new FirebaseRecyclerAdapter<Meetup, MeetupViewHolder>(
                 Meetup.class,
-                R.layout.item_three_text,
+                R.layout.item_five_text,
                 MeetupViewHolder.class,
                 squadQuery
         )
@@ -513,6 +513,22 @@ public class MeetupsListActivity extends AppCompatActivity
             }
         });
 
+        //need an easy way to count all of the attendees
+        //???
+
+        //getting status
+        model.updateStatus();
+        int status = model.gimmeStatus();
+        if(status == 0)
+            viewHolder.statusField.setText("Upcoming");
+        else if(status == 1)
+            viewHolder.statusField.setText("Ongoing");
+        else if(status == 2)
+            viewHolder.statusField.setText("Expired");
+        else
+            viewHolder.statusField.setText("Deleted");
+
+
         viewHolder.mView.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -650,6 +666,8 @@ public class MeetupsListActivity extends AppCompatActivity
         TextView nameField;
         TextView descriptionfield;
         TextView squadField;
+        TextView attendingField;
+        TextView statusField;
 
         public MeetupViewHolder(View v)
         {
@@ -658,6 +676,10 @@ public class MeetupsListActivity extends AppCompatActivity
             nameField = (TextView) v.findViewById(R.id.text1);
             descriptionfield = (TextView) v.findViewById(R.id.text2);
             squadField = (TextView) v.findViewById(R.id.text3);
+            attendingField = (TextView) v.findViewById(R.id.text4);
+            statusField = (TextView) v.findViewById(R.id.text5);
+
+            squadField.setText("loading...");
         }
     }
 
@@ -677,7 +699,7 @@ public class MeetupsListActivity extends AppCompatActivity
         {
             View itemView = LayoutInflater.
                     from(parent.getContext()).
-                    inflate(R.layout.item_three_text, parent, false);
+                    inflate(R.layout.item_five_text, parent, false);
 
             return new MeetupViewHolder(itemView);
         }
@@ -686,8 +708,10 @@ public class MeetupsListActivity extends AppCompatActivity
         public void onBindViewHolder(final MeetupViewHolder holder, int position)
         {
             final Meetup meetup = meetupList.get(position);
+            //getting name
             holder.nameField.setText(meetup.getName());
 
+            //getting description
             String description = meetup.getDescription().replace("\n", "");
             String elipsis = "";
             if (description.length() > 54)
@@ -712,6 +736,22 @@ public class MeetupsListActivity extends AppCompatActivity
 
                 }
             });
+
+            //need an easy way to count all of the attendees
+            //???
+
+            //getting status
+            meetup.updateStatus();
+            int status = meetup.gimmeStatus();
+            if(status == 0)
+                holder.statusField.setText("Upcoming");
+            else if(status == 1)
+                holder.statusField.setText("Ongoing");
+            else if(status == 2)
+                holder.statusField.setText("Expired");
+            else
+                holder.statusField.setText("Deleted");
+
 
             // OnClick
             holder.mView.setOnClickListener(new View.OnClickListener()
