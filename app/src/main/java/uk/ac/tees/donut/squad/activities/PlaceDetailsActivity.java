@@ -97,13 +97,13 @@ public class PlaceDetailsActivity extends AppCompatActivity
         galleryLayout = (RelativeLayout) findViewById(R.id.galleryLayout);
 
         //if there are no pictures
-        boolean pics = false; //TEMPORARY TILL WE CAN ATTEMPT AT LOADING PICS
-        if (pics)
+        boolean noPics = true; //TEMPORARY TILL WE CAN ATTEMPT AT LOADING PICS
+        if (noPics)
         {
             //keeps the noPic text, and changes the height of the layout so it's not too big
-            ViewGroup.LayoutParams params = galleryLayout.getLayoutParams();
-            params.height = 35;
-            galleryLayout.setLayoutParams(params);
+            gallery.setVisibility(View.GONE);
+            noPic.setVisibility(View.VISIBLE);
+            noPic.setText("No pictures to show.");
         } else
             //gets rid of the noPic text
             noPic.setVisibility(View.GONE);
