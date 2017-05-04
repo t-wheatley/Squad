@@ -1,5 +1,8 @@
-package uk.ac.tees.donut.squad.activities.fragments;
+package uk.ac.q5081793tees.bottomnav;
 
+/**
+ * Created by jlc-1 on 29/04/2017.
+ */
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -7,10 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-/**
- * Created by jlc-1 on 02/05/2017.
- */
 
 public class MenuFragment extends Fragment{
     private static final String ARG_TEXT = "arg_text";

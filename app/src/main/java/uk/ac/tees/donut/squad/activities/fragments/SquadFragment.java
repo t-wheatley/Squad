@@ -11,13 +11,13 @@ import android.view.ViewGroup;
  * Created by jlc-1 on 29/04/2017.
  */
 
-public class ProfileFragment extends Fragment {
+public class SquadFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View profileView = inflater.inflate(R.layout.profile_fragment, container, false);
-        System.out.println("-------Inflated: Profile Fragment-------");
-        return profileView;
+        View squadView = inflater.inflate(R.layout.squad_fragment, container, false);
+        System.out.println("-------Inflated: Squad Fragment-------");
+        return squadView;
     }
 
     @Override
@@ -25,4 +25,3 @@ public class ProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
     }
 }
-
