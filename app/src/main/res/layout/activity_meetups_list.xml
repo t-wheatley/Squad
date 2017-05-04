@@ -32,7 +32,6 @@
             android:drawableLeft="@drawable/ic_search"
             android:gravity="center" >
         </EditText>
-
     </LinearLayout>
 
     <LinearLayout

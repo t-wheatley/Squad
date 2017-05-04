@@ -77,11 +77,11 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
 
     GoogleApiClient mGoogleApiClient;
     LocationRequest mLocationRequest;
-
     Location userLoc;
+    final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
     int loadingCount;
-    final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -145,7 +145,6 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
 
             }
         });
-
 
         member = false;
         host = false;
@@ -224,25 +223,6 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
     }
 
     @Override
-    public void onBackPressed() {
-        MeetupsListActivity.this.finish();
-    }
-
-
-    public void buildGoogleApiClient()
-    {
-        // Create an instance of GoogleAPIClient.
-        if (mGoogleApiClient == null)
-        {
-            mGoogleApiClient = new GoogleApiClient.Builder(this)
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(LocationServices.API)
-                    .build();
-        }
-    }
-
-    @Override
     protected void onStart()
     {
         mGoogleApiClient.connect();
@@ -270,6 +250,23 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
         mGoogleApiClient.connect();
     }
 
+    @Override
+    public void onBackPressed() {
+        MeetupsListActivity.this.finish();
+    }
+
+    public void buildGoogleApiClient()
+    {
+        // Create an instance of GoogleAPIClient.
+        if (mGoogleApiClient == null)
+        {
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
+    }
 
     public void getAll()
     {
@@ -763,7 +760,6 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
                     meetupLoc2.setLatitude(m2.getLatitude());
                     meetupLoc2.setLongitude(m2.getLongitude());
 
-
                     double distance1 = userLoc.distanceTo(meetupLoc1);
                     double distance2 = userLoc.distanceTo(meetupLoc2);
 
@@ -788,23 +784,16 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
         } else
         {
             new AlertDialog.Builder(MeetupsListActivity.this)
-                    .setTitle("Lost location")
-                    .setMessage("REEEEE")
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener()
+                    .setTitle("No Location")
+                    .setMessage("Sorry we can't access your location right now, make sure you have Location turned on!")
+                    .setPositiveButton("Ok", new DialogInterface.OnClickListener()
                     {
                         public void onClick(DialogInterface dialog, int which)
                         {
-                            // continue with delete
+                            finish();
                         }
                     })
-                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener()
-                    {
-                        public void onClick(DialogInterface dialog, int which)
-                        {
-                            // do nothing
-                        }
-                    })
-                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setCancelable(false)
                     .show();
         }
     }
