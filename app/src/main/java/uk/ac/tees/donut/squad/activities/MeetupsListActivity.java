@@ -1,26 +1,35 @@
 package uk.ac.tees.donut.squad.activities;
 
 import android.Manifest;
-import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.firebase.ui.database.ChangeEventListener;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -37,7 +46,7 @@ import java.util.List;
 import uk.ac.tees.donut.squad.R;
 import uk.ac.tees.donut.squad.posts.Meetup;
 
-public class MeetupsListActivity extends AppCompatActivity
+public class MeetupsListActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener
 {
 
     private DatabaseReference mDatabase;
@@ -58,11 +67,21 @@ public class MeetupsListActivity extends AppCompatActivity
     TextView listText;
     Button btnDistance;
     Button btnStartTime;
+    EditText searchBar;
 
+    List<Meetup> searchList;
+    List<Meetup> filteredList;
+    MeetupAdapter filteredAdapter;
+    boolean search;
     int filter;
 
+    GoogleApiClient mGoogleApiClient;
+    LocationRequest mLocationRequest;
+    Location userLoc;
+    final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+
     int loadingCount;
-    int MY_PERMISSION_ACCESS_COURSE_LOCATION;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -98,11 +117,43 @@ public class MeetupsListActivity extends AppCompatActivity
                 filterStart();
             }
         });
+        searchBar = (EditText) findViewById(R.id.meetupsList_searchBar);
+        searchBar.addTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after)
+            {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count)
+            {
+                if (s.length() == 0)
+                {
+                    search = false;
+                    updateFilter();
+                } else
+                {
+                    search(searchBar.getText().toString());
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s)
+            {
+
+            }
+        });
 
         member = false;
         host = false;
         squad = false;
+        search = false;
         filter = 0;
+
+        searchList = new ArrayList<Meetup>();
+        filteredList = new ArrayList<Meetup>();
 
         // Gets the extra passed from the last activity
         Intent detail = getIntent();
@@ -160,7 +211,61 @@ public class MeetupsListActivity extends AppCompatActivity
             getAll();
         }
 
+        buildGoogleApiClient();
+        mGoogleApiClient.connect();
+
+
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setPriority(102);
+        mLocationRequest.setInterval(5);
+
         mRecyclerView.setAdapter(mAdapter);
+    }
+
+    @Override
+    protected void onStart()
+    {
+        mGoogleApiClient.connect();
+        super.onStart();
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        mGoogleApiClient.disconnect();
+        super.onDestroy();
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onRestart()
+    {
+        super.onRestart();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onBackPressed() {
+        MeetupsListActivity.this.finish();
+    }
+
+    public void buildGoogleApiClient()
+    {
+        // Create an instance of GoogleAPIClient.
+        if (mGoogleApiClient == null)
+        {
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
     }
 
     public void getAll()
@@ -187,7 +292,8 @@ public class MeetupsListActivity extends AppCompatActivity
             @Override
             protected void onChildChanged(ChangeEventListener.EventType type, int index, int oldIndex)
             {
-                switch (type) {
+                switch (type)
+                {
                     case ADDED:
                         notifyItemInserted(index);
                         updateFilter();
@@ -236,7 +342,8 @@ public class MeetupsListActivity extends AppCompatActivity
             @Override
             protected void onChildChanged(ChangeEventListener.EventType type, int index, int oldIndex)
             {
-                switch (type) {
+                switch (type)
+                {
                     case ADDED:
                         notifyItemInserted(index);
                         updateFilter();
@@ -285,7 +392,8 @@ public class MeetupsListActivity extends AppCompatActivity
             @Override
             protected void onChildChanged(ChangeEventListener.EventType type, int index, int oldIndex)
             {
-                switch (type) {
+                switch (type)
+                {
                     case ADDED:
                         notifyItemInserted(index);
                         updateFilter();
@@ -311,7 +419,6 @@ public class MeetupsListActivity extends AppCompatActivity
 
     }
 
-
     public void getSquad(String squadId)
     {
         // Database reference to get a Squad's Meetups
@@ -336,7 +443,8 @@ public class MeetupsListActivity extends AppCompatActivity
             @Override
             protected void onChildChanged(ChangeEventListener.EventType type, int index, int oldIndex)
             {
-                switch (type) {
+                switch (type)
+                {
                     case ADDED:
                         notifyItemInserted(index);
                         updateFilter();
@@ -363,7 +471,7 @@ public class MeetupsListActivity extends AppCompatActivity
     // Checks if Meetups in the selected query exist
     public void checkForEmpty(Query query, MeetupAdapter adapter)
     {
-        if(query != null)
+        if (query != null)
         {
             query.addListenerForSingleValueEvent(new ValueEventListener()
             {
@@ -414,7 +522,7 @@ public class MeetupsListActivity extends AppCompatActivity
     // An observer on the RecyclerView to check if empty on changes
     public void adapterObserver(final FirebaseRecyclerAdapter fbAdapter, final MeetupAdapter meetupAdapter)
     {
-        if(fbAdapter != null)
+        if (fbAdapter != null)
         {
             mObserver = new RecyclerView.AdapterDataObserver()
             {
@@ -446,7 +554,7 @@ public class MeetupsListActivity extends AppCompatActivity
             };
 
             fbAdapter.registerAdapterDataObserver(mObserver);
-        } else if(meetupAdapter != null)
+        } else if (meetupAdapter != null)
         {
             mObserver = new RecyclerView.AdapterDataObserver()
             {
@@ -482,7 +590,6 @@ public class MeetupsListActivity extends AppCompatActivity
         }
     }
 
-
     public void populateMeetupViewHolder(final MeetupViewHolder viewHolder, final Meetup model, int position)
     {
         // Displaying the name
@@ -514,7 +621,7 @@ public class MeetupsListActivity extends AppCompatActivity
         });
 
         // Displaying the number of attendees
-        if( model.getUsers() != null)
+        if (model.getUsers() != null)
         {
             int attendees = model.getUsers().size();
             viewHolder.attendingField.setText(attendees + " attendees");
@@ -526,11 +633,11 @@ public class MeetupsListActivity extends AppCompatActivity
         // Getting status
         model.updateStatus();
         int status = model.gimmeStatus();
-        if(status == 0)
+        if (status == 0)
             viewHolder.statusField.setText("Upcoming");
-        else if(status == 1)
+        else if (status == 1)
             viewHolder.statusField.setText("Ongoing");
-        else if(status == 2)
+        else if (status == 2)
             viewHolder.statusField.setText("Expired");
         else
             viewHolder.statusField.setText("Deleted");
@@ -552,76 +659,143 @@ public class MeetupsListActivity extends AppCompatActivity
         });
     }
 
+    public void search(String searchText)
+    {
+        search = true;
+
+        searchList.clear();
+
+        if (!searchText.isEmpty())
+        {
+            // If not filter has been applied yet, needs original list
+            if (filter == 0)
+            {
+                filteredList.clear();
+
+                for (int i = 0; i < mAdapter.getItemCount(); i++)
+                {
+                    filteredList.add((Meetup) mAdapter.getItem(i));
+                }
+            }
+
+            searchText = searchText.toLowerCase();
+
+            for (Meetup meetup : filteredList)
+            {
+                if (meetup.getName().toLowerCase().contains(searchText))
+                {
+                    searchList.add(meetup);
+                }
+            }
+
+            MeetupAdapter searchAdapter = new MeetupAdapter(searchList);
+
+            checkForEmpty(null, searchAdapter);
+
+            mRecyclerView.setAdapter(searchAdapter);
+        } else
+        {
+            if (filter == 0)
+            {
+                mRecyclerView.setAdapter(mAdapter);
+            } else
+            {
+                mRecyclerView.setAdapter(filteredAdapter);
+            }
+        }
+    }
+
     public void updateFilter()
     {
-        if(filter == 1)
+        if (filter == 1)
         {
             // Distance filter
             filterDistance();
-        } else if(filter == 2)
+        } else if (filter == 2)
         {
             // Start date
             filterStart();
+        } else
+        {
+            mRecyclerView.setAdapter(mAdapter);
+        }
+
+        if (search = true)
+        {
+            search(searchBar.getText().toString());
         }
     }
 
     public void filterDistance()
     {
-        // Displaying the loading overlay
-        loadingOverlay.setVisibility(View.VISIBLE);
-        loadingText.setText("Filtering...");
-
-        filter = 1;
-
-        List<Meetup> newList = new ArrayList<>();
-
-        for(int i = 0; i < mAdapter.getItemCount(); i++)
+        if(mGoogleApiClient.isConnected())
         {
-            newList.add((Meetup) mAdapter.getItem(i));
+            getNewLocation();
         }
 
-        Collections.sort(newList, new Comparator<Meetup>()
+        if(userLoc != null)
         {
-            public int compare(Meetup m1, Meetup m2)
+            // Displaying the loading overlay
+            loadingOverlay.setVisibility(View.VISIBLE);
+            loadingText.setText("Filtering...");
+
+            filter = 1;
+
+            filteredList = new ArrayList<>();
+
+            for (int i = 0; i < mAdapter.getItemCount(); i++)
             {
-                if ( ContextCompat.checkSelfPermission( MeetupsListActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION ) != PackageManager.PERMISSION_GRANTED ) {
-
-                    ActivityCompat.requestPermissions( MeetupsListActivity.this, new String[] {  Manifest.permission.ACCESS_FINE_LOCATION  },
-                            MY_PERMISSION_ACCESS_COURSE_LOCATION );
-                }
-
-
-                Location userLoc = null;
-                LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                if (locationManager != null) {
-                    userLoc = locationManager
-                            .getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                }
-
-
-                Location meetupLoc1 = new Location("meetup1");
-                meetupLoc1.setLatitude(m1.getLatitude());
-                meetupLoc1.setLongitude(m1.getLongitude());
-
-                Location meetupLoc2 = new Location("meetup2");
-                meetupLoc2.setLatitude(m2.getLatitude());
-                meetupLoc2.setLongitude(m2.getLongitude());
-
-
-                double distance1 = userLoc.distanceTo(meetupLoc1);
-                double distance2 = userLoc.distanceTo(meetupLoc2);
-
-                if (distance1 < distance2) return -1;
-                if (distance1 > distance2) return 1;
-                return 0;
+                filteredList.add((Meetup) mAdapter.getItem(i));
             }
-        });
 
-        MeetupAdapter distance = new MeetupAdapter(newList);
+            Collections.sort(filteredList, new Comparator<Meetup>()
+            {
+                public int compare(Meetup m1, Meetup m2)
+                {
+                    Location meetupLoc1 = new Location("meetup1");
+                    meetupLoc1.setLatitude(m1.getLatitude());
+                    meetupLoc1.setLongitude(m1.getLongitude());
 
-        checkForEmpty(null, distance);
+                    Location meetupLoc2 = new Location("meetup2");
+                    meetupLoc2.setLatitude(m2.getLatitude());
+                    meetupLoc2.setLongitude(m2.getLongitude());
 
-        mRecyclerView.setAdapter(distance);
+                    double distance1 = userLoc.distanceTo(meetupLoc1);
+                    double distance2 = userLoc.distanceTo(meetupLoc2);
+
+                    if (distance1 < distance2) return -1;
+                    if (distance1 > distance2) return 1;
+                    return 0;
+
+                }
+            });
+
+            filteredAdapter = new MeetupAdapter(filteredList);
+
+            checkForEmpty(null, filteredAdapter);
+
+            if (search = true)
+            {
+                search(searchBar.getText().toString());
+            } else
+            {
+                mRecyclerView.setAdapter(filteredAdapter);
+            }
+        } else
+        {
+            new AlertDialog.Builder(MeetupsListActivity.this)
+                    .setTitle("No Location")
+                    .setMessage("Sorry we can't access your location right now, make sure you have Location turned on!")
+                    .setPositiveButton("Ok", new DialogInterface.OnClickListener()
+                    {
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+                            finish();
+                        }
+                    })
+                    .setCancelable(false)
+                    .show();
+        }
     }
 
     public void filterStart()
@@ -631,40 +805,104 @@ public class MeetupsListActivity extends AppCompatActivity
         loadingText.setText("Filtering...");
 
 
-        filter = 1;
+        filter = 2;
 
-        List<Meetup> newList = new ArrayList<>();
+        filteredList = new ArrayList<>();
 
-        for(int i = 0; i < mAdapter.getItemCount(); i++)
+        for (int i = 0; i < mAdapter.getItemCount(); i++)
         {
-            newList.add((Meetup) mAdapter.getItem(i));
+            filteredList.add((Meetup) mAdapter.getItem(i));
         }
 
 
-        for (Iterator<Meetup> iterator = newList.iterator(); iterator.hasNext();) {
+        for (Iterator<Meetup> iterator = filteredList.iterator(); iterator.hasNext(); )
+        {
             Meetup meetup = iterator.next();
-            if (meetup.gimmeStatus() ==  2)
+            if (meetup.gimmeStatus() == 2)
             {
                 // Remove the current element from the iterator and the list.
                 iterator.remove();
             }
         }
 
-        Collections.sort(newList, new Comparator<Meetup>()
+        Collections.sort(filteredList, new Comparator<Meetup>()
         {
             public int compare(Meetup m1, Meetup m2)
             {
-                if(m1.getStartDateTime() < m2.getStartDateTime()) return -1;
-                if(m1.getStartDateTime() > m2.getStartDateTime()) return 1;
+                if (m1.getStartDateTime() < m2.getStartDateTime()) return -1;
+                if (m1.getStartDateTime() > m2.getStartDateTime()) return 1;
                 return 0;
             }
         });
 
-        MeetupAdapter start = new MeetupAdapter(newList);
+        filteredAdapter = new MeetupAdapter(filteredList);
 
-        checkForEmpty(null, start);
+        checkForEmpty(null, filteredAdapter);
 
-        mRecyclerView.setAdapter(start);
+        if (search = true)
+        {
+            search(searchBar.getText().toString());
+        } else
+        {
+            mRecyclerView.setAdapter(filteredAdapter);
+        }
+    }
+
+    public void getNewLocation()
+    {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(MeetupsListActivity.this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
+        }
+
+
+        LocationServices.FusedLocationApi.requestLocationUpdates(
+                mGoogleApiClient, mLocationRequest, this);
+
+        userLoc = LocationServices.FusedLocationApi.getLastLocation(
+                mGoogleApiClient);
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle)
+    {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(MeetupsListActivity.this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
+        }
+
+        getNewLocation();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i)
+    {
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                getNewLocation();
+            } else { // if permission is not granted
+                finish();
+            }
+        }
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult)
+    {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location)
+    {
+
     }
 
     public static class MeetupViewHolder extends RecyclerView.ViewHolder
@@ -745,7 +983,7 @@ public class MeetupsListActivity extends AppCompatActivity
             });
 
             // Displaying the number of attendees
-            if( meetup.getUsers() != null)
+            if (meetup.getUsers() != null)
             {
                 int attendees = meetup.getUsers().size();
                 holder.attendingField.setText(attendees + " attendees");
@@ -757,11 +995,11 @@ public class MeetupsListActivity extends AppCompatActivity
             // Getting status
             meetup.updateStatus();
             int status = meetup.gimmeStatus();
-            if(status == 0)
+            if (status == 0)
                 holder.statusField.setText("Upcoming");
-            else if(status == 1)
+            else if (status == 1)
                 holder.statusField.setText("Ongoing");
-            else if(status == 2)
+            else if (status == 2)
                 holder.statusField.setText("Expired");
             else
                 holder.statusField.setText("Deleted");
