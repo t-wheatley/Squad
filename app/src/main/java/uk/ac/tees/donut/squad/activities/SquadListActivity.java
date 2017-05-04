@@ -5,11 +5,14 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.android.gms.vision.text.Text;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -30,7 +33,7 @@ public class SquadListActivity extends AppCompatActivity
     private DatabaseReference mDatabase;
 
     private RecyclerView mRecyclerView;
-    private LinearLayoutManager mLayoutManager;
+    private StaggeredGridLayoutManager mLayoutManager;
     private FirebaseRecyclerAdapter mAdapter;
     private RecyclerView.AdapterDataObserver mObserver;
 
@@ -83,7 +86,7 @@ public class SquadListActivity extends AppCompatActivity
         }
 
         // Setting up the layout manager
-        mLayoutManager = new LinearLayoutManager(this);
+        mLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // If came from 'View Squads' button on profile
@@ -108,7 +111,7 @@ public class SquadListActivity extends AppCompatActivity
 
         mAdapter = new FirebaseRecyclerAdapter<Squad, SquadViewHolder>(
                 Squad.class,
-                R.layout.item_three_text,
+                R.layout.item_squad,
                 SquadViewHolder.class,
                 allQuery
         )
@@ -131,7 +134,7 @@ public class SquadListActivity extends AppCompatActivity
 
         mAdapter = new FirebaseRecyclerAdapter<Squad, SquadViewHolder>(
                 Squad.class,
-                R.layout.item_three_text,
+                R.layout.item_squad,
                 SquadViewHolder.class,
                 userQuery
         )
@@ -212,6 +215,7 @@ public class SquadListActivity extends AppCompatActivity
     {
         viewHolder.nameField.setText(model.getName());
 
+
         String description = model.getDescription().replace("\n", "");
         String elipsis = "";
         if (description.length() > 54)
@@ -230,16 +234,21 @@ public class SquadListActivity extends AppCompatActivity
             // Checking if the user is already in the Squad
             if (users.containsKey(firebaseUser.getUid()))
             {
-                viewHolder.placeHolder.setText("✓");
+                viewHolder.joined.setText("✓");
             } else
             {
-                viewHolder.placeHolder.setText("×");
+                viewHolder.joined.setText("×");
             }
         }else
         {
-            viewHolder.placeHolder.setText("×");
+            viewHolder.joined.setText("×");
         }
 
+        //get member count
+        viewHolder.squadMembers.setText("#");
+
+        //get squad image
+        //stuff here for that
 
         viewHolder.mView.setOnClickListener(new View.OnClickListener()
         {
@@ -271,15 +280,19 @@ public class SquadListActivity extends AppCompatActivity
         View mView;
         TextView nameField;
         TextView descriptionfield;
-        TextView placeHolder;
+        TextView joined;
+        ImageView squadImage;
+        TextView squadMembers;
 
         public SquadViewHolder(View v)
         {
             super(v);
             mView = v;
-            nameField = (TextView) v.findViewById(R.id.text1);
-            descriptionfield = (TextView) v.findViewById(R.id.text2);
-            placeHolder = (TextView) v.findViewById(R.id.text3);
+            nameField = (TextView) v.findViewById(R.id.squadName);
+            descriptionfield = (TextView) v.findViewById(R.id.squadDescription);
+            joined = (TextView) v.findViewById(R.id.squadCheck);
+            squadImage = (ImageView) v.findViewById(R.id.squadImage);
+            squadMembers = (TextView) v.findViewById(R.id.squadMembers);
         }
     }
 }
