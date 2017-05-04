@@ -48,8 +48,10 @@ public class MeetupDetailActivity extends AppCompatActivity
     TextView nameDisplay;
     TextView squadDisplay;
     TextView hostDisplay;
+    TextView statusDisplay;
     TextView descriptionDisplay;
-    TextView dateDisplay;
+    TextView startDateDisplay;
+    TextView endDateDisplay;
     TextView attendingDisplay;
     TextView memberCountDisplay;
     ImageButton editName;
@@ -88,7 +90,9 @@ public class MeetupDetailActivity extends AppCompatActivity
         squadDisplay = (TextView) findViewById(R.id.meetupDetail_textEditSquad);
         hostDisplay = (TextView) findViewById(R.id.meetupDetail_textEditHost);
         descriptionDisplay = (TextView) findViewById(R.id.meetupDetail_textEditDescription);
-        dateDisplay = (TextView) findViewById(R.id.meetupDetail_textEditDateTime);
+        statusDisplay = (TextView) findViewById(R.id.meetupDetail_textStatus);
+        startDateDisplay = (TextView) findViewById(R.id.meetupDetail_startDate);
+        endDateDisplay = (TextView) findViewById(R.id.meetupId_endDate);
         attendeesGrid = (GridView) findViewById(R.id.meetupDetail_userGrid);
         attendBtn = (Button) findViewById(R.id.meetupDetail_attendBtn);
         deleteBtn = (Button) findViewById(R.id.meetupDetail_deleteBtn);
@@ -168,7 +172,20 @@ public class MeetupDetailActivity extends AppCompatActivity
                 SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy 'at' h:mm a");
                 String startDate = sdf.format(meetup.getStartDateTime() * 1000L);
                 String endDate = sdf.format(meetup.getEndDateTime() * 1000L);
-                dateDisplay.setText("Start: " + startDate + "\nEnd: " + endDate);
+
+                startDateDisplay.setText(startDate);
+                endDateDisplay.setText(endDate);
+
+                meetup.updateStatus();
+                int status = meetup.gimmeStatus();
+                if(status == 0)
+                    statusDisplay.setText("Upcoming");
+                else if(status == 1)
+                    statusDisplay.setText("Ongoing");
+                else if(status == 2)
+                    statusDisplay.setText("Expired");
+                else
+                    statusDisplay.setText("Deleted");
 
                 // If user is the host
                 if (firebaseUser.getUid().equals(meetup.getHost()))
