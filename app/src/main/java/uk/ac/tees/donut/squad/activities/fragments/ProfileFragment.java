@@ -1,28 +1,22 @@
-package uk.ac.q5081793tees.bottomnav;
+package uk.ac.tees.donut.squad.activities.fragments;
+
+/**
+ * Created by jlc-1 on 31/03/2017.
+ */
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-/**
- * Created by jlc-1 on 29/04/2017.
- */
+import uk.ac.tees.donut.squad.R;
 
-public class ProfileFragment extends Fragment {
-    @Nullable
+public class ProfileFragment extends Fragment
+{
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View profileView = inflater.inflate(R.layout.profile_fragment, container, false);
-        System.out.println("-------Inflated: Profile Fragment-------");
-        return profileView;
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
+        return inflater.inflate(R.layout.profile_fragment, container, false);
     }
 }
-

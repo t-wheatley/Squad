@@ -1,7 +1,8 @@
-package uk.ac.q5081793tees.bottomnav;
+package uk.ac.tees.donut.squad.activities.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +13,9 @@ import android.widget.Toast;
 /**
  * Created by jlc-1 on 02/05/2017.
  */
-public class ListFragment extends android.support.v4.app.ListFragment implements AdapterView.OnItemClickListener {
+
+public class ListFragment extends Fragment implements AdapterView.OnItemClickListener
+{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.list_fragment, container, false);
