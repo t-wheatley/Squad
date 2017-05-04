@@ -8,22 +8,18 @@ import android.os.ResultReceiver;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
-
-
 
 import uk.ac.tees.donut.squad.R;
 
 /**
  * Created by Anthony Ward
  */
-public class GeocoderActivity extends AppCompatActivity {
+public class GeocoderActivity extends AppCompatActivity
+{
 
     AddressResultReceiver mResultReceiver;
 
@@ -36,7 +32,8 @@ public class GeocoderActivity extends AppCompatActivity {
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_locating);
 
@@ -51,15 +48,15 @@ public class GeocoderActivity extends AppCompatActivity {
     }
 
 
-
-
-
-    public void onButtonClicked(View view) {
+    public void onButtonClicked(View view)
+    {
         Intent intent = new Intent(this, FetchAddressIntentService.class);
         intent.putExtra(LocContants.RECEIVER, mResultReceiver);
         intent.putExtra(LocContants.FETCH_TYPE_EXTRA, fetchType);
-        if(fetchType == LocContants.USE_ADDRESS_NAME) {
-            if(addressEdit.getText().length() == 0) {
+        if (fetchType == LocContants.USE_ADDRESS_NAME)
+        {
+            if (addressEdit.getText().length() == 0)
+            {
                 Toast.makeText(this, "Please enter an address name", Toast.LENGTH_LONG).show();
                 return;
             }
@@ -72,18 +69,24 @@ public class GeocoderActivity extends AppCompatActivity {
         startService(intent);
     }
 
-    public class AddressResultReceiver extends ResultReceiver {
-        public AddressResultReceiver(Handler handler) {
+    public class AddressResultReceiver extends ResultReceiver
+    {
+        public AddressResultReceiver(Handler handler)
+        {
             super(handler);
         }
 
         @Override
-        protected void onReceiveResult(int resultCode, final Bundle resultData) {
-            if (resultCode == LocContants.SUCCESS_RESULT) {
+        protected void onReceiveResult(int resultCode, final Bundle resultData)
+        {
+            if (resultCode == LocContants.SUCCESS_RESULT)
+            {
                 final Address address = resultData.getParcelable(LocContants.RESULT_ADDRESS);
-                runOnUiThread(new Runnable() {
+                runOnUiThread(new Runnable()
+                {
                     @Override
-                    public void run() {
+                    public void run()
+                    {
                         progressBar.setVisibility(View.GONE);
                         infoText.setVisibility(View.VISIBLE);
                         infoText.setText("Latitude: " + address.getLatitude() + "\n" +
@@ -92,11 +95,13 @@ public class GeocoderActivity extends AppCompatActivity {
 
                     }
                 });
-            }
-            else {
-                runOnUiThread(new Runnable() {
+            } else
+            {
+                runOnUiThread(new Runnable()
+                {
                     @Override
-                    public void run() {
+                    public void run()
+                    {
                         progressBar.setVisibility(View.GONE);
                         infoText.setVisibility(View.VISIBLE);
                         infoText.setText(resultData.getString(LocContants.RESULT_DATA_KEY));
