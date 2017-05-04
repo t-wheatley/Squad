@@ -443,7 +443,17 @@ public class NewPlaceActivity extends AppCompatActivity
 
                     }
                 });
-            }
+            } else{
+            runOnUiThread(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    loadingOverlay.setVisibility(View.INVISIBLE);
+                    Toast.makeText(NewPlaceActivity.this, "Invalid Address, please try again.", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
         }
     }
 }

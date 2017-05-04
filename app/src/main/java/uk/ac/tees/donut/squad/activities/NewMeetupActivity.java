@@ -498,10 +498,7 @@ public class NewMeetupActivity extends AppCompatActivity
                 .show();
     }
 
-    public void NoAddress(){
-        loadingOverlay.setVisibility(View.INVISIBLE);
-        Toast.makeText(NewMeetupActivity.this, "Something went wrong, please try again.", Toast.LENGTH_SHORT).show();
-    }
+
 
     //Inner Class to receive address for geocoder
     public class AddressResultReceiver extends ResultReceiver
@@ -527,12 +524,6 @@ public class NewMeetupActivity extends AppCompatActivity
                         latitude = address.getLatitude();
                         longitude = address.getLongitude();
 
-                        editAddress1.setText(address.getAddressLine(0));
-                        editAddress2.setText(address.getAddressLine(1));
-                        editAddressTC.setText(address.getAddressLine(2));
-                        editAddressC.setText(address.getAddressLine(3));
-                        editAddressPC.setText(address.getPostalCode());
-
                         geocodeAddress = resultData.getString(LocContants.RESULT_DATA_KEY);
 
                         CreateAlertDiolog();
@@ -540,7 +531,15 @@ public class NewMeetupActivity extends AppCompatActivity
                     }
                 });
             } else{
-                NoAddress();
+                runOnUiThread(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        loadingOverlay.setVisibility(View.INVISIBLE);
+                        Toast.makeText(NewMeetupActivity.this, "Invalid Address, please try again.", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         }
     }
