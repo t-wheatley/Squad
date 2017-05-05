@@ -21,6 +21,12 @@ public class LocPlace extends AddressPlace
         locLong = lo;
     }
 
+    public LocPlace(String pi, String n, String d, String s, String u, String add, double la, double lo){
+        super(pi,n,d,s,u,add);
+        locLat = la;
+        locLong = lo;
+    }
+
     //GETTERS
     public double getLocLat()
     {

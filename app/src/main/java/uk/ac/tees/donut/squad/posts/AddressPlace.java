@@ -1,6 +1,7 @@
 package uk.ac.tees.donut.squad.posts;
 
 
+
 /**
  * Created by q5273202 on 21/04/2017.
  */
@@ -12,6 +13,7 @@ public class AddressPlace extends Place
     public String townCity;
     public String county;
     public String postCode;
+    public String addressFull;
 
     public AddressPlace()
     {
@@ -27,6 +29,13 @@ public class AddressPlace extends Place
         county = c.trim();
         postCode = pc.trim().toUpperCase();
     }
+
+    public AddressPlace (String pi, String n, String d, String s, String u, String add){
+        super(pi,n,d,s,u);
+        addressFull = add;
+
+    }
+
 
     //GETTERS
     public String getAddress1()

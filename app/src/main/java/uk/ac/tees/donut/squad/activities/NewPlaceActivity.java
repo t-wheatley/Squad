@@ -267,7 +267,9 @@ public class NewPlaceActivity extends AppCompatActivity
 
             // Creating a place object
 
-            Place place = new LocPlace(placeId, n, d, s, user.getUid(), a1, a2, tc, c, pc, latitude, longitude);
+            //Place place = new LocPlace(placeId, n, d, s, user.getUid(), a1, a2, tc, c, pc, lat, lon);
+
+            Place place = new LocPlace(placeId, n, d, s, user.getUid(), geocodeAddress, lat, lon);
 
 
             // Pushing the meetup to the "meetups" node using the placeId
@@ -434,7 +436,6 @@ public class NewPlaceActivity extends AppCompatActivity
                         latitude = address.getLatitude();
                         longitude= address.getLongitude();
                         geocodeAddress = resultData.getString(LocContants.RESULT_DATA_KEY);
-
 
                         CreateAlertDiolog();
 
