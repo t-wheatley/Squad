@@ -99,7 +99,7 @@ public class SquadPostActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         // When pressed calls the submitPost method
                         if (sTxtbox != "") {
-                            //createPost();
+                            createPost();
                         }
                     }
                 });
