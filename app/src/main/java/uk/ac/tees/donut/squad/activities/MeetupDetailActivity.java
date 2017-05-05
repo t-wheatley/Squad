@@ -24,6 +24,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,8 +48,12 @@ public class MeetupDetailActivity extends AppCompatActivity
     TextView nameDisplay;
     TextView squadDisplay;
     TextView hostDisplay;
+    TextView statusDisplay;
     TextView descriptionDisplay;
+    TextView startDateDisplay;
+    TextView endDateDisplay;
     TextView attendingDisplay;
+    TextView memberCountDisplay;
     ImageButton editName;
     ImageButton editDesc;
     Button attendBtn;
@@ -65,8 +70,8 @@ public class MeetupDetailActivity extends AppCompatActivity
     List<String> userPics;
     List<String> userIds;
 
+    int secretCount;
     int memberCount;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -85,12 +90,16 @@ public class MeetupDetailActivity extends AppCompatActivity
         squadDisplay = (TextView) findViewById(R.id.meetupDetail_textEditSquad);
         hostDisplay = (TextView) findViewById(R.id.meetupDetail_textEditHost);
         descriptionDisplay = (TextView) findViewById(R.id.meetupDetail_textEditDescription);
+        statusDisplay = (TextView) findViewById(R.id.meetupDetail_textStatus);
+        startDateDisplay = (TextView) findViewById(R.id.meetupDetail_startDate);
+        endDateDisplay = (TextView) findViewById(R.id.meetupId_endDate);
         attendeesGrid = (GridView) findViewById(R.id.meetupDetail_userGrid);
         attendBtn = (Button) findViewById(R.id.meetupDetail_attendBtn);
         deleteBtn = (Button) findViewById(R.id.meetupDetail_deleteBtn);
         editName = (ImageButton) findViewById(R.id.meetupDetail_imageButtonEditName);
         editDesc = (ImageButton) findViewById(R.id.meetupDetail_imageButtonEditDescription);
         attendingDisplay = (TextView) findViewById(R.id.meetupDetail_textEditAttendees);
+        memberCountDisplay = (TextView) findViewById(R.id.meetupDetail_textViewAttendees);
 
         // Disabling the edit ImageButtons and delete Button
         editName.setEnabled(false);
@@ -137,6 +146,7 @@ public class MeetupDetailActivity extends AppCompatActivity
         // Defaults
         attending = false;
         attendBtn.setText("Attend Meetup");
+        secretCount = 0;
         memberCount = 0;
 
         // Starts the loading chain
@@ -158,6 +168,24 @@ public class MeetupDetailActivity extends AppCompatActivity
                 // Displays the found meetup's attributes
                 nameDisplay.setText(meetup.getName());
                 descriptionDisplay.setText(meetup.getDescription());
+
+                SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy 'at' h:mm a");
+                String startDate = sdf.format(meetup.getStartDateTime() * 1000L);
+                String endDate = sdf.format(meetup.getEndDateTime() * 1000L);
+
+                startDateDisplay.setText(startDate);
+                endDateDisplay.setText(endDate);
+
+                meetup.updateStatus();
+                int status = meetup.gimmeStatus();
+                if(status == 0)
+                    statusDisplay.setText("Upcoming");
+                else if(status == 1)
+                    statusDisplay.setText("Ongoing");
+                else if(status == 2)
+                    statusDisplay.setText("Expired");
+                else
+                    statusDisplay.setText("Deleted");
 
                 // If user is the host
                 if (firebaseUser.getUid().equals(meetup.getHost()))
@@ -284,15 +312,33 @@ public class MeetupDetailActivity extends AppCompatActivity
                     {
                         // Getting each member and adding their name to the memberList
                         FBUser user = dataSnapshot.getValue(FBUser.class);
-                        userNames.add(user.getName());
-                        userPics.add(user.getPicture());
-                        userIds.add(uId);
 
+                        // Checks if the user is not secret
+                        if(user.getSecret() == null || user.getSecret() == false)
+                        {
+                            userNames.add(user.getName());
+                            userPics.add(user.getPicture());
+                            userIds.add(uId);
+                        } else
+                        {
+                            secretCount++;
+                        }
 
                         memberCount++;
                         // If all members added
                         if (usersSize == memberCount)
                         {
+                            String memberString = "Members: " + memberCount;
+
+                            // If there is secret members
+                            if(secretCount != 0)
+                            {
+                                memberString = memberString + " (" + secretCount + " Secret)";
+                            }
+
+                            // Display the amount of members
+                            memberCountDisplay.setText(memberString);
+
                             // Display the members
                             UserGridViewAdapter gridAdapter = new UserGridViewAdapter(MeetupDetailActivity.this, userNames, userPics, userIds);
                             attendeesGrid.setAdapter(gridAdapter);
@@ -313,6 +359,7 @@ public class MeetupDetailActivity extends AppCompatActivity
         {
             // If the squad has no members
             attendingDisplay.setText("This Meetup has no one attending!");
+            memberCountDisplay.setText("Members: 0");
 
             // Hiding loading overlay
             loadingOverlay.setVisibility(View.GONE);

@@ -5,14 +5,13 @@
     android:padding="5dp"
     android:background="@color/colorPrimary"
     android:layout_margin="5dp"
-    android:elevation="5dp"
     >
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Loading Name..."
+        android:text="Text 1"
         android:layout_alignParentStart="true"
         android:id="@+id/text1"
         android:textColor="@color/tw__solid_white"
@@ -22,7 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Loading Squad..."
+        android:text="Text 3"
         android:layout_alignParentEnd="true"
         android:id="@+id/text3"
         android:layout_marginRight="5dp"
@@ -43,10 +42,34 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Loading Description..."
+            android:text="Text 2"
             android:id="@+id/text2"/>
 
     </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Text 4"
+        android:layout_marginLeft="5dp"
+        android:layout_below="@id/detailsLayout"
+        android:paddingTop="5dp"
+        android:textColor="@color/tw__solid_white"
+        android:id="@+id/text4"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Text 5"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/detailsLayout"
+        android:paddingTop="5dp"
+        android:id="@+id/text5"
+        android:layout_marginRight="5dp"
+        style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"
+        />
 
 
 </RelativeLayout>

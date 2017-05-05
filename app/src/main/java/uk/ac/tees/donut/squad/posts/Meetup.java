@@ -14,6 +14,12 @@ public class Meetup
     // Attendees
     HashMap<String, Boolean> users;
 
+    // DateTime
+    Long startDateTime, endDateTime;
+
+    // Chasing Status
+    int status; //0 = upcoming, 1 = ongoing, 2 = happened/expired, 3 = deleted (? so people who were originally in it are notified of its deletion ?)
+
     // Location
     Double longitude, latitude;
 
@@ -41,17 +47,23 @@ public class Meetup
     }
 
 
-    // Constructor with location
-    public Meetup(String i, String n, String d, String s, String h, double longi, double lat)
+    // Constructor with datetime and location
+    public Meetup(String i, String n, String d, String s, String h, long sd, long ed, double longi, double lat)
     {
         id = i;
         name = n;
         description = d;
         squad = s;
         host = h;
+        startDateTime = sd;
+        endDateTime = ed;
         longitude = longi;
         latitude = lat;
+
+        updateStatus();
     }
+
+
 
     // GETTERS
     public String getId()
@@ -84,6 +96,16 @@ public class Meetup
         return users;
     }
 
+    public Long getStartDateTime()
+    {
+        return startDateTime;
+    }
+
+    public Long getEndDateTime()
+    {
+        return endDateTime;
+    }
+
     public Double getLongitude()
     {
         return longitude;
@@ -92,6 +114,11 @@ public class Meetup
     public Double getLatitude()
     {
         return latitude;
+    }
+
+    public int gimmeStatus()    //not 'get' so doesn't get sent to firebase
+    {
+        return status;
     }
 
     // SETTERS
@@ -120,9 +147,19 @@ public class Meetup
         this.host = h;
     }
 
-    public void setAttendees(HashMap<String, Boolean> users)
+    public void setUsers(HashMap<String, Boolean> users)
     {
         this.users = users;
+    }
+
+    public void setStartDateTime(Long startDateTime)
+    {
+        this.startDateTime = startDateTime;
+    }
+
+    public void setEndDateTime(Long endDateTime)
+    {
+        this.endDateTime = endDateTime;
     }
 
     public void setLongitude(Double longitude)
@@ -133,5 +170,22 @@ public class Meetup
     public void setLatitude(Double latitude)
     {
         this.latitude = latitude;
+    }
+
+    public void changeStatus(int st)    //not 'set' so firebase api doesn't do anything with it
+    {
+        status = st;
+    }
+
+    //Updating Status
+    public void updateStatus()
+    {
+        Long current = System.currentTimeMillis() / 1000L;
+        if(current < getStartDateTime())
+            status = 0;
+        else if(current > getStartDateTime() && current < getEndDateTime())
+            status = 1;
+        else
+            status = 2;
     }
 }

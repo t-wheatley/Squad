@@ -99,7 +99,7 @@ public class SquadPostActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         // When pressed calls the submitPost method
                         if (sTxtbox != "") {
-                            createPost();
+                            //createPost();
                         }
                     }
                 });
@@ -123,7 +123,7 @@ public class SquadPostActivity extends AppCompatActivity {
     }
 
     // Takes a meetup and pushes it to the Firebase Realtime Database (Without extras)
-    public void createMeetup(String name, String desc, String squadId)
+    public void createPost(String name, String desc, String squadId)
     {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null)
@@ -133,7 +133,7 @@ public class SquadPostActivity extends AppCompatActivity {
             String meetupId = mDatabase.child("meetups").push().getKey();
 
             // Creating a meetup object
-            Meetup meetup = new Meetup(meetupId, name, desc, squadId, user.getUid(), longitude, latitude);
+            Meetup meetup = new Meetup(meetupId, name, desc, squadId, user.getUid());
 
             // Pushing the meetup to the "meetups" node using the meetupId
             mDatabase.child("meetups").child(meetupId).setValue(meetup);
@@ -142,9 +142,9 @@ public class SquadPostActivity extends AppCompatActivity {
             mDatabase.child("users").child(user.getUid()).child("hosting").child(meetupId).setValue(true);
 
             // Send user to their meetup on the MeetupDetailActivity activity
-            Intent intent = new Intent(NewMeetupActivity.this, MeetupDetailActivity.class);
+            /*Intent intent = new Intent(NewMeetupActivity.this, MeetupDetailActivity.class);
             intent.putExtra("meetupId", meetupId);
-            startActivity(intent);
+            startActivity(intent);*/
             finish();
 
         } else

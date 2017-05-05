@@ -42,6 +42,7 @@ public class SquadDetailActivity extends AppCompatActivity
 
     TextView nameDisplay;
     TextView descriptionDisplay;
+    TextView memberCountDisplay;
     TextView memberDisplay;
     String squadId;
 
@@ -51,6 +52,7 @@ public class SquadDetailActivity extends AppCompatActivity
     List<String> userPics;
     List<String> userIds;
 
+    int secretCount;
     int memberCount;
 
     Button joinBtn;
@@ -73,6 +75,7 @@ public class SquadDetailActivity extends AppCompatActivity
         descriptionDisplay = (TextView) findViewById(R.id.squadDetail_textEditDescription);
         memberDisplay = (TextView) findViewById(R.id.squadDetail_textEditMembers);
         membersGrid = (GridView) findViewById(R.id.squadDetail_userGrid);
+        memberCountDisplay = (TextView) findViewById(R.id.squadDetail_textViewMembers);
         joinBtn = (Button) findViewById(R.id.squadDetail_joinBtn);
 
         // Gets the extra passed from the last activity
@@ -109,6 +112,7 @@ public class SquadDetailActivity extends AppCompatActivity
         // Defaults
         member = false;
         joinBtn.setText("Join Squad");
+        secretCount = 0;
         memberCount = 0;
 
         // Starts the loading chain
@@ -184,15 +188,33 @@ public class SquadDetailActivity extends AppCompatActivity
                     {
                         // Getting each member and adding their name to the memberList
                         FBUser user = dataSnapshot.getValue(FBUser.class);
-                        userNames.add(user.getName());
-                        userPics.add(user.getPicture());
-                        userIds.add(uId);
 
+                        // Checks if the user is not secret
+                        if(user.getSecret() == null || user.getSecret() == false)
+                        {
+                            userNames.add(user.getName());
+                            userPics.add(user.getPicture());
+                            userIds.add(uId);
+                        } else
+                        {
+                            secretCount++;
+                        }
 
                         memberCount++;
                         // If all members added
                         if (usersSize == memberCount)
                         {
+                            String memberString = "Members: " + memberCount;
+
+                            // If there is secret members
+                            if(secretCount != 0)
+                            {
+                                memberString = memberString + " (" + secretCount + " Secret)";
+                            }
+
+                            // Display the amount of members
+                            memberCountDisplay.setText(memberString);
+
                             // Display the members
                             UserGridViewAdapter gridAdapter = new UserGridViewAdapter(SquadDetailActivity.this, userNames, userPics, userIds);
                             membersGrid.setAdapter(gridAdapter);

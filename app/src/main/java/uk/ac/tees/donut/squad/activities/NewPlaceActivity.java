@@ -66,6 +66,7 @@ public class NewPlaceActivity extends AppCompatActivity
     protected double latitude;
     protected double longitude;
     protected String addressFull;
+    protected String geocodeAddress;
 
 
     private EditText editName;
@@ -380,6 +381,41 @@ public class NewPlaceActivity extends AppCompatActivity
         }
     }
 
+    public void CreateAlertDiolog(){
+        new AlertDialog.Builder(NewPlaceActivity.this)
+                .setTitle("Confirm Address")
+                .setMessage("" + geocodeAddress + "\n" + "Is this the correct address?")
+                .setIcon(android.R.drawable.ic_dialog_info)
+                .setPositiveButton("Confirm Address", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i)
+                    {
+                        // Calls the createPlace method with the strings entered
+                        createPlace(name, description, squadId, a1, a2, tc, c, pc, longitude, latitude);
+                        finish();
+
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i){
+                        loadingOverlay.setVisibility(View.INVISIBLE);
+                        return;
+                    }
+                })
+                .setOnDismissListener(new DialogInterface.OnDismissListener(){
+
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        loadingOverlay.setVisibility(View.INVISIBLE);
+                        return;
+                    }
+                })
+                .create()
+                .show();
+    }
+
     //Inner Class to receive address for geocoder
     public class AddressResultReceiver extends ResultReceiver {
         public AddressResultReceiver(Handler handler) {
@@ -397,12 +433,23 @@ public class NewPlaceActivity extends AppCompatActivity
 
                         latitude = address.getLatitude();
                         longitude= address.getLongitude();
+                        geocodeAddress = resultData.getString(LocContants.RESULT_DATA_KEY);
 
 
-                        // Calls the createPlace method with the strings entered
-                        createPlace(name, description, squadId, a1, a2, tc, c, pc, longitude, latitude);
+                        CreateAlertDiolog();
 
 
+
+                    }
+                });
+            } else{
+                runOnUiThread(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        loadingOverlay.setVisibility(View.INVISIBLE);
+                        Toast.makeText(NewPlaceActivity.this, "Invalid Address, please try again.", Toast.LENGTH_SHORT).show();
                     }
                 });
             }

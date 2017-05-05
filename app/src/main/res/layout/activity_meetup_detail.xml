@@ -39,47 +39,76 @@
             android:id="@+id/meetupDetail_detailsLayout"
             android:layout_toRightOf="@+id/meetupDetail_picture"
             android:padding="5dp">
+
             <TextView
-                android:text="Name:"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
+                android:ems="10"
                 android:layout_alignParentStart="true"
-                android:id="@+id/meetupDetail_textViewName"
+                android:id="@+id/meetupDetail_textEditName"
+                android:layout_alignParentEnd="true"
+                android:textColor="@color/tw__solid_white"
                 style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"
+                android:text="Name"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:layout_below="@+id/meetupDetail_textEditName"
+                android:layout_alignParentStart="true"
+                android:id="@+id/meetupDetail_textEditSquad"
+                android:layout_alignParentEnd="true"
+                android:textColor="@color/tw__solid_white"
+                android:onClick="viewSquad"
+                android:text="Squad"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Status"
+                android:layout_below="@+id/meetupDetail_textEditSquad"
+                android:paddingTop="5dp"
+                style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"
+                android:id="@+id/meetupDetail_textStatus"
+                android:layout_centerHorizontal="true"
                 />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:ems="10"
-                android:layout_below="@+id/meetupDetail_textViewName"
-                android:layout_alignParentStart="true"
-                android:id="@+id/meetupDetail_textEditName"
-                android:layout_alignParentEnd="true"
-                android:textColor="@color/tw__solid_white"/>
-
-            <TextView
-                android:text="Squad:"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/meetupDetail_textEditName"
-                android:layout_alignParentStart="true"
-                android:id="@+id/meetupDetail_textViewSquad"
-                style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
+                android:layout_below="@+id/meetupDetail_textStatus"
+                android:text="St "
+                style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"
+                android:id="@+id/meetupDetail_start"
+                />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:ems="10"
-                android:layout_below="@+id/meetupDetail_textViewSquad"
-                android:layout_alignParentStart="true"
-                android:id="@+id/meetupDetail_textEditSquad"
-                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/meetupDetail_start"
+                android:text="En "
+                style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"
+                android:id="@+id/meetupDetail_end"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/meetupDetail_start"
+                android:layout_below="@id/meetupDetail_textStatus"
+                android:id="@+id/meetupDetail_startDate"
                 android:textColor="@color/tw__solid_white"
-                android:onClick="viewSquad"/>
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/meetupDetail_end"
+                android:layout_below="@id/meetupDetail_startDate"
+                android:id="@+id/meetupId_endDate"
+                android:textColor="@color/tw__solid_white"
+                />
 
             <ImageButton
                 android:layout_width="wrap_content"
@@ -104,7 +133,7 @@
             >
 
             <TextView
-                android:text="Description:"
+                android:text="Description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
