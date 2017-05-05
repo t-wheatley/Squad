@@ -8,17 +8,6 @@
     android:background="@color/cardview_dark_background">
 
     <!-- Dummy layout to prevent searchBar from receiving focus -->
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fillViewport="true"
-        >
-
     <LinearLayout
         android:focusable="true"
         android:focusableInTouchMode="true"
@@ -26,13 +15,12 @@
         android:layout_height="0px"/>
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:id="@+id/meetupsList_searchLayout"
         android:background="@color/colorPrimary"
-        android:layout_margin="5dp"
->
+        android:layout_margin="5dp">
 
         <EditText
             android:id="@+id/meetupsList_searchBar"
@@ -41,7 +29,7 @@
             android:layout_margin="5dp"
             android:ems="10"
             android:hint="Search Meetups..."
-            android:drawableStart="@drawable/ic_search"
+            android:drawableLeft="@drawable/ic_search"
             android:gravity="center" >
         </EditText>
     </LinearLayout>
@@ -52,7 +40,7 @@
         android:layout_centerHorizontal="true"
         android:id="@+id/meetupsList_filterLayout"
         android:background="@color/colorPrimary"
-        android:layout_marginBottom="5dp"
+        android:layout_margin="5dp"
         android:layout_below="@+id/meetupsList_searchLayout">
 
         <Button
@@ -101,7 +89,5 @@
 
     <!-- Loading overlay; -->
     <include layout="@layout/loading_overlay"/>
-    </RelativeLayout>
-    </ScrollView>
 
 </RelativeLayout>
