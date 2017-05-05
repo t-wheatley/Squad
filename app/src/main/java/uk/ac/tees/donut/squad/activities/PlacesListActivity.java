@@ -6,10 +6,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -22,7 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -70,12 +67,6 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
     String squadId;
     Boolean squad;
 
-    RelativeLayout searchMenu;
-    LinearLayout burgerMenu;
-    FloatingActionButton burgerButton;
-    //for whenever the burger menu is open or not
-    Boolean burger = false;
-
     List<LocPlace> searchList;
     List<LocPlace> filteredList;
     PlaceAdapter filteredAdapter;
@@ -114,11 +105,6 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
                 filterDistance();
             }
         });
-
-        searchMenu = (RelativeLayout) findViewById(R.id.placesList_searchLayout);
-        burgerMenu = (LinearLayout) findViewById(R.id.placesList_burgerMenu);
-        burgerButton = (FloatingActionButton) findViewById(R.id.placesList_fab);
-
         searchBar = (EditText) findViewById(R.id.placesList_searchBar);
         searchBar.addTextChangedListener(new TextWatcher()
         {
@@ -785,24 +771,6 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
         public int getItemCount()
         {
             return placeList.size();
-        }
-    }
-
-    public void fab(View view)
-    {
-        if(burger == false)
-        {
-            searchBar.setVisibility(View.INVISIBLE);
-            burgerMenu.setVisibility(View.VISIBLE);
-            burgerButton.setImageResource(R.drawable.ic_cross);
-            burger = true;
-        }
-        else
-        {
-            burgerMenu.setVisibility(View.GONE);
-            searchBar.setVisibility(View.VISIBLE);
-            burgerButton.setImageResource(R.drawable.ic_burger);
-            burger = false;
         }
     }
 
