@@ -57,6 +57,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     protected Location mLastLocation;
     private Marker mCurrLocationMarker;
     private GoogleMap mMap;
+    //Google directions API key
     private String directionAPIKey = "AIzaSyBPSyzwv_Lr4JyCgKRswRhBRebSi8htqt8";
     private LatLng currentLocation;
     private LatLng destination;
@@ -129,8 +130,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         if (currentLocation == null || destination == null)
         {
             Toast.makeText(this, "Invalid Destination", Toast.LENGTH_LONG).show();
-        } else
-        {
+        }
+        else {
+            //Generate Directions
             GoogleDirection.withServerKey(directionAPIKey)
                     .from(currentLocation)
                     .to(destination)

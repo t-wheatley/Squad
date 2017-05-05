@@ -21,6 +21,7 @@ public class LocPlace extends AddressPlace
         locLong = lo;
     }
 
+
     //GETTERS
     public double getLocLat()
     {
