@@ -7,27 +7,55 @@
     tools:context="uk.ac.tees.donut.squad.activities.PlacesListActivity"
     android:background="@color/cardview_dark_background">
 
+    <!-- Dummy layout to prevent searchBar from receiving focus -->
     <LinearLayout
-        android:layout_width="match_parent"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:layout_width="0px"
+        android:layout_height="0px"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/placesList_filterLayout">
+        android:layout_centerHorizontal="true"
+        android:id="@+id/placesList_searchLayout"
+        android:background="@color/colorPrimary"
+        android:layout_margin="5dp">
+
+        <EditText
+            android:id="@+id/placesList_searchBar"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_margin="5dp"
+            android:ems="10"
+            android:hint="Search Meetups..."
+            android:drawableLeft="@drawable/ic_search"
+            android:gravity="center" >
+        </EditText>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="5dp"
+        android:id="@+id/placesList_filterLayout"
+        android:background="@color/colorPrimary"
+        android:layout_below="@+id/placesList_searchLayout">
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="170dp"
             android:layout_height="wrap_content"
             android:text="Sort by Distance"
-            android:id="@+id/placesList_btnDistance"/>
+            android:id="@+id/placesList_btnDistance"
+            style="@style/Widget.AppCompat.Button.Colored"/>
 
     </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/placesList_filterLayout"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin">
+        android:layout_below="@+id/placesList_filterLayout">
 
         <TextView
             android:layout_width="wrap_content"
