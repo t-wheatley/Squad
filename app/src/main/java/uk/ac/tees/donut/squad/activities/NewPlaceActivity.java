@@ -245,15 +245,13 @@ public class NewPlaceActivity extends AppCompatActivity
         }
         geocode();
 
-
-
         // Disable button so there are no multi-posts
         setEditingEnabled(false);
 
 
         // Re-enables the editTexts and buttons and finishes the activity
         setEditingEnabled(true);
-
+        finish();
     }
 
     // Takes a meetup and pushes it to the Firebase Realtime Database (Without extras)
@@ -382,6 +380,7 @@ public class NewPlaceActivity extends AppCompatActivity
             return false;
         }
     }
+
     public void CreateAlertDiolog(){
         new AlertDialog.Builder(NewPlaceActivity.this)
                 .setTitle("Confirm Address")
@@ -444,16 +443,16 @@ public class NewPlaceActivity extends AppCompatActivity
                     }
                 });
             } else{
-            runOnUiThread(new Runnable()
-            {
-                @Override
-                public void run()
+                runOnUiThread(new Runnable()
                 {
-                    loadingOverlay.setVisibility(View.INVISIBLE);
-                    Toast.makeText(NewPlaceActivity.this, "Invalid Address, please try again.", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
+                    @Override
+                    public void run()
+                    {
+                        loadingOverlay.setVisibility(View.INVISIBLE);
+                        Toast.makeText(NewPlaceActivity.this, "Invalid Address, please try again.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
         }
     }
 }

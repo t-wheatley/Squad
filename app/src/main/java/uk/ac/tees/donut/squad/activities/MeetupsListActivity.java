@@ -1031,6 +1031,11 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
 
     }
 
+    public void fab()
+    {
+
+    }
+
 
 }
 
