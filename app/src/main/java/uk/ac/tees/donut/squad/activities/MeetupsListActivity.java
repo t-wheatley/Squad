@@ -8,6 +8,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -62,6 +64,14 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
     Boolean member;
     Boolean squad;
 
+    LinearLayout burgerMenu;
+    FloatingActionButton burgerButton;
+    //for whenever burger menu is open or not
+    boolean burger = false;
+
+    boolean past = false;
+    Button pastButton;
+
     RelativeLayout loadingOverlay;
     TextView loadingText;
     TextView listText;
@@ -95,6 +105,11 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
         loadingText.setText("Loading Meetups...");
         loadingOverlay.setVisibility(View.VISIBLE);
         loadingCount = 1;
+
+        burgerMenu = (LinearLayout) findViewById(R.id.meetupsList_burgerMenu);
+        burgerButton = (FloatingActionButton) findViewById(R.id.meetupsList_fab);
+
+        pastButton = (Button) findViewById(R.id.meetupsList_showPast);
 
         // Initialising RecyclerView
         mRecyclerView = (RecyclerView) findViewById(R.id.meetupsList_recyclerView);
@@ -602,6 +617,9 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
 
         String shortDesc = description.substring(0, Math.min(description.length(), 54)) + elipsis;
 
+        if(position == 1)
+            viewHolder.layout.setPadding(5, 15 , 5, 5);
+
         viewHolder.descriptionfield.setText(shortDesc);
 
         // Get Squad name from id
@@ -913,6 +931,8 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
         TextView squadField;
         TextView attendingField;
         TextView statusField;
+        RelativeLayout layout;
+
 
         public MeetupViewHolder(View v)
         {
@@ -923,6 +943,7 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
             squadField = (TextView) v.findViewById(R.id.text3);
             attendingField = (TextView) v.findViewById(R.id.text4);
             statusField = (TextView) v.findViewById(R.id.text5);
+            layout = (RelativeLayout) v.findViewById(R.id.layout);
 
             squadField.setText("loading...");
         }
@@ -1031,9 +1052,44 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
 
     }
 
-    public void fab()
+    public void fab(View view)
     {
+        if(burger == false)
+        {
+            searchBar.setVisibility(View.INVISIBLE);
+            burgerMenu.setVisibility(View.VISIBLE);
+            burgerButton.setImageResource(R.drawable.ic_cross);
+            burger = true;
+        }
+        else
+        {
+            burgerMenu.setVisibility(View.GONE);
+            searchBar.setVisibility(View.VISIBLE);
+            burgerButton.setImageResource(R.drawable.ic_burger);
+            burger = false;
+        }
+    }
 
+    public void createNew(View view)
+    {
+        Intent intent = new Intent(this, NewMeetupActivity.class);
+        startActivity(intent);
+    }
+
+    public void showPast(View view)
+    {
+        if(past == false)
+        {
+            past = true;
+            //actually change what is shown
+            pastButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_tick, 0);
+        }
+        else
+        {
+            past = false;
+            //actually change what is shown
+            pastButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_cross, 0);
+        }
     }
 
 
