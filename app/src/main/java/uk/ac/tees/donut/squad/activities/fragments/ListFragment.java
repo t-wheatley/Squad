@@ -10,6 +10,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import uk.ac.tees.donut.squad.R;
+
 /**
  * Created by jlc-1 on 02/05/2017.
  */

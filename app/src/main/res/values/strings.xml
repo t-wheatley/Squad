@@ -78,4 +78,15 @@
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="title_activity_map">Map</string>
     <string name="title_activity_place_maps">Map</string>
+    <string-array name="Planets">
+        <item>Sun</item>
+        <item>Mercury</item>
+        <item>Venus</item>
+        <item>Earth</item>
+        <item>Mars</item>
+        <item>Jupiter</item>
+        <item>Saturn</item>
+        <item>Uranus</item>
+        <item>Neptune</item>
+    </string-array>
 </resources>
