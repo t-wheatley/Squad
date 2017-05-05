@@ -30,11 +30,6 @@ public class AddressPlace extends Place
         postCode = pc.trim().toUpperCase();
     }
 
-    public AddressPlace (String pi, String n, String d, String s, String u, String add){
-        super(pi,n,d,s,u);
-        addressFull = add;
-
-    }
 
 
     //GETTERS
