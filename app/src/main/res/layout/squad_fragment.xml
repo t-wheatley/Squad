@@ -1,10 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark">
-    <TextView
-        android:layout_width="wrap_content"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.SearchView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Squad Fragment"/>
+        android:id="@+id/search_view">
+    </android.support.v7.widget.SearchView>
+
+    <!-- Layout for content is here. This can be a RelativeLayout  -->
+
+
+    <fragment
+        android:id="@+id/fragment1"
+        android:name="uk.ac.q5081793tees.bottomnav.Fragments.SquadListFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>

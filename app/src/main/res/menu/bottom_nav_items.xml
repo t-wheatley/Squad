@@ -1,20 +1,21 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    >
     <item
         android:id="@+id/menu_home"
-        android:title="home"
-        android:icon="@drawable/ic_home"
-        />
+        android:title="@string/menu_home"
+        android:icon="@drawable/ic_home" />
     <item
-        android:id="@+id/menu_meetup"
-        android:title="search"
-        android:icon="@drawable/ic_meetups"
-        />
+        android:id="@+id/menu_squads"
+        android:title="@string/menu_squads"
+        android:icon="@drawable/ic_squads" />
+
     <item
-    android:id="@+id/menu_squads"
-    android:title="squads"
-    android:icon="@drawable/ic_squads"/>
+        android:id="@+id/menu_meetups"
+        android:title="@string/menu_meetups"
+        android:icon="@drawable/ic_meetups" />
     <item
         android:id="@+id/menu_profile"
-        android:title="profile"
+        android:title="@string/menu_profile"
         android:icon="@drawable/ic_profile" />
 </menu>
