@@ -1,26 +1,35 @@
 package uk.ac.tees.donut.squad.activities;
 
 import android.Manifest;
-import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.firebase.ui.database.ChangeEventListener;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,8 +44,11 @@ import java.util.List;
 
 import uk.ac.tees.donut.squad.R;
 import uk.ac.tees.donut.squad.posts.LocPlace;
+import uk.ac.tees.donut.squad.posts.Meetup;
+import uk.ac.tees.donut.squad.posts.Place;
+import uk.ac.tees.donut.squad.squads.Squad;
 
-public class PlacesListActivity extends AppCompatActivity
+public class PlacesListActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener
 {
 
     private DatabaseReference mDatabase;
@@ -50,13 +62,23 @@ public class PlacesListActivity extends AppCompatActivity
     TextView loadingText;
     TextView listText;
     Button btnDistance;
+    EditText searchBar;
 
     String squadId;
     Boolean squad;
 
+    List<LocPlace> searchList;
+    List<LocPlace> filteredList;
+    PlaceAdapter filteredAdapter;
+    boolean search;
     int filter;
+
+    GoogleApiClient mGoogleApiClient;
+    LocationRequest mLocationRequest;
+    Location userLoc;
+    final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+
     int loadingCount;
-    int MY_PERMISSION_ACCESS_COURSE_LOCATION;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -83,9 +105,40 @@ public class PlacesListActivity extends AppCompatActivity
                 filterDistance();
             }
         });
+        searchBar = (EditText) findViewById(R.id.placesList_searchBar);
+        searchBar.addTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after)
+            {
 
-        filter = 0;
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count)
+            {
+                if (s.length() == 0)
+                {
+                    search = false;
+                    updateFilter();
+                } else
+                {
+                    search(searchBar.getText().toString());
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s)
+            {
+
+            }
+        });
+
         squad = false;
+
+        searchList = new ArrayList<LocPlace>();
+        filteredList = new ArrayList<LocPlace>();
+        filter = 0;
 
         // Gets the extra passed from the last activity
         Intent detail = getIntent();
@@ -119,7 +172,61 @@ public class PlacesListActivity extends AppCompatActivity
             getAll();
         }
 
+        buildGoogleApiClient();
+        mGoogleApiClient.connect();
+
+
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setPriority(102);
+        mLocationRequest.setInterval(5);
+
         mRecyclerView.setAdapter(mAdapter);
+    }
+
+    @Override
+    protected void onStart()
+    {
+        mGoogleApiClient.connect();
+        super.onStart();
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        mGoogleApiClient.disconnect();
+        super.onDestroy();
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onRestart()
+    {
+        super.onRestart();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onBackPressed() {
+        PlacesListActivity.this.finish();
+    }
+
+    public void buildGoogleApiClient()
+    {
+        // Create an instance of GoogleAPIClient.
+        if (mGoogleApiClient == null)
+        {
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
     }
 
     public void getAll()
@@ -147,7 +254,8 @@ public class PlacesListActivity extends AppCompatActivity
             @Override
             protected void onChildChanged(ChangeEventListener.EventType type, int index, int oldIndex)
             {
-                switch (type) {
+                switch (type)
+                {
                     case ADDED:
                         notifyItemInserted(index);
                         updateFilter();
@@ -196,7 +304,8 @@ public class PlacesListActivity extends AppCompatActivity
             @Override
             protected void onChildChanged(ChangeEventListener.EventType type, int index, int oldIndex)
             {
-                switch (type) {
+                switch (type)
+                {
                     case ADDED:
                         notifyItemInserted(index);
                         updateFilter();
@@ -223,7 +332,7 @@ public class PlacesListActivity extends AppCompatActivity
     // Checks if Places in the selected query exist
     public void checkForEmpty(Query query, PlaceAdapter adapter)
     {
-        if(query != null)
+        if (query != null)
         {
             query.addListenerForSingleValueEvent(new ValueEventListener()
             {
@@ -274,7 +383,7 @@ public class PlacesListActivity extends AppCompatActivity
     // An observer on the RecyclerView to check if empty on changes
     public void adapterObserver(final FirebaseRecyclerAdapter fbAdapter, final PlaceAdapter placeAdapter)
     {
-        if(fbAdapter != null)
+        if (fbAdapter != null)
         {
             mObserver = new RecyclerView.AdapterDataObserver()
             {
@@ -306,7 +415,7 @@ public class PlacesListActivity extends AppCompatActivity
             };
 
             fbAdapter.registerAdapterDataObserver(mObserver);
-        } else if(placeAdapter != null)
+        } else if (placeAdapter != null)
         {
             mObserver = new RecyclerView.AdapterDataObserver()
             {
@@ -388,72 +497,195 @@ public class PlacesListActivity extends AppCompatActivity
         loadingCount++;
     }
 
+    public void search(String searchText)
+    {
+        search = true;
+
+        searchList.clear();
+
+        if (!searchText.isEmpty())
+        {
+            // If not filter has been applied yet, needs original list
+            if (filter == 0)
+            {
+                filteredList.clear();
+
+                for (int i = 0; i < mAdapter.getItemCount(); i++)
+                {
+                    filteredList.add((LocPlace) mAdapter.getItem(i));
+                }
+            }
+
+            searchText = searchText.toLowerCase();
+
+            for (LocPlace place : filteredList)
+            {
+                if (place.getName().toLowerCase().contains(searchText))
+                {
+                    searchList.add(place);
+                }
+            }
+
+            PlaceAdapter searchAdapter = new PlaceAdapter(searchList);
+
+            checkForEmpty(null, searchAdapter);
+
+            mRecyclerView.setAdapter(searchAdapter);
+        } else
+        {
+            if (filter == 0)
+            {
+                mRecyclerView.setAdapter(mAdapter);
+            } else
+            {
+                mRecyclerView.setAdapter(filteredAdapter);
+            }
+        }
+    }
+
     public void updateFilter()
     {
-        if(filter == 1)
+        if (filter == 1)
         {
             // Distance filter
             filterDistance();
+        } else
+        {
+            mRecyclerView.setAdapter(mAdapter);
+        }
+
+        if (search = true)
+        {
+            search(searchBar.getText().toString());
         }
     }
 
     public void filterDistance()
     {
-        // Displaying the loading overlay
-        loadingOverlay.setVisibility(View.VISIBLE);
-        loadingText.setText("Filtering...");
-
-        filter = 1;
-
-        List<LocPlace> newList = new ArrayList<>();
-
-        for(int i = 0; i < mAdapter.getItemCount(); i++)
+        if (mGoogleApiClient.isConnected())
         {
-            newList.add((LocPlace) mAdapter.getItem(i));
+            getNewLocation();
         }
 
-        Collections.sort(newList, new Comparator<LocPlace>()
+        if (userLoc != null)
         {
-            public int compare(LocPlace p1, LocPlace p2)
+            // Displaying the loading overlay
+            loadingOverlay.setVisibility(View.VISIBLE);
+            loadingText.setText("Filtering...");
+
+            filter = 1;
+
+            filteredList = new ArrayList<>();
+
+            for (int i = 0; i < mAdapter.getItemCount(); i++)
             {
-                if ( ContextCompat.checkSelfPermission( PlacesListActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION ) != PackageManager.PERMISSION_GRANTED ) {
-
-                    ActivityCompat.requestPermissions( PlacesListActivity.this, new String[] {  Manifest.permission.ACCESS_FINE_LOCATION  },
-                            MY_PERMISSION_ACCESS_COURSE_LOCATION );
-                }
-
-
-                Location userLoc = null;
-                LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                if (locationManager != null) {
-                    userLoc = locationManager
-                            .getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                }
-
-
-                Location place1 = new Location("place1");
-                place1.setLatitude(p1.getLocLat());
-                place1.setLongitude(p1.getLocLong());
-
-                Location place2 = new Location("place2");
-                place2.setLatitude(p2.getLocLat());
-                place2.setLongitude(p2.getLocLong());
-
-
-                double distance1 = userLoc.distanceTo(place1);
-                double distance2 = userLoc.distanceTo(place2);
-
-                if (distance1 < distance2) return -1;
-                if (distance1 > distance2) return 1;
-                return 0;
+                filteredList.add((LocPlace) mAdapter.getItem(i));
             }
-        });
 
-        PlaceAdapter distance = new PlaceAdapter(newList);
+            Collections.sort(filteredList, new Comparator<LocPlace>()
+            {
+                public int compare(LocPlace p1, LocPlace p2)
+                {
+                    Location place1 = new Location("place1");
+                    place1.setLatitude(p1.getLocLat());
+                    place1.setLongitude(p1.getLocLong());
 
-        checkForEmpty(null, distance);
+                    Location place2 = new Location("place2");
+                    place2.setLatitude(p2.getLocLat());
+                    place2.setLongitude(p2.getLocLong());
 
-        mRecyclerView.setAdapter(distance);
+                    double distance1 = userLoc.distanceTo(place1);
+                    double distance2 = userLoc.distanceTo(place2);
+
+                    if (distance1 < distance2) return -1;
+                    if (distance1 > distance2) return 1;
+                    return 0;
+                }
+            });
+
+            filteredAdapter = new PlaceAdapter(filteredList);
+
+            checkForEmpty(null, filteredAdapter);
+
+            if (search = true)
+            {
+                search(searchBar.getText().toString());
+            } else
+            {
+                mRecyclerView.setAdapter(filteredAdapter);
+            }
+        } else
+        {
+            new AlertDialog.Builder(PlacesListActivity.this)
+                    .setTitle("No Location")
+                    .setMessage("Sorry we can't access your location right now, make sure you have Location turned on!")
+                    .setPositiveButton("Ok", new DialogInterface.OnClickListener()
+                    {
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+                            finish();
+                        }
+                    })
+                    .setCancelable(false)
+                    .show();
+        }
+    }
+
+    public void getNewLocation()
+    {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(PlacesListActivity.this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
+        }
+
+
+        LocationServices.FusedLocationApi.requestLocationUpdates(
+                mGoogleApiClient, mLocationRequest, this);
+
+        userLoc = LocationServices.FusedLocationApi.getLastLocation(
+                mGoogleApiClient);
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle)
+    {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(PlacesListActivity.this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
+        }
+
+        getNewLocation();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i)
+    {
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                getNewLocation();
+            } else { // if permission is not granted
+                finish();
+            }
+        }
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult)
+    {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location)
+    {
+
     }
 
     public static class PlaceViewHolder extends RecyclerView.ViewHolder
