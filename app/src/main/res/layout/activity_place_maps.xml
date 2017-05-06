@@ -4,13 +4,36 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/btn_request_direction"
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/squadDetail_picture"
+        android:background="@color/colorPrimary"
+        android:layout_marginRight="10dp"
+        android:padding="10dp"
+        >
+
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/btn_request_driving_direction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf ="@+id/btn_request_walking_direction"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:text="request_direction" />
+        android:text="Driving Direnctions" />
+
+    <Button
+        android:id="@+id/btn_request_walking_direction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf = "@+id/btn_request_driving_direction"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="Walking Directions" />
+
 
     <fragment
         android:layout_width="match_parent"
