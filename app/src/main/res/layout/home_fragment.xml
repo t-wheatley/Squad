@@ -42,7 +42,7 @@
 
     <fragment
         android:id="@+id/fragment1"
-        android:name="uk.ac.q5081793tees.bottomnav.Fragments.HomeListFragment"
+        android:name="uk.ac.tees.donut.squad.fragments.HomeListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

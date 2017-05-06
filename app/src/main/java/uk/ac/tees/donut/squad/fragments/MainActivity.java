@@ -1,4 +1,4 @@
-package uk.ac.q5081793tees.bottomnav.Fragments;
+package uk.ac.tees.donut.squad.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
@@ -12,7 +12,11 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import uk.ac.q5081793tees.bottomnav.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import uk.ac.tees.donut.squad.R;
+
 
 public class MainActivity extends AppCompatActivity {
     private static final String SELECTED_ITEM = "arg_selected_item";
@@ -121,7 +125,4 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private int getColorFromRes(@ColorRes int resId) {
-        return ContextCompat.getColor(this, resId);
-    }
 }

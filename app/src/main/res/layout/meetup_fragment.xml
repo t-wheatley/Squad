@@ -5,7 +5,7 @@ android:id="@+id/meetup_fragment"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
     android:background="@color/colorPrimary"
-tools:context="uk.ac.q5081793tees.bottomnav.Fragments.MainActivity">
+tools:context=".fragments.MainActivity">
 
 <RelativeLayout
     android:layout_width="match_parent"

@@ -1,4 +1,4 @@
-package uk.ac.q5081793tees.bottomnav.Fragments;
+package uk.ac.tees.donut.squad.fragments;
 
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -8,7 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import uk.ac.q5081793tees.bottomnav.R;
+import uk.ac.tees.donut.squad.R;
+
 
 public class MeetupFragment extends Fragment {
     @Nullable

@@ -1,4 +1,4 @@
-package uk.ac.q5081793tees.bottomnav.Fragments;
+package uk.ac.tees.donut.squad.fragments;
 
 /**
  * Created by jlc-1 on 29/04/2017.
@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import uk.ac.q5081793tees.bottomnav.R;
+import uk.ac.tees.donut.squad.R;
 
 public class MenuFragment extends Fragment{
     private static final String ARG_TEXT = "arg_text";

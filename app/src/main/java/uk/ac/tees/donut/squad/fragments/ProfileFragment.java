@@ -1,4 +1,4 @@
-package uk.ac.q5081793tees.bottomnav.Fragments;
+package uk.ac.tees.donut.squad.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import uk.ac.q5081793tees.bottomnav.R;
+import uk.ac.tees.donut.squad.R;
 
 /**
  * Created by jlc-1 on 29/04/2017.
