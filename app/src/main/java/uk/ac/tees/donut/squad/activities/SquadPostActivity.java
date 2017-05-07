@@ -6,10 +6,13 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.MultiAutoCompleteTextView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -18,28 +21,29 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import uk.ac.tees.donut.squad.R;
-import uk.ac.tees.donut.squad.posts.Meetup;
+import uk.ac.tees.donut.squad.posts.Post;
 
 public class SquadPostActivity extends AppCompatActivity {
 
     private Button btnPost;
+    private RecyclerView mRecyclerView;
     private static final String TAG = "Auth";
-    private MultiAutoCompleteTextView Txtbox;
+    private EditText Txtbox;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private String squadId;
+    private String post;
     private FirebaseUser firebaseUser;
     private DatabaseReference mDatabase;
-    private String sTxtbox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_squad_post);
 
-        Txtbox = (MultiAutoCompleteTextView) findViewById(R.id.txtboxPost);
+        Txtbox = (EditText) findViewById(R.id.txtboxPost);
         btnPost = (Button) findViewById(R.id.btnPost);
-        sTxtbox = Txtbox.getText().toString();
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
         // Getting the reference for the Firebase Realtime Database
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -97,12 +101,18 @@ public class SquadPostActivity extends AppCompatActivity {
                 btnPost.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // When pressed calls the submitPost method
-                        if (sTxtbox != "") {
-                            createPost();
+                        // When pressed calls the createPost method
+                        if (Txtbox.getText().toString() != "") {
+                            post=Txtbox.getText().toString();
+                            createPost(post, squadId);
                         }
                     }
                 });
+
+        if (mRecyclerView != null)
+        {
+            mRecyclerView.setHasFixedSize(true);
+        }
     }
 
     @Override
@@ -122,31 +132,24 @@ public class SquadPostActivity extends AppCompatActivity {
         }
     }
 
-    // Takes a meetup and pushes it to the Firebase Realtime Database (Without extras)
-    public void createPost(String name, String desc, String squadId)
+    // Takes a post and pushes it to the Firebase Realtime Database (Without extras)
+    public void createPost(String post, String squadId)
     {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null)
         {
             // User is signed in
-            // Creating a new meetup node and getting the key value
-            String meetupId = mDatabase.child("meetups").push().getKey();
+            // Creating a new post node and getting the key value
+            String postId = mDatabase.child("posts").push().getKey();
 
-            // Creating a meetup object
-            Meetup meetup = new Meetup(meetupId, name, desc, squadId, user.getUid());
+            // Creating a post object
+            Post postObject = new Post(user.getUid(), squadId, post, postId);
 
-            // Pushing the meetup to the "meetups" node using the meetupId
-            mDatabase.child("meetups").child(meetupId).setValue(meetup);
+            // Pushing the post to the "posts" node using the postId
+            mDatabase.child("posts").child(postId).setValue(postObject);
 
-            // Adding the Meetup to the user's hosted
-            mDatabase.child("users").child(user.getUid()).child("hosting").child(meetupId).setValue(true);
-
-            // Send user to their meetup on the MeetupDetailActivity activity
-            /*Intent intent = new Intent(NewMeetupActivity.this, MeetupDetailActivity.class);
-            intent.putExtra("meetupId", meetupId);
-            startActivity(intent);*/
             finish();
-
+            startActivity(getIntent());
         } else
         {
             // No user is signed in

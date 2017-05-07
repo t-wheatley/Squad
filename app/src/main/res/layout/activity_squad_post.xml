@@ -33,15 +33,25 @@
                     android:layout_below="@+id/txtboxPost"
                     android:layout_alignParentStart="true" />
 
-                <MultiAutoCompleteTextView
+                <EditText
                     android:layout_width="wrap_content"
                     android:layout_height="100dp"
+                    android:inputType="textMultiLine"
                     android:id="@+id/txtboxPost"
                     android:hint="Writing something here"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentEnd="true" />
+
             </RelativeLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="vertical"
+                android:id="@+id/recyclerView">
+
+            </android.support.v7.widget.RecyclerView>
 
         </LinearLayout>
     </ScrollView>
