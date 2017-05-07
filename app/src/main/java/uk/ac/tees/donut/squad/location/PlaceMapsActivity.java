@@ -22,8 +22,13 @@ import android.widget.Toast;
 
 import com.akexorcist.googledirection.DirectionCallback;
 import com.akexorcist.googledirection.GoogleDirection;
+import com.akexorcist.googledirection.constant.TransitMode;
 import com.akexorcist.googledirection.constant.TransportMode;
+import com.akexorcist.googledirection.constant.Unit;
 import com.akexorcist.googledirection.model.Direction;
+import com.akexorcist.googledirection.model.Info;
+import com.akexorcist.googledirection.model.Leg;
+import com.akexorcist.googledirection.model.Route;
 import com.akexorcist.googledirection.util.DirectionConverter;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.common.ConnectionResult;
@@ -63,7 +68,8 @@ public class PlaceMapsActivity extends AppCompatActivity implements OnMapReadyCa
     //GOOGLE MAP API V2
 
     private SupportMapFragment mapFrag;
-    private Button btnRequest;
+    private Button btnRequestDriving;
+    private Button btnRequestWalking;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     protected Location mLastLocation;
@@ -83,8 +89,11 @@ public class PlaceMapsActivity extends AppCompatActivity implements OnMapReadyCa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_maps);
 
-        btnRequest = (Button) findViewById(R.id.btn_request_direction);
-        btnRequest.setOnClickListener(this);
+        btnRequestDriving = (Button) findViewById(R.id.btn_request_driving_direction);
+        btnRequestDriving.setOnClickListener(this);
+
+        btnRequestWalking = (Button) findViewById(R.id.btn_request_walking_direction);
+        btnRequestWalking.setOnClickListener(this);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         mapFrag = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -161,6 +170,9 @@ public class PlaceMapsActivity extends AppCompatActivity implements OnMapReadyCa
 
         mMap.addMarker(new MarkerOptions().position(destination).snippet(placeDetails).title(placeName));
 
+        //move map camera
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(destination,11));
+
 
 
     }
@@ -169,20 +181,30 @@ public class PlaceMapsActivity extends AppCompatActivity implements OnMapReadyCa
 
     public void onClick(View v){
         int id = v.getId();
-        if (id == R.id.btn_request_direction){
-            requestDirection();
+        if (id == R.id.btn_request_driving_direction){
+            requestDirection(true);
+        } else {
+            requestDirection(false);
         }
     }
 
-    public void requestDirection(){
+    public void requestDirection(Boolean m){
         if (currentLocation == null || destination == null){
             Toast.makeText(this, "Invalid Destination", Toast.LENGTH_LONG).show();
         }
-        else {
+        else if (m = true) {
             GoogleDirection.withServerKey(directionAPIKey)
                     .from(currentLocation)
                     .to(destination)
                     .transportMode(TransportMode.DRIVING)
+                    .unit(Unit.METRIC)
+                    .execute(this);
+        } else{
+            GoogleDirection.withServerKey(directionAPIKey)
+                    .from(currentLocation)
+                    .to(destination)
+                    .transportMode(TransportMode.WALKING)
+                    .unit(Unit.IMPERIAL)
                     .execute(this);
         }
     }
@@ -253,8 +275,7 @@ public class PlaceMapsActivity extends AppCompatActivity implements OnMapReadyCa
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
         mCurrLocationMarker = mMap.addMarker(markerOptions);
 
-        //move map camera
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,11));
+
 
         //optionally, stop location updates if only current location is needed
         if (mGoogleApiClient != null) {
@@ -334,9 +355,20 @@ public class PlaceMapsActivity extends AppCompatActivity implements OnMapReadyCa
     public void onDirectionSuccess(Direction direction, String rawBody) {
         if (direction.isOK()) {
             ArrayList<LatLng> directionPositionList = direction.getRouteList().get(0).getLegList().get(0).getDirectionPoint();
+
+            Route route = direction.getRouteList().get(0);
+            Leg leg = route.getLegList().get(0);
+
+            Info distanceInfo = leg.getDistance();
+            Info durationInfo = leg.getDuration();
+            String distance = distanceInfo.getText();
+            String duration = durationInfo.getText();
+
+            Toast.makeText(this, distance + duration, Toast.LENGTH_LONG).show();
+
             mMap.addPolyline(DirectionConverter.createPolyline(this, directionPositionList, 5, Color.RED));
 
-            btnRequest.setVisibility(View.GONE);
+           // btnRequestDriving.setVisibility(View.GONE);
         }
     }
 
