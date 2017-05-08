@@ -1,4 +1,3 @@
-
 package uk.ac.tees.donut.squad.activities;
 
 import android.content.DialogInterface;
@@ -67,7 +66,6 @@ public class NewPlaceActivity extends AppCompatActivity
     protected double longitude;
     protected String addressFull;
     protected String geocodeAddress;
-    private AlertDialog alertDialog;
 
 
     private EditText editName;
@@ -252,12 +250,11 @@ public class NewPlaceActivity extends AppCompatActivity
 
         // Re-enables the editTexts and buttons and finishes the activity
         setEditingEnabled(true);
-        finish();
     }
 
     // Takes a meetup and pushes it to the Firebase Realtime Database (Without extras)
 
-    public void createPlace(String n, String d, String s, String a1, String a2, String tc, String c, String pc, Double lat, Double lon){
+    public void createPlace(String n, String d, String s, String a1, String a2, String tc, String c, String pc, Double lat, Double lon, String fullAddy){
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null)
@@ -268,7 +265,7 @@ public class NewPlaceActivity extends AppCompatActivity
 
             // Creating a place object
 
-            Place place = new LocPlace(placeId, n, d, s, user.getUid(), a1, a2, tc, c, pc, latitude, longitude);
+            Place place = new LocPlace(placeId, n, d, s, user.getUid(), a1, a2, tc, c, pc, lon, lat);
 
 
             // Pushing the meetup to the "meetups" node using the placeId
@@ -382,28 +379,40 @@ public class NewPlaceActivity extends AppCompatActivity
         }
     }
 
-    public void AlertDiolog(){
+    public void CreateAlertDialog(){
         new AlertDialog.Builder(NewPlaceActivity.this)
                 .setTitle("Confirm Address")
-                .setMessage("" + geocodeAddress + "\n" + "is this the correct Address")
+                .setMessage("" + geocodeAddress + "\n" + "Is this the correct address?")
+                .setIcon(android.R.drawable.ic_dialog_info)
                 .setPositiveButton("Confirm Address", new DialogInterface.OnClickListener()
                 {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i)
                     {
                         // Calls the createPlace method with the strings entered
-                        createPlace(name, description, squadId, a1, a2, tc, c, pc, longitude, latitude);
+                        createPlace(name, description, squadId, a1, a2, tc, c, pc, longitude, latitude, geocodeAddress);
+                        finish();
 
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i){
+                        loadingOverlay.setVisibility(View.INVISIBLE);
+                        return;
+                    }
+                })
+                .setOnDismissListener(new DialogInterface.OnDismissListener(){
+
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        loadingOverlay.setVisibility(View.INVISIBLE);
                         return;
                     }
                 })
                 .create()
                 .show();
+
     }
 
     //Inner Class to receive address for geocoder
@@ -425,10 +434,55 @@ public class NewPlaceActivity extends AppCompatActivity
                         longitude= address.getLongitude();
                         geocodeAddress = resultData.getString(LocContants.RESULT_DATA_KEY);
 
-                        AlertDiolog();
+                        int addressLength = address.getMaxAddressLineIndex();
+
+
+                        switch (addressLength){
+
+                            default: a1 = address.getAddressLine(0);
+                                break;
+                            case 1: a1 = address.getAddressLine(0);
+                                break;
+                            case 2: a1 = address.getAddressLine(0);
+                                a2 = address.getAddressLine(1);
+                                break;
+                            case 3: a1 = address.getAddressLine(0);
+                                a2 = address.getAddressLine(1);
+                                pc = address.getAddressLine(2);
+                                break;
+                            case 4: a1 = address.getAddressLine(0);
+                                a2 = address.getAddressLine(1);
+                                tc = address.getAddressLine(2);
+                                pc = address.getAddressLine(3);
+                                break;
+                            case 5: a1 = address.getAddressLine(0);
+                                a2 = address.getAddressLine(1);
+                                tc = address.getAddressLine(2);
+                                c = address.getAddressLine(3);
+                                pc = address.getAddressLine(4);
+                                break;
+                            case 6:  a1 = address.getAddressLine(0);
+                                a2 = address.getAddressLine(1) + " " + address.getAddressLine(2);
+                                tc = address.getAddressLine(4);
+                                c = address.getAddressLine(3);
+                                pc = address.getAddressLine(5);
+                                break;
+                        }
+
+                        CreateAlertDialog();
 
 
 
+                    }
+                });
+            } else{
+                runOnUiThread(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        loadingOverlay.setVisibility(View.INVISIBLE);
+                        Toast.makeText(NewPlaceActivity.this, "Invalid Address, please try again.", Toast.LENGTH_SHORT).show();
                     }
                 });
             }

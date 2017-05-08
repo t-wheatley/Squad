@@ -2,15 +2,54 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/cardview_dark_background">
 
-    <Button
-        android:id="@+id/btn_request_direction"
+<RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+        <RelativeLayout
+            android:id= "@+id/btn_request_driving_direction_box"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:padding="5dp">
+
+            <Button
+                android:text="Driving Directions"
+                android:layout_width="170dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_request_driving_direction"
+                style="@style/Widget.AppCompat.Button.Colored"/>
+
+
+        </RelativeLayout>
+
+    <RelativeLayout
+        android:id= "@+id/btn_request_walking_direction_box"
+        android:layout_toRightOf="@+id/btn_request_driving_direction_box"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:text="request_direction" />
+        android:background="@color/colorPrimary"
+        android:padding="5dp">
+
+        <Button
+            android:text="Walking Directions"
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_request_walking_direction"
+            style="@style/Widget.AppCompat.Button.Colored"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>
 
     <fragment
         android:layout_width="match_parent"
