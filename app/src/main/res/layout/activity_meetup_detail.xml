@@ -23,12 +23,23 @@
             android:id="@+id/meetupDetail_picture"
             android:background="@color/colorPrimary"
             android:layout_marginRight="10dp"
-            android:padding="10dp"
-            >
+            android:padding="10dp">
 
             <ImageView
+                android:id="@+id/meetupDetail_ImageView"
                 android:layout_width="90dp"
-                android:layout_height="90dp" />
+                android:layout_height="90dp"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/ic_add_a_photo_white_24px"
+                android:visibility="invisible"/>
+
+            <ProgressBar
+                android:id="@+id/meetupDetail_imageProgress"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:visibility="gone"/>
 
         </RelativeLayout>
 
