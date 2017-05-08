@@ -3,58 +3,42 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/cardview_dark_background">
+    android:background="@color/cardview_dark_background"
+    android:weightSum="1">
 
-<RelativeLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
-        <RelativeLayout
-            android:id= "@+id/btn_request_driving_direction_box"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginLeft="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            android:padding="5dp">
-
-            <Button
-                android:text="Driving Directions"
-                android:layout_width="170dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/btn_request_driving_direction"
-                style="@style/Widget.AppCompat.Button.Colored"/>
-
-
-        </RelativeLayout>
-
-    <RelativeLayout
-        android:id= "@+id/btn_request_walking_direction_box"
-        android:layout_toRightOf="@+id/btn_request_driving_direction_box"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:padding="5dp">
-
-        <Button
-            android:text="Walking Directions"
-            android:layout_width="170dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/btn_request_walking_direction"
-            style="@style/Widget.AppCompat.Button.Colored"/>
-
-    </RelativeLayout>
-
-</RelativeLayout>
 
     <fragment
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="377dp"
         android:id="@+id/map"
         tools:context=".location.MapActivity"
-        android:name="com.google.android.gms.maps.SupportMapFragment" />
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_weight="0.91" />
+
+    <TextView
+        android:text=""
+        android:padding="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_alignParentStart="true"
+        android:background="@color/colorPrimary"
+        android:id="@+id/textDistance"
+        style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
+
+    <TextView
+        android:text=""
+        android:padding="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_alignParentStart="true"
+        android:background="@color/colorPrimary"
+        android:id="@+id/textDuration"
+        style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
+
 </LinearLayout>

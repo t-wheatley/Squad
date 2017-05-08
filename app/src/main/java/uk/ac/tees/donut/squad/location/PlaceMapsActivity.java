@@ -18,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.akexorcist.googledirection.DirectionCallback;
@@ -55,8 +56,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 import uk.ac.tees.donut.squad.R;
-import uk.ac.tees.donut.squad.activities.PlaceDetailsActivity;
-import uk.ac.tees.donut.squad.posts.LocPlace;
 
 /**
  * Created by Anthony Ward
@@ -70,6 +69,8 @@ public class PlaceMapsActivity extends AppCompatActivity implements OnMapReadyCa
     private SupportMapFragment mapFrag;
     private Button btnRequestDriving;
     private Button btnRequestWalking;
+    private TextView showDistance;
+    private TextView showDuration;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     protected Location mLastLocation;
@@ -89,11 +90,11 @@ public class PlaceMapsActivity extends AppCompatActivity implements OnMapReadyCa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_maps);
 
-        btnRequestDriving = (Button) findViewById(R.id.btn_request_driving_direction);
-        btnRequestDriving.setOnClickListener(this);
+        showDistance = (TextView) findViewById(R.id.textDistance);
+        showDistance.setVisibility(View.INVISIBLE);
 
-        btnRequestWalking = (Button) findViewById(R.id.btn_request_walking_direction);
-        btnRequestWalking.setOnClickListener(this);
+        showDuration = (TextView) findViewById(R.id.textDuration);
+        showDuration.setVisibility(View.INVISIBLE);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         mapFrag = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -163,15 +164,15 @@ public class PlaceMapsActivity extends AppCompatActivity implements OnMapReadyCa
             mMap.setMyLocationEnabled(true);
         }
 
-
         // Add a marker at home
         LatLng Home = new LatLng(54.6993131, -1.5103871);
         setDestination(latitude, longitude);
 
+
         mMap.addMarker(new MarkerOptions().position(destination).snippet(placeDetails).title(placeName));
 
         //move map camera
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(destination,11));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(destination,13));
 
 
 
@@ -181,11 +182,6 @@ public class PlaceMapsActivity extends AppCompatActivity implements OnMapReadyCa
 
     public void onClick(View v){
         int id = v.getId();
-        if (id == R.id.btn_request_driving_direction){
-            requestDirection(true);
-        } else {
-            requestDirection(false);
-        }
     }
 
     public void requestDirection(Boolean m){
@@ -274,6 +270,18 @@ public class PlaceMapsActivity extends AppCompatActivity implements OnMapReadyCa
         markerOptions.title("Current Position");
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
         mCurrLocationMarker = mMap.addMarker(markerOptions);
+
+        if (currentLocation == null || destination == null){
+            Toast.makeText(this, "Invalid Destination", Toast.LENGTH_LONG).show();
+        }
+        else {
+            GoogleDirection.withServerKey(directionAPIKey)
+                    .from(currentLocation)
+                    .to(destination)
+                    .transportMode(TransportMode.DRIVING)
+                    .unit(Unit.METRIC)
+                    .execute(this);
+        }
 
 
 
@@ -364,7 +372,11 @@ public class PlaceMapsActivity extends AppCompatActivity implements OnMapReadyCa
             String distance = distanceInfo.getText();
             String duration = durationInfo.getText();
 
-            Toast.makeText(this, distance + duration, Toast.LENGTH_LONG).show();
+            showDistance.setText("Distance: " + distance);
+            showDuration.setText("Duration: " + duration);
+
+            showDistance.setVisibility(View.VISIBLE);
+            showDuration.setVisibility(View.VISIBLE);
 
             mMap.addPolyline(DirectionConverter.createPolyline(this, directionPositionList, 5, Color.RED));
 
