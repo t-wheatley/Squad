@@ -81,6 +81,7 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
 
     List<Meetup> searchList;
     List<Meetup> filteredList;
+    List<Meetup> filteredListExpired;
     MeetupAdapter filteredAdapter;
     boolean search;
     int filter;
@@ -165,6 +166,7 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
         host = false;
         squad = false;
         search = false;
+        past = true;
         filter = 0;
 
         searchList = new ArrayList<Meetup>();
@@ -266,7 +268,8 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
     }
 
     @Override
-    public void onBackPressed() {
+    public void onBackPressed()
+    {
         MeetupsListActivity.this.finish();
     }
 
@@ -301,6 +304,7 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
             @Override
             protected void populateViewHolder(final MeetupViewHolder viewHolder, final Meetup model, int position)
             {
+                model.updateStatus();
                 populateMeetupViewHolder(viewHolder, model, position);
             }
 
@@ -351,6 +355,7 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
             @Override
             protected void populateViewHolder(final MeetupViewHolder viewHolder, final Meetup model, int position)
             {
+                model.updateStatus();
                 populateMeetupViewHolder(viewHolder, model, position);
             }
 
@@ -401,6 +406,7 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
             @Override
             protected void populateViewHolder(final MeetupViewHolder viewHolder, final Meetup model, int position)
             {
+                model.updateStatus();
                 populateMeetupViewHolder(viewHolder, model, position);
             }
 
@@ -452,6 +458,7 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
             @Override
             protected void populateViewHolder(final MeetupViewHolder viewHolder, final Meetup model, int position)
             {
+                model.updateStatus();
                 populateMeetupViewHolder(viewHolder, model, position);
             }
 
@@ -617,8 +624,8 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
 
         String shortDesc = description.substring(0, Math.min(description.length(), 54)) + elipsis;
 
-        if(position == 1)
-            viewHolder.layout.setPadding(5, 15 , 5, 5);
+        if (position == 1)
+            viewHolder.layout.setPadding(5, 15, 5, 5);
 
         viewHolder.descriptionfield.setText(shortDesc);
 
@@ -675,6 +682,7 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
                 startActivity(detail);
             }
         });
+
     }
 
     public void search(String searchText)
@@ -746,12 +754,12 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
 
     public void filterDistance()
     {
-        if(mGoogleApiClient.isConnected())
+        if (mGoogleApiClient.isConnected())
         {
             getNewLocation();
         }
 
-        if(userLoc != null)
+        if (userLoc != null)
         {
             // Displaying the loading overlay
             loadingOverlay.setVisibility(View.VISIBLE);
@@ -759,13 +767,17 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
 
             filter = 1;
 
+            // List sorted by distance
             filteredList = new ArrayList<>();
 
+
+            // Filling the list with data retrieved from Firebase
             for (int i = 0; i < mAdapter.getItemCount(); i++)
             {
                 filteredList.add((Meetup) mAdapter.getItem(i));
             }
 
+            // Sorting the list in order of distance
             Collections.sort(filteredList, new Comparator<Meetup>()
             {
                 public int compare(Meetup m1, Meetup m2)
@@ -788,17 +800,44 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
                 }
             });
 
-            filteredAdapter = new MeetupAdapter(filteredList);
+            // List sorted by distance with expired meetups
+            filteredListExpired = new ArrayList<>(filteredList);
+
+            // Removing expired from filtered list
+            for (Iterator<Meetup> iterator = filteredList.iterator(); iterator.hasNext(); )
+            {
+                Meetup meetup = iterator.next();
+                if (meetup.gimmeStatus() == 2)
+                {
+                    // Remove the current element from the iterator and the list.
+                    iterator.remove();
+                }
+            }
+
+            // If user wants expired
+            if (past == true)
+            {
+                // Display expired
+                filteredAdapter = new MeetupAdapter(filteredListExpired);
+            } else
+            {
+                // Hide expired
+                filteredAdapter = new MeetupAdapter(filteredList);
+            }
 
             checkForEmpty(null, filteredAdapter);
 
-            if (search = true)
+            // If there is a search term entered
+            if (search == true)
             {
+                // call search()
                 search(searchBar.getText().toString());
             } else
             {
+                // display the adapter
                 mRecyclerView.setAdapter(filteredAdapter);
             }
+
         } else
         {
             new AlertDialog.Builder(MeetupsListActivity.this)
@@ -822,27 +861,18 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
         loadingOverlay.setVisibility(View.VISIBLE);
         loadingText.setText("Filtering...");
 
-
         filter = 2;
 
+        // List sorted by start time
         filteredList = new ArrayList<>();
 
+        // Filling the list with data retrieved from Firebase
         for (int i = 0; i < mAdapter.getItemCount(); i++)
         {
             filteredList.add((Meetup) mAdapter.getItem(i));
         }
 
-
-        for (Iterator<Meetup> iterator = filteredList.iterator(); iterator.hasNext(); )
-        {
-            Meetup meetup = iterator.next();
-            if (meetup.gimmeStatus() == 2)
-            {
-                // Remove the current element from the iterator and the list.
-                iterator.remove();
-            }
-        }
-
+        // Sorting the list in order of start time
         Collections.sort(filteredList, new Comparator<Meetup>()
         {
             public int compare(Meetup m1, Meetup m2)
@@ -853,15 +883,41 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
             }
         });
 
-        filteredAdapter = new MeetupAdapter(filteredList);
+        // List sorted by start time with expired meetups
+        filteredListExpired = new ArrayList<>(filteredList);
+
+        // Removing expired from filtered list
+        for (Iterator<Meetup> iterator = filteredList.iterator(); iterator.hasNext(); )
+        {
+            Meetup meetup = iterator.next();
+            if (meetup.gimmeStatus() == 2)
+            {
+                // Remove the current element from the iterator and the list.
+                iterator.remove();
+            }
+        }
+
+        // If user wants expired
+        if (past == true)
+        {
+            // Display expired
+            filteredAdapter = new MeetupAdapter(filteredListExpired);
+        } else
+        {
+            // Hide expired
+            filteredAdapter = new MeetupAdapter(filteredList);
+        }
 
         checkForEmpty(null, filteredAdapter);
 
-        if (search = true)
+        // If there is a search term entered
+        if (search == true)
         {
+            // call search()
             search(searchBar.getText().toString());
         } else
         {
+            // display the adapter
             mRecyclerView.setAdapter(filteredAdapter);
         }
     }
@@ -899,13 +955,17 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
+    {
 
-        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE)
+        {
 
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            {
                 getNewLocation();
-            } else { // if permission is not granted
+            } else
+            { // if permission is not granted
                 finish();
             }
         }
@@ -1054,14 +1114,13 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
 
     public void fab(View view)
     {
-        if(burger == false)
+        if (burger == false)
         {
             searchBar.setVisibility(View.INVISIBLE);
             burgerMenu.setVisibility(View.VISIBLE);
             burgerButton.setImageResource(R.drawable.ic_cross);
             burger = true;
-        }
-        else
+        } else
         {
             burgerMenu.setVisibility(View.GONE);
             searchBar.setVisibility(View.VISIBLE);
@@ -1078,21 +1137,64 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
 
     public void showPast(View view)
     {
-        if(past == false)
+        if (filter == 0)
         {
-            past = true;
-            //actually change what is shown
-            pastButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_tick, 0);
-        }
-        else
+            if(past == true)
+            {
+                // Hide expired
+                past = false;
+                pastButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_tick, 0);
+
+                filteredList = new ArrayList<>();
+
+                // Filling the list with data retrieved from Firebase
+                for (int i = 0; i < mAdapter.getItemCount(); i++)
+                {
+                    filteredList.add((Meetup) mAdapter.getItem(i));
+                }
+
+                // Removing expired from filtered list
+                for (Iterator<Meetup> iterator = filteredList.iterator(); iterator.hasNext(); )
+                {
+                    Meetup meetup = iterator.next();
+                    if (meetup.gimmeStatus() == 2)
+                    {
+                        // Remove the current element from the iterator and the list.
+                        iterator.remove();
+                    }
+                }
+
+                filteredAdapter = new MeetupAdapter(filteredList);
+                mRecyclerView.setAdapter(filteredAdapter);
+            } else
+            {
+                past = true;
+                pastButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_cross, 0);
+
+                mRecyclerView.setAdapter(mAdapter);
+            }
+        } else
         {
-            past = false;
-            //actually change what is shown
-            pastButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_cross, 0);
+            if (past == false)
+            {
+                // Display expired
+                past = true;
+                pastButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_tick, 0);
+
+                filteredAdapter = new MeetupAdapter(filteredListExpired);
+                mRecyclerView.setAdapter(filteredAdapter);
+
+            } else
+            {
+                // Hide expired
+                past = false;
+                pastButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_cross, 0);
+
+                filteredAdapter = new MeetupAdapter(filteredList);
+                mRecyclerView.setAdapter(filteredAdapter);
+            }
         }
     }
-
-
 }
 
 
