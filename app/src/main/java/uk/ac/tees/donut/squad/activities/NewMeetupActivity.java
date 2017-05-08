@@ -96,7 +96,6 @@ public class NewMeetupActivity extends AppCompatActivity
         mResultReceiver = new AddressResultReceiver(null);
         fetchType = LocContants.USE_ADDRESS_NAME;
 
-
         // DateTime defaults
         fromDateTime = Calendar.getInstance();
         untilDateTime = Calendar.getInstance();
@@ -462,6 +461,7 @@ public class NewMeetupActivity extends AppCompatActivity
         }
     }
 
+
     public void CreateAlertDiolog(){
         new AlertDialog.Builder(NewMeetupActivity.this)
                 .setTitle("Confirm Address")
@@ -475,7 +475,7 @@ public class NewMeetupActivity extends AppCompatActivity
 
                         // Calls the createMeetup method with the strings entered
                         createMeetup(name, description, squadId);
-                        
+
 
                     }
                 })
