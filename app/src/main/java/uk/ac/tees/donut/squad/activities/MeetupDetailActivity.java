@@ -2,7 +2,10 @@ package uk.ac.tees.donut.squad.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
@@ -12,10 +15,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -23,7 +32,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.mvc.imagepicker.ImagePicker;
 
+import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,10 +53,13 @@ public class MeetupDetailActivity extends AppCompatActivity
     // Firebase
     DatabaseReference mDatabase;
     FirebaseUser firebaseUser;
+    FirebaseStorage firebaseStorage;
+    StorageReference meetupStorage;
 
     // Loading Overlay
     RelativeLayout loadingOverlay;
     TextView loadingText;
+    ProgressBar loadingImage;
 
     // Activity UI
     TextView nameDisplay;
@@ -54,6 +71,7 @@ public class MeetupDetailActivity extends AppCompatActivity
     TextView endDateDisplay;
     TextView attendingDisplay;
     TextView memberCountDisplay;
+    ImageView meetupImage;
     ImageButton editName;
     ImageButton editDesc;
     Button attendBtn;
@@ -82,8 +100,10 @@ public class MeetupDetailActivity extends AppCompatActivity
         // Initialising loading overlay and displaying
         loadingOverlay = (RelativeLayout) this.findViewById(R.id.loading_overlay);
         loadingText = (TextView) this.findViewById(R.id.loading_overlay_text);
+        loadingImage = (ProgressBar) findViewById(R.id.meetupDetail_imageProgress);
         loadingText.setText("Loading Meetup...");
         loadingOverlay.setVisibility(View.VISIBLE);
+        loadingImage.setVisibility(View.VISIBLE);
 
         // Declaring everything
         nameDisplay = (TextView) findViewById(R.id.meetupDetail_textEditName);
@@ -100,6 +120,8 @@ public class MeetupDetailActivity extends AppCompatActivity
         editDesc = (ImageButton) findViewById(R.id.meetupDetail_imageButtonEditDescription);
         attendingDisplay = (TextView) findViewById(R.id.meetupDetail_textEditAttendees);
         memberCountDisplay = (TextView) findViewById(R.id.meetupDetail_textViewAttendees);
+        meetupImage = (ImageView) findViewById(R.id.meetupDetail_ImageView);
+
 
         // Disabling the edit ImageButtons and delete Button
         editName.setEnabled(false);
@@ -108,6 +130,7 @@ public class MeetupDetailActivity extends AppCompatActivity
         editDesc.setVisibility(View.GONE);
         deleteBtn.setEnabled(false);
         deleteBtn.setVisibility(View.GONE);
+        meetupImage.setEnabled(false);
 
         // Disabling the editTexts
         nameDisplay.setEnabled(false);
@@ -142,6 +165,9 @@ public class MeetupDetailActivity extends AppCompatActivity
 
         // Getting the reference for the Firebase Realtime Database
         mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        // Getting the reference for the Firebase Storage
+        firebaseStorage = FirebaseStorage.getInstance();
 
         // Defaults
         attending = false;
@@ -192,6 +218,9 @@ public class MeetupDetailActivity extends AppCompatActivity
                 {
                     editMode();
                 }
+
+                // Creating the reference for the meetup's Firebase Storage
+                meetupStorage = firebaseStorage.getReference().child("meetups/" + meetup.getId() + ".jpg");
 
                 // Load the name of the Squad
                 loadSquad();
@@ -343,8 +372,8 @@ public class MeetupDetailActivity extends AppCompatActivity
                             UserGridViewAdapter gridAdapter = new UserGridViewAdapter(MeetupDetailActivity.this, userNames, userPics, userIds);
                             attendeesGrid.setAdapter(gridAdapter);
 
-                            // Hiding loading overlay
-                            loadingOverlay.setVisibility(View.GONE);
+                            // Load the meetup's picture
+                            loadPicture();
                         }
                     }
 
@@ -361,9 +390,36 @@ public class MeetupDetailActivity extends AppCompatActivity
             attendingDisplay.setText("This Meetup has no one attending!");
             memberCountDisplay.setText("Members: 0");
 
-            // Hiding loading overlay
-            loadingOverlay.setVisibility(View.GONE);
+            // Load the meetup's picture
+            loadPicture();
         }
+    }
+
+    public void loadPicture()
+    {
+        // Setting the loading text
+        loadingText.setText("Getting the Meetup's picture...");
+
+        // If the meetup has an image display it
+        meetupStorage.getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                Bitmap image = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                meetupImage.setVisibility(View.VISIBLE);
+                meetupImage.setImageBitmap(image);
+                loadingImage.setVisibility(View.GONE);
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                meetupImage.setVisibility(View.VISIBLE);
+                loadingImage.setVisibility(View.GONE);
+            }
+        });
+
+        // Hiding loading overlay
+        loadingOverlay.setVisibility(View.GONE);
     }
 
     public void deleteMeetupPrompt()
@@ -452,6 +508,16 @@ public class MeetupDetailActivity extends AppCompatActivity
             {
                 // Load Dialog to confirm deletion of Meetup
                 deleteMeetupPrompt();
+            }
+        });
+
+        meetupImage.setEnabled(true);
+        meetupImage.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                selectImage(v);
             }
         });
     }
@@ -588,6 +654,45 @@ public class MeetupDetailActivity extends AppCompatActivity
         attending = false;
         attendBtn.setText("Attend Meetup");
         finish();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // If picture selected
+        final Bitmap bitmap = ImagePicker.getImageFromResult(this, requestCode, resultCode, data);
+        if(bitmap != null)
+        {
+            loadingText.setText("Uploading photo...");
+            loadingOverlay.setVisibility(View.VISIBLE);
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] bytes = baos.toByteArray();
+
+            // Upload to Firebase Storage
+            UploadTask uploadTask = meetupStorage.putBytes(bytes);
+
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    loadingOverlay.setVisibility(View.GONE);
+                    Toast.makeText(MeetupDetailActivity.this, "Upload failed, please try again!"
+                            , Toast.LENGTH_SHORT);
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    meetupImage.setImageBitmap(bitmap);
+                    loadingOverlay.setVisibility(View.GONE);
+                    Toast.makeText(MeetupDetailActivity.this, "Photo uploaded!", Toast.LENGTH_SHORT);
+                }
+            });
+        }
+    }
+
+    public void selectImage(View view) {
+        // Click on image button
+        ImagePicker.pickImage(this, "Select your image:");
     }
 
 
