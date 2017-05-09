@@ -96,13 +96,14 @@
             android:id="@+id/placesList_burgerMenu"
             android:background="@color/colorPrimary"
             android:gravity="center"
-            android:elevation="5dp">
+            android:elevation="5dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Sort Places"
-                android:paddingTop="10dp"
                 android:gravity="center"
                 style="@style/TextAppearance.AppCompat.Widget.Button.Colored"
                 />

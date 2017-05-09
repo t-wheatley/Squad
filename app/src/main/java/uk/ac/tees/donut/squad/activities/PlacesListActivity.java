@@ -74,7 +74,7 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
     LinearLayout burgerMenu;
     FloatingActionButton burgerButton;
     //for whenever the burger menu is open or not
-    Boolean burger = false;
+    boolean burger = false;
 
     List<LocPlace> searchList;
     List<LocPlace> filteredList;
