@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -33,6 +34,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.vision.text.Text;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -253,7 +255,7 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
 
         mAdapter = new FirebaseRecyclerAdapter<LocPlace, PlacesListActivity.PlaceViewHolder>(
                 LocPlace.class,
-                R.layout.item_three_text,
+                R.layout.item_list_card,
                 PlacesListActivity.PlaceViewHolder.class,
                 allQuery
         )
@@ -303,7 +305,7 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
 
         mAdapter = new FirebaseRecyclerAdapter<LocPlace, PlacesListActivity.PlaceViewHolder>(
                 LocPlace.class,
-                R.layout.item_three_text,
+                R.layout.item_list_card,
                 PlacesListActivity.PlaceViewHolder.class,
                 squadQuery
         )
@@ -469,7 +471,22 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
     {
 
         viewHolder.nameField.setText(model.getName());
-        viewHolder.addressField.setText(model.fullAddress());
+
+        //getting description
+        String description = model.getDescription().replace("\n", "");
+        String elipsis = "";
+        if (description.length() > 54)
+            elipsis = "...";
+
+        final String shortDesc = description.substring(0, Math.min(description.length(), 54)) + elipsis;
+
+        viewHolder.descriptionField.setText(shortDesc);
+
+        //number of meetups at place
+        viewHolder.meetupNo.setText("# of meetups");
+
+        //distance of place
+        viewHolder.distance.setText("distance");
 
         // Get Squad name from id
         mDatabase.child("squads").child(model.getSquad()).addListenerForSingleValueEvent(new ValueEventListener()
@@ -705,17 +722,27 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
     public static class PlaceViewHolder extends RecyclerView.ViewHolder
     {
         View mView;
+        ImageView image;
         TextView nameField;
-        TextView addressField;
+        TextView descriptionField;
         TextView squadField;
+        ImageView icon;
+        TextView meetupNo;
+        TextView distance;
 
         public PlaceViewHolder(View v)
         {
             super(v);
             mView = v;
-            nameField = (TextView) v.findViewById(R.id.text1);
-            addressField = (TextView) v.findViewById(R.id.text2);
-            squadField = (TextView) v.findViewById(R.id.text3);
+            nameField = (TextView) v.findViewById(R.id.listCard_text1);
+            descriptionField = (TextView) v.findViewById(R.id.listCard_text3);
+            squadField = (TextView) v.findViewById(R.id.listCard_text2);
+            icon = (ImageView) v.findViewById(R.id.icon);
+            image = (ImageView) v.findViewById(R.id.listCard_image);
+            meetupNo = (TextView) v.findViewById(R.id.listCard_text4);
+            distance = (TextView) v.findViewById(R.id.listCard_text5);
+
+            icon.setImageResource(R.drawable.ic_meetup_icon);
         }
     }
 
@@ -735,7 +762,7 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
         {
             View itemView = LayoutInflater.
                     from(parent.getContext()).
-                    inflate(R.layout.item_three_text, parent, false);
+                    inflate(R.layout.item_list_card, parent, false);
 
             return new PlaceViewHolder(itemView);
         }
@@ -745,8 +772,22 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
         {
             final LocPlace place = placeList.get(position);
             holder.nameField.setText(place.getName());
-            holder.addressField.setText(place.fullAddress());
 
+            //getting description
+            String description = place.getDescription().replace("\n", "");
+            String elipsis = "";
+            if (description.length() > 54)
+                elipsis = "...";
+
+            final String shortDesc = description.substring(0, Math.min(description.length(), 54)) + elipsis;
+
+            holder.descriptionField.setText(shortDesc);
+
+            //number of meetups at place
+            holder.meetupNo.setText("# of meetups");
+
+            //distance of place
+            holder.distance.setText("distance");
 
             // Get Squad name from id
             mDatabase.child("squads").child(place.getSquad()).addListenerForSingleValueEvent(new ValueEventListener()

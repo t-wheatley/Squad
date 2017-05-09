@@ -16,11 +16,6 @@
         android:layout_height="0px"/>
 
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true"
-        >
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -43,7 +38,6 @@
         android:layout_centerHorizontal="true"
         android:id="@+id/placesList_searchLayout"
         android:background="@color/colorPrimary"
-        android:layout_marginBottom="5dp"
         android:elevation="5dp">
 
         <EditText
@@ -61,16 +55,20 @@
         </EditText>
     </RelativeLayout>
 
+        <ScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/placesList_searchLayout">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/placesList_searchLayout"
+
         android:id="@+id/recyclerViewLayout">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="textPersonName"
             android:ems="10"
             android:layout_centerInParent = "true"
             android:id="@+id/placesList_textView"
@@ -78,14 +76,24 @@
             android:visibility="gone"
             android:text="There are no Places here!"/>
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="18dp"
+            android:id="@+id/gap"
+            >
+
+        </RelativeLayout>
+
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="vertical"
             android:id="@+id/recyclerView"
+            android:layout_below="@+id/gap"
             >
         </android.support.v7.widget.RecyclerView>
     </RelativeLayout>
+        </ScrollView>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -121,6 +129,5 @@
     <!-- Loading overlay; -->
     <include layout="@layout/loading_overlay"/>
 </RelativeLayout>
-    </ScrollView>
 
 </RelativeLayout>

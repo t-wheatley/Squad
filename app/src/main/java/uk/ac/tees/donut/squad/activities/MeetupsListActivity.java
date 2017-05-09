@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -296,7 +297,7 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
 
         mAdapter = new FirebaseRecyclerAdapter<Meetup, MeetupViewHolder>(
                 Meetup.class,
-                R.layout.item_five_text,
+                R.layout.item_list_card,
                 MeetupViewHolder.class,
                 allQuery
         )
@@ -347,7 +348,7 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
 
         mAdapter = new FirebaseRecyclerAdapter<Meetup, MeetupViewHolder>(
                 Meetup.class,
-                R.layout.item_five_text,
+                R.layout.item_list_card,
                 MeetupViewHolder.class,
                 userQuery
         )
@@ -398,7 +399,7 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
 
         mAdapter = new FirebaseRecyclerAdapter<Meetup, MeetupViewHolder>(
                 Meetup.class,
-                R.layout.item_five_text,
+                R.layout.item_list_card,
                 MeetupViewHolder.class,
                 hostQuery
         )
@@ -450,7 +451,7 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
 
         mAdapter = new FirebaseRecyclerAdapter<Meetup, MeetupViewHolder>(
                 Meetup.class,
-                R.layout.item_five_text,
+                R.layout.item_list_card,
                 MeetupViewHolder.class,
                 squadQuery
         )
@@ -623,9 +624,6 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
             elipsis = "...";
 
         String shortDesc = description.substring(0, Math.min(description.length(), 54)) + elipsis;
-
-        if (position == 1)
-            viewHolder.layout.setPadding(5, 15, 5, 5);
 
         viewHolder.descriptionfield.setText(shortDesc);
 
@@ -986,6 +984,7 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
     public static class MeetupViewHolder extends RecyclerView.ViewHolder
     {
         View mView;
+        ImageView image;
         TextView nameField;
         TextView descriptionfield;
         TextView squadField;
@@ -998,14 +997,15 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
         {
             super(v);
             mView = v;
-            nameField = (TextView) v.findViewById(R.id.text1);
-            descriptionfield = (TextView) v.findViewById(R.id.text2);
-            squadField = (TextView) v.findViewById(R.id.text3);
-            attendingField = (TextView) v.findViewById(R.id.text4);
-            statusField = (TextView) v.findViewById(R.id.text5);
+            image = (ImageView) v.findViewById(R.id.listCard_image);
+            nameField = (TextView) v.findViewById(R.id.listCard_text1);
+            descriptionfield = (TextView) v.findViewById(R.id.listCard_text3);
+            squadField = (TextView) v.findViewById(R.id.listCard_text2);
+            attendingField = (TextView) v.findViewById(R.id.listCard_text4);
+            statusField = (TextView) v.findViewById(R.id.listCard_text5);
             layout = (RelativeLayout) v.findViewById(R.id.layout);
 
-            squadField.setText("loading...");
+            //squadField.setText("loading...");
         }
     }
 
@@ -1025,7 +1025,7 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
         {
             View itemView = LayoutInflater.
                     from(parent.getContext()).
-                    inflate(R.layout.item_five_text, parent, false);
+                    inflate(R.layout.item_list_card, parent, false);
 
             return new MeetupViewHolder(itemView);
         }

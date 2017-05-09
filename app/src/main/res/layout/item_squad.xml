@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         android:layout_margin="5dp"
         card_view:cardElevation="5dp"
-        card_view:cardCornerRadius="4dp"
+        card_view:cardCornerRadius="5dp"
         card_view:cardBackgroundColor="@color/colorPrimary">
 
         <LinearLayout
@@ -23,7 +23,8 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.2">
+                android:layout_weight="0.2"
+                android:background="@color/colorPrimaryDark">
 
                 <ImageView
                     android:layout_width="100dp"
