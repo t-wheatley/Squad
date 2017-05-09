@@ -117,7 +117,7 @@
             android:id="@+id/meetupsList_showPast"
             android:onClick="showPast"
             style="@style/Widget.AppCompat.Button.Colored"
-            android:drawableEnd="@drawable/ic_cross"
+            android:drawableEnd="@drawable/ic_tick"
 
             />
     </LinearLayout>

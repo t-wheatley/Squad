@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -12,18 +13,21 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activities.LoginActivity"
-            android:label="@string/app_name">
+            android:name=".activities.SplashScreen"
+            android:label="@string/app_name"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activities.LoginActivity"/>
         <activity android:name=".activities.MenuActivity" />
         <activity android:name=".location.GeocoderActivity" />
         <activity android:name=".activities.NewMeetupActivity" />
-        <activity android:name=".activities.MeetupDetailActivity" />
+        <activity
+            android:name=".activities.MeetupDetailActivity"
+            android:configChanges="orientation|screenSize" />
         <activity android:name=".activities.ProfileActivity" />
         <activity android:name=".activities.SquadListActivity" />
         <activity android:name=".activities.SquadDetailActivity" />
@@ -58,7 +62,7 @@
         <activity android:name=".activities.PlacesListActivity"/>
         <activity
             android:name=".location.PlaceMapsActivity"
-            android:label="@string/title_activity_place_maps"></activity>
+            android:label="@string/title_activity_place_maps" />
     </application>
 
 </manifest>
