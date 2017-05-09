@@ -69,9 +69,10 @@ public class NewMeetupActivity extends AppCompatActivity
     String name, description, squadId;
     HashMap<String, String> squads;
     HashMap<String, String> places;
-    Calendar unchangedTime;
     Calendar fromDateTime;
     Calendar untilDateTime;
+    Calendar currentDateTime;
+    int currentYear, currentMonth, currentDay, currentHour, currentMinute;
 
     // Boolean to determine whether the address is coming from the spinner or user input
     boolean spinnerAddress;
@@ -185,26 +186,19 @@ public class NewMeetupActivity extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
-                // Get Current Date
-                final Calendar c = Calendar.getInstance();
-                int mYear = c.get(Calendar.YEAR);
-                int mMonth = c.get(Calendar.MONTH);
-                int mDay = c.get(Calendar.DAY_OF_MONTH);
-
-
+                // Launch Date Picker Dialog
                 DatePickerDialog datePickerDialog = new DatePickerDialog(NewMeetupActivity.this,
                         new DatePickerDialog.OnDateSetListener() {
 
                             @Override
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
-
                                 btnFromDate.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
                                 fromDateTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                                 fromDateTime.set(Calendar.MONTH, monthOfYear);
                                 fromDateTime.set(Calendar.YEAR, year);
                             }
-                        }, mYear, mMonth, mDay);
+                        }, currentYear, currentMonth, currentDay);
                 datePickerDialog.show();
             }
         });
@@ -214,11 +208,6 @@ public class NewMeetupActivity extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
-                // Get Current Time
-                final Calendar c = Calendar.getInstance();
-                int mHour = c.get(Calendar.HOUR_OF_DAY);
-                int mMinute = c.get(Calendar.MINUTE);
-
                 // Launch Time Picker Dialog
                 TimePickerDialog timePickerDialog = new TimePickerDialog(NewMeetupActivity.this,
                         new TimePickerDialog.OnTimeSetListener() {
@@ -226,12 +215,17 @@ public class NewMeetupActivity extends AppCompatActivity
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay,
                                                   int minute) {
-
-                                btnFromTime.setText(hourOfDay + ":" + minute);
+                                if(minute < 10)
+                                {
+                                    btnFromTime.setText(hourOfDay + ":0" + minute);
+                                } else
+                                {
+                                    btnFromTime.setText(hourOfDay + ":" + minute);
+                                }
                                 fromDateTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
                                 fromDateTime.set(Calendar.MINUTE, minute);
                             }
-                        }, mHour, mMinute, true);
+                        }, currentHour, currentMinute, true);
                 timePickerDialog.show();
             }
         });
@@ -241,27 +235,20 @@ public class NewMeetupActivity extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
-                // Get Current Date
-                final Calendar c = Calendar.getInstance();
-                int mYear = c.get(Calendar.YEAR);
-                int mMonth = c.get(Calendar.MONTH);
-                int mDay = c.get(Calendar.DAY_OF_MONTH);
-
-
+                // Launch Date Picker Dialog
                 DatePickerDialog datePickerDialog = new DatePickerDialog(NewMeetupActivity.this,
                         new DatePickerDialog.OnDateSetListener() {
 
                             @Override
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
-
                                 btnUntilDate.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
                                 untilDateTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                                 untilDateTime.set(Calendar.MONTH, monthOfYear);
                                 untilDateTime.set(Calendar.YEAR, year);
 
                             }
-                        }, mYear, mMonth, mDay);
+                        }, currentYear, currentMonth, currentDay);
                 datePickerDialog.show();
             }
         });
@@ -271,11 +258,6 @@ public class NewMeetupActivity extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
-                // Get Current Time
-                final Calendar c = Calendar.getInstance();
-                int mHour = c.get(Calendar.HOUR_OF_DAY);
-                int mMinute = c.get(Calendar.MINUTE);
-
                 // Launch Time Picker Dialog
                 TimePickerDialog timePickerDialog = new TimePickerDialog(NewMeetupActivity.this,
                         new TimePickerDialog.OnTimeSetListener() {
@@ -283,12 +265,17 @@ public class NewMeetupActivity extends AppCompatActivity
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay,
                                                   int minute) {
-
-                                btnUntilTime.setText(hourOfDay + ":" + minute);
+                                if(minute < 10)
+                                {
+                                    btnUntilTime.setText(hourOfDay + ":0" + minute);
+                                } else
+                                {
+                                    btnUntilTime.setText(hourOfDay + ":" + minute);
+                                }
                                 untilDateTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
                                 untilDateTime.set(Calendar.MINUTE, minute);
                             }
-                        }, mHour, mMinute, true);
+                        }, currentHour, currentMinute, true);
                 timePickerDialog.show();
             }
         });
@@ -331,6 +318,7 @@ public class NewMeetupActivity extends AppCompatActivity
         loadingText.setText("Loading...");
         loadingOverlay.setVisibility(View.VISIBLE);
         fillSquadSpinner();
+        displayCurrentDateTime();
 
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener()
@@ -359,6 +347,7 @@ public class NewMeetupActivity extends AppCompatActivity
                                 }
                             })
                             .setIcon(android.R.drawable.ic_dialog_alert)
+                            .setCancelable(false)
                             .show();
                 }
                 // ...
@@ -401,13 +390,39 @@ public class NewMeetupActivity extends AppCompatActivity
         loadingOverlay.setVisibility(View.VISIBLE);
 
         // Gets the strings from the editTexts
-        name = editName.getText().toString();
-        description = editDescription.getText().toString();
+        name = editName.getText().toString().trim();
+        description = editDescription.getText().toString().trim();
         squadId = squads.get(spinnerSquad.getSelectedItem().toString().trim());
 
-        if(spinnerAddress)
+        if(fromDateTime.getTimeInMillis() == currentDateTime.getTimeInMillis())
         {
-            mDatabase.child("places").child(places.get(spinnerPlace.getSelectedItem().toString().trim())).addListenerForSingleValueEvent(new ValueEventListener() {
+            loadingOverlay.setVisibility(View.GONE);
+            Toast.makeText(NewMeetupActivity.this, "Please change the Meetup's Start from the " +
+                    "default", Toast.LENGTH_SHORT).show();
+        }  else if (untilDateTime.getTimeInMillis() == currentDateTime.getTimeInMillis())
+        {
+            loadingOverlay.setVisibility(View.GONE);
+            Toast.makeText(NewMeetupActivity.this, "Please change the Meetup's End from the " +
+                    "default", Toast.LENGTH_SHORT).show();
+        } else if(fromDateTime.getTimeInMillis() < currentDateTime.getTimeInMillis())
+        {
+            loadingOverlay.setVisibility(View.GONE);
+            Toast.makeText(NewMeetupActivity.this, "A Meetup can not start in the past",
+                    Toast.LENGTH_SHORT).show();
+        }else if(untilDateTime.getTimeInMillis() < currentDateTime.getTimeInMillis())
+        {
+            loadingOverlay.setVisibility(View.GONE);
+            Toast.makeText(NewMeetupActivity.this, "A Meetup can not end in the past",
+                    Toast.LENGTH_SHORT).show();
+        } else if(untilDateTime.getTimeInMillis() < fromDateTime.getTimeInMillis())
+        {
+            loadingOverlay.setVisibility(View.GONE);
+            Toast.makeText(NewMeetupActivity.this, "A Meetup can not end before it starts",
+                    Toast.LENGTH_SHORT).show();
+        } else if(spinnerAddress)
+        {
+            String placeId = places.get(spinnerPlace.getSelectedItem().toString().trim());
+            mDatabase.child("places").child(placeId).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     // Gets the data from Firebase and stores it in a LocPlace class
@@ -432,8 +447,6 @@ public class NewMeetupActivity extends AppCompatActivity
                     Toast.makeText(NewMeetupActivity.this, "Something went wrong, please try again.", Toast.LENGTH_SHORT).show();
                 }
             });
-
-
         } else
         {
             addressFull = editAddress1.getText().toString() + " " + editAddress2.getText().toString()
@@ -566,7 +579,6 @@ public class NewMeetupActivity extends AppCompatActivity
         }
     }
 
-
     public void CreateAlertDiolog(){
         new AlertDialog.Builder(NewMeetupActivity.this)
                 .setTitle("Confirm Address")
@@ -602,8 +614,6 @@ public class NewMeetupActivity extends AppCompatActivity
                 .create()
                 .show();
     }
-
-
 
     //Inner Class to receive address for geocoder
     public class AddressResultReceiver extends ResultReceiver
@@ -721,5 +731,33 @@ public class NewMeetupActivity extends AppCompatActivity
 
             }
         });
+    }
+
+    public void displayCurrentDateTime()
+    {
+        // Getting the users current DateTime
+        currentDateTime = Calendar.getInstance();
+        fromDateTime = (Calendar) currentDateTime.clone();
+        untilDateTime = (Calendar) currentDateTime.clone();
+
+        currentYear = currentDateTime.get(Calendar.YEAR);
+        currentMonth = currentDateTime.get(Calendar.MONTH);
+        currentDay = currentDateTime.get(Calendar.DAY_OF_MONTH);
+        currentHour = currentDateTime.get(Calendar.HOUR_OF_DAY);
+        currentMinute = currentDateTime.get(Calendar.MINUTE);
+
+        // Displaying the current DateTime
+        btnFromDate.setText(currentDay + "/" + (currentMonth + 1) + "/" + currentYear);
+        btnUntilDate.setText(currentDay + "/" + (currentMonth + 1) + "/" + currentYear);
+
+        if(currentMinute < 10)
+        {
+            btnFromTime.setText(currentHour + ":0" + currentMinute);
+            btnUntilTime.setText(currentHour + ":0" + currentMinute);
+        } else
+        {
+            btnFromTime.setText(currentHour + ":" + currentMinute);
+            btnUntilTime.setText(currentHour + ":" + currentMinute);
+        }
     }
 }

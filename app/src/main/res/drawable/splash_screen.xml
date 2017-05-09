@@ -9,5 +9,4 @@
             android:gravity="center"
             android:src="@mipmap/donut"/>
     </item>
-
 </layer-list>
