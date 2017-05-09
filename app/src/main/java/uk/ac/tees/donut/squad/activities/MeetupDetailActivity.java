@@ -467,6 +467,12 @@ public class MeetupDetailActivity extends AppCompatActivity
         // Removing the meetup from the user's hosting
         mDatabase.child("users").child(firebaseUser.getUid()).child("hosting").child(meetupId).removeValue();
 
+        // Removing the meetup from the place's meetups
+        if(meetup.getPlace() != null)
+        {
+            mDatabase.child("places").child(meetup.getPlace()).child("meetups").child(meetupId).removeValue();
+        }
+
         // Removing the meetup
         mDatabase.child("meetups").child(meetupId).removeValue();
         finish();

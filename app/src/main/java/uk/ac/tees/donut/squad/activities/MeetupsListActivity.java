@@ -4,6 +4,8 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -23,6 +25,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,12 +37,16 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,6 +61,7 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
 {
 
     private DatabaseReference mDatabase;
+    private FirebaseStorage firebaseStorage;
 
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
@@ -213,6 +221,7 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
 
         // Base database reference
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        firebaseStorage = FirebaseStorage.getInstance();
 
         if (mRecyclerView != null)
         {
@@ -714,7 +723,14 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
         if (model.getUsers() != null)
         {
             int attendees = model.getUsers().size();
-            viewHolder.attendingField.setText(attendees + " attendees");
+
+            if (attendees > 1)
+            {
+                viewHolder.attendingField.setText(attendees + " attendees");
+            } else
+            {
+                viewHolder.attendingField.setText("1 attendee");
+            }
         } else
         {
             viewHolder.attendingField.setText("0 attendees");
@@ -745,6 +761,25 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
                 Intent detail = new Intent(MeetupsListActivity.this, MeetupDetailActivity.class);
                 detail.putExtra("meetupId", mId);
                 startActivity(detail);
+            }
+        });
+
+        // Diplaying the picture
+        StorageReference meetupStorage = firebaseStorage.getReference().child("meetups/" + model.getId() + ".jpg");
+
+        // If the meetup has an image display it
+        meetupStorage.getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                Bitmap meetupImage = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                viewHolder.image.setVisibility(View.VISIBLE);
+                viewHolder.image.setImageBitmap(meetupImage);
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                viewHolder.image.setVisibility(View.GONE);
             }
         });
 
@@ -1102,10 +1137,10 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
         public void onBindViewHolder(final MeetupViewHolder holder, int position)
         {
             final Meetup meetup = meetupList.get(position);
-            //getting name
+            // Getting name
             holder.nameField.setText(meetup.getName());
 
-            //getting description
+            // Getting description
             String description = meetup.getDescription().replace("\n", "");
             String elipsis = "";
             if (description.length() > 54)
@@ -1135,7 +1170,14 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
             if (meetup.getUsers() != null)
             {
                 int attendees = meetup.getUsers().size();
-                holder.attendingField.setText(attendees + " attendees");
+
+                if (attendees > 1)
+                {
+                    holder.attendingField.setText(attendees + " attendees");
+                } else
+                {
+                    holder.attendingField.setText("1 attendee");
+                }
             } else
             {
                 holder.attendingField.setText("0 attendees");
@@ -1169,6 +1211,25 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
                     startActivity(detail);
                 }
             });
+
+            // Diplaying the picture
+            StorageReference meetupStorage = firebaseStorage.getReference().child("meetups/" + meetup.getId() + ".jpg");
+
+            // If the meetup has an image display it
+            meetupStorage.getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                @Override
+                public void onSuccess(byte[] bytes) {
+                    Bitmap meetupImage = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    holder.image.setVisibility(View.VISIBLE);
+                    holder.image.setImageBitmap(meetupImage);
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    holder.image.setVisibility(View.GONE);
+                }
+            });
         }
 
         @Override
@@ -1176,8 +1237,6 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
         {
             return meetupList.size();
         }
-
-
     }
 
     public void fab(View view)

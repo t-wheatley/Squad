@@ -482,7 +482,9 @@ public class NewMeetupActivity extends AppCompatActivity
             // If at a existing place
             if(spinnerAddress)
             {
-                meetup.setPlace(places.get(spinnerPlace.getSelectedItem().toString().trim()));
+                String placeId = places.get(spinnerPlace.getSelectedItem().toString().trim());
+                meetup.setPlace(placeId);
+                mDatabase.child("places").child(placeId).child("meetups").child(meetupId).setValue(true);
             }
 
             // Pushing the meetup to the "meetups" node using the meetupId
