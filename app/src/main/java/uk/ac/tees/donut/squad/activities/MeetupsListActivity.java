@@ -282,7 +282,13 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
     @Override
     public void onBackPressed()
     {
-        MeetupsListActivity.this.finish();
+        if(burger == true)
+        {
+            fab(burgerButton);
+        } else
+        {
+            MeetupsListActivity.this.finish();
+        }
     }
 
     public void buildGoogleApiClient()

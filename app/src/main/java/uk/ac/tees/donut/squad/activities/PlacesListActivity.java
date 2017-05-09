@@ -228,8 +228,15 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
     }
 
     @Override
-    public void onBackPressed() {
-        PlacesListActivity.this.finish();
+    public void onBackPressed()
+    {
+        if(burger == true)
+        {
+            fab(burgerButton);
+        } else
+        {
+            PlacesListActivity.this.finish();
+        }
     }
 
     public void buildGoogleApiClient()
