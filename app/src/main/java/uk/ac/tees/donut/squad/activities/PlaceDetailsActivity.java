@@ -45,7 +45,7 @@ public class PlaceDetailsActivity extends AppCompatActivity
     TextView address;
     TextView squad;
     Button mapBtn;
-    Button directionsBtn;
+    Button meetupsBtn;
 
     double latitude;
     double longitude;
@@ -83,13 +83,13 @@ public class PlaceDetailsActivity extends AppCompatActivity
             }
         });
 
-        directionsBtn = (Button) findViewById(R.id.directionsButton);
-        directionsBtn.setOnClickListener(new View.OnClickListener()
+        meetupsBtn = (Button) findViewById(R.id.meetupsButton);
+        meetupsBtn.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                openMapDirections();
+                viewMeetups();
             }
         });
 
@@ -218,8 +218,11 @@ public class PlaceDetailsActivity extends AppCompatActivity
         startActivity(detail);
     }
 
-    private void openMapDirections()
+    public void viewMeetups()
     {
-        Toast.makeText(PlaceDetailsActivity.this, "Nothing here yet", Toast.LENGTH_LONG).show();
+        // Loads the MeetupsList activity displaying the Meetups that are at this place
+        Intent intent = new Intent(this, MeetupsListActivity.class);
+        intent.putExtra("placeId", placeId);
+        startActivity(intent);
     }
 }
