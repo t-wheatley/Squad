@@ -2,6 +2,7 @@ package uk.ac.tees.donut.squad.location;
 
 import android.Manifest;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -35,6 +36,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
@@ -50,6 +53,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     //GOOGLE MAP API V2
 
+    private DatabaseReference mDatabase;
+
     private SupportMapFragment mapFrag;
     private Button btnRequest;
     private GoogleApiClient mGoogleApiClient;
@@ -62,6 +67,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private LatLng currentLocation;
     private LatLng destination;
 
+    String userId;
+    String squadId;
+    Boolean host;
+    Boolean member;
+    Boolean squad;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -70,6 +81,38 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         btnRequest = (Button) findViewById(R.id.btn_request_direction);
         btnRequest.setOnClickListener(this);
+
+        // Gets the extra passed from the last activity
+        Intent detail = getIntent();
+        Bundle b = detail.getExtras();
+        if (b != null)
+        {
+            if (b.get("squadId") != null)
+            {
+                // Squad mode
+                squadId = (String) b.get("squadId");
+                squad = true;
+            } else if (b.get("userId") != null)
+            {
+                // Collects the userId passed from the RecyclerView
+                userId = (String) b.get("userId");
+                if (b.get("host") != null)
+                {
+                    if ((Boolean) b.get("host"))
+                    {
+                        // Host mode
+                        host = true;
+                    }
+                } else
+                {
+                    // Member mode
+                    member = true;
+                }
+            }
+        }
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         mapFrag = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
