@@ -11,6 +11,10 @@
     tools:context="uk.ac.tees.donut.squad.activities.SquadPostActivity"
     android:background="@color/cardview_dark_background">
 
+    <!-- Loading overlay; -->
+    <include layout="@layout/loading_overlay"
+        android:id="@+id/include" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">

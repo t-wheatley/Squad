@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,6 +44,11 @@ public class SquadPostActivity extends AppCompatActivity {
     private LinearLayoutManager mLayoutManager;
     private FirebaseRecyclerAdapter mAdapter;
     private TextView listText;
+    private RecyclerView.AdapterDataObserver mObserver;
+
+    TextView loadingText;
+    int loadingCount;
+    RelativeLayout loadingOverlay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +62,13 @@ public class SquadPostActivity extends AppCompatActivity {
 
         // Getting the reference for the Firebase Realtime Database
         mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        // Display loading overlay
+        loadingOverlay = (RelativeLayout) this.findViewById(R.id.loading_overlay);
+        loadingText = (TextView) this.findViewById(R.id.loading_overlay_text);
+        loadingText.setText("Loading Posts...");
+        loadingOverlay.setVisibility(View.VISIBLE);
+        loadingCount = 1;
 
         // Gets the extra passed from the last activity
         Intent detail = getIntent();
@@ -173,6 +186,37 @@ public class SquadPostActivity extends AppCompatActivity {
         });
     }
 
+    public void adapterObserver()
+    {
+        mObserver = new RecyclerView.AdapterDataObserver()
+        {
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount)
+            {
+                if (mAdapter.getItemCount() == 0)
+                {
+                    listText.setVisibility(View.VISIBLE);
+                } else
+                {
+                    listText.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onItemRangeRemoved(int positionStart, int itemCount)
+            {
+                if (mAdapter.getItemCount() == 0)
+                {
+                    listText.setVisibility(View.VISIBLE);
+                } else
+                {
+                    listText.setVisibility(View.GONE);
+                }
+            }
+        };
+        mAdapter.registerAdapterDataObserver(mObserver);
+    }
+
     @Override
     public void onStart()
     {
@@ -219,23 +263,10 @@ public class SquadPostActivity extends AppCompatActivity {
 
     public void populateSquadViewHolder(SquadPostActivity.PostViewHolder viewHolder, final Post model, int position)
     {
-        viewHolder.nameField.setText(model.getName());
+        viewHolder.nameField.setText(model.getUser());
 
+        viewHolder.postField.setText(model.getPost());
 
-        String description = model.getDescription().replace("\n", "");
-        String elipsis = "";
-        if (description.length() > 54)
-            elipsis = "...";
-
-        String shortDesc = description.substring(0, Math.min(description.length(), 54)) + elipsis;
-
-        viewHolder.descriptionfield.setText(shortDesc);
-
-        //get member count
-        viewHolder.squadMembers.setText("#");
-
-        //get squad image
-        //stuff here for that
 
         // If loading the last item
         if (mAdapter.getItemCount() == loadingCount)
@@ -251,7 +282,7 @@ public class SquadPostActivity extends AppCompatActivity {
     {
         View mView;
         TextView nameField;
-        TextView post;
+        TextView postField;
         ImageView ProfilePic;
 
         public PostViewHolder(View v)
@@ -259,7 +290,7 @@ public class SquadPostActivity extends AppCompatActivity {
             super(v);
             mView = v;
             nameField = (TextView) v.findViewById(R.id.userName);
-            post = (TextView) v.findViewById(R.id.txtPost);
+            postField = (TextView) v.findViewById(R.id.txtPost);
             ProfilePic = (ImageView) v.findViewById(R.id.userPP);
         }
     }
