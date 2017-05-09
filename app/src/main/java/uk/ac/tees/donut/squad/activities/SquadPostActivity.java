@@ -7,14 +7,14 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.MultiAutoCompleteTextView;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -33,8 +33,9 @@ public class SquadPostActivity extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener mAuthListener;
     private String squadId;
     private String post;
-    private FirebaseUser firebaseUser;
     private DatabaseReference mDatabase;
+    private StaggeredGridLayoutManager mLayoutManager;
+    private FirebaseRecyclerAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +48,6 @@ public class SquadPostActivity extends AppCompatActivity {
 
         // Getting the reference for the Firebase Realtime Database
         mDatabase = FirebaseDatabase.getInstance().getReference();
-
-        // Getting the current user
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         // Gets the extra passed from the last activity
         Intent detail = getIntent();
@@ -109,10 +107,9 @@ public class SquadPostActivity extends AppCompatActivity {
                     }
                 });
 
-        if (mRecyclerView != null)
-        {
-            mRecyclerView.setHasFixedSize(true);
-        }
+        // Setting up the layout manager
+        mLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(mLayoutManager);
     }
 
     @Override
