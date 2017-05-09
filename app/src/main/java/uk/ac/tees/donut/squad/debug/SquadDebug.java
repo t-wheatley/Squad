@@ -9,7 +9,8 @@ import uk.ac.tees.donut.squad.squads.Squad;
  * Created by q5071488 on 21/04/2017.
  */
 
-public class SquadDebug {
+public class SquadDebug
+{
 
     public static void addSquad(String name, String desc)
     {

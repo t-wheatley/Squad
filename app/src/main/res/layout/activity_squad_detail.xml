@@ -4,7 +4,7 @@
     android:id="@+id/activity_squad_detail"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="uk.ac.tees.donut.squad.activities.SquadDetail"
+    tools:context="uk.ac.tees.donut.squad.activities.SquadDetailActivity"
     android:background="@color/cardview_dark_background">
 
     <RelativeLayout
@@ -34,7 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="110dp"
             android:background="@color/colorPrimary"
-            android:id="@+id/detailsLayout"
+            android:id="@+id/squadDetail_detailsLayout"
             android:layout_toRightOf="@+id/squadDetail_picture"
             android:padding="5dp">
             <TextView
@@ -64,11 +64,11 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/detailsLayout"
+            android:layout_below="@+id/squadDetail_detailsLayout"
             android:background="@color/colorPrimary"
             android:padding="5dp"
             android:layout_marginTop="10dp"
-            android:id="@+id/descriptionLayout"
+            android:id="@+id/squadDetail_descriptionLayout"
             >
 
             <TextView
@@ -90,30 +90,89 @@
                 android:layout_alignParentEnd="true"
                 android:textColor="@color/tw__solid_white"/>
 
+
         </RelativeLayout>
 
         <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/squadDetail_descriptionLayout"
+            android:layout_above="@+id/squadDetail_buttonLayout"
+            android:background="@color/colorPrimary"
+            android:padding="5dp"
+            android:layout_marginTop="10dp"
+            android:id="@+id/squadDetail_memberLayout"
+            >
+
+            <TextView
+                android:text="Members:"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:id="@+id/squadDetail_textViewMembers"
+                style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
+
+            <GridView
+                android:id="@+id/squadDetail_userGrid"
+                android:layout_below="@+id/squadDetail_textViewMembers"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:columnWidth="110dp"
+                android:gravity="center"
+                android:numColumns="auto_fit" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:ems="10"
+                android:layout_below="@+id/squadDetail_textViewMembers"
+                android:layout_alignParentStart="true"
+                android:id="@+id/squadDetail_textEditMembers"
+                android:layout_alignParentEnd="true"
+                android:textColor="@color/tw__solid_white"/>
+
+        </RelativeLayout>
+
+        <LinearLayout
             android:layout_width="200dp"
             android:layout_centerHorizontal="true"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/descriptionLayout"
-            android:id="@+id/buttonLayout"
+            android:layout_alignParentBottom="true"
+            android:id="@+id/squadDetail_buttonLayout"
             android:background="@color/colorPrimary"
             android:padding="5dp"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="10dp"
+            android:orientation="vertical">
 
             <Button
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentRight="true"
                 android:text="Join Squad"
                 android:id="@+id/squadDetail_joinBtn"
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:onClick="squadButton"/>
 
-        </RelativeLayout>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Meetups"
+                android:id="@+id/squadDetail_meetupsBtn"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:onClick="viewMeetups" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Places"
+                android:id="@+id/squadDetail_placesBtn"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:onClick="viewPlaces"
+                />
+
+        </LinearLayout>
     </RelativeLayout>
+
 
     <!-- Loading overlay; -->
     <include layout="@layout/loading_overlay"/>

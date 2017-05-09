@@ -1,6 +1,7 @@
 package uk.ac.tees.donut.squad.posts;
 
 
+
 /**
  * Created by q5273202 on 21/04/2017.
  */
@@ -12,77 +13,91 @@ public class AddressPlace extends Place
     public String townCity;
     public String county;
     public String postCode;
+    public String addressFull;
 
     public AddressPlace()
     {
         //Empty Constructor
     }
 
-    public AddressPlace(String pi, String n, String i, String d, String u, String a1, String a2, String tc, String c, String pc)
+    public AddressPlace(String pi, String n, String d, String s, String u, String a1, String a2, String tc, String c, String pc)
     {
-        super(pi, n, i, d, u);
-        address1 = a1;
-        address2 = a2;
-        townCity = tc;
-        county = c;
-        postCode = pc;
+        super(pi, n, d, s, u);
+        address1 = a1.trim();
+        address2 = a2.trim();
+        townCity = tc.trim();
+        county = c.trim();
+        postCode = pc.trim().toUpperCase();
     }
 
+
+
     //GETTERS
-    public String getAddress1() {
+    public String getAddress1()
+    {
         return address1;
     }
 
-    public String getAddress2() {
+    public String getAddress2()
+    {
         return address2;
     }
 
-    public String getTownCity() {
+    public String getTownCity()
+    {
         return townCity;
     }
 
-    public String getCounty() {
+    public String getCounty()
+    {
         return county;
     }
 
-    public String getPostCode() {
+    public String getPostCode()
+    {
         return postCode;
     }
 
-    public String FullAddress() {
+    public String fullAddress()
+    {
         String a = "";
-        if (address1 != null)
+        if (address1.length() != 0)
             a = a + address1;
-        if (address2 != null)
+        if (address2.length() != 0)
             a = a + ", " + address2;
-        if (townCity != null)
+        if (townCity.length() != 0)
             a = a + ", " + townCity;
-        if (county != null)
+        if (county.length() != 0)
             a = a + ", " + county;
-        if (postCode != null)
+        if (postCode.length() != 0)
             a = a + ", " + postCode;
 
         return a;
     }
 
     //SETTERS
-    public void setAddress1(String a1) {
-        address1 = a1;
+    public void setAddress1(String a1)
+    {
+        this.address1 = a1.trim();
     }
 
-    public void setAddress2(String a2) {
-        address2 = a2;
+    public void setAddress2(String a2)
+    {
+        this.address2 = a2.trim();
     }
 
-    public void setTownCity(String tc) {
-        townCity = tc;
+    public void setTownCity(String tc)
+    {
+        this.townCity = tc.trim();
     }
 
-    public void setCounty(String c) {
-        county = c;
+    public void setCounty(String c)
+    {
+        this.county = c.trim();
     }
 
-    public void setPostCode(String pc) {
-        postCode = pc;
+    public void setPostCode(String pc)
+    {
+        this.postCode = pc.trim().toUpperCase();
     }
 }

@@ -14,18 +14,20 @@ public class LocPlace extends AddressPlace
         //Empty constructor
     }
 
-    public LocPlace(String pi, String n, String i, String d, String u, String a1, String a2, String tc, String c, String pc, double la, double lo)
+    public LocPlace(String pi, String n, String d, String s, String u, String a1, String a2, String tc, String c, String pc, double la, double lo)
     {
-        super(pi, n, i, d, u, a1, a2, tc, c, pc);
+        super(pi, n, d, s, u, a1, a2, tc, c, pc);
         locLat = la;
         locLong = lo;
     }
+
 
     //GETTERS
     public double getLocLat()
     {
         return locLat;
     }
+
     public double getLocLong()
     {
         return locLong;

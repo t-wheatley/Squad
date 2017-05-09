@@ -1,17 +1,25 @@
+
 package uk.ac.tees.donut.squad.activities;
 
 import android.content.DialogInterface;
+import android.content.Intent;
+
+import android.location.Address;
+import android.os.Handler;
+import android.os.ResultReceiver;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -21,23 +29,22 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.JsonObject;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import uk.ac.tees.donut.squad.R;
 
-import uk.ac.tees.donut.squad.posts.AddressPlace;
+import uk.ac.tees.donut.squad.location.FetchAddressIntentService;
+import uk.ac.tees.donut.squad.location.LocContants;
 
-import uk.ac.tees.donut.squad.posts.Meetup;
-
+import uk.ac.tees.donut.squad.posts.LocPlace;
 import uk.ac.tees.donut.squad.posts.Place;
+import uk.ac.tees.donut.squad.squads.Squad;
 
-public class NewPlaceActivity extends AppCompatActivity {
+public class NewPlaceActivity extends AppCompatActivity
+{
 
     private static final String TAG = "Auth";
 
@@ -46,60 +53,106 @@ public class NewPlaceActivity extends AppCompatActivity {
 
     private DatabaseReference mDatabase;
 
-    private EditText editName;
-    private Spinner spinnerInterest;
-    private EditText editDescription;
+    RelativeLayout loadingOverlay;
+    TextView loadingText;
+
+    HashMap<String, String> squads;
+
+    private Spinner spinnerSquad;
     private Button btnSubmit;
 
-    private EditText editA1;
-    private EditText editA2;
-    private EditText editTC;
-    private EditText editC;
-    private EditText editPC;
+    private AddressResultReceiver mResultReceiver;
+    private int fetchType;
+    protected double latitude;
+    protected double longitude;
+    protected String addressFull;
+    protected String geocodeAddress;
+
+
+    private EditText editName;
+    private EditText editDescription;
+    private EditText editAddress1;
+    private EditText editAddress2;
+    private EditText editAddressTC;
+    private EditText editAddressC;
+    private EditText editAddressPC;
+
+    protected String name;
+    protected String description;
+    protected String squadId;
+    protected String a1;
+    protected String a2;
+    protected String pc;
+    protected String tc;
+    protected String c;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_place);
-        this.setTitle("New Meetup");
+        this.setTitle("New Place");
 
         // Getting the reference for the Firebase Realtime Database
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
+        // Creating new result reciever and setting the fetch type for geocoder
+        mResultReceiver = new AddressResultReceiver(null);
+        fetchType = LocContants.USE_ADDRESS_NAME;
+
         // Links the variables to their layout items.
         editName = (EditText) findViewById(R.id.textEditName);
-        spinnerInterest = (Spinner) findViewById(R.id.spinnerInterest);
+        spinnerSquad = (Spinner) findViewById(R.id.spinnerSquad);
         editDescription = (EditText) findViewById(R.id.textEditDescription);
         btnSubmit = (Button) findViewById(R.id.buttonSubmit);
 
-        editA1 = (EditText) findViewById(R.id.textEditAddress1);
-        editA2 = (EditText) findViewById(R.id.textEditAddress2);
-        editTC = (EditText) findViewById(R.id.textEditAddressTC);
-        editC = (EditText) findViewById(R.id.textEditAddressCounty);
-        editPC = (EditText) findViewById(R.id.textEditAddressPC);
+        editAddress1 = (EditText) findViewById(R.id.textEditAddress1);
+        editAddress2 = (EditText) findViewById(R.id.textEditAddress2);
+        editAddressTC = (EditText) findViewById(R.id.textEditAddressTC);
+        editAddressC = (EditText) findViewById(R.id.textEditAddressCounty);
+        editAddressPC = (EditText) findViewById(R.id.textEditAddressPC);
 
         // onClick listener for the submit button
-        btnSubmit.setOnClickListener(new View.OnClickListener() {
+        btnSubmit.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
-                // When pressed calls the submitMeeup method
-                submitPlace();
+            public void onClick(View v)
+            {
+                // When pressed calls the submitPlace method
+                if (checkEditTexts())
+                {
+                    submitPlace();
+                } else
+                {
+                    Toast.makeText(NewPlaceActivity.this, "Please provide a Name, Squad, " +
+                                    "Description and Location"
+                            , Toast.LENGTH_SHORT).show();
+                }
+
+
             }
         });
 
+        // Load interests and display loading overlay
+        loadingOverlay = (RelativeLayout) this.findViewById(R.id.loading_overlay);
+        loadingText = (TextView) this.findViewById(R.id.loading_overlay_text);
+        loadingText.setText("Loading...");
+        loadingOverlay.setVisibility(View.VISIBLE);
         fillSpinner();
 
         mAuth = FirebaseAuth.getInstance();
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
+        mAuthListener = new FirebaseAuth.AuthStateListener()
+        {
             @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth)
+            {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
+                if (user != null)
+                {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                    Toast.makeText(NewPlaceActivity.this, "User: " + user.getUid(), Toast.LENGTH_SHORT).show();
-                } else {
+                } else
+                {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
                     Toast.makeText(NewPlaceActivity.this, "No User", Toast.LENGTH_SHORT).show();
@@ -107,8 +160,10 @@ public class NewPlaceActivity extends AppCompatActivity {
                     new AlertDialog.Builder(NewPlaceActivity.this)
                             .setTitle("Sign-in Error")
                             .setMessage("You do not appear to be signed in, please try again.")
-                            .setPositiveButton("Back", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
+                            .setPositiveButton("Back", new DialogInterface.OnClickListener()
+                            {
+                                public void onClick(DialogInterface dialog, int which)
+                                {
                                     finish();
                                 }
                             })
@@ -121,30 +176,57 @@ public class NewPlaceActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onStart() {
+    public void onStart()
+    {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
     }
 
     @Override
-    public void onStop() {
+    public void onStop()
+    {
         super.onStop();
-        if (mAuthListener != null) {
+        if (mAuthListener != null)
+        {
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
 
-    private void submitPlace(){
-        // Gets the strings from the editTexts
-        final String name = editName.getText().toString();
-        final String interest = spinnerInterest.getSelectedItem().toString();
-        final String description = editDescription.getText().toString();
+    private void geocode(){
+        Intent intent = new Intent(this, FetchAddressIntentService.class);
+        intent.putExtra(LocContants.RECEIVER, mResultReceiver);
+        intent.putExtra(LocContants.FETCH_TYPE_EXTRA, fetchType);
+        intent.putExtra(LocContants.LOCATION_NAME_DATA_EXTRA, addressFull);
 
-        final String a1 = editA1.getText().toString();
-        final String a2 = editA2.getText().toString();
-        final String tc = editTC.getText().toString();
-        final String c = editC.getText().toString();
-        final String pc = editPC.getText().toString();
+        Log.e(TAG, "Starting Service");
+        startService(intent);
+    }
+
+    private void submitPlace()
+    {
+
+        // Display loading overlay
+        loadingText.setText("Posting your Place...");
+        loadingOverlay.setVisibility(View.VISIBLE);
+
+        // Gets the strings from the editTexts
+
+        name = editName.getText().toString();
+        description = editDescription.getText().toString();
+
+        a1 = editAddress1.getText().toString();
+        a2 = editAddress2.getText().toString();
+        tc = editAddressTC.getText().toString();
+        c = editAddressC.getText().toString();
+        pc = editAddressPC.getText().toString();
+
+        addressFull = editAddress1.getText().toString() + " " + editAddress2.getText().toString()
+                + " " + editAddressTC.getText().toString() + " " + editAddressC.getText().toString()
+                + " " +editAddressPC.getText().toString();
+
+        squadId = squads.get(spinnerSquad.getSelectedItem().toString().trim());
+
+
 
 
         // Checks if the name field is empty
@@ -161,36 +243,43 @@ public class NewPlaceActivity extends AppCompatActivity {
             editDescription.setError("Required");
             return;
         }
+        geocode();
 
         // Disable button so there are no multi-posts
         setEditingEnabled(false);
-        Toast.makeText(this, "Posting...", Toast.LENGTH_SHORT).show();
 
-        // Calls the createMeetup method with the strings entered
-        createPlace(name, interest, description, a1, a2, tc, c, pc);
 
         // Re-enables the editTexts and buttons and finishes the activity
         setEditingEnabled(true);
-        finish();
     }
 
     // Takes a meetup and pushes it to the Firebase Realtime Database (Without extras)
-    public void createPlace(String n, String i, String d, String a1, String a2, String tc, String c, String pc){
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            // User is signed in
 
+    public void createPlace(String n, String d, String s, String a1, String a2, String tc, String c, String pc, Double lat, Double lon, String fullAddy){
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null)
+        {
+            // User is signed in
             // Creating a new meetup node and getting the key value
             String placeId = mDatabase.child("places").push().getKey();
 
             // Creating a place object
-            Place place = new AddressPlace(placeId, n, i, d, user.getUid(), a1, a2, tc, c, pc);
+
+            Place place = new LocPlace(placeId, n, d, s, user.getUid(), a1, a2, tc, c, pc, lon, lat);
+
 
             // Pushing the meetup to the "meetups" node using the placeId
             mDatabase.child("places").child(placeId).setValue(place);
-        } else {
-            // No user is signed in
 
+            // Send user to their meetup on the MeetupDetailActivity activity
+            Intent intent = new Intent(NewPlaceActivity.this, PlaceDetailsActivity.class);
+            intent.putExtra("placeId", placeId);
+            startActivity(intent);
+            finish();
+        } else
+        {
+            // No user is signed in
             Toast.makeText(this, "Something went wrong, please try again.", Toast.LENGTH_SHORT).show();
         }
 
@@ -201,7 +290,7 @@ public class NewPlaceActivity extends AppCompatActivity {
     private void setEditingEnabled(boolean enabled)
     {
         editName.setEnabled(enabled);
-        spinnerInterest.setEnabled(enabled);
+        spinnerSquad.setEnabled(enabled);
         editDescription.setEnabled(enabled);
         if (enabled)
         {
@@ -215,26 +304,189 @@ public class NewPlaceActivity extends AppCompatActivity {
     // Fill's the spinner with all of the interests stored in FireBase
     private void fillSpinner()
     {
-        mDatabase.child("interests").addValueEventListener(new ValueEventListener() {
+        mDatabase.child("squads").addValueEventListener(new ValueEventListener()
+        {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Toast.makeText(NewPlaceActivity.this, "Loading interests...", Toast.LENGTH_SHORT).show();
-                final List<String> interests = new ArrayList<String>();
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                squads = new HashMap<String, String>();
 
-                for (DataSnapshot interestSnapshot: dataSnapshot.getChildren()) {
-                    String interest = interestSnapshot.child("name").getValue(String.class);
-                    interests.add(interest);
+                // Get all the squads
+                for (DataSnapshot squadsSnapshot : dataSnapshot.getChildren())
+                {
+                    Squad squad = squadsSnapshot.getValue(Squad.class);
+                    squads.put(squad.getName(), squad.getId());
                 }
 
-                ArrayAdapter<String> interestAdapter = new ArrayAdapter<String>(NewPlaceActivity.this, android.R.layout.simple_spinner_item, interests);
-                interestAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spinnerInterest.setAdapter(interestAdapter);
+                final List<String> squadNames = new ArrayList<String>();
+                for (String name : squads.keySet())
+                {
+                    squadNames.add(name);
+                }
+
+                // Fill the spinner
+                ArrayAdapter<String> squadAdapter = new ArrayAdapter<String>(NewPlaceActivity.this, android.R.layout.simple_spinner_item, squadNames);
+                squadAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinnerSquad.setAdapter(squadAdapter);
+
+                // Hide the loading overlay
+                loadingOverlay.setVisibility(View.GONE);
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(DatabaseError databaseError)
+            {
 
             }
         });
+    }
+
+    // Checks at least one of the location fields has a value and name + desc have a value
+    public boolean checkEditTexts()
+    {
+        // Checks if the name field is empty
+        if (editName.getText().toString().trim().length() == 0)
+        {
+            editName.setError("Required");
+            return false;
+        }
+
+        // Checks if the desc field is empty
+        if (editDescription.getText().toString().trim().length() == 0)
+        {
+            editDescription.setError("Required");
+            return false;
+        }
+
+        // Checks a location field has been entered
+        if (editAddress1.getText().toString().trim().length() > 0)
+        {
+            return true;
+        } else if (editAddress2.getText().toString().trim().length() > 0)
+        {
+            return true;
+        } else if (editAddressTC.getText().toString().trim().length() > 0)
+        {
+            return true;
+        } else if (editAddressC.getText().toString().trim().length() > 0)
+        {
+            return true;
+        } else if (editAddressPC.getText().toString().trim().length() > 0)
+        {
+            return true;
+        } else
+        {
+            return false;
+        }
+    }
+
+    public void CreateAlertDialog(){
+        new AlertDialog.Builder(NewPlaceActivity.this)
+                .setTitle("Confirm Address")
+                .setMessage("" + geocodeAddress + "\n" + "Is this the correct address?")
+                .setIcon(android.R.drawable.ic_dialog_info)
+                .setPositiveButton("Confirm Address", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i)
+                    {
+                        // Calls the createPlace method with the strings entered
+                        createPlace(name, description, squadId, a1, a2, tc, c, pc, longitude, latitude, geocodeAddress);
+                        finish();
+
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i){
+                        loadingOverlay.setVisibility(View.INVISIBLE);
+                        return;
+                    }
+                })
+                .setOnDismissListener(new DialogInterface.OnDismissListener(){
+
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        loadingOverlay.setVisibility(View.INVISIBLE);
+                        return;
+                    }
+                })
+                .create()
+                .show();
+
+    }
+
+    //Inner Class to receive address for geocoder
+    public class AddressResultReceiver extends ResultReceiver {
+        public AddressResultReceiver(Handler handler) {
+            super(handler);
+        }
+
+
+        @Override
+        protected void onReceiveResult(int resultCode, final Bundle resultData) {
+            if (resultCode == LocContants.SUCCESS_RESULT) {
+                final Address address = resultData.getParcelable(LocContants.RESULT_ADDRESS);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        latitude = address.getLatitude();
+                        longitude= address.getLongitude();
+                        geocodeAddress = resultData.getString(LocContants.RESULT_DATA_KEY);
+
+                        int addressLength = address.getMaxAddressLineIndex();
+
+
+                        switch (addressLength){
+
+                            default: a1 = address.getAddressLine(0);
+                                break;
+                            case 1: a1 = address.getAddressLine(0);
+                                break;
+                            case 2: a1 = address.getAddressLine(0);
+                                a2 = address.getAddressLine(1);
+                                break;
+                            case 3: a1 = address.getAddressLine(0);
+                                a2 = address.getAddressLine(1);
+                                pc = address.getAddressLine(2);
+                                break;
+                            case 4: a1 = address.getAddressLine(0);
+                                a2 = address.getAddressLine(1);
+                                tc = address.getAddressLine(2);
+                                pc = address.getAddressLine(3);
+                                break;
+                            case 5: a1 = address.getAddressLine(0);
+                                a2 = address.getAddressLine(1);
+                                tc = address.getAddressLine(2);
+                                c = address.getAddressLine(3);
+                                pc = address.getAddressLine(4);
+                                break;
+                            case 6:  a1 = address.getAddressLine(0);
+                                a2 = address.getAddressLine(1) + " " + address.getAddressLine(2);
+                                tc = address.getAddressLine(4);
+                                c = address.getAddressLine(3);
+                                pc = address.getAddressLine(5);
+                                break;
+                        }
+
+                        CreateAlertDialog();
+
+
+
+                    }
+                });
+            } else{
+                runOnUiThread(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        loadingOverlay.setVisibility(View.INVISIBLE);
+                        Toast.makeText(NewPlaceActivity.this, "Invalid Address, please try again.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        }
     }
 }

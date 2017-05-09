@@ -9,7 +9,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="uk.ac.tees.donut.squad.activities.MainActivity"
+    tools:context="uk.ac.tees.donut.squad.activities.MenuActivity"
     android:background="@color/cardview_dark_background"
     >
     <ImageView
@@ -20,7 +20,8 @@
         android:id="@+id/iv_logo"
         />
 
-    <RelativeLayout
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -32,83 +33,76 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
             android:id="@+id/textview"
             android:text="Squads!"
             style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"
             />
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@+id/textview"
             android:id="@+id/profileBtn"
             android:text="My Profile"
             android:onClick="openProfile"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"/>
+            style="@style/Widget.AppCompat.Button.Colored" />
+
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@+id/profileBtn"
             android:id="@+id/squadsBtn"
             android:text="Squads"
             android:onClick="openSquads"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"/>
+            style="@style/Widget.AppCompat.Button.Colored" />
+
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/squadsBtn"
-            android:layout_centerHorizontal="true"
             android:id="@+id/eventsBtn"
             android:text="Events"
             android:onClick="openEvents"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"/>
+            style="@style/Widget.AppCompat.Button.Colored" />
+
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/eventsBtn"
-            android:layout_centerHorizontal="true"
             android:id="@+id/hostBtn"
             android:text="Host an Event"
             android:onClick="openHost"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"/>
+            style="@style/Widget.AppCompat.Button.Colored" />
+
+        <Button
+            android:text="Places"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/placeList"
+            android:onClick="openPlaces"
+            style="@style/Widget.AppCompat.Button.Colored" />
+
+        <Button
+            android:text="New Place"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/newPlace"
+            android:onClick="openNewPlace"
+            style="@style/Widget.AppCompat.Button.Colored" />
+
         <Button
             android:text="Location"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/locationTest"
             android:onClick="openLocation"
-            android:layout_below="@+id/hostBtn"
-            android:layout_centerHorizontal="true"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"/>
+            style="@style/Widget.AppCompat.Button.Colored" />
 
         <Button
             android:text="Map"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/locationTest"
             android:id="@+id/mapTest"
             android:onClick="openMap"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"/>/>
+            style="@style/Widget.AppCompat.Button.Colored" />
 
-
-
-
-    </RelativeLayout>
+    </LinearLayout>
 
     <RelativeLayout
         android:layout_width="200dp"
@@ -120,27 +114,14 @@
         android:background="@color/colorPrimary"
         >
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/signInBtn"
-            android:text="Sign In"
-            android:onClick="openSignIn"
+            android:id="@+id/mysteryButton"
+            android:text="Mystery Button"
+            android:onClick="openMystery"
             android:layout_centerHorizontal="true"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"/>
+            style="@style/Widget.AppCompat.Button.Colored" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/settingsBtn"
-            android:text="Settings"
-            android:layout_below="@+id/signInBtn"
-            android:layout_centerHorizontal="true"
-            android:onClick="openSettings"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"/>
     </RelativeLayout>
 
 

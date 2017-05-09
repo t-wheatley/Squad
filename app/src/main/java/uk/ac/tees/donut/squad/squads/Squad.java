@@ -1,14 +1,13 @@
 package uk.ac.tees.donut.squad.squads;
 
-/**
- * Created by Scott on 14/03/2017.
- */
+import java.util.HashMap;
 
 public class Squad
 {
     String id;
     String name;
     String description;
+    HashMap<String, Boolean> users;
 
     public Squad()
     {
@@ -22,27 +21,45 @@ public class Squad
         description = d;
     }
 
-
-
     //GETTERS
+    public String getId()
+    {
+        return id;
+    }
+
     public String getName()
     {
         return name;
     }
+
     public String getDescription()
     {
         return description;
     }
 
+    public void setUsers(HashMap<String, Boolean> users)
+    {
+        this.users = users;
+    }
 
     //SETTERS
-    public void setName(String n)
+    public void setId(String id)
     {
-        name = n;
-    }
-    public void setDescription(String d)
-    {
-        description = d;
+        this.id = id;
     }
 
+    public void setName(String n)
+    {
+        this.name = n;
+    }
+
+    public void setDescription(String d)
+    {
+        this.description = d;
+    }
+
+    public HashMap<String, Boolean> getUsers()
+    {
+        return users;
+    }
 }
