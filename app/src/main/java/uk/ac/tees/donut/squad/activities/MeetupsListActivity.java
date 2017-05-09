@@ -46,7 +46,7 @@ import java.util.List;
 import uk.ac.tees.donut.squad.R;
 import uk.ac.tees.donut.squad.posts.Meetup;
 
-public class MeetupsListActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener
+public class MeetupsListActivity extends BaseActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener
 {
 
     private DatabaseReference mDatabase;
@@ -227,6 +227,16 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
     {
         mGoogleApiClient.connect();
         super.onStart();
+    }
+
+    @Override
+    int getContentViewId() {
+        return R.layout.activity_meetups_list;
+    }
+
+    @Override
+    int getNavigationMenuItemId() {
+        return R.id.menu_meetups;
     }
 
     @Override

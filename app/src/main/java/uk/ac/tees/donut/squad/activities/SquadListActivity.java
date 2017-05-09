@@ -27,7 +27,7 @@ import java.util.HashMap;
 import uk.ac.tees.donut.squad.R;
 import uk.ac.tees.donut.squad.squads.Squad;
 
-public class SquadListActivity extends AppCompatActivity
+public class SquadListActivity extends BaseActivity
 {
 
     private DatabaseReference mDatabase;
@@ -51,7 +51,6 @@ public class SquadListActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_squad_list);
 
         // Display loading overlay
         loadingOverlay = (RelativeLayout) this.findViewById(R.id.loading_overlay);
@@ -99,6 +98,16 @@ public class SquadListActivity extends AppCompatActivity
         }
 
         mRecyclerView.setAdapter(mAdapter);
+    }
+
+    @Override
+    int getContentViewId() {
+        return R.layout.activity_squad_list;
+    }
+
+    @Override
+    int getNavigationMenuItemId() {
+        return R.id.menu_squads;
     }
 
     public void getAll()

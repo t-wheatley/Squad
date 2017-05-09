@@ -18,4 +18,8 @@
         android:id="@+id/map"
         tools:context=".location.MapActivity"
         android:name="com.google.android.gms.maps.SupportMapFragment" />
+    <include
+        android:id="@+id/nav_bar"
+        layout="@layout/element_bottom_navigation"
+        />
 </LinearLayout>

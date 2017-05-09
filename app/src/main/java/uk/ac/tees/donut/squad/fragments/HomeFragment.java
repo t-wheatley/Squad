@@ -28,7 +28,7 @@ public class HomeFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
-         View Homeview = inflater.inflate(R.layout.home_fragment, container, false);
+         View Homeview = inflater.inflate(R.layout.activity_menu, container, false);
         System.out.println("-------Inflated: Home Fragment-------");
         final Toolbar myToolbar = (Toolbar) Homeview.findViewById(R.id.my_toolbar);
         final Spinner toolbarSpin = (Spinner) Homeview.findViewById(R.id.spinner_nav);

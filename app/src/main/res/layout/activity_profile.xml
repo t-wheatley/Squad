@@ -24,9 +24,6 @@
             android:id="@+id/profile_pictureLayout"
             android:layout_marginRight="10dp"
             >
-
-
-
             <ImageView
                 android:id="@+id/profileImage_ImageView"
                 android:layout_width="90dp"
@@ -134,4 +131,10 @@
     <!-- Loading overlay; -->
     <include layout="@layout/loading_overlay"/>
 
+    <include
+        layout="@layout/element_bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        />
 </RelativeLayout>

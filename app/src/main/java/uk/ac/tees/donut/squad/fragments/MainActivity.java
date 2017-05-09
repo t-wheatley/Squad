@@ -1,5 +1,8 @@
 package uk.ac.tees.donut.squad.fragments;
 
+import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
@@ -16,6 +19,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import uk.ac.tees.donut.squad.R;
+import uk.ac.tees.donut.squad.activities.MeetupsListActivity;
+import uk.ac.tees.donut.squad.activities.MenuActivity;
+import uk.ac.tees.donut.squad.activities.ProfileActivity;
+import uk.ac.tees.donut.squad.activities.SquadListActivity;
+import uk.ac.tees.donut.squad.location.GeocoderActivity;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -77,26 +85,34 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
     private void selectFragment(MenuItem item) {
         Fragment frag = null;
         // init corresponding fragment
+        Intent intent;
         switch (item.getItemId()) {
             case R.id.menu_home:
                 System.out.println("-------Selected: Home Fragment-------");
-                fragmentManager(new HomeFragment());
+                //fragmentManager(new HomeFragment());
+                intent = new Intent(this, MenuActivity.class);
+                startActivity(intent);
                 break;
             case R.id.menu_squads:
                 System.out.println("-------Selected: Squads Fragment-------");
-                fragmentManager(new SquadFragment());
+                //fragmentManager(new SquadFragment());
+                intent = new Intent(this, SquadListActivity.class);
+                startActivity(intent);
                 break;
             case R.id.menu_meetups:
                 System.out.println("-------Selected: Meetups Fragment-------");
-                fragmentManager(new MeetupFragment());
+                //fragmentManager(new MeetupFragment());
+                intent = new Intent(this, MeetupsListActivity.class);
+                startActivity(intent);
                 break;
             case R.id.menu_profile:
                 System.out.println("-------Selected: Profile Fragment-------");
-                fragmentManager(new ProfileFragment());
+                //fragmentManager(new ProfileFragment());
+                intent = new Intent(this, ProfileActivity.class);
+                startActivity(intent);
                 break;
         }
 
@@ -124,5 +140,4 @@ public class MainActivity extends AppCompatActivity {
             actionBar.setTitle(text);
         }
     }
-
 }
