@@ -5,12 +5,14 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.android.gms.vision.text.Text;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -31,7 +33,7 @@ public class SquadListActivity extends AppCompatActivity
     private DatabaseReference mDatabase;
 
     private RecyclerView mRecyclerView;
-    private LinearLayoutManager mLayoutManager;
+    private StaggeredGridLayoutManager mLayoutManager;
     private FirebaseRecyclerAdapter mAdapter;
     private RecyclerView.AdapterDataObserver mObserver;
 
@@ -84,7 +86,7 @@ public class SquadListActivity extends AppCompatActivity
         }
 
         // Setting up the layout manager
-        mLayoutManager = new LinearLayoutManager(this);
+        mLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // If came from 'View Squads' button on profile

@@ -70,6 +70,8 @@ public class SquadPostActivity extends AppCompatActivity {
         loadingOverlay.setVisibility(View.VISIBLE);
         loadingCount = 1;
 
+        Log.d("myTag", "This is my message");
+
         // Gets the extra passed from the last activity
         Intent detail = getIntent();
         Bundle b = detail.getExtras();
