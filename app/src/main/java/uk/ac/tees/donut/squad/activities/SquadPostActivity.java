@@ -17,9 +17,13 @@ import android.widget.Toast;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
+import uk.ac.tees.donut.squad.MyAdapter;
 import uk.ac.tees.donut.squad.R;
 import uk.ac.tees.donut.squad.posts.Post;
 
@@ -102,7 +106,7 @@ public class SquadPostActivity extends AppCompatActivity {
                         // When pressed calls the createPost method
                         if (Txtbox.getText().toString() != "") {
                             post=Txtbox.getText().toString();
-                            createPost(post, squadId);
+                           // createPost(post, squadId);
                         }
                     }
                 });
@@ -110,7 +114,57 @@ public class SquadPostActivity extends AppCompatActivity {
         // Setting up the layout manager
         mLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(mLayoutManager);
+
+        // specify an adapter
+        mRecyclerView.setAdapter(mAdapter);
     }
+
+    public void getPost(String userId)
+    {
+        // Database reference to get posts
+        Query userQuery = mDatabase.child("posts").orderByChild("users/" + userId).equalTo(true);
+
+        // Check to see if any Meetups exist
+        checkForEmpty(userQuery);
+
+        mAdapter = new FirebaseRecyclerAdapter<Post, SquadViewHolder>(
+                Post.class,
+                R.layout.item_squad,
+                SquadViewHolder.class,
+                userQuery
+        )
+        {
+            @Override
+            protected void populateViewHolder(SquadViewHolder viewHolder, final Squad model, int position)
+            {
+                populateSquadViewHolder(viewHolder, model, position);
+            }
+        };
+    }
+
+    // Checks if Squads in the selected query exist
+    public void checkForEmpty(Query query)
+    {
+        query.addListenerForSingleValueEvent(new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                // Hide the loading screen
+                loadingOverlay.setVisibility(View.GONE);
+
+                // Checks if Squads will be found
+                if (dataSnapshot.hasChildren())
+                {
+                    listText.setVisibility(View.GONE);
+                } else
+                {
+                    listText.setVisibility(View.VISIBLE);
+                }
+
+                // Add an Observer to the RecyclerView
+                adapterObserver();
+            }
 
     @Override
     public void onStart()
