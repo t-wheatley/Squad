@@ -7,6 +7,14 @@
     tools:context="uk.ac.tees.donut.squad.activities.NewMeetupActivity"
     android:background="@color/cardview_dark_background">
 
+    <!-- Dummy layout to prevent searchBar from receiving focus -->
+    <LinearLayout
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:layout_width="0px"
+        android:layout_height="0px"/>
+
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -132,58 +140,93 @@
                 android:layout_below="@+id/newMeetup_textDescription"
                 android:id="@+id/newMeetup_textEditDescription"/>
 
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/newMeetup_textEditDescription"
+                android:id="@+id/newMeetup_buttonNewAddress"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_alignParentLeft="true"
+                android:text="New Address" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/newMeetup_textEditDescription"
+                android:id="@+id/newMeetup_buttonFromPlace"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_alignParentRight="true"
+                android:text="Existing Place" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Address:"
-                android:layout_below="@+id/newMeetup_textEditDescription"
+                android:layout_below="@+id/newMeetup_buttonFromPlace"
                 android:id="@+id/newMeetup_textAddress"
                 style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
 
-            <EditText
+            <Spinner
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:id="@+id/newMeetup_textEditAddress1"
+                android:layout_height="40dp"
                 android:layout_below="@+id/newMeetup_textAddress"
                 android:layout_alignParentStart="true"
-                android:hint="Address Line 1" />
+                android:id="@+id/newMeetup_spinnerPlace"
+                android:layout_alignParentEnd="true"
+                android:visibility="gone"
+                style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
 
-            <EditText
-                android:layout_width="match_parent"
+            <RelativeLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:id="@+id/newMeetup_textEditAddress2"
-                android:layout_below="@+id/newMeetup_textEditAddress1"
-                android:layout_alignParentStart="true"
-                android:hint="Address Line 2" />
+                android:id="@+id/newMeetup_layoutNewAddress"
+                android:layout_below="@+id/newMeetup_textAddress">
 
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:id="@+id/newMeetup_textEditAddressTC"
-                android:layout_below="@+id/newMeetup_textEditAddress2"
-                android:layout_alignParentStart="true"
-                android:hint="Town/City" />
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName"
+                    android:id="@+id/newMeetup_textEditAddress1"
 
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:id="@+id/newMeetup_textEditAddressCounty"
-                android:layout_below="@+id/newMeetup_textEditAddressTC"
-                android:layout_alignParentStart="true"
-                android:hint="County" />
+                    android:layout_alignParentStart="true"
+                    android:hint="Address Line 1" />
 
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:id="@+id/newMeetup_textEditAddressPC"
-                android:layout_below="@+id/newMeetup_textEditAddressCounty"
-                android:layout_alignParentStart="true"
-                android:hint="Postcode" />
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName"
+                    android:id="@+id/newMeetup_textEditAddress2"
+                    android:layout_below="@+id/newMeetup_textEditAddress1"
+                    android:layout_alignParentStart="true"
+                    android:hint="Address Line 2" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName"
+                    android:id="@+id/newMeetup_textEditAddressTC"
+                    android:layout_below="@+id/newMeetup_textEditAddress2"
+                    android:layout_alignParentStart="true"
+                    android:hint="Town/City" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName"
+                    android:id="@+id/newMeetup_textEditAddressCounty"
+                    android:layout_below="@+id/newMeetup_textEditAddressTC"
+                    android:layout_alignParentStart="true"
+                    android:hint="County" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName"
+                    android:id="@+id/newMeetup_textEditAddressPC"
+                    android:layout_below="@+id/newMeetup_textEditAddressCounty"
+                    android:layout_alignParentStart="true"
+                    android:hint="Postcode" />
+            </RelativeLayout>
         </RelativeLayout>
 
         <RelativeLayout
