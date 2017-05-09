@@ -479,11 +479,29 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
 
         viewHolder.descriptionField.setText(shortDesc);
 
-        //number of meetups at place
-        viewHolder.meetupNo.setText("# of meetups");
+        // Number of Meetups at place
+        if(model.getMeetups() == null)
+        {
+            viewHolder.meetupNo.setText("0 Meetups");
+        } else
+        {
+            if (model.getMeetups().size() > 1)
+            {
+                viewHolder.meetupNo.setText(model.getMeetups().size() + " Meetups");
+            } else
+            {
+                viewHolder.meetupNo.setText("1 Meetup");
+            }
+        }
 
         //distance of place
-        viewHolder.distance.setText("distance");
+        Location placeLocation = new Location("place");
+        placeLocation.setLatitude(model.getLocLat());
+        placeLocation.setLongitude(model.getLocLong());
+        double distance = userLoc.distanceTo(placeLocation) / 1609.344;
+        String miles = String.format("%.2f", distance);
+        viewHolder.distance.setText(miles + " miles");
+
 
         // Get Squad name from id
         mDatabase.child("squads").child(model.getSquad()).addListenerForSingleValueEvent(new ValueEventListener()
@@ -823,7 +841,7 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
             final LocPlace place = placeList.get(position);
             holder.nameField.setText(place.getName());
 
-            //getting description
+            // Getting description
             String description = place.getDescription().replace("\n", "");
             String elipsis = "";
             if (description.length() > 54)
@@ -833,11 +851,28 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
 
             holder.descriptionField.setText(shortDesc);
 
-            //number of meetups at place
-            holder.meetupNo.setText("# of meetups");
+            // Number of Meetups at place
+            if(place.getMeetups() == null)
+            {
+                holder.meetupNo.setText("0 Meetups");
+            } else
+            {
+                if (place.getMeetups().size() > 1)
+                {
+                    holder.meetupNo.setText(place.getMeetups().size() + " Meetups");
+                } else
+                {
+                    holder.meetupNo.setText("1 Meetup");
+                }
+            }
 
-            //distance of place
-            holder.distance.setText("distance");
+            // Distance of place
+            Location placeLocation = new Location("place");
+            placeLocation.setLatitude(place.getLocLat());
+            placeLocation.setLongitude(place.getLocLong());
+            double distance = userLoc.distanceTo(placeLocation) / 1609.344;
+            String miles = String.format("%.2f", distance);
+            holder.distance.setText(miles + " miles");
 
             // Get Squad name from id
             mDatabase.child("squads").child(place.getSquad()).addListenerForSingleValueEvent(new ValueEventListener()

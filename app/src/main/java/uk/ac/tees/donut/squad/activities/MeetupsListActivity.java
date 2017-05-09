@@ -714,7 +714,14 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
         if (model.getUsers() != null)
         {
             int attendees = model.getUsers().size();
-            viewHolder.attendingField.setText(attendees + " attendees");
+
+            if (attendees > 1)
+            {
+                viewHolder.attendingField.setText(attendees + " attendees");
+            } else
+            {
+                viewHolder.attendingField.setText("1 attendee");
+            }
         } else
         {
             viewHolder.attendingField.setText("0 attendees");
@@ -1102,10 +1109,10 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
         public void onBindViewHolder(final MeetupViewHolder holder, int position)
         {
             final Meetup meetup = meetupList.get(position);
-            //getting name
+            // Getting name
             holder.nameField.setText(meetup.getName());
 
-            //getting description
+            // Getting description
             String description = meetup.getDescription().replace("\n", "");
             String elipsis = "";
             if (description.length() > 54)
@@ -1135,7 +1142,14 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
             if (meetup.getUsers() != null)
             {
                 int attendees = meetup.getUsers().size();
-                holder.attendingField.setText(attendees + " attendees");
+
+                if (attendees > 1)
+                {
+                    holder.attendingField.setText(attendees + " attendees");
+                } else
+                {
+                    holder.attendingField.setText("1 attendee");
+                }
             } else
             {
                 holder.attendingField.setText("0 attendees");
