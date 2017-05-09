@@ -189,8 +189,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 double lng = meetup.getLongitude();
                 String name = meetup.getName();
                 String description = meetup.getDescription();
+                String squad = meetup.getSquad();
                 LatLng location = new LatLng(lat,lng);
-                map.addMarker(new MarkerOptions().position(location).title(name).snippet(description));
+                map.addMarker(new MarkerOptions().position(location).title(name).snippet(squad));
 
             }
 
@@ -215,40 +216,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         });
 
-
-
-        // Check to see if any Meetups exist
-       // checkForEmpty(userQuery);
-
     }
 
-    public void getAll(String squadId )
-    {
-        mDatabase.child("meetups").child(squadId).addListenerForSingleValueEvent(new ValueEventListener()
-        {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // Gets the data from Firebase and stores it in a Place class
-                meetup = dataSnapshot.getValue(Meetup.class);
-
-                latitude = meetup.getLatitude();
-                longitude = meetup.getLongitude();
-
-                setDestination(latitude, longitude);
-
-                mMap.addMarker(new MarkerOptions().position(destination));
-
-
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-
-        });
-    }
 
     @Override
     public void onPause()
