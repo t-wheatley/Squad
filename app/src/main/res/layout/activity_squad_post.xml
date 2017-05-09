@@ -51,7 +51,7 @@
                 android:inputType="textPersonName"
                 android:ems="10"
                 android:layout_centerInParent = "true"
-                android:id="@+id/squadList_textView"
+                android:id="@+id/squadPost_textView"
                 android:textColor="@color/tw__solid_white"
                 android:visibility="gone"
                 android:text="There are no posts here!"/>

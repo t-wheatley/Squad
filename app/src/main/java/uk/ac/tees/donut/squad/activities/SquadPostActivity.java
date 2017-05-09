@@ -6,24 +6,26 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import uk.ac.tees.donut.squad.MyAdapter;
 import uk.ac.tees.donut.squad.R;
 import uk.ac.tees.donut.squad.posts.Post;
 
@@ -38,8 +40,9 @@ public class SquadPostActivity extends AppCompatActivity {
     private String squadId;
     private String post;
     private DatabaseReference mDatabase;
-    private StaggeredGridLayoutManager mLayoutManager;
+    private LinearLayoutManager mLayoutManager;
     private FirebaseRecyclerAdapter mAdapter;
+    private TextView listText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,7 @@ public class SquadPostActivity extends AppCompatActivity {
         Txtbox = (EditText) findViewById(R.id.txtboxPost);
         btnPost = (Button) findViewById(R.id.btnPost);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        listText = (TextView) findViewById(R.id.squadPost_textView);
 
         // Getting the reference for the Firebase Realtime Database
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -112,7 +116,7 @@ public class SquadPostActivity extends AppCompatActivity {
                 });
 
         // Setting up the layout manager
-        mLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
+        mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // specify an adapter
@@ -127,44 +131,47 @@ public class SquadPostActivity extends AppCompatActivity {
         // Check to see if any Meetups exist
         checkForEmpty(userQuery);
 
-        mAdapter = new FirebaseRecyclerAdapter<Post, SquadViewHolder>(
+        mAdapter = new FirebaseRecyclerAdapter<Post, PostViewHolder>(
                 Post.class,
-                R.layout.item_squad,
-                SquadViewHolder.class,
+                R.layout.item_post,
+                PostViewHolder.class,
                 userQuery
         )
         {
             @Override
-            protected void populateViewHolder(SquadViewHolder viewHolder, final Squad model, int position)
+            protected void populateViewHolder(PostViewHolder viewHolder, final Post model, int position)
             {
                 populateSquadViewHolder(viewHolder, model, position);
             }
         };
     }
 
-    // Checks if Squads in the selected query exist
+    // Checks if post in the selected query exist
     public void checkForEmpty(Query query)
     {
-        query.addListenerForSingleValueEvent(new ValueEventListener()
-        {
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot)
-            {
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 // Hide the loading screen
                 loadingOverlay.setVisibility(View.GONE);
 
                 // Checks if Squads will be found
-                if (dataSnapshot.hasChildren())
-                {
+                if (dataSnapshot.hasChildren()) {
                     listText.setVisibility(View.GONE);
-                } else
-                {
+                } else {
                     listText.setVisibility(View.VISIBLE);
                 }
 
                 // Add an Observer to the RecyclerView
                 adapterObserver();
             }
+            @Override
+            public void onCancelled(DatabaseError databaseError)
+            {
+
+            }
+        });
+    }
 
     @Override
     public void onStart()
@@ -209,4 +216,53 @@ public class SquadPostActivity extends AppCompatActivity {
 
 
     }
+
+    public void populateSquadViewHolder(SquadPostActivity.PostViewHolder viewHolder, final Post model, int position)
+    {
+        viewHolder.nameField.setText(model.getName());
+
+
+        String description = model.getDescription().replace("\n", "");
+        String elipsis = "";
+        if (description.length() > 54)
+            elipsis = "...";
+
+        String shortDesc = description.substring(0, Math.min(description.length(), 54)) + elipsis;
+
+        viewHolder.descriptionfield.setText(shortDesc);
+
+        //get member count
+        viewHolder.squadMembers.setText("#");
+
+        //get squad image
+        //stuff here for that
+
+        // If loading the last item
+        if (mAdapter.getItemCount() == loadingCount)
+        {
+            // Hide the loading overlay
+            loadingOverlay.setVisibility(View.GONE);
+        }
+
+        loadingCount++;
+    }
+
+    public static class PostViewHolder extends RecyclerView.ViewHolder
+    {
+        View mView;
+        TextView nameField;
+        TextView post;
+        ImageView ProfilePic;
+
+        public PostViewHolder(View v)
+        {
+            super(v);
+            mView = v;
+            nameField = (TextView) v.findViewById(R.id.userName);
+            post = (TextView) v.findViewById(R.id.txtPost);
+            ProfilePic = (ImageView) v.findViewById(R.id.userPP);
+        }
+    }
 }
+
+
