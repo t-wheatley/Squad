@@ -68,6 +68,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     //GOOGLE MAP API V2
 
     private DatabaseReference mDatabase;
+    private ChildEventListener mChildEventListener;
 
     private SupportMapFragment mapFrag;
     private Button btnRequest;
@@ -107,7 +108,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
          userId = (String) b.get("uId");
         }
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase = FirebaseDatabase.getInstance().getReference("meetups");
 
 
 
@@ -147,7 +148,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             mMap.setMyLocationEnabled(true);
         }
 
-        getUsers(userId);
+        addMarkers(mMap);
 
 
 
@@ -178,27 +179,19 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     .execute(this);
         }
     }
-    public void getUsers(String userId)
+    public void addMarkers(final GoogleMap map)
     {
-        Query queryRef = mDatabase.child("meetups");
-
-        queryRef.addChildEventListener(new ChildEventListener() {
+        mChildEventListener = mDatabase.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Meetup meetup = dataSnapshot.getValue(Meetup.class);
+                double lat = meetup.getLatitude();
+                double lng = meetup.getLongitude();
+                String name = meetup.getName();
+                String description = meetup.getDescription();
+                LatLng location = new LatLng(lat,lng);
+                map.addMarker(new MarkerOptions().position(location).title(name).snippet(description));
 
-                Map data = (Map) dataSnapshot.getValue();
-
-                Map mCoordinante = (HashMap)data.get("meetups");
-                double lat = (double) (mCoordinante.get("latititude"));
-                double lng = (double) (mCoordinante.get("longitude"));
-
-                LatLng mLatlng = new LatLng(lat, lng);
-
-                MarkerOptions mMarkerOptions = new MarkerOptions()
-                        .position(mLatlng)
-                        .title("meetup");
-
-                mMap.addMarker(mMarkerOptions);
             }
 
             @Override
@@ -221,6 +214,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
             }
         });
+
 
 
         // Check to see if any Meetups exist
