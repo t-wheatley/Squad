@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.ChangeEventListener;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -61,9 +62,11 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
 
     String userId;
     String squadId;
-    Boolean host;
-    Boolean member;
-    Boolean squad;
+    String placeId;
+    boolean host;
+    boolean member;
+    boolean squad;
+    boolean place;
 
     LinearLayout burgerMenu;
     FloatingActionButton burgerButton;
@@ -166,6 +169,7 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
         member = false;
         host = false;
         squad = false;
+        place = false;
         search = false;
         past = true;
         filter = 0;
@@ -199,6 +203,11 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
                     // Member mode
                     member = true;
                 }
+            } else if(b.get("placeId") != null)
+            {
+                // Place mode
+                placeId = (String) b.get("placeId");
+                place = true;
             }
         }
 
@@ -224,6 +233,9 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
         } else if (squad)
         {
             getSquad(squadId);
+        } else if(place)
+        {
+            getPlace(placeId);
         } else
         {
             getAll();
@@ -271,7 +283,13 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
     @Override
     public void onBackPressed()
     {
-        MeetupsListActivity.this.finish();
+        if(burger == true)
+        {
+            fab(burgerButton);
+        } else
+        {
+            MeetupsListActivity.this.finish();
+        }
     }
 
     public void buildGoogleApiClient()
@@ -335,7 +353,6 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
                 }
             }
         };
-
     }
 
     public void getUsers(String userId)
@@ -454,6 +471,56 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
                 R.layout.item_list_card,
                 MeetupViewHolder.class,
                 squadQuery
+        )
+        {
+            @Override
+            protected void populateViewHolder(final MeetupViewHolder viewHolder, final Meetup model, int position)
+            {
+                model.updateStatus();
+                populateMeetupViewHolder(viewHolder, model, position);
+            }
+
+            @Override
+            protected void onChildChanged(ChangeEventListener.EventType type, int index, int oldIndex)
+            {
+                switch (type)
+                {
+                    case ADDED:
+                        notifyItemInserted(index);
+                        updateFilter();
+                        break;
+                    case CHANGED:
+                        notifyItemChanged(index);
+                        updateFilter();
+                        break;
+                    case REMOVED:
+                        notifyItemRemoved(index);
+                        updateFilter();
+                        break;
+                    case MOVED:
+                        notifyItemMoved(oldIndex, index);
+                        updateFilter();
+                        break;
+                    default:
+                        throw new IllegalStateException("Incomplete case statement");
+                }
+            }
+        };
+    }
+
+    public void getPlace(String placeId)
+    {
+        // Database reference to get all Meetups
+        Query allQuery = mDatabase.child("meetups").orderByChild("place").equalTo(placeId);
+
+        // Check to see if any Meetups exist
+        checkForEmpty(allQuery, null);
+
+        mAdapter = new FirebaseRecyclerAdapter<Meetup, MeetupViewHolder>(
+                Meetup.class,
+                R.layout.item_list_card,
+                MeetupViewHolder.class,
+                allQuery
         )
         {
             @Override
@@ -941,9 +1008,10 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
         {
             ActivityCompat.requestPermissions(MeetupsListActivity.this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
+        } else
+        {
+            getNewLocation();
         }
-
-        getNewLocation();
     }
 
     @Override

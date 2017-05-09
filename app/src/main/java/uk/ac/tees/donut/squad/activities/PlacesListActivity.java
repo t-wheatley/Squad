@@ -179,18 +179,8 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
         mRecyclerView.setLayoutManager(mLayoutManager);
 
 
-        // If came from 'View Places' button on Squad
-        if (squad)
-        {
-            getSquad(squadId);
-        } else
-        {
-            getAll();
-        }
-
         buildGoogleApiClient();
         mGoogleApiClient.connect();
-
 
         mLocationRequest = new LocationRequest();
         mLocationRequest.setPriority(102);
@@ -228,8 +218,15 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
     }
 
     @Override
-    public void onBackPressed() {
-        PlacesListActivity.this.finish();
+    public void onBackPressed()
+    {
+        if(burger == true)
+        {
+            fab(burgerButton);
+        } else
+        {
+            PlacesListActivity.this.finish();
+        }
     }
 
     public void buildGoogleApiClient()
@@ -683,9 +680,36 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
         {
             ActivityCompat.requestPermissions(PlacesListActivity.this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
-        }
+        } else
+        {
+            getNewLocation();
 
-        getNewLocation();
+            if(userLoc == null)
+            {
+                new AlertDialog.Builder(PlacesListActivity.this)
+                        .setTitle("No Location")
+                        .setMessage("Sorry we can't access your location right now, make sure you have Location turned on!")
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener()
+                        {
+                            public void onClick(DialogInterface dialog, int which)
+                            {
+                                finish();
+                            }
+                        })
+                        .setCancelable(false)
+                        .show();
+            }else
+            {
+                // If came from 'View Places' button on Squad
+                if (squad)
+                {
+                    getSquad(squadId);
+                } else
+                {
+                    getAll();
+                }
+            }
+        }
     }
 
     @Override
@@ -701,6 +725,32 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
 
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 getNewLocation();
+
+                if(userLoc == null)
+                {
+                    new AlertDialog.Builder(PlacesListActivity.this)
+                            .setTitle("No Location")
+                            .setMessage("Sorry we can't access your location right now, make sure you have Location turned on!")
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener()
+                            {
+                                public void onClick(DialogInterface dialog, int which)
+                                {
+                                    finish();
+                                }
+                            })
+                            .setCancelable(false)
+                            .show();
+                } else
+                {
+                    // If came from 'View Places' button on Squad
+                    if (squad)
+                    {
+                        getSquad(squadId);
+                    } else
+                    {
+                        getAll();
+                    }
+                }
             } else { // if permission is not granted
                 finish();
             }
