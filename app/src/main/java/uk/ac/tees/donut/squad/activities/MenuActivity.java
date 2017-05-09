@@ -76,8 +76,9 @@ public class MenuActivity extends AppCompatActivity
 
     public void openMap(View view)
     {
-        Intent intent = new Intent(this, MapActivity.class);
-        startActivity(intent);
+        Intent detail = new Intent(MenuActivity.this, MapActivity.class);
+        detail.putExtra("uId", firebaseUser.getUid());
+        startActivity(detail);
     }
 
     // USE THIS WHEN YOU NEED TO DEBUG OR TEST CERTAIN THINGS WITHOUT DESTROYING THE REST OF THE APP

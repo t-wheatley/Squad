@@ -23,6 +23,8 @@ import com.akexorcist.googledirection.GoogleDirection;
 import com.akexorcist.googledirection.constant.TransportMode;
 import com.akexorcist.googledirection.model.Direction;
 import com.akexorcist.googledirection.util.DirectionConverter;
+import com.firebase.ui.database.ChangeEventListener;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -36,12 +38,24 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import uk.ac.tees.donut.squad.R;
+import uk.ac.tees.donut.squad.activities.MeetupsListActivity;
+import uk.ac.tees.donut.squad.activities.SquadListActivity;
+import uk.ac.tees.donut.squad.posts.LocPlace;
+import uk.ac.tees.donut.squad.posts.Meetup;
+import uk.ac.tees.donut.squad.squads.Squad;
 
 /**
  * Created by Anthony Ward
@@ -66,12 +80,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private String directionAPIKey = "AIzaSyBPSyzwv_Lr4JyCgKRswRhBRebSi8htqt8";
     private LatLng currentLocation;
     private LatLng destination;
+    private double longitude;
+    private double latitude;
 
-    String userId;
-    String squadId;
-    Boolean host;
-    Boolean member;
-    Boolean squad;
+    private Meetup meetup;
+    private Squad squad;
+
+    private String userId;
+    private String squadId;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -87,31 +104,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         Bundle b = detail.getExtras();
         if (b != null)
         {
-            if (b.get("squadId") != null)
-            {
-                // Squad mode
-                squadId = (String) b.get("squadId");
-                squad = true;
-            } else if (b.get("userId") != null)
-            {
-                // Collects the userId passed from the RecyclerView
-                userId = (String) b.get("userId");
-                if (b.get("host") != null)
-                {
-                    if ((Boolean) b.get("host"))
-                    {
-                        // Host mode
-                        host = true;
-                    }
-                } else
-                {
-                    // Member mode
-                    member = true;
-                }
-            }
+         userId = (String) b.get("uId");
         }
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
+
 
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -121,7 +118,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     public void setDestination(double lat, double lng)
     {
-        destination = new LatLng(lat, lng);
+        destination = new LatLng(latitude, longitude);
     }
 
     @Override
@@ -150,9 +147,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             mMap.setMyLocationEnabled(true);
         }
 
-
-        // Add a marker at home
-        LatLng Home = new LatLng(54.6993131, -1.5103871);
+        getUsers(userId);
 
 
 
@@ -182,6 +177,83 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     .transportMode(TransportMode.DRIVING)
                     .execute(this);
         }
+    }
+    public void getUsers(String userId)
+    {
+        Query queryRef = mDatabase.child("meetups");
+
+        queryRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                Map data = (Map) dataSnapshot.getValue();
+
+                Map mCoordinante = (HashMap)data.get("meetups");
+                double lat = (double) (mCoordinante.get("latititude"));
+                double lng = (double) (mCoordinante.get("longitude"));
+
+                LatLng mLatlng = new LatLng(lat, lng);
+
+                MarkerOptions mMarkerOptions = new MarkerOptions()
+                        .position(mLatlng)
+                        .title("meetup");
+
+                mMap.addMarker(mMarkerOptions);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+        // Check to see if any Meetups exist
+       // checkForEmpty(userQuery);
+
+    }
+
+    public void getAll(String squadId )
+    {
+        mDatabase.child("meetups").child(squadId).addListenerForSingleValueEvent(new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Gets the data from Firebase and stores it in a Place class
+                meetup = dataSnapshot.getValue(Meetup.class);
+
+                latitude = meetup.getLatitude();
+                longitude = meetup.getLongitude();
+
+                setDestination(latitude, longitude);
+
+                mMap.addMarker(new MarkerOptions().position(destination));
+
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+
+        });
     }
 
     @Override

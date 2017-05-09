@@ -67,8 +67,6 @@ public class PlaceMapsActivity extends AppCompatActivity implements OnMapReadyCa
     //GOOGLE MAP API V2
 
     private SupportMapFragment mapFrag;
-    private Button btnRequestDriving;
-    private Button btnRequestWalking;
     private TextView showDistance;
     private TextView showDuration;
     private GoogleApiClient mGoogleApiClient;
