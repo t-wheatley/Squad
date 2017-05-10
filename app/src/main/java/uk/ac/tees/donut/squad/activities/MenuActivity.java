@@ -67,12 +67,7 @@ public class MenuActivity extends AppCompatActivity
         Intent intent = new Intent(this, PlacesListActivity.class);
         startActivity(intent);
     }
-
-    public void openLocation(View view)
-    {
-        Intent intent = new Intent(this, GeocoderActivity.class);
-        startActivity(intent);
-    }
+    
 
     public void openMap(View view)
     {
