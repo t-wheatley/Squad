@@ -66,9 +66,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private ChildEventListener mChildEventListener;
 
     Calendar currentDateTime;
+    int filter;
 
     private SupportMapFragment mapFrag;
     private Button btnRequest;
+    private Button btnOngoingFilter;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     protected Location mLastLocation;
@@ -81,9 +83,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private double longitude;
     private double latitude;
 
-    private Meetup meetup;
-    private Squad squad;
-
     private String userId;
     private String squadId;
 
@@ -93,14 +92,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     {
         currentDateTime = Calendar.getInstance();
 
-
-
+        filter = 1;
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
         btnRequest = (Button) findViewById(R.id.btn_request_direction);
         btnRequest.setOnClickListener(this);
+
+        btnOngoingFilter = (Button) findViewById(R.id.btn_filter_ongoing);
+        btnOngoingFilter.setOnClickListener(this);
 
         // Gets the extra passed from the last activity
         Intent detail = getIntent();
@@ -166,6 +167,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         {
             requestDirection();
         }
+        if (id == R.id.btn_filter_ongoing){
+            mMap.clear();
+            getLocation();
+            filter = 1;
+            addMarkers(mMap);
+        }
     }
 
     public void requestDirection()
@@ -186,9 +193,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public void addMarkers(final GoogleMap map)
     {
 
-        Toast.makeText(this, ""+ currentDateTime, Toast.LENGTH_SHORT).show();
-
-
         mChildEventListener = mDatabase.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -203,9 +207,20 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 long strtDateTime = meetup.getStartDateTime();
                 long endDateTime = meetup.getEndDateTime();
                 LatLng location = new LatLng(lat,lng);
-                Marker marker = map.addMarker(new MarkerOptions().position(location).title(name));
-                marker.setTag(meetup);
+                if(filter == 1){
+                    Marker marker = map.addMarker(new MarkerOptions().position(location).title(name));
+                    marker.setTag(meetup);
+                } else if(filter == 2) {
+                    if (currentDateTime.getTimeInMillis() / 1000L > strtDateTime && currentDateTime.getTimeInMillis() / 1000L < endDateTime) {
+                        Marker marker = map.addMarker(new MarkerOptions().position(location).title(name));
+                        marker.setTag(meetup);
+                    } else {
+                        displayMessage();
+                    }
 
+                    Marker marker = map.addMarker(new MarkerOptions().position(location).title(name));
+                    marker.setTag(meetup);
+                }
             }
 
             @Override
@@ -230,7 +245,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         });
 
     }
+    public void displayMessage(){
+        Toast.makeText(this, "No meetups found", Toast.LENGTH_LONG).show();
 
+    }
 
     @Override
     public void onPause()
@@ -404,9 +422,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         if (direction.isOK())
         {
             ArrayList<LatLng> directionPositionList = direction.getRouteList().get(0).getLegList().get(0).getDirectionPoint();
+            mMap.clear();
+            mMap.addMarker(new MarkerOptions().position(currentLocation).title("Current Postion").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA)));
+            addMarkers(mMap);
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(destination, 11));
             mMap.addPolyline(DirectionConverter.createPolyline(this, directionPositionList, 5, Color.RED));
 
-            btnRequest.setVisibility(View.GONE);
+            btnRequest.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -422,6 +444,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             return false;
         }else {
             Meetup meetup = (Meetup) marker.getTag();
+            btnRequest.setVisibility(View.VISIBLE);
+            destination = marker.getPosition();
             if(meetup.getEndDateTime() < currentDateTime.getTimeInMillis() /1000L){
                 Toast.makeText(this, "Expired", Toast.LENGTH_LONG).show();
                 return  false;
