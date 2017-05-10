@@ -17,6 +17,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -28,7 +33,9 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import uk.ac.tees.donut.squad.R;
+import uk.ac.tees.donut.squad.UserGridViewAdapter;
 import uk.ac.tees.donut.squad.posts.Post;
+import uk.ac.tees.donut.squad.users.FBUser;
 
 public class SquadPostActivity extends AppCompatActivity {
 
@@ -45,10 +52,13 @@ public class SquadPostActivity extends AppCompatActivity {
     private FirebaseRecyclerAdapter mAdapter;
     private TextView listText;
     private RecyclerView.AdapterDataObserver mObserver;
+    private ImageView profileImage;
 
+    FirebaseUser firebaseUser;
     TextView loadingText;
     int loadingCount;
     RelativeLayout loadingOverlay;
+    FBUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +70,8 @@ public class SquadPostActivity extends AppCompatActivity {
         btnPost = (Button) findViewById(R.id.btnPost);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         listText = (TextView) findViewById(R.id.squadPost_textView);
+        profileImage = (ImageView) findViewById(R.id.userPP);
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         // Getting the reference for the Firebase Realtime Database
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -108,10 +120,9 @@ public class SquadPostActivity extends AppCompatActivity {
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
+                if (firebaseUser != null) {
                     // User is signed in
-                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    Log.d(TAG, "onAuthStateChanged:signed_in:" + firebaseUser.getUid());
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
@@ -138,12 +149,14 @@ public class SquadPostActivity extends AppCompatActivity {
 
         // specify an adapter
         mRecyclerView.setAdapter(mAdapter);
+
+        temp();
     }
 
     public void getPost(String squadId)
     {
         // Database reference to get posts
-        Query userQuery = mDatabase.child("posts").orderByChild("squad/"+squadId);
+        Query userQuery = mDatabase.child("posts").orderByChild("squad").equalTo(squadId);
 
         // Check to see if any Meetups exist
         checkForEmpty(userQuery);
@@ -300,6 +313,65 @@ public class SquadPostActivity extends AppCompatActivity {
             ProfilePic = (ImageView) v.findViewById(R.id.userPP);
         }
     }
+
+    public void temp (){
+        mDatabase.child("users").child(firebaseUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Getting user
+                user = dataSnapshot.getValue(FBUser.class);
+
+                if (user != null) {
+                    // Displays the photo in the ImageView
+                    Glide.with(SquadPostActivity.this)
+                            .load(user.getPicture().trim())
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .skipMemoryCache(true)
+                            .listener(new RequestListener<String, GlideDrawable>() {
+                                @Override
+                                public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                                    return false;
+                                }
+
+                                @Override
+                                public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                                    // If profileName != default and profileImage isnt null
+                                    if (profileImage != null) {
+                                        // Hiding loading overlay
+                                        loadingOverlay.setVisibility(View.GONE);
+                                    }
+                                    return false;
+                                }
+                            })
+                            .dontAnimate()
+                            .fitCenter()
+                            .error(R.drawable.com_facebook_profile_picture_blank_portrait)
+                            .into(profileImage);
+                    } else
+                    {
+                        new AlertDialog.Builder(SquadPostActivity.this)
+                                .setTitle("Something went wrong!")
+                                .setMessage("We do not appear to be able to find this user, please try again.")
+                                .setPositiveButton("Back", new DialogInterface.OnClickListener()
+                        {
+                            public void onClick(DialogInterface dialog, int which)
+                            {
+                                finish();
+                            }
+                        })
+                                .setCancelable(false)
+                                .show();
+                    }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError)
+            {
+            }
+        });
+    }
+
 }
 
 
