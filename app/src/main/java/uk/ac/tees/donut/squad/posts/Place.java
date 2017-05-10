@@ -1,5 +1,7 @@
 package uk.ac.tees.donut.squad.posts;
 
+import java.util.HashMap;
+
 public class Place
 {
 
@@ -8,6 +10,7 @@ public class Place
     public String description;
     public String squad;
     public String host;
+    HashMap<String, Boolean> meetups;
 
 
     public Place()
@@ -51,6 +54,11 @@ public class Place
         return host;
     }
 
+    public HashMap<String, Boolean> getMeetups()
+    {
+        return meetups;
+    }
+
     //SETTERS
     public void setPlaceId(String pi)
     {
@@ -75,5 +83,10 @@ public class Place
     public void setHost(String host)
     {
         this.host = host;
+    }
+
+    public void setMeetups(HashMap<String, Boolean> meetups)
+    {
+        this.meetups = meetups;
     }
 }

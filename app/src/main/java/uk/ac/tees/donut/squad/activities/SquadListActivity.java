@@ -244,12 +244,20 @@ public class SquadListActivity extends AppCompatActivity
             viewHolder.joined.setText("×");
         }
 
-        //get member count
-        viewHolder.squadMembers.setText("#");
+        // Get member count
+        if(users != null)
+        {
+            viewHolder.squadMembers.setText(String.valueOf(users.size()));
+        } else
+        {
+            viewHolder.squadMembers.setText("0");
+        }
 
-        //get squad image
+
+        //Get squad image
         //stuff here for that
 
+        // OnClick
         viewHolder.mView.setOnClickListener(new View.OnClickListener()
         {
             @Override

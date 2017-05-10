@@ -139,9 +139,9 @@
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Directions"
+                android:text="View Meetups"
                 style="@style/Base.Widget.AppCompat.Button.Colored"
-                android:id="@+id/directionsButton"
+                android:id="@+id/meetupsButton"
                 android:layout_below="@+id/mapButton"/>
         </RelativeLayout>
     </RelativeLayout>
