@@ -23,8 +23,6 @@ import com.akexorcist.googledirection.GoogleDirection;
 import com.akexorcist.googledirection.constant.TransportMode;
 import com.akexorcist.googledirection.model.Direction;
 import com.akexorcist.googledirection.util.DirectionConverter;
-import com.firebase.ui.database.ChangeEventListener;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -43,17 +41,14 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Calendar;
+import java.util.Date;
 
 import uk.ac.tees.donut.squad.R;
-import uk.ac.tees.donut.squad.activities.MeetupsListActivity;
-import uk.ac.tees.donut.squad.activities.SquadListActivity;
-import uk.ac.tees.donut.squad.posts.LocPlace;
 import uk.ac.tees.donut.squad.posts.Meetup;
 import uk.ac.tees.donut.squad.squads.Squad;
 
@@ -62,13 +57,15 @@ import uk.ac.tees.donut.squad.squads.Squad;
  */
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener, DirectionCallback
+        GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener, DirectionCallback, GoogleMap.OnMarkerClickListener
 {
 
     //GOOGLE MAP API V2
 
     private DatabaseReference mDatabase;
     private ChildEventListener mChildEventListener;
+
+    Calendar currentDateTime;
 
     private SupportMapFragment mapFrag;
     private Button btnRequest;
@@ -94,6 +91,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        currentDateTime = Calendar.getInstance();
+
+
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
@@ -148,6 +150,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             mMap.setMyLocationEnabled(true);
         }
 
+        mMap.setOnMarkerClickListener(this);
+
         addMarkers(mMap);
 
 
@@ -181,17 +185,26 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
     public void addMarkers(final GoogleMap map)
     {
+
+        Toast.makeText(this, ""+ currentDateTime, Toast.LENGTH_SHORT).show();
+
+
         mChildEventListener = mDatabase.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Meetup meetup = dataSnapshot.getValue(Meetup.class);
+                SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy 'at' h:mm a");
+                String startDate = sdf.format(meetup.getStartDateTime() * 1000L);
+                String endDate = sdf.format(meetup.getEndDateTime() * 1000L);
                 double lat = meetup.getLatitude();
                 double lng = meetup.getLongitude();
                 String name = meetup.getName();
                 String description = meetup.getDescription();
-                String squad = meetup.getSquad();
+                long strtDateTime = meetup.getStartDateTime();
+                long endDateTime = meetup.getEndDateTime();
                 LatLng location = new LatLng(lat,lng);
-                map.addMarker(new MarkerOptions().position(location).title(name).snippet(squad));
+                Marker marker = map.addMarker(new MarkerOptions().position(location).title(name));
+                marker.setTag(meetup);
 
             }
 
@@ -402,6 +415,28 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     {
 
     }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        if(marker.equals(mCurrLocationMarker)){
+            return false;
+        }else {
+            Meetup meetup = (Meetup) marker.getTag();
+            if(meetup.getEndDateTime() < currentDateTime.getTimeInMillis() /1000L){
+                Toast.makeText(this, "Expired", Toast.LENGTH_LONG).show();
+                return  false;
+            } else if(meetup.getStartDateTime() > currentDateTime.getTimeInMillis() /1000L){
+                Toast.makeText(this, "Upcoming", Toast.LENGTH_LONG).show();
+                return false;
+            } else{
+                Toast.makeText(this, "Ongoing", Toast.LENGTH_LONG).show();
+                return false;
+            }
+        }
+
+
+    }
+
 }
 
 
