@@ -363,12 +363,6 @@ public class NewMeetupActivity extends AppCompatActivity
     }
 
     @Override
-    public void onPause()
-    {
-
-    }
-
-    @Override
     public void onStop()
     {
         super.onStop();
