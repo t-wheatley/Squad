@@ -287,4 +287,11 @@ public class SquadDetailActivity extends AppCompatActivity
         intent.putExtra("squadId", squadId);
         startActivity(intent);
     }
+
+    public void openPost(View view)
+    {
+        Intent intent = new Intent(this, SquadPostActivity.class);
+        intent.putExtra("squadId", squadId);
+        startActivity(intent);
+    }
 }
