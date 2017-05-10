@@ -55,6 +55,7 @@ public class SquadPostActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_squad_post);
 
+        // Declaring everything
         Txtbox = (EditText) findViewById(R.id.txtboxPost);
         btnPost = (Button) findViewById(R.id.btnPost);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
@@ -69,8 +70,6 @@ public class SquadPostActivity extends AppCompatActivity {
         loadingText.setText("Loading Posts...");
         loadingOverlay.setVisibility(View.VISIBLE);
         loadingCount = 1;
-
-        Log.d("myTag", "This is my message");
 
         // Gets the extra passed from the last activity
         Intent detail = getIntent();
@@ -91,6 +90,19 @@ public class SquadPostActivity extends AppCompatActivity {
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
         }
+
+        // onClick listener for the post button
+        btnPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // When pressed calls the createPost method
+                if (Txtbox.getText().toString() != "") {
+                    post=Txtbox.getText().toString();
+                    createPost(post, squadId);
+                }
+            }
+        });
+
 
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -118,30 +130,20 @@ public class SquadPostActivity extends AppCompatActivity {
             }
         };
 
-                // onClick listener for the post button
-                btnPost.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // When pressed calls the createPost method
-                        if (Txtbox.getText().toString() != "") {
-                            post=Txtbox.getText().toString();
-                           // createPost(post, squadId);
-                        }
-                    }
-                });
-
         // Setting up the layout manager
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
+
+        getPost(squadId);
 
         // specify an adapter
         mRecyclerView.setAdapter(mAdapter);
     }
 
-    public void getPost(String userId)
+    public void getPost(String squadId)
     {
         // Database reference to get posts
-        Query userQuery = mDatabase.child("posts").orderByChild("users/" + userId).equalTo(true);
+        Query userQuery = mDatabase.child("posts").orderByChild("squad/"+squadId);
 
         // Check to see if any Meetups exist
         checkForEmpty(userQuery);
@@ -247,7 +249,7 @@ public class SquadPostActivity extends AppCompatActivity {
             String postId = mDatabase.child("posts").push().getKey();
 
             // Creating a post object
-            Post postObject = new Post(user.getUid(), squadId, post, postId);
+            Post postObject = new Post(user.getDisplayName(), squadId, post, postId);
 
             // Pushing the post to the "posts" node using the postId
             mDatabase.child("posts").child(postId).setValue(postObject);
@@ -268,6 +270,8 @@ public class SquadPostActivity extends AppCompatActivity {
         viewHolder.nameField.setText(model.getUser());
 
         viewHolder.postField.setText(model.getPost());
+
+
 
 
         // If loading the last item
