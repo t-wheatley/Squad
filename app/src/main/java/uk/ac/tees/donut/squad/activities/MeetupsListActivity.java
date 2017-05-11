@@ -695,13 +695,7 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
         viewHolder.nameField.setText(model.getName());
 
         String description = model.getDescription().replace("\n", "");
-        String elipsis = "";
-        if (description.length() > 54)
-            elipsis = "...";
-
-        String shortDesc = description.substring(0, Math.min(description.length(), 54)) + elipsis;
-
-        viewHolder.descriptionfield.setText(shortDesc);
+        viewHolder.descriptionfield.setText(description);
 
         // Get Squad name from id
         mDatabase.child("squads").child(model.getSquad()).addListenerForSingleValueEvent(new ValueEventListener()
@@ -1142,13 +1136,7 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
 
             // Getting description
             String description = meetup.getDescription().replace("\n", "");
-            String elipsis = "";
-            if (description.length() > 54)
-                elipsis = "...";
-
-            final String shortDesc = description.substring(0, Math.min(description.length(), 54)) + elipsis;
-
-            holder.descriptionfield.setText(shortDesc);
+            holder.descriptionfield.setText(description);
 
             // Get Squad name from id
             mDatabase.child("squads").child(meetup.getSquad()).addListenerForSingleValueEvent(new ValueEventListener()
@@ -1270,7 +1258,7 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
             {
                 // Hide expired
                 past = false;
-                pastButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_tick, 0);
+                pastButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_cross, 0);
 
                 filteredList = new ArrayList<>();
 
@@ -1296,7 +1284,7 @@ public class MeetupsListActivity extends AppCompatActivity implements GoogleApiC
             } else
             {
                 past = true;
-                pastButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_cross, 0);
+                pastButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_tick, 0);
 
                 mRecyclerView.setAdapter(mAdapter);
             }
