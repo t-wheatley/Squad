@@ -285,7 +285,7 @@ public class SquadDetailActivity extends BaseActivity
 
     public void viewMeetups(View view)
     {
-        // Loads the MeetupsList activity displaying the Meetups that the user is hosting
+        // Loads the MeetupsList activity displaying the Meetups that are part of the Squad
         Intent intent = new Intent(this, MeetupsListActivity.class);
         intent.putExtra("squadId", squadId);
         startActivity(intent);
@@ -294,6 +294,13 @@ public class SquadDetailActivity extends BaseActivity
     public void viewPlaces(View view)
     {
         Intent intent = new Intent(this, PlacesListActivity.class);
+        intent.putExtra("squadId", squadId);
+        startActivity(intent);
+    }
+
+    public void openPost(View view)
+    {
+        Intent intent = new Intent(this, SquadPostActivity.class);
         intent.putExtra("squadId", squadId);
         startActivity(intent);
     }

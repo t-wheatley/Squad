@@ -211,18 +211,20 @@ public class NewPlaceActivity extends AppCompatActivity
 
         // Gets the strings from the editTexts
 
-        name = editName.getText().toString();
-        description = editDescription.getText().toString();
+        name = editName.getText().toString().trim();
+        description = editDescription.getText().toString().trim();
 
-        a1 = editAddress1.getText().toString();
-        a2 = editAddress2.getText().toString();
-        tc = editAddressTC.getText().toString();
-        c = editAddressC.getText().toString();
-        pc = editAddressPC.getText().toString();
+        a1 = editAddress1.getText().toString().trim();
+        a2 = editAddress2.getText().toString().trim();
+        tc = editAddressTC.getText().toString().trim();
+        c = editAddressC.getText().toString().trim();
+        pc = editAddressPC.getText().toString().trim();
 
-        addressFull = editAddress1.getText().toString() + " " + editAddress2.getText().toString()
-                + " " + editAddressTC.getText().toString() + " " + editAddressC.getText().toString()
-                + " " +editAddressPC.getText().toString();
+        addressFull = editAddress1.getText().toString().trim() + " " +
+                editAddress2.getText().toString().trim() + " " +
+                editAddressTC.getText().toString().trim() + " " +
+                editAddressC.getText().toString().trim() + " " +
+                editAddressPC.getText().toString().trim();
 
         squadId = squads.get(spinnerSquad.getSelectedItem().toString().trim());
 

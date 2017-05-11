@@ -9,7 +9,8 @@ public class Meetup
             name,
             description,
             squad,
-            host;
+            host,
+            place;
 
     // Attendees
     HashMap<String, Boolean> users;
@@ -91,6 +92,10 @@ public class Meetup
         return host;
     }
 
+    public String getPlace() {
+        return place;
+    }
+
     public HashMap<String, Boolean> getUsers()
     {
         return users;
@@ -145,6 +150,10 @@ public class Meetup
     public void setHost(String h)
     {
         this.host = h;
+    }
+
+    public void setPlace(String place) {
+        this.place = place;
     }
 
     public void setUsers(HashMap<String, Boolean> users)

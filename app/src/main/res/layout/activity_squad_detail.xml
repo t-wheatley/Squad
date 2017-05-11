@@ -170,6 +170,15 @@
                 android:onClick="viewPlaces"
                 />
 
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Discussion"
+                android:id="@+id/squadDetail_postButton"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:onClick="openPost"
+                />
+
         </LinearLayout>
     </RelativeLayout>
     <include
