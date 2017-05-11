@@ -98,7 +98,6 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_meetups_list);
 
         // Display loading overlay
         loadingOverlay = (RelativeLayout) this.findViewById(R.id.loading_overlay);

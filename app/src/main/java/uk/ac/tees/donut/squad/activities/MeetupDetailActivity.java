@@ -48,7 +48,7 @@ import uk.ac.tees.donut.squad.UserGridViewAdapter;
 import uk.ac.tees.donut.squad.posts.Meetup;
 import uk.ac.tees.donut.squad.users.FBUser;
 
-public class MeetupDetailActivity extends AppCompatActivity
+public class MeetupDetailActivity extends BaseActivity
 {
     // Firebase
     DatabaseReference mDatabase;
@@ -178,6 +178,16 @@ public class MeetupDetailActivity extends AppCompatActivity
         // Starts the loading chain
         // loadMeetup -> loadSquad -> loadHost -> loadUsers
         loadMeetup();
+    }
+
+    @Override
+    int getContentViewId() {
+        return R.layout.activity_meetup_detail;
+    }
+
+    @Override
+    int getNavigationMenuItemId() {
+        return R.id.menu_meetups;
     }
 
     public void loadMeetup()

@@ -45,8 +45,4 @@
         android:layout_centerHorizontal="true"
         android:visibility="invisible"/>
 
-    <include
-        android:id="@+id/nav_bar"
-        layout="@layout/element_bottom_navigation"
-        />
 </RelativeLayout>

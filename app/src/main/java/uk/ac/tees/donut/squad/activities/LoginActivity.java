@@ -343,7 +343,8 @@ public class LoginActivity extends AppCompatActivity implements
         if (startedActivity == false)
         {
             startedActivity = true;
-            startActivity(new Intent (this, MenuActivity.class));
+            Intent i = new Intent(LoginActivity.this, MenuActivity.class);
+            startActivity(i);
             finish();
         }
     }
