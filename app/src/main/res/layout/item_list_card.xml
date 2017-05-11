@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         app:cardBackgroundColor="@color/colorPrimary"
         android:layout_margin="5dp"
-        app:cardCornerRadius="5dp"
+        app:cardCornerRadius="2dp"
         app:cardElevation="3dp"
         >
         <RelativeLayout
@@ -17,15 +17,14 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxWidth="60dp"
-                android:maxHeight="80dp"
+                android:layout_width="60dp"
+                android:layout_height="88dp"
                 android:id="@+id/listCard_image"
-                android:background="@color/colorAccent"
                 android:layout_gravity="center"
                 android:adjustViewBounds="true"
-                android:scaleType="fitXY"
+                android:scaleType="centerCrop"
+                android:background="@color/colorPrimaryDark"
+                android:visibility="gone"
                 />
 
         <LinearLayout
@@ -41,12 +40,14 @@
                 android:background="@color/colorPrimaryDark">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Text 1"
                     android:id="@+id/listCard_text1"
                     android:textColor="@color/tw__composer_white"
                     android:textStyle="bold"
+                    android:layout_toLeftOf="@+id/listCard_text2"
+                    android:ellipsize="marquee"
                     />
 
                 <TextView
@@ -61,11 +62,15 @@
             </RelativeLayout>
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="29dp"
                 android:text="Text 3"
-                android:padding="5dp"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="4dp"
                 android:id="@+id/listCard_text3"
+                android:ellipsize="end"
                 />
 
             <!-- Line Break -->
@@ -86,7 +91,7 @@
                 android:layout_height="wrap_content"
                 android:paddingStart="5dp"
                 android:paddingEnd="5dp"
-                android:paddingBottom="5dp"
+                android:paddingBottom="4dp"
                 >
 
                 <ImageView
