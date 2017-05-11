@@ -471,13 +471,7 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
 
         //getting description
         String description = model.getDescription().replace("\n", "");
-        String elipsis = "";
-        if (description.length() > 54)
-            elipsis = "...";
-
-        final String shortDesc = description.substring(0, Math.min(description.length(), 54)) + elipsis;
-
-        viewHolder.descriptionField.setText(shortDesc);
+        viewHolder.descriptionField.setText(description);
 
         // Number of Meetups at place
         if(model.getMeetups() == null)
@@ -843,13 +837,7 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
 
             // Getting description
             String description = place.getDescription().replace("\n", "");
-            String elipsis = "";
-            if (description.length() > 54)
-                elipsis = "...";
-
-            final String shortDesc = description.substring(0, Math.min(description.length(), 54)) + elipsis;
-
-            holder.descriptionField.setText(shortDesc);
+            holder.descriptionField.setText(description);
 
             // Number of Meetups at place
             if(place.getMeetups() == null)

@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.IntentCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -58,8 +60,13 @@ public class ProfileActivity extends BaseActivity implements GoogleApiClient.OnC
     Button hostingBtn;
     Button secretBtn;
     Button signOutBtn;
-    ImageButton editBioBtn;
+    Button editBioBtn;
     ImageView profileImage;
+
+    FloatingActionButton fab;
+    boolean burger = false;
+    RelativeLayout burgerMenu;
+
 
     // Variables
     Boolean personal;
@@ -102,6 +109,9 @@ public class ProfileActivity extends BaseActivity implements GoogleApiClient.OnC
         profileImage = (ImageView) findViewById(R.id.profileImage_ImageView);
 
         profileName = (TextView) findViewById(R.id.profile_name);
+
+        fab = (FloatingActionButton) findViewById(R.id.profile_fab);
+        burgerMenu = (RelativeLayout) findViewById(R.id.profile_burgerMenu);
 
         bio = (TextView) findViewById(R.id.bio);
 
@@ -158,7 +168,7 @@ public class ProfileActivity extends BaseActivity implements GoogleApiClient.OnC
         });
         signOutBtn.setVisibility(View.GONE);
 
-        editBioBtn = (ImageButton) findViewById(R.id.profile_imageButtonProfileBioEdit);
+        editBioBtn = (Button) findViewById(R.id.profile_editBio);
         editBioBtn.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -544,5 +554,21 @@ public class ProfileActivity extends BaseActivity implements GoogleApiClient.OnC
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult)
     {
 
+    }
+
+    public void fab(View view)
+    {
+        if(burger == false)
+        {
+            burgerMenu.setVisibility(View.VISIBLE);
+            fab.setImageResource(R.drawable.ic_cross);
+            burger = true;
+        }
+        else
+        {
+            burgerMenu.setVisibility(View.GONE);
+            fab.setImageResource(R.drawable.ic_burger);
+            burger = false;
+        }
     }
 }

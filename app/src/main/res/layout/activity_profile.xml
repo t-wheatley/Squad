@@ -1,179 +1,265 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_profile"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/cardview_dark_background"
+    tools:context="uk.ac.tees.donut.squad.activities.ProfileActivity">
 
-    tools:context="uk.ac.tees.donut.squad.activities.ProfileActivity"
-    android:background="@color/cardview_dark_background">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin">
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true">
 
-        <android.support.v7.widget.CardView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/profile_pictureLayout"
-            android:layout_marginRight="10dp"
-            app:cardCornerRadius="5dp"
-            app:cardBackgroundColor="@color/colorPrimary"
-            android:layout_centerHorizontal="true"
-            >
-        <RelativeLayout
+        <!-- Floating Action Button, Top Right -->
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/profile_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="10dp"
             >
             <ImageView
-                android:id="@+id/profileImage_ImageView"
-                android:layout_width="90dp"
-                android:layout_height="90dp"
-                android:layout_centerHorizontal="true"
-                android:src="@drawable/com_facebook_profile_picture_blank_portrait" />
+            android:layout_alignParentEnd="true"
+            android:layout_margin="15dp"
+            android:onClick="fab"
+            android:src="@drawable/ic_burger"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content" />
+        </android.support.design.widget.FloatingActionButton>
 
-        </RelativeLayout>
-        </android.support.v7.widget.CardView>
-
-<android.support.v7.widget.CardView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_below="@+id/profile_pictureLayout"
-    app:cardBackgroundColor="@color/colorPrimary"
-    app:cardCornerRadius="5dp"
-    android:id="@id/descriptionLayout"
-    android:layout_marginTop="10dp">
-        <LinearLayout
+        <!-- AppBar at top -->
+        <RelativeLayout
+            android:id="@+id/profile_appbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            >
-<RelativeLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:padding="5dp"
-    android:background="@color/colorPrimaryDark">
+            android:layout_height="56dp"
+            android:layout_centerHorizontal="true"
+            android:background="@color/colorPrimary"
+            android:elevation="5dp"
+            android:gravity="center">
+
+            <!-- Profile Name -->
             <TextView
                 android:id="@+id/profile_name"
-                android:text="User Name"
-                android:textColor="#FFFFFF"
+                style="@style/TextAppearance.AppCompat.Widget.Button.Colored"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"
-                android:layout_centerVertical="true"/>
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="88dp"
+                android:layout_marginStart="16dp"
+                android:gravity="center"
+                android:text="Username"
+                android:textSize="18sp"
+                android:textColor="@color/tw__solid_white" />
+        </RelativeLayout>
 
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_mode_edit_white_24px"
-        android:background="?android:selectableItemBackground"
-        android:id="@+id/profile_imageButtonProfileBioEdit"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"/>
+        <!-- ScrollView for content,
+        so the appBar stays at the top -->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/profile_appbar">
 
-</RelativeLayout>
-
-            <TextView
+            <!-- Linear Layout that houses everything in the ScrollView-->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/profile_name"
-                android:padding="5dp"
-                android:id="@+id/bio"
-                android:text="Bio goes here"/>
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:orientation="vertical"
+                android:gravity="center"
+                >
 
-        </LinearLayout>
-</android.support.v7.widget.CardView>
+                <!-- Profile Pic Card -->
+                <android.support.v7.widget.CardView
+                    android:id="@+id/profile_pictureLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="@color/colorPrimary"
+                    app:cardCornerRadius="5dp">
 
-<android.support.v7.widget.CardView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    app:cardBackgroundColor="@color/colorPrimary"
-    android:layout_below="@+id/descriptionLayout"
-    android:layout_centerHorizontal="true"
-    android:layout_marginTop="10dp"
-    app:cardCornerRadius="5dp"
-    >
-        <LinearLayout
-            android:layout_width="wrap_content"
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp">
+
+                        <ImageView
+                            android:id="@+id/profileImage_ImageView"
+                            android:layout_width="90dp"
+                            android:layout_height="90dp"
+                            android:layout_centerHorizontal="true"
+                            android:src="@drawable/com_facebook_profile_picture_blank_portrait" />
+
+                    </RelativeLayout>
+                </android.support.v7.widget.CardView>
+
+                <!-- Bio Card -->
+                <android.support.v7.widget.CardView
+                    android:id="@id/descriptionLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    app:cardBackgroundColor="@color/colorPrimary"
+                    app:cardCornerRadius="5dp">
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                        <!-- Top Bar -->
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/colorPrimaryDark"
+                            android:padding="10dp"
+                            android:gravity="center">
+
+                            <!-- Bio Title -->
+                            <TextView
+                                style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Biography"
+                                android:gravity="center"
+                                android:textColor="#FFFFFF"
+                                />
+
+                        </RelativeLayout>
+
+                        <!-- Bio Text -->
+                        <TextView
+                            android:id="@+id/bio"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:text="Bio goes here"
+                            android:gravity="center"/>
+
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+
+                <!-- Public Access Buttons -->
+                <android.support.v7.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    app:cardBackgroundColor="@color/colorPrimary"
+                    app:cardCornerRadius="5dp">
+
+                    <LinearLayout
+                        android:id="@+id/profile_buttonLayout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:layout_centerHorizontal="true"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+
+                            android:padding="5dp">
+
+                            <!-- Squads -->
+                            <Button
+                                android:id="@+id/profile_squadsBtn"
+                                style="@style/Base.Widget.AppCompat.Button.Colored"
+                                android:layout_width="190dp"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentRight="true"
+                                android:text="View Squads" />
+
+                            <!-- Meetups -->
+                            <Button
+                                android:id="@+id/profile_attendingBtn"
+                                style="@style/Base.Widget.AppCompat.Button.Colored"
+                                android:layout_width="190dp"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentRight="true"
+                                android:text="View Meetups" />
+
+                            <!-- Hosted -->
+                            <Button
+                                android:id="@+id/profile_hostingBtn"
+                                style="@style/Base.Widget.AppCompat.Button.Colored"
+                                android:layout_width="190dp"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentRight="true"
+                                android:text="View Hosted" />
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+
+            </LinearLayout>
+        </ScrollView>
+
+        <!-- Burger Menu -->
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
+            android:paddingBottom="16dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="88dp"
+            android:paddingTop="10dp"
+            android:background="@color/colorPrimary"
+            android:elevation="5dp"
+            android:visibility="gone"
+            android:id="@+id/profile_burgerMenu"
+            >
 
-            android:id="@+id/profile_buttonLayout"
-            android:orientation="vertical">
-
-<LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-
-    android:padding="5dp"
-    >
-            <Button
-                android:id="@+id/profile_squadsBtn"
-                android:layout_width="190dp"
+            <!-- Buttons -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentLeft="true"
-                style="@style/Base.Widget.AppCompat.Button.Colored"
-                android:text="View Squads"/>
+                android:orientation="vertical">
 
-            <Button
-                android:id="@+id/profile_attendingBtn"
-                android:layout_width="190dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentLeft="true"
-                style="@style/Base.Widget.AppCompat.Button.Colored"
-                android:text="View Meetups"/>
+                <!-- Edit Bio -->
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:text="Edit Biography"
+                    android:id="@+id/profile_editBio"
+                    />
 
-            <Button
-                android:id="@+id/profile_hostingBtn"
-                android:layout_width="190dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentLeft="true"
-                style="@style/Base.Widget.AppCompat.Button.Colored"
-                android:text="My Hosted"/>
+                <!-- Secret Mode -->
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:text="Enable Secret Mode"
+                    android:id="@+id/profile_secretBtn"
+                    />
 
-            <Button
-                android:id="@+id/profile_secretBtn"
-                android:layout_width="190dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentLeft="true"
-                style="@style/Base.Widget.AppCompat.Button.Colored"
-                android:text="Enable Secret Mode"/>
-</LinearLayout>
+                <!-- Sign Out -->
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Sign Out"
+                    android:id="@+id/profile_signOutBtn"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    />
 
-<LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="@color/colorPrimaryDark"
-    android:orientation="vertical"
-    android:padding="5dp">
-            <Button
-                android:id="@+id/profile_signOutBtn"
-                android:layout_width="190dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentLeft="true"
-                style="@style/Base.Widget.AppCompat.Button.Colored"
-                android:text="Sign Out"/>
-</LinearLayout>
-        </LinearLayout>
+            </LinearLayout>
 
-</android.support.v7.widget.CardView>
+        </RelativeLayout>
+
 
     </RelativeLayout>
-
     <include
         layout="@layout/element_bottom_navigation"
         android:layout_width="match_parent"
@@ -183,5 +269,5 @@
         />
 
     <!-- Loading overlay; -->
-    <include layout="@layout/loading_overlay"/>
+    <include layout="@layout/loading_overlay" />
 </RelativeLayout>
