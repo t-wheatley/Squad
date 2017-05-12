@@ -93,6 +93,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private Button btnShowMeetup;
     private TextView showDistance;
     private TextView showDuration;
+    private TextView mapTitle;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     protected Location mLastLocation;
@@ -128,6 +129,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         showDuration = (TextView) findViewById(R.id.textDuration);
         showDuration.setVisibility(View.GONE);
+
+        mapTitle = (TextView) findViewById(R.id.textTitle);
+        mapTitle.setVisibility(View.VISIBLE);
 
         burgerMenu = (LinearLayout) findViewById(R.id.map_burgerMenu);
         burgerButton = (FloatingActionButton) findViewById(R.id.map_fab);
@@ -294,11 +298,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         {
             burgerMenu.setVisibility(View.VISIBLE);
             burgerButton.setImageResource(R.drawable.ic_cross);
+            mapTitle.setVisibility(View.GONE);
             burger = true;
         } else
         {
             burgerMenu.setVisibility(View.GONE);
             burgerButton.setImageResource(R.drawable.ic_burger);
+            mapTitle.setVisibility(View.VISIBLE);
             burger = false;
         }
     }
@@ -458,7 +464,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mCurrLocationMarker = mMap.addMarker(markerOptions);
 
         //move map camera
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 11));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14));
 
         //optionally, stop location updates if only current location is needed
         if (mGoogleApiClient != null)
@@ -589,7 +595,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        if(marker.equals(mCurrLocationMarker)){
+        if(marker.getPosition().equals(currentLocation)){
             return false;
         }else {
             Meetup meetup = (Meetup) marker.getTag();
@@ -597,7 +603,20 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             btnShowMeetup.setVisibility(View.VISIBLE);
             btnRequest.setVisibility(View.VISIBLE);
             destination = marker.getPosition();
-            return false;
+            if(filter == 1){
+                if(meetup.getEndDateTime() < currentDateTime.getTimeInMillis() /1000L){
+                    Toast.makeText(this, "Expired", Toast.LENGTH_LONG).show();
+                    return  false;
+                } else if(meetup.getStartDateTime() > currentDateTime.getTimeInMillis() /1000L){
+                    Toast.makeText(this, "Upcoming", Toast.LENGTH_LONG).show();
+                    return false;
+                } else{
+                    Toast.makeText(this, "Ongoing", Toast.LENGTH_LONG).show();
+                    return false;
+                }
+            } else{
+                return false;
+            }
         }
 
 
