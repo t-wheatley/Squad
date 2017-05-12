@@ -161,21 +161,7 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
         {
          userId = (String) b.get("uId");
         }
-
-        mDatabase.child("squads").child("users").addListenerForSingleValueEvent(new ValueEventListener()
-        {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot)
-            {
-                Squad squad = dataSnapshot.getValue(Squad.class);
-                squadId = dataSnapshot.child(userId).getValue(String.class);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError)
-            {
-            }
-        });
+        
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         mapFrag = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
