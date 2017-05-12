@@ -18,10 +18,6 @@ import com.google.firebase.auth.FirebaseUser;
 
 import uk.ac.tees.donut.squad.R;
 import uk.ac.tees.donut.squad.debug.SquadDebug;
-import uk.ac.tees.donut.squad.fragments.HomeFragment;
-import uk.ac.tees.donut.squad.fragments.MeetupFragment;
-import uk.ac.tees.donut.squad.fragments.ProfileFragment;
-import uk.ac.tees.donut.squad.fragments.SquadFragment;
 import uk.ac.tees.donut.squad.location.GeocoderActivity;
 import uk.ac.tees.donut.squad.location.MapActivity;
 

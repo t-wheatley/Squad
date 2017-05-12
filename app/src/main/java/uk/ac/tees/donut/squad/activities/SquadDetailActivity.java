@@ -61,7 +61,6 @@ public class SquadDetailActivity extends BaseActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_squad_detail);
 
 
         // Initialising loading overlay and displaying

@@ -20,15 +20,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            >
-            <ImageView
             android:layout_alignParentEnd="true"
             android:layout_margin="15dp"
             android:onClick="fab"
             android:src="@drawable/ic_burger"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content" />
-        </android.support.design.widget.FloatingActionButton>
+            />
 
         <!-- AppBar at top -->
         <RelativeLayout

@@ -95,7 +95,6 @@ public class MeetupDetailActivity extends BaseActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_meetup_detail);
 
         // Initialising loading overlay and displaying
         loadingOverlay = (RelativeLayout) this.findViewById(R.id.loading_overlay);
