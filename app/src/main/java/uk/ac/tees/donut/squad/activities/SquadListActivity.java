@@ -1,7 +1,10 @@
 package uk.ac.tees.donut.squad.activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +15,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.vision.text.Text;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -21,6 +26,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.HashMap;
 
@@ -31,6 +38,7 @@ public class SquadListActivity extends AppCompatActivity
 {
 
     private DatabaseReference mDatabase;
+    private FirebaseStorage firebaseStorage;
 
     private RecyclerView mRecyclerView;
     private StaggeredGridLayoutManager mLayoutManager;
@@ -79,6 +87,7 @@ public class SquadListActivity extends AppCompatActivity
 
         // Getting the reference for the Firebase Realtime Database
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        firebaseStorage = FirebaseStorage.getInstance();
 
         if (mRecyclerView != null)
         {
@@ -211,7 +220,7 @@ public class SquadListActivity extends AppCompatActivity
         mAdapter.registerAdapterDataObserver(mObserver);
     }
 
-    public void populateSquadViewHolder(SquadViewHolder viewHolder, final Squad model, int position)
+    public void populateSquadViewHolder(final SquadViewHolder viewHolder, final Squad model, int position)
     {
         viewHolder.nameField.setText(model.getName());
 
@@ -254,8 +263,24 @@ public class SquadListActivity extends AppCompatActivity
         }
 
 
-        //Get squad image
-        //stuff here for that
+        // Diplaying the picture
+        StorageReference squadStorage = firebaseStorage.getReference().child("squads/" + model.getId() + ".png");
+
+        // If the meetup has an image display it
+        squadStorage.getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                Bitmap meetupImage = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                viewHolder.squadImage.setVisibility(View.VISIBLE);
+                viewHolder.squadImage.setImageBitmap(meetupImage);
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Display default
+            }
+        });
 
         // OnClick
         viewHolder.mView.setOnClickListener(new View.OnClickListener()
