@@ -186,18 +186,11 @@ public class PlaceMapsActivity extends AppCompatActivity implements OnMapReadyCa
         if (currentLocation == null || destination == null){
             Toast.makeText(this, "Invalid Destination", Toast.LENGTH_LONG).show();
         }
-        else if (m = true) {
+        else {
             GoogleDirection.withServerKey(directionAPIKey)
                     .from(currentLocation)
                     .to(destination)
                     .transportMode(TransportMode.DRIVING)
-                    .unit(Unit.METRIC)
-                    .execute(this);
-        } else{
-            GoogleDirection.withServerKey(directionAPIKey)
-                    .from(currentLocation)
-                    .to(destination)
-                    .transportMode(TransportMode.WALKING)
                     .unit(Unit.IMPERIAL)
                     .execute(this);
         }
@@ -371,7 +364,7 @@ public class PlaceMapsActivity extends AppCompatActivity implements OnMapReadyCa
             String duration = durationInfo.getText();
 
             showDistance.setText("Distance: " + distance);
-            showDuration.setText("Duration: " + duration);
+            showDuration.setText("Driving time: " + duration);
 
             showDistance.setVisibility(View.VISIBLE);
             showDuration.setVisibility(View.VISIBLE);

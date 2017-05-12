@@ -4,7 +4,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/activity_map"
+    android:background="@color/cardview_dark_background"
+    tools:context="uk.ac.tees.donut.squad.location.MapActivity">
 
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"
@@ -17,21 +20,125 @@
         android:onClick="fab"
         />
 
-    <Button
-        android:id="@+id/btn_request_direction"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/map_burgerMenu"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:text="request_direction" />
+        android:layout_marginBottom="5dp"
+        android:background="@color/colorPrimary"
+        android:elevation="5dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:visibility="gone">
 
-    <Button
-        android:id="@+id/btn_filter_ongoing"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:text="Filter ongoing" />
+        <Button
+            android:id="@+id/btn_request_direction"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:text="Directions" />
+
+        <Button
+            android:id="@+id/btn_show_meetup"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:text="View meetup" />
+
+        <TextView
+            android:text=""
+            android:padding="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_alignParentStart="true"
+            android:background="@color/colorPrimary"
+            android:id="@+id/textDistance"
+            style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
+
+        <TextView
+            android:text=""
+            android:padding="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="5dp"
+            android:layout_alignParentStart="true"
+            android:background="@color/colorPrimary"
+            android:id="@+id/textDuration"
+            style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
+
+        <TextView
+            android:text="Filters"
+            android:padding="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_alignParentStart="true"
+            android:background="@color/colorPrimary"
+            android:id="@+id/textMap"
+            style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
+
+        <Button
+            android:id="@+id/btn_Clear"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:text="Clear" />
+
+        <Button
+            android:id="@+id/btn_filter_all"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:text="Show all events" />
+
+        <Button
+            android:id="@+id/btn_filter_ongoing"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:text="Show ongoing events" />
+
+        <Button
+            android:id="@+id/btn_filter_upcoming"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:text="Show upcoming events" />
+
+        <Button
+            android:id="@+id/btn_filter_expired"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:text="Show expired events" />
+
+        </LinearLayout>
+
+
 
 
     <fragment
@@ -40,4 +147,6 @@
         android:id="@+id/map"
         tools:context=".location.MapActivity"
         android:name="com.google.android.gms.maps.SupportMapFragment" />
+
+
 </LinearLayout>
