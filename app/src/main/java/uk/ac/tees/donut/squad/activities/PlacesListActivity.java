@@ -179,18 +179,8 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
         mRecyclerView.setLayoutManager(mLayoutManager);
 
 
-        // If came from 'View Places' button on Squad
-        if (squad)
-        {
-            getSquad(squadId);
-        } else
-        {
-            getAll();
-        }
-
         buildGoogleApiClient();
         mGoogleApiClient.connect();
-
 
         mLocationRequest = new LocationRequest();
         mLocationRequest.setPriority(102);
@@ -228,8 +218,15 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
     }
 
     @Override
-    public void onBackPressed() {
-        PlacesListActivity.this.finish();
+    public void onBackPressed()
+    {
+        if(burger == true)
+        {
+            fab(burgerButton);
+        } else
+        {
+            PlacesListActivity.this.finish();
+        }
     }
 
     public void buildGoogleApiClient()
@@ -474,19 +471,31 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
 
         //getting description
         String description = model.getDescription().replace("\n", "");
-        String elipsis = "";
-        if (description.length() > 54)
-            elipsis = "...";
+        viewHolder.descriptionField.setText(description);
 
-        final String shortDesc = description.substring(0, Math.min(description.length(), 54)) + elipsis;
-
-        viewHolder.descriptionField.setText(shortDesc);
-
-        //number of meetups at place
-        viewHolder.meetupNo.setText("# of meetups");
+        // Number of Meetups at place
+        if(model.getMeetups() == null)
+        {
+            viewHolder.meetupNo.setText("0 Meetups");
+        } else
+        {
+            if (model.getMeetups().size() > 1)
+            {
+                viewHolder.meetupNo.setText(model.getMeetups().size() + " Meetups");
+            } else
+            {
+                viewHolder.meetupNo.setText("1 Meetup");
+            }
+        }
 
         //distance of place
-        viewHolder.distance.setText("distance");
+        Location placeLocation = new Location("place");
+        placeLocation.setLatitude(model.getLocLat());
+        placeLocation.setLongitude(model.getLocLong());
+        double distance = userLoc.distanceTo(placeLocation) / 1609.344;
+        String miles = String.format("%.2f", distance);
+        viewHolder.distance.setText(miles + " miles");
+
 
         // Get Squad name from id
         mDatabase.child("squads").child(model.getSquad()).addListenerForSingleValueEvent(new ValueEventListener()
@@ -683,9 +692,36 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
         {
             ActivityCompat.requestPermissions(PlacesListActivity.this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
-        }
+        } else
+        {
+            getNewLocation();
 
-        getNewLocation();
+            if(userLoc == null)
+            {
+                new AlertDialog.Builder(PlacesListActivity.this)
+                        .setTitle("No Location")
+                        .setMessage("Sorry we can't access your location right now, make sure you have Location turned on!")
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener()
+                        {
+                            public void onClick(DialogInterface dialog, int which)
+                            {
+                                finish();
+                            }
+                        })
+                        .setCancelable(false)
+                        .show();
+            }else
+            {
+                // If came from 'View Places' button on Squad
+                if (squad)
+                {
+                    getSquad(squadId);
+                } else
+                {
+                    getAll();
+                }
+            }
+        }
     }
 
     @Override
@@ -701,6 +737,32 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
 
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 getNewLocation();
+
+                if(userLoc == null)
+                {
+                    new AlertDialog.Builder(PlacesListActivity.this)
+                            .setTitle("No Location")
+                            .setMessage("Sorry we can't access your location right now, make sure you have Location turned on!")
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener()
+                            {
+                                public void onClick(DialogInterface dialog, int which)
+                                {
+                                    finish();
+                                }
+                            })
+                            .setCancelable(false)
+                            .show();
+                } else
+                {
+                    // If came from 'View Places' button on Squad
+                    if (squad)
+                    {
+                        getSquad(squadId);
+                    } else
+                    {
+                        getAll();
+                    }
+                }
             } else { // if permission is not granted
                 finish();
             }
@@ -773,21 +835,32 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
             final LocPlace place = placeList.get(position);
             holder.nameField.setText(place.getName());
 
-            //getting description
+            // Getting description
             String description = place.getDescription().replace("\n", "");
-            String elipsis = "";
-            if (description.length() > 54)
-                elipsis = "...";
+            holder.descriptionField.setText(description);
 
-            final String shortDesc = description.substring(0, Math.min(description.length(), 54)) + elipsis;
+            // Number of Meetups at place
+            if(place.getMeetups() == null)
+            {
+                holder.meetupNo.setText("0 Meetups");
+            } else
+            {
+                if (place.getMeetups().size() > 1)
+                {
+                    holder.meetupNo.setText(place.getMeetups().size() + " Meetups");
+                } else
+                {
+                    holder.meetupNo.setText("1 Meetup");
+                }
+            }
 
-            holder.descriptionField.setText(shortDesc);
-
-            //number of meetups at place
-            holder.meetupNo.setText("# of meetups");
-
-            //distance of place
-            holder.distance.setText("distance");
+            // Distance of place
+            Location placeLocation = new Location("place");
+            placeLocation.setLatitude(place.getLocLat());
+            placeLocation.setLongitude(place.getLocLong());
+            double distance = userLoc.distanceTo(placeLocation) / 1609.344;
+            String miles = String.format("%.2f", distance);
+            holder.distance.setText(miles + " miles");
 
             // Get Squad name from id
             mDatabase.child("squads").child(place.getSquad()).addListenerForSingleValueEvent(new ValueEventListener()
