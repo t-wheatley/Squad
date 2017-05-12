@@ -281,7 +281,7 @@ public class SquadPostActivity extends AppCompatActivity {
         viewHolder.postField.setText(model.getPost());
 
         // Getting the user's name and picture
-        mDatabase.child("users").child(firebaseUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener()
+        mDatabase.child("users").child(model.getUser()).addListenerForSingleValueEvent(new ValueEventListener()
         {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -292,7 +292,7 @@ public class SquadPostActivity extends AppCompatActivity {
 
                     // Displaying the user's name
                     viewHolder.nameField.setText(user.getName());
-                    
+
                     // Displays the user's photo in the ImageView
                     Glide.with(SquadPostActivity.this)
                             .load(user.getPicture().trim())
