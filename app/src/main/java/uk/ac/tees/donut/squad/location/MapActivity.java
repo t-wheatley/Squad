@@ -116,7 +116,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-
         currentDateTime = Calendar.getInstance();
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -139,7 +138,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         btnClear = (Button) findViewById(R.id.btn_Clear);
         btnClear.setOnClickListener(this);
         btnClear.setVisibility(View.GONE);
-
         btnRequest = (Button) findViewById(R.id.btn_request_direction);
         btnRequest.setOnClickListener(this);
         btnRequest.setVisibility(View.GONE);

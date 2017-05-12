@@ -28,7 +28,7 @@ import uk.ac.tees.donut.squad.UserGridViewAdapter;
 import uk.ac.tees.donut.squad.squads.Squad;
 import uk.ac.tees.donut.squad.users.FBUser;
 
-public class SquadDetailActivity extends AppCompatActivity
+public class SquadDetailActivity extends BaseActivity
 {
 
     DatabaseReference mDatabase;
@@ -61,7 +61,6 @@ public class SquadDetailActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_squad_detail);
 
 
         // Initialising loading overlay and displaying
@@ -118,6 +117,16 @@ public class SquadDetailActivity extends AppCompatActivity
         // Starts the loading chain
         // loadSquad -> loadUsers
         loadSquad();
+    }
+
+    @Override
+    int getContentViewId() {
+        return R.layout.activity_squad_detail;
+    }
+
+    @Override
+    int getNavigationMenuItemId() {
+        return R.id.menu_squads;
     }
 
     public void loadSquad()

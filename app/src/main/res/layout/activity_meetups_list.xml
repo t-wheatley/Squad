@@ -1,149 +1,167 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_meetups_list"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/cardview_dark_background"
-    tools:context="uk.ac.tees.donut.squad.activities.MeetupsListActivity">
+    tools:context="uk.ac.tees.donut.squad.activities.MeetupsListActivity"
+    android:background="@color/cardview_dark_background">
 
     <!-- Dummy layout to prevent searchBar from receiving focus -->
     <LinearLayout
-        android:layout_width="0px"
-        android:layout_height="0px"
         android:focusable="true"
-        android:focusableInTouchMode="true" />
+        android:focusableInTouchMode="true"
+        android:layout_width="0px"
+        android:layout_height="0px"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        >
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/meetupsList_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_margin="15dp"
-            android:onClick="fab"
+            app:fabSize="normal"
             android:src="@drawable/ic_burger"
-            app:fabSize="normal" />
+            android:id="@+id/meetupsList_fab"
+            android:onClick="fab"
+            />
 
-        <RelativeLayout
-            android:id="@+id/meetupsList_searchLayout"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/meetupsList_searchLayout"
+        android:background="@color/colorPrimary"
+        android:elevation="5dp"
+>
+
+        <EditText
+            android:id="@+id/meetupsList_searchBar"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_centerHorizontal="true"
-            android:background="@color/colorPrimary"
-            android:elevation="5dp">
+            android:layout_height="40dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="77dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:ems="10"
+            android:layout_gravity="center"
+            android:hint="Search Meetups..."
+            android:drawableStart="@drawable/ic_search"
+            android:gravity="center" >
+        </EditText>
+    </LinearLayout>
 
-            <EditText
-                android:id="@+id/meetupsList_searchBar"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginEnd="88dp"
-                android:layout_marginStart="16dp"
-                android:layout_centerVertical="true"
-                android:drawableStart="@drawable/ic_search"
-                android:ems="10"
-                android:gravity="center"
-                android:hint="Search Meetups...">
-            </EditText>
-        </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/meetupsList_burgerMenu"
+        android:background="@color/colorPrimary"
+        android:layout_marginBottom="5dp"
+        android:orientation="vertical"
+        android:elevation="5dp"
+        android:gravity="center"
+        android:visibility="gone"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        >
 
-        <LinearLayout
-            android:id="@+id/meetupsList_burgerMenu"
+        <Button
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:text="Create New"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:onClick="createNew"
+            />
+
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="5dp"
-            android:background="@color/colorPrimary"
-            android:elevation="5dp"
+            android:text="Sort Meetups"
+            style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"
             android:gravity="center"
-            android:orientation="vertical"
-            android:paddingBottom="10dp"
             android:paddingTop="10dp"
-            android:visibility="gone">
+            />
 
-            <Button
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_width="170dp"
-                android:layout_height="wrap_content"
-                android:onClick="createNew"
-                android:text="Create New" />
+        <Button
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:text="By Distance"
+            android:id="@+id/meetupsList_btnDistance"
+            style="@style/Widget.AppCompat.Button.Colored"
+            />
 
-            <TextView
-                style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingTop="10dp"
-                android:text="Sort Meetups" />
+        <Button
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:text="By Start Time"
+            android:id="@+id/meetupsList_btnStartTime"
+            style="@style/Widget.AppCompat.Button.Colored"
+            />
 
-            <Button
-                android:id="@+id/meetupsList_btnDistance"
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_width="170dp"
-                android:layout_height="wrap_content"
-                android:text="By Distance" />
+        <Button
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:text="Show Past"
+            android:id="@+id/meetupsList_showPast"
+            android:onClick="showPast"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:drawableEnd="@drawable/ic_tick"
 
-            <Button
-                android:id="@+id/meetupsList_btnStartTime"
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_width="170dp"
-                android:layout_height="wrap_content"
-                android:text="By Start Time" />
-
-            <Button
-                android:id="@+id/meetupsList_showPast"
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_width="170dp"
-                android:layout_height="wrap_content"
-                android:drawableEnd="@drawable/ic_tick"
-                android:onClick="showPast"
-                android:text="Show Past"
-
-                />
-        </LinearLayout>
+            />
+    </LinearLayout>
 
         <ScrollView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/meetupsList_searchLayout">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:layout_centerInParent = "true"
+            android:id="@+id/meetupsList_textView"
+            android:textColor="@color/tw__solid_white"
+            android:visibility="gone"
+            android:text="There are no Meetups here!"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="18dp"
+            android:id="@+id/gap"
+            >
 
-                <TextView
-                    android:id="@+id/meetupsList_textView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:ems="10"
-                    android:text="There are no Meetups here!"
-                    android:textColor="@color/tw__solid_white"
-                    android:visibility="gone" />
+        </RelativeLayout>
 
-                <RelativeLayout
-                    android:id="@+id/gap"
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp">
-
-                </RelativeLayout>
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/meetupsList_recyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_below="@+id/gap"
-                    android:scrollbars="vertical"></android.support.v7.widget.RecyclerView>
-            </RelativeLayout>
-        </ScrollView>
-
-        <!-- Loading overlay; -->
-        <include layout="@layout/loading_overlay" />
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            android:id="@+id/meetupsList_recyclerView"
+            android:layout_below="@+id/gap"
+            >
+        </android.support.v7.widget.RecyclerView>
     </RelativeLayout>
+    </ScrollView>
+        </RelativeLayout>
+    <!-- Loading overlay; -->
+    <include layout="@layout/loading_overlay"/>
+        <include
+            layout="@layout/element_bottom_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom"
+            />
 
 </RelativeLayout>
