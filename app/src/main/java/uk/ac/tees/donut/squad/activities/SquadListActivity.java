@@ -11,10 +11,12 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.android.gms.ads.formats.NativeAd;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.vision.text.Text;
@@ -222,8 +224,11 @@ public class SquadListActivity extends AppCompatActivity
 
     public void populateSquadViewHolder(final SquadViewHolder viewHolder, final Squad model, int position)
     {
-        viewHolder.nameField.setText(model.getName());
+        // Displaying the image loading
+        viewHolder.imageLoading.setVisibility(View.VISIBLE);
+        viewHolder.squadImage.setVisibility(View.INVISIBLE);
 
+        viewHolder.nameField.setText(model.getName());
 
         String description = model.getDescription().replace("\n", "");
         String elipsis = "";
@@ -243,14 +248,14 @@ public class SquadListActivity extends AppCompatActivity
             // Checking if the user is already in the Squad
             if (users.containsKey(firebaseUser.getUid()))
             {
-                viewHolder.joined.setText("✓");
+                viewHolder.joined.setVisibility(View.VISIBLE);
             } else
             {
-                viewHolder.joined.setText("×");
+                viewHolder.joined.setVisibility(View.GONE);
             }
         }else
         {
-            viewHolder.joined.setText("×");
+            viewHolder.joined.setVisibility(View.GONE);
         }
 
         // Get member count
@@ -271,6 +276,7 @@ public class SquadListActivity extends AppCompatActivity
             @Override
             public void onSuccess(byte[] bytes) {
                 Bitmap meetupImage = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                viewHolder.imageLoading.setVisibility(View.GONE);
                 viewHolder.squadImage.setVisibility(View.VISIBLE);
                 viewHolder.squadImage.setImageBitmap(meetupImage);
 
@@ -279,6 +285,8 @@ public class SquadListActivity extends AppCompatActivity
             @Override
             public void onFailure(@NonNull Exception exception) {
                 // Display default
+                viewHolder.imageLoading.setVisibility(View.GONE);
+                viewHolder.squadImage.setVisibility(View.VISIBLE);
             }
         });
 
@@ -313,19 +321,21 @@ public class SquadListActivity extends AppCompatActivity
         View mView;
         TextView nameField;
         TextView descriptionfield;
-        TextView joined;
+        ImageView joined;
         ImageView squadImage;
+        ProgressBar imageLoading;
         TextView squadMembers;
 
         public SquadViewHolder(View v)
         {
             super(v);
             mView = v;
-            nameField = (TextView) v.findViewById(R.id.squadName);
-            descriptionfield = (TextView) v.findViewById(R.id.squadDescription);
-            joined = (TextView) v.findViewById(R.id.squadCheck);
-            squadImage = (ImageView) v.findViewById(R.id.squadImage);
-            squadMembers = (TextView) v.findViewById(R.id.squadMembers);
+            nameField = (TextView) v.findViewById(R.id.itemSquad_squadName);
+            descriptionfield = (TextView) v.findViewById(R.id.itemSquad_description);
+            joined = (ImageView) v.findViewById(R.id.itemSquad_tick);
+            squadImage = (ImageView) v.findViewById(R.id.itemSquad_image);
+            imageLoading = (ProgressBar) v.findViewById(R.id.itemSquad_imageProgress);
+            squadMembers = (TextView) v.findViewById(R.id.itemSquad_memberCount);
         }
     }
 }
