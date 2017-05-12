@@ -6,15 +6,17 @@ package uk.ac.tees.donut.squad.posts;
 
 public class Post {
     String id, post, user, squad;
+    long dateTime;
 
     public Post() {
     }
 
-    public Post(String user, String squad, String post, String id) {
+    public Post(String user, String squad, String post, String id, long dateTime) {
         this.user = user;
         this.squad = squad;
         this.post = post;
         this.id = id;
+        this.dateTime = dateTime;
     }
 
     public String getId() {
@@ -47,6 +49,14 @@ public class Post {
 
     public void setSquad(String squad) {
         this.squad = squad;
+    }
+
+    public long getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(long dateTime) {
+        this.dateTime = dateTime;
     }
 }
 
