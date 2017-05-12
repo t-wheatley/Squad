@@ -1,0 +1,22 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.SearchView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/search_view">
+    </android.support.v7.widget.SearchView>
+
+    <!-- Layout for content is here. This can be a RelativeLayout  -->
+
+
+    <fragment
+        android:id="@+id/fragment1"
+        android:name="uk.ac.tees.donut.squad.fragments.SquadListFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>

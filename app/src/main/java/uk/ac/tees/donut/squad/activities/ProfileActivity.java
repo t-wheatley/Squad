@@ -40,7 +40,7 @@ import com.google.firebase.database.ValueEventListener;
 import uk.ac.tees.donut.squad.R;
 import uk.ac.tees.donut.squad.users.FBUser;
 
-public class ProfileActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener
+public class ProfileActivity extends BaseActivity implements GoogleApiClient.OnConnectionFailedListener
 {
     // Firebase + Google
     FirebaseAuth mAuth;
@@ -81,7 +81,6 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
 
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
@@ -227,6 +226,16 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
         // Starts the loading chain
         // secretCheck -> loadInfo
         secretCheck();
+    }
+
+    @Override
+    int getContentViewId() {
+        return R.layout.activity_profile;
+    }
+
+    @Override
+    int getNavigationMenuItemId() {
+        return R.id.menu_profile;
     }
 
     public void secretCheck()
