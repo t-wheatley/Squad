@@ -24,14 +24,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         navigationView = (BottomNavigationView) findViewById(R.id.navigation);
-        try{
-            navigationView.setOnNavigationItemSelectedListener(this);
-        }
-        catch(NullPointerException e)
-        {
-            return;
-        }
-
+        navigationView.setOnNavigationItemSelectedListener(this);
     }
 
     @Override

@@ -149,8 +149,6 @@ public class SquadPostActivity extends AppCompatActivity {
 
         // specify an adapter
         mRecyclerView.setAdapter(mAdapter);
-
-        temp();
     }
 
     public void getPost(String squadId)
@@ -262,7 +260,7 @@ public class SquadPostActivity extends AppCompatActivity {
             String postId = mDatabase.child("posts").push().getKey();
 
             // Creating a post object
-            Post postObject = new Post(user.getDisplayName(), squadId, post, postId);
+            Post postObject = new Post(user.getUid(), squadId, post, postId);
 
             // Pushing the post to the "posts" node using the postId
             mDatabase.child("posts").child(postId).setValue(postObject);
@@ -278,44 +276,12 @@ public class SquadPostActivity extends AppCompatActivity {
 
     }
 
-    public void populateSquadViewHolder(SquadPostActivity.PostViewHolder viewHolder, final Post model, int position)
+    public void populateSquadViewHolder(final SquadPostActivity.PostViewHolder viewHolder, final Post model, int position)
     {
-        viewHolder.nameField.setText(model.getUser());
-
         viewHolder.postField.setText(model.getPost());
 
-
-
-
-        // If loading the last item
-        if (mAdapter.getItemCount() == loadingCount)
-        {
-            // Hide the loading overlay
-            loadingOverlay.setVisibility(View.GONE);
-        }
-
-        loadingCount++;
-    }
-
-    public static class PostViewHolder extends RecyclerView.ViewHolder
-    {
-        View mView;
-        TextView nameField;
-        TextView postField;
-        ImageView ProfilePic;
-
-        public PostViewHolder(View v)
-        {
-            super(v);
-            mView = v;
-            nameField = (TextView) v.findViewById(R.id.userName);
-            postField = (TextView) v.findViewById(R.id.txtPost);
-            ProfilePic = (ImageView) v.findViewById(R.id.userPP);
-        }
-    }
-
-    public void temp (){
-        mDatabase.child("users").child(firebaseUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener()
+        // Getting the user's name and picture
+        mDatabase.child("users").child(model.getUser()).addListenerForSingleValueEvent(new ValueEventListener()
         {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -323,7 +289,11 @@ public class SquadPostActivity extends AppCompatActivity {
                 user = dataSnapshot.getValue(FBUser.class);
 
                 if (user != null) {
-                    // Displays the photo in the ImageView
+
+                    // Displaying the user's name
+                    viewHolder.nameField.setText(user.getName());
+
+                    // Displays the user's photo in the ImageView
                     Glide.with(SquadPostActivity.this)
                             .load(user.getPicture().trim())
                             .diskCacheStrategy(DiskCacheStrategy.NONE)
@@ -347,22 +317,22 @@ public class SquadPostActivity extends AppCompatActivity {
                             .dontAnimate()
                             .fitCenter()
                             .error(R.drawable.com_facebook_profile_picture_blank_portrait)
-                            .into(profileImage);
-                    } else
-                    {
-                        new AlertDialog.Builder(SquadPostActivity.this)
-                                .setTitle("Something went wrong!")
-                                .setMessage("We do not appear to be able to find this user, please try again.")
-                                .setPositiveButton("Back", new DialogInterface.OnClickListener()
-                        {
-                            public void onClick(DialogInterface dialog, int which)
+                            .into(viewHolder.profilePic);
+                } else
+                {
+                    new AlertDialog.Builder(SquadPostActivity.this)
+                            .setTitle("Something went wrong!")
+                            .setMessage("We do not appear to be able to find this user, please try again.")
+                            .setPositiveButton("Back", new DialogInterface.OnClickListener()
                             {
-                                finish();
-                            }
-                        })
-                                .setCancelable(false)
-                                .show();
-                    }
+                                public void onClick(DialogInterface dialog, int which)
+                                {
+                                    finish();
+                                }
+                            })
+                            .setCancelable(false)
+                            .show();
+                }
             }
 
             @Override
@@ -370,7 +340,39 @@ public class SquadPostActivity extends AppCompatActivity {
             {
             }
         });
+
+
+
+
+
+        // If loading the last item
+        if (mAdapter.getItemCount() == loadingCount)
+        {
+            // Hide the loading overlay
+            loadingOverlay.setVisibility(View.GONE);
+        }
+
+        loadingCount++;
     }
+
+    public static class PostViewHolder extends RecyclerView.ViewHolder
+    {
+        View mView;
+        TextView nameField;
+        TextView postField;
+        ImageView profilePic;
+
+        public PostViewHolder(View v)
+        {
+            super(v);
+            mView = v;
+            nameField = (TextView) v.findViewById(R.id.userName);
+            postField = (TextView) v.findViewById(R.id.txtPost);
+            profilePic = (ImageView) v.findViewById(R.id.userPP);
+        }
+    }
+
+
 
 }
 
