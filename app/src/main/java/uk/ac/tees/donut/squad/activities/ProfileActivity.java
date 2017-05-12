@@ -440,9 +440,11 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
         if (user.getSecret() == null || user.getSecret() == false)
         {
             enableSecret();
+            Toast.makeText(this, "Secret mode enabled, your profile is now hidden on meetup's and squad's", Toast.LENGTH_LONG).show();
         } else
         {
             disableSecret();
+            Toast.makeText(this, "Secret mode disabled, your profile is now visible on meetup's and squad's", Toast.LENGTH_LONG).show();
         }
     }
 

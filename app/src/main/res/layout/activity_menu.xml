@@ -100,14 +100,6 @@
             style="@style/Widget.AppCompat.Button.Colored" />
 
         <Button
-            android:text="Location"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/locationTest"
-            android:onClick="openLocation"
-            style="@style/Widget.AppCompat.Button.Colored" />
-
-        <Button
             android:text="Map"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

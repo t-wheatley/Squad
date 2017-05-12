@@ -1,4 +1,3 @@
-
 package uk.ac.tees.donut.squad.activities;
 
 import android.content.DialogInterface;
