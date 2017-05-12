@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.akexorcist.googledirection.DirectionCallback;
 import com.akexorcist.googledirection.GoogleDirection;
 import com.akexorcist.googledirection.constant.TransportMode;
+import com.akexorcist.googledirection.constant.Unit;
 import com.akexorcist.googledirection.model.Direction;
 import com.akexorcist.googledirection.model.Info;
 import com.akexorcist.googledirection.model.Leg;
@@ -264,6 +265,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
         if (id==R.id.btn_Clear){
             mMap.clear();
+            mMap.addMarker(new MarkerOptions().title("Current Position").position(currentLocation).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA)));
             addMarkers(mMap);
             btnShowMeetup.setVisibility(View.GONE);
             btnRequest.setVisibility(View.GONE);
@@ -313,6 +315,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     .from(currentLocation)
                     .to(destination)
                     .transportMode(TransportMode.DRIVING)
+                    .unit(Unit.IMPERIAL)
                     .execute(this);
         }
     }
@@ -337,19 +340,19 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 if(filter == 2){
                     if (currentDateTime.getTimeInMillis() / 1000L > strtDateTime && currentDateTime.getTimeInMillis() / 1000L < endDateTime) {
                         status[0] = true;
-                        Marker marker = map.addMarker(new MarkerOptions().position(location).title(name).snippet(description));
+                        Marker marker = map.addMarker(new MarkerOptions().position(location).title(name).snippet(description).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
                         marker.setTag(meetup);
                     }
                 } else if(filter == 3) {
                     if (currentDateTime.getTimeInMillis() / 1000L < strtDateTime) {
                         status[0] = true;
-                        Marker marker = map.addMarker(new MarkerOptions().position(location).title(name).snippet(description));
+                        Marker marker = map.addMarker(new MarkerOptions().position(location).title(name).snippet(description).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
                         marker.setTag(meetup);
                     }
                 } else if(filter == 4) {
                     if (currentDateTime.getTimeInMillis() / 1000L > endDateTime) {
                         status[0] = true;
-                        Marker marker = map.addMarker(new MarkerOptions().position(location).title(name).snippet(description));
+                        Marker marker = map.addMarker(new MarkerOptions().position(location).title(name).snippet(description).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
                         marker.setTag(meetup);
                     }
                 }else{

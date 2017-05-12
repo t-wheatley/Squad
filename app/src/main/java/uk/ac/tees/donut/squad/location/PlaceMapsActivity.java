@@ -270,7 +270,7 @@ public class PlaceMapsActivity extends AppCompatActivity implements OnMapReadyCa
                     .from(currentLocation)
                     .to(destination)
                     .transportMode(TransportMode.DRIVING)
-                    .unit(Unit.METRIC)
+                    .unit(Unit.IMPERIAL)
                     .execute(this);
         }
 
@@ -360,6 +360,7 @@ public class PlaceMapsActivity extends AppCompatActivity implements OnMapReadyCa
 
             Info distanceInfo = leg.getDistance();
             Info durationInfo = leg.getDuration();
+
             String distance = distanceInfo.getText();
             String duration = durationInfo.getText();
 
