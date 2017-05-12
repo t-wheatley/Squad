@@ -111,10 +111,11 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
 
         profileName = (TextView) findViewById(R.id.profile_name);
 
-        fab = (FloatingActionButton) findViewById(R.id.profile_fab);
-        burgerMenu = (RelativeLayout) findViewById(R.id.profile_burgerMenu);
-
         bio = (TextView) findViewById(R.id.bio);
+
+        fab = (FloatingActionButton) findViewById(R.id.profile_fab);
+        fab.setVisibility(View.GONE);
+        burgerMenu = (RelativeLayout) findViewById(R.id.profile_burgerMenu);
 
         squadBtn = (Button) findViewById(R.id.profile_squadsBtn);
         squadBtn.setOnClickListener(new View.OnClickListener()
@@ -537,10 +538,16 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
         // Displaying what the user should see on their own profile
         squadBtn.setText("My Squads");
         attendingBtn.setText("My Meetups");
+        fab.setVisibility(View.VISIBLE);
         hostingBtn.setVisibility(View.VISIBLE);
         secretBtn.setVisibility(View.VISIBLE);
         signOutBtn.setVisibility(View.VISIBLE);
         editBioBtn.setVisibility(View.VISIBLE);
+
+        // Moving the user's Name if displaying the fab
+        RelativeLayout.LayoutParams newParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+        newParams.setMarginEnd(88);
+        profileName.setLayoutParams(newParams);
     }
 
     @Override
