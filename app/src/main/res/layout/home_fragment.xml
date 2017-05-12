@@ -1,15 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/colorPrimary"
+    android:id="@+id/home_fragment">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="Home"
-        android:textAppearance="?android:attr/textAppearanceLarge"/>
+        android:background="?attr/colorPrimaryDark"
+        android:minHeight="?attr/actionBarSize"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        android:weightSum="1">
 
-</RelativeLayout>
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_alignParentStart="true"
+            android:id="@+id/spinner_nav"
+            android:layout_alignParentEnd="true"
+            style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:entries="@array/spinnerItems"
+        />
+
+        <Button
+            android:id="@+id/button_maps"
+            android:icon="@drawable/ic_maps"
+            style="@style/AlertDialog.AppCompat.Light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.16" />
+
+
+    </android.support.v7.widget.Toolbar>
+
+    <fragment
+        android:id="@+id/fragment1"
+        android:name="uk.ac.tees.donut.squad.fragments.HomeListFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

@@ -40,7 +40,7 @@ import com.google.firebase.database.ValueEventListener;
 import uk.ac.tees.donut.squad.R;
 import uk.ac.tees.donut.squad.users.FBUser;
 
-public class ProfileActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener
+public class ProfileActivity extends BaseActivity implements GoogleApiClient.OnConnectionFailedListener
 {
     // Firebase + Google
     FirebaseAuth mAuth;
@@ -81,7 +81,6 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
 
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
@@ -111,10 +110,11 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
 
         profileName = (TextView) findViewById(R.id.profile_name);
 
-        fab = (FloatingActionButton) findViewById(R.id.profile_fab);
-        burgerMenu = (RelativeLayout) findViewById(R.id.profile_burgerMenu);
-
         bio = (TextView) findViewById(R.id.bio);
+
+        fab = (FloatingActionButton) findViewById(R.id.profile_fab);
+        fab.setVisibility(View.GONE);
+        burgerMenu = (RelativeLayout) findViewById(R.id.profile_burgerMenu);
 
         squadBtn = (Button) findViewById(R.id.profile_squadsBtn);
         squadBtn.setOnClickListener(new View.OnClickListener()
@@ -226,6 +226,16 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
         // Starts the loading chain
         // secretCheck -> loadInfo
         secretCheck();
+    }
+
+    @Override
+    int getContentViewId() {
+        return R.layout.activity_profile;
+    }
+
+    @Override
+    int getNavigationMenuItemId() {
+        return R.id.menu_profile;
     }
 
     public void secretCheck()
@@ -537,10 +547,16 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
         // Displaying what the user should see on their own profile
         squadBtn.setText("My Squads");
         attendingBtn.setText("My Meetups");
+        fab.setVisibility(View.VISIBLE);
         hostingBtn.setVisibility(View.VISIBLE);
         secretBtn.setVisibility(View.VISIBLE);
         signOutBtn.setVisibility(View.VISIBLE);
         editBioBtn.setVisibility(View.VISIBLE);
+
+        // Moving the user's Name if displaying the fab
+        RelativeLayout.LayoutParams newParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+        newParams.setMarginEnd(88);
+        profileName.setLayoutParams(newParams);
     }
 
     @Override
