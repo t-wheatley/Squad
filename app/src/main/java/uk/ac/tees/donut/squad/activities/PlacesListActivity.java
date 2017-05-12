@@ -911,6 +911,12 @@ public class PlacesListActivity extends BaseActivity implements GoogleApiClient.
         }
     }
 
+    public void createNew(View view)
+    {
+        Intent intent = new Intent(this, NewPlaceActivity.class);
+        startActivity(intent);
+    }
+
     public void fab(View view)
     {
         if(burger == false)

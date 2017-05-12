@@ -32,6 +32,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import uk.ac.tees.donut.squad.R;
 import uk.ac.tees.donut.squad.UserGridViewAdapter;
 import uk.ac.tees.donut.squad.posts.Post;
@@ -259,8 +262,12 @@ public class SquadPostActivity extends AppCompatActivity {
             // Creating a new post node and getting the key value
             String postId = mDatabase.child("posts").push().getKey();
 
+            // Getting current DateTime
+            Calendar currentDateTime = Calendar.getInstance();
+            Long dateTime = currentDateTime.getTimeInMillis() / 1000L;
+
             // Creating a post object
-            Post postObject = new Post(user.getUid(), squadId, post, postId);
+            Post postObject = new Post(user.getUid(), squadId, post, postId, dateTime);
 
             // Pushing the post to the "posts" node using the postId
             mDatabase.child("posts").child(postId).setValue(postObject);
@@ -278,7 +285,13 @@ public class SquadPostActivity extends AppCompatActivity {
 
     public void populateSquadViewHolder(final SquadPostActivity.PostViewHolder viewHolder, final Post model, int position)
     {
+        // Display the Post
         viewHolder.postField.setText(model.getPost());
+
+        // Display the post DateTime
+        SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy 'at' h:mm a");
+        String startDate = sdf.format(model.getDateTime() * 1000L);
+        // Display here
 
         // Getting the user's name and picture
         mDatabase.child("users").child(model.getUser()).addListenerForSingleValueEvent(new ValueEventListener()
