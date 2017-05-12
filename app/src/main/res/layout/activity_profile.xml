@@ -19,11 +19,12 @@
             android:id="@+id/profile_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="10dp"
             android:layout_alignParentEnd="true"
             android:layout_margin="15dp"
             android:onClick="fab"
             android:src="@drawable/ic_burger"
-            app:fabSize="normal" />
+            />
 
         <!-- AppBar at top -->
         <RelativeLayout
@@ -257,7 +258,14 @@
 
 
     </RelativeLayout>
+    <include
+        layout="@layout/element_bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        />
 
+    <!-- Loading overlay; -->
     <include layout="@layout/loading_overlay" />
-
 </RelativeLayout>
