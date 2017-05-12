@@ -67,11 +67,11 @@ public class PlaceDetailsActivity extends AppCompatActivity
         loadingOverlay.setVisibility(View.VISIBLE);
 
         //getting UI Elements
-        placeName = (TextView) findViewById(R.id.placeNameText);
-        description = (TextView) findViewById(R.id.descriptionText);
+        placeName = (TextView) findViewById(R.id.placeDetails_placeName);
+        description = (TextView) findViewById(R.id.placeDetails_description);
         noPic = (TextView) findViewById(R.id.noPic);
-        address = (TextView) findViewById(R.id.address);
-        squad = (TextView) findViewById(R.id.squadText);
+        address = (TextView) findViewById(R.id.placeDetails_address);
+        squad = (TextView) findViewById(R.id.placeDetails_squadName);
 
         mapBtn = (Button) findViewById(R.id.mapButton);
         mapBtn.setOnClickListener(new View.OnClickListener()
@@ -93,8 +93,7 @@ public class PlaceDetailsActivity extends AppCompatActivity
             }
         });
 
-        gallery = (ImageSwitcher) findViewById(R.id.placeGallery);
-        galleryLayout = (RelativeLayout) findViewById(R.id.galleryLayout);
+        gallery = (ImageSwitcher) findViewById(R.id.placeDetails_gallery);
 
         //if there are no pictures
         boolean noPics = true; //TEMPORARY TILL WE CAN ATTEMPT AT LOADING PICS
@@ -102,11 +101,14 @@ public class PlaceDetailsActivity extends AppCompatActivity
         {
             //keeps the noPic text, and changes the height of the layout so it's not too big
             gallery.setVisibility(View.GONE);
-            noPic.setVisibility(View.VISIBLE);
-            noPic.setText("No pictures to show.");
         } else
+        {
             //gets rid of the noPic text
             noPic.setVisibility(View.GONE);
+            gallery.setVisibility(View.VISIBLE);
+        }
+
+
 
 
         //gets extras passd from last activity
