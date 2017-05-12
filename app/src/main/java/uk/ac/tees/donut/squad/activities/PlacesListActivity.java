@@ -902,6 +902,12 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
         }
     }
 
+    public void createNew(View view)
+    {
+        Intent intent = new Intent(this, NewPlaceActivity.class);
+        startActivity(intent);
+    }
+
     public void fab(View view)
     {
         if(burger == false)
