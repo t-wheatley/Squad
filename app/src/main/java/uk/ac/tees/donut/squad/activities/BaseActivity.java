@@ -24,6 +24,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         navigationView = (BottomNavigationView) findViewById(R.id.navigation);
+        System.out.println(this);
         navigationView.setOnNavigationItemSelectedListener(this);
     }
 
@@ -40,6 +41,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
         overridePendingTransition(0, 0);
     }
 
+    //Handles navigation between the nav bar
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         Intent intent;
@@ -57,6 +59,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
                 startActivity(intent);
                 break;
             case R.id.menu_profile:
+                System.out.println("Opening ProfileActivity!");
                 if (firebaseUser != null) {
                     //Sends the user's id to the profile activity
                     intent = new Intent(this, ProfileActivity.class);
@@ -85,8 +88,9 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
         }
     }
 
+    //Returns the layout id of the xml required
     abstract int getContentViewId();
-
+    // returns the menu id for which icon to highlight
     abstract int getNavigationMenuItemId();
 
 }
