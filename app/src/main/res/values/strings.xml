@@ -85,17 +85,8 @@
     <string name="menu_profile">Profile</string>
     <string name="test_text">Hello World</string>
     <string name="menu_places">Places</string>
-    <string-array name="Planets">
-        <item>Sun</item>
-        <item>Mercury</item>
-        <item>Venus</item>
-        <item>Earth</item>
-        <item>Mars</item>
-        <item>Jupiter</item>
-        <item>Saturn</item>
-        <item>Uranus</item>
-        <item>Neptune</item>
-    </string-array>
+    <string name="menu_maps">Maps</string>
+    <string name="menu_map">Map</string>
 
     <string-array name="spinnerItems">
         <item>Squads</item>

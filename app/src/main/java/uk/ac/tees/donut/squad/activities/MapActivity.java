@@ -1,4 +1,4 @@
-package uk.ac.tees.donut.squad.location;
+package uk.ac.tees.donut.squad.activities;
 
 import android.Manifest;
 import android.content.DialogInterface;
@@ -18,7 +18,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,14 +50,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
 
 import uk.ac.tees.donut.squad.R;
-import uk.ac.tees.donut.squad.activities.MeetupDetailActivity;
-import uk.ac.tees.donut.squad.activities.MeetupsListActivity;
 import uk.ac.tees.donut.squad.posts.Meetup;
 import uk.ac.tees.donut.squad.squads.Squad;
 
@@ -66,7 +62,7 @@ import uk.ac.tees.donut.squad.squads.Squad;
  * Created by Anthony Ward
  */
 
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
+public class MapActivity extends BaseActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener, DirectionCallback, GoogleMap.OnMarkerClickListener
 {
 
@@ -115,7 +111,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_map);
+
         currentDateTime = Calendar.getInstance();
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -173,13 +169,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             {
                 Squad squad = dataSnapshot.getValue(Squad.class);
                 squadId = dataSnapshot.child(userId).getValue(String.class);
-
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError)
             {
-
             }
         });
 
@@ -325,7 +319,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
     public void addMarkers(final GoogleMap map)
     {
-
         mChildEventListener = mDatabase.child("meetups").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -397,6 +390,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         }
+    }
+
+    @Override
+    int getContentViewId() {
+        return R.layout.activity_map;
+    }
+
+    @Override
+    int getNavigationMenuItemId() {
+        return R.id.menu_map;
     }
 
 

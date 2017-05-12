@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:id="@+id/activity_map"
     android:background="@color/cardview_dark_background"
-    tools:context="uk.ac.tees.donut.squad.location.MapActivity">
+    tools:context="uk.ac.tees.donut.squad.activities.MapActivity">
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -157,12 +157,28 @@
                 android:text="Show expired events" />
 
         </LinearLayout>
+
+
     </RelativeLayout>
 
-    <fragment
+    <RelativeLayout
+        android:id="@+id/fragmentHolder"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/map"
-        tools:context=".location.MapActivity"
-        android:name="com.google.android.gms.maps.SupportMapFragment" />
+        android:layout_height="377dp">
+
+        <fragment
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/map"
+            tools:context=".activities.MapActivity"
+            android:name="com.google.android.gms.maps.SupportMapFragment" />
+    </RelativeLayout>
+
+    <include
+        layout="@layout/element_bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/fragmentHolder"
+        />
 </LinearLayout>

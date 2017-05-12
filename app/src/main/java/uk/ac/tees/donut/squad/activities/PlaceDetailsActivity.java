@@ -26,7 +26,7 @@ import uk.ac.tees.donut.squad.location.PlaceMapsActivity;
 import uk.ac.tees.donut.squad.posts.AddressPlace;
 import uk.ac.tees.donut.squad.posts.LocPlace;
 
-public class PlaceDetailsActivity extends AppCompatActivity
+public class PlaceDetailsActivity extends BaseActivity
 {
 
     String placeId;
@@ -141,6 +141,16 @@ public class PlaceDetailsActivity extends AppCompatActivity
         // Starts the loading chain
         // loadMeetup -> loadSquad
         loadPlace();
+    }
+
+    @Override
+    int getContentViewId() {
+        return R.layout.activity_place_details;
+    }
+
+    @Override
+    int getNavigationMenuItemId() {
+        return R.id.menu_places;
     }
 
     public void loadPlace()
