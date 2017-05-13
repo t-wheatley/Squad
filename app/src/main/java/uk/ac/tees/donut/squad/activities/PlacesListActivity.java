@@ -95,7 +95,7 @@ public class PlacesListActivity extends BaseActivity implements GoogleApiClient.
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
+        System.out.println("PlacesListActivity: oncreate method");
         // Display loading overlay
         loadingOverlay = (RelativeLayout) this.findViewById(R.id.loading_overlay);
         loadingText = (TextView) this.findViewById(R.id.loading_overlay_text);

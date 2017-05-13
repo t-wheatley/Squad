@@ -11,7 +11,7 @@
         android:icon="@drawable/ic_meetups" />
     <item
         android:id="@+id/menu_places"
-        android:title="Places"
+        android:title="@string/menu_places"
         android:icon="@drawable/ic_places"/>
     <item
         android:id="@+id/menu_map"
