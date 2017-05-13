@@ -47,36 +47,21 @@ import uk.ac.tees.donut.squad.posts.Meetup;
 import uk.ac.tees.donut.squad.posts.Place;
 import uk.ac.tees.donut.squad.squads.Squad;
 
+/**
+ * Activity which allows the user to create a new Meetup.
+ */
 public class NewMeetupActivity extends AppCompatActivity
 {
-    private static final String TAG = "Auth";
-
+    // Firebase
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-
     private DatabaseReference mDatabase;
 
+    // Loading Overlay
     RelativeLayout loadingOverlay;
     TextView loadingText;
 
-    private AddressResultReceiver mResultReceiver;
-    private int fetchType;
-    protected double latitude;
-    protected double longitude;
-    protected String addressFull;
-    protected String geocodeAddress;
-
-    String name, description, squadId;
-    HashMap<String, String> squads;
-    HashMap<String, String> places;
-    Calendar fromDateTime;
-    Calendar untilDateTime;
-    Calendar currentDateTime;
-    int currentYear, currentMonth, currentDay, currentHour, currentMinute;
-
-    // Boolean to determine whether the address is coming from the spinner or user input
-    boolean spinnerAddress;
-
+    // Activity UI
     private RelativeLayout newAddressLayout;
     private EditText editName;
     private EditText editAddress1;
@@ -94,6 +79,27 @@ public class NewMeetupActivity extends AppCompatActivity
     private Button btnUntilTime;
     private Button btnNewAddress;
     private Button btnFromPlace;
+
+    // Location
+    private AddressResultReceiver mResultReceiver;
+    private int fetchType;
+    protected double latitude;
+    protected double longitude;
+    protected String addressFull;
+    protected String geocodeAddress;
+
+    // Variables
+    String name, description, squadId;
+    HashMap<String, String> squads;
+    HashMap<String, String> places;
+    Calendar fromDateTime;
+    Calendar untilDateTime;
+    Calendar currentDateTime;
+    int currentYear, currentMonth, currentDay, currentHour, currentMinute;
+    boolean spinnerAddress;
+
+    // Final values
+    private static final String TAG = "Auth";
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -113,14 +119,13 @@ public class NewMeetupActivity extends AppCompatActivity
         fromDateTime = Calendar.getInstance();
         untilDateTime = Calendar.getInstance();
 
-        // Links the variables to their layout items.
+        // UI Elements
         newAddressLayout = (RelativeLayout) findViewById(R.id.newMeetup_layoutNewAddress);
         editAddress1 = (EditText) findViewById(R.id.newMeetup_textEditAddress1);
         editAddress2 = (EditText) findViewById(R.id.newMeetup_textEditAddress2);
         editAddressTC = (EditText) findViewById(R.id.newMeetup_textEditAddressTC);
         editAddressC = (EditText) findViewById(R.id.newMeetup_textEditAddressCounty);
         editAddressPC = (EditText) findViewById(R.id.newMeetup_textEditAddressPC);
-
         editName = (EditText) findViewById(R.id.newMeetup_textEditName);
         spinnerSquad = (Spinner) findViewById(R.id.newMeetup_spinnerSquad);
         spinnerPlace = (Spinner) findViewById(R.id.newMeetup_spinnerPlace);
@@ -309,7 +314,7 @@ public class NewMeetupActivity extends AppCompatActivity
             }
         });
 
-        // Defaults to user input rather than from spinner.
+        // Boolean to determine whether the address is coming from the spinner or user input
         spinnerAddress = false;
 
         // Load interests and display loading overlay
@@ -320,6 +325,7 @@ public class NewMeetupActivity extends AppCompatActivity
         fillSquadSpinner();
         displayCurrentDateTime();
 
+        // AuthStateListener
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener()
         {
@@ -359,6 +365,7 @@ public class NewMeetupActivity extends AppCompatActivity
     public void onStart()
     {
         super.onStart();
+        // Connecting the AuthStateListener
         mAuth.addAuthStateListener(mAuthListener);
     }
 
@@ -368,10 +375,14 @@ public class NewMeetupActivity extends AppCompatActivity
         super.onStop();
         if (mAuthListener != null)
         {
+            // Removing the AuthStateListener
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
 
+    /**
+     * Method to get the Latitude and Longitude of the location.
+     */
     private void geocode()
     {
         Intent intent = new Intent(this, FetchAddressIntentService.class);
@@ -383,6 +394,9 @@ public class NewMeetupActivity extends AppCompatActivity
         startService(intent);
     }
 
+    /**
+     * Method called on submit button press, validates the proposed Meetup.
+     */
     private void submitMeetup()
     {
         // Display loading overlay
@@ -394,6 +408,7 @@ public class NewMeetupActivity extends AppCompatActivity
         description = editDescription.getText().toString().trim();
         squadId = squads.get(spinnerSquad.getSelectedItem().toString().trim());
 
+        // Start and End time validation
         if(fromDateTime.getTimeInMillis() == currentDateTime.getTimeInMillis())
         {
             loadingOverlay.setVisibility(View.GONE);
@@ -421,6 +436,7 @@ public class NewMeetupActivity extends AppCompatActivity
                     Toast.LENGTH_SHORT).show();
         } else if(spinnerAddress)
         {
+            // If using a Place instead of an address
             String placeId = places.get(spinnerPlace.getSelectedItem().toString().trim());
             mDatabase.child("places").child(placeId).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -428,12 +444,12 @@ public class NewMeetupActivity extends AppCompatActivity
                     // Gets the data from Firebase and stores it in a LocPlace class
                     LocPlace firebasePlace = dataSnapshot.getValue(LocPlace.class);
 
+                    // Gets the latitude and longitude from the Place
                     longitude = firebasePlace.getLocLong();
                     latitude = firebasePlace.getLocLat();
 
                     if(longitude != 0 && latitude != 0)
                     {
-
                         createMeetup(name, description, squadId);
                     } else
                     {
@@ -449,6 +465,7 @@ public class NewMeetupActivity extends AppCompatActivity
             });
         } else
         {
+            // New lat and long needed
             addressFull = editAddress1.getText().toString() + " " + editAddress2.getText().toString()
                     + " " + editAddressTC.getText().toString() + " " + editAddressC.getText().toString()
                     + " " + editAddressPC.getText().toString();
@@ -457,7 +474,13 @@ public class NewMeetupActivity extends AppCompatActivity
         }
     }
 
-    // Takes a meetup and pushes it to the Firebase Realtime Database (Without extras)
+    /**
+     * Method to post a meetup to the Firebase Realtime Database.
+     *
+     * @param name The name for the Meetup.
+     * @param desc The description for the Meetup.
+     * @param squadId The Squad for the Meetup.
+     */
     public void createMeetup(String name, String desc, String squadId)
     {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -467,6 +490,7 @@ public class NewMeetupActivity extends AppCompatActivity
             // Creating a new meetup node and getting the key value
             String meetupId = mDatabase.child("meetups").push().getKey();
 
+            // Getting the DateTimes as long
             long fromUnix = fromDateTime.getTimeInMillis() / 1000L;
             long untilUnix = untilDateTime.getTimeInMillis() / 1000L;
 
@@ -498,11 +522,11 @@ public class NewMeetupActivity extends AppCompatActivity
             // No user is signed in
             Toast.makeText(this, "Something went wrong, please try again.", Toast.LENGTH_SHORT).show();
         }
-
-
     }
 
-    // Fill's the spinner with all of the squads stored in FireBase
+    /**
+     * Method that fills the spinner with all of the squads stored in FireBase
+     */
     private void fillSquadSpinner()
     {
         mDatabase.child("squads").addValueEventListener(new ValueEventListener()
@@ -542,7 +566,11 @@ public class NewMeetupActivity extends AppCompatActivity
         });
     }
 
-    // Checks at least one of the location fields has a value and name + desc have a value
+    /**
+     * Method that validates the text edits.
+     *
+     * @return boolean if valid.
+     */
     public boolean checkEditTexts()
     {
         // Checks if the name field is empty
@@ -581,6 +609,9 @@ public class NewMeetupActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Method to display an AlertDialog to validate address.
+     */
     public void CreateAlertDiolog(){
         new AlertDialog.Builder(NewMeetupActivity.this)
                 .setTitle("Confirm Address")
@@ -617,7 +648,9 @@ public class NewMeetupActivity extends AppCompatActivity
                 .show();
     }
 
-    //Inner Class to receive address for geocoder
+    /**
+     * Inner Class to receive address for geocoder.
+     */
     public class AddressResultReceiver extends ResultReceiver
     {
         public AddressResultReceiver(Handler handler)
@@ -661,16 +694,20 @@ public class NewMeetupActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Method thats called when the User wants to use a new address.
+     */
     public void newAddress()
     {
         spinnerAddress = false;
 
         newAddressLayout.setVisibility(View.VISIBLE);
         spinnerPlace.setVisibility(View.GONE);
-
-
     }
 
+    /**
+     * Method thats called when the User wants to use a existing Place.
+     */
     public void fromPlace()
     {
         spinnerAddress = true;
@@ -678,9 +715,13 @@ public class NewMeetupActivity extends AppCompatActivity
         newAddressLayout.setVisibility(View.GONE);
         spinnerPlace.setVisibility(View.VISIBLE);
         fillPlaceSpinner(squads.get(spinnerSquad.getSelectedItem().toString().trim()));
-
     }
 
+    /**
+     * Method to fill a spinner with all of a Squad's Places.
+     *
+     * @param id Squad's id to retreive Places.
+     */
     public void fillPlaceSpinner(String id)
     {
         loadingText.setText("Getting the Squad's Places");
@@ -735,6 +776,9 @@ public class NewMeetupActivity extends AppCompatActivity
         });
     }
 
+    /**
+     * Method that gets and displays the current Date and Time on the date and time pickers.
+     */
     public void displayCurrentDateTime()
     {
         // Getting the users current DateTime

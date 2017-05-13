@@ -13,7 +13,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -25,10 +24,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.firebase.ui.database.ChangeEventListener;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -57,54 +54,59 @@ import java.util.List;
 import uk.ac.tees.donut.squad.R;
 import uk.ac.tees.donut.squad.posts.Meetup;
 
+/**
+ * Activity which allows the user to view a list of Meetups.
+ */
 public class MeetupsListActivity extends BaseActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener
 {
-
+    // Firebase
     private DatabaseReference mDatabase;
     private FirebaseStorage firebaseStorage;
-
-    private RecyclerView mRecyclerView;
-    private LinearLayoutManager mLayoutManager;
     private FirebaseRecyclerAdapter mAdapter;
-    private RecyclerView.AdapterDataObserver mObserver;
 
-    String userId;
-    String squadId;
-    String placeId;
-    boolean host;
-    boolean member;
-    boolean squad;
-    boolean place;
+    // Location
+    GoogleApiClient mGoogleApiClient;
+    LocationRequest mLocationRequest;
+    Location userLoc;
 
-    LinearLayout burgerMenu;
-    FloatingActionButton burgerButton;
-    //for whenever burger menu is open or not
-    boolean burger = false;
-
-    boolean past = false;
-    Button pastButton;
-
+    // Activity UI
     RelativeLayout loadingOverlay;
     TextView loadingText;
     TextView listText;
     Button btnDistance;
     Button btnStartTime;
+    Button pastButton;
     EditText searchBar;
 
+    // RecyclerView
+    private RecyclerView mRecyclerView;
+    private LinearLayoutManager mLayoutManager;
+    private RecyclerView.AdapterDataObserver mObserver;
+    MeetupAdapter filteredAdapter;
+
+    // BurgerMenu
+    LinearLayout burgerMenu;
+    FloatingActionButton burgerButton;
+
+    // Variables
     List<Meetup> searchList;
     List<Meetup> filteredList;
     List<Meetup> filteredListExpired;
-    MeetupAdapter filteredAdapter;
-    boolean search;
+    String userId;
+    String squadId;
+    String placeId;
     int filter;
-
-    GoogleApiClient mGoogleApiClient;
-    LocationRequest mLocationRequest;
-    Location userLoc;
-    final int LOCATION_PERMISSION_REQUEST_CODE = 1;
-
     int loadingCount;
+    boolean host;
+    boolean member;
+    boolean squad;
+    boolean place;
+    boolean search;
+    boolean past = false;
+    boolean burger = false;
 
+    // Final Value
+    final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -118,12 +120,10 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
         loadingOverlay.setVisibility(View.VISIBLE);
         loadingCount = 1;
 
+        // Initialising UI Elements
         burgerMenu = (LinearLayout) findViewById(R.id.meetupsList_burgerMenu);
         burgerButton = (FloatingActionButton) findViewById(R.id.meetupsList_fab);
-
         pastButton = (Button) findViewById(R.id.meetupsList_showPast);
-
-        // Initialising RecyclerView
         mRecyclerView = (RecyclerView) findViewById(R.id.meetupsList_recyclerView);
         listText = (TextView) findViewById(R.id.meetupsList_textView);
         btnDistance = (Button) findViewById(R.id.meetupsList_btnDistance);
@@ -156,6 +156,7 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count)
             {
+                // If search is empty
                 if (s.length() == 0)
                 {
                     search = false;
@@ -173,6 +174,7 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
             }
         });
 
+        // Initialising variables
         member = false;
         host = false;
         squad = false;
@@ -210,7 +212,7 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
                     // Member mode
                     member = true;
                 }
-            } else if(b.get("placeId") != null)
+            } else if (b.get("placeId") != null)
             {
                 // Place mode
                 placeId = (String) b.get("placeId");
@@ -231,7 +233,7 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        // If came from 'View Meetups' button on profile
+        // Determining which list to display
         if (host)
         {
             getHosted(userId);
@@ -241,7 +243,7 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
         } else if (squad)
         {
             getSquad(squadId);
-        } else if(place)
+        } else if (place)
         {
             getPlace(placeId);
         } else
@@ -249,14 +251,16 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
             getAll();
         }
 
+        // Connecting to the GoogleApiClient
         buildGoogleApiClient();
         mGoogleApiClient.connect();
 
-
+        // Initialising the LocationRequest
         mLocationRequest = new LocationRequest();
         mLocationRequest.setPriority(102);
         mLocationRequest.setInterval(5);
 
+        // Displaying the mAdapter in he recyclerVIew
         mRecyclerView.setAdapter(mAdapter);
     }
 
@@ -268,12 +272,14 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
     }
 
     @Override
-    int getContentViewId() {
+    int getContentViewId()
+    {
         return R.layout.activity_meetups_list;
     }
 
     @Override
-    int getNavigationMenuItemId() {
+    int getNavigationMenuItemId()
+    {
         return R.id.menu_meetups;
     }
 
@@ -301,15 +307,21 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
     @Override
     public void onBackPressed()
     {
-        if(burger == true)
+        // If burger menu is open
+        if (burger == true)
         {
+            // Close the burger menu
             fab(burgerButton);
         } else
         {
+            // Close the activity
             MeetupsListActivity.this.finish();
         }
     }
 
+    /**
+     * Method to build a GoogleApiClient if one doesn't already exist.
+     */
     public void buildGoogleApiClient()
     {
         // Create an instance of GoogleAPIClient.
@@ -323,6 +335,9 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
         }
     }
 
+    /**
+     * Method to get all of the Meetups.
+     */
     public void getAll()
     {
         // Database reference to get all Meetups
@@ -331,6 +346,7 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
         // Check to see if any Meetups exist
         checkForEmpty(allQuery, null);
 
+        // Loads the adapter with all the Meetups returned by the query
         mAdapter = new FirebaseRecyclerAdapter<Meetup, MeetupViewHolder>(
                 Meetup.class,
                 R.layout.item_list_card,
@@ -341,13 +357,16 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
             @Override
             protected void populateViewHolder(final MeetupViewHolder viewHolder, final Meetup model, int position)
             {
+                // Updates the status of the Meetup
                 model.updateStatus();
+                // Populates a viewHolder with the found Meetup
                 populateMeetupViewHolder(viewHolder, model, position);
             }
 
             @Override
             protected void onChildChanged(ChangeEventListener.EventType type, int index, int oldIndex)
             {
+                // When the data is changed call updateFilter()
                 switch (type)
                 {
                     case ADDED:
@@ -373,6 +392,9 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
         };
     }
 
+    /**
+     * Method to get a User's attended Meetups.
+     */
     public void getUsers(String userId)
     {
         // Database reference to get a User's Meetups
@@ -381,6 +403,7 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
         // Check to see if any Meetups exist
         checkForEmpty(userQuery, null);
 
+        // Loads the adapter with all the Meetups returned by the query
         mAdapter = new FirebaseRecyclerAdapter<Meetup, MeetupViewHolder>(
                 Meetup.class,
                 R.layout.item_list_card,
@@ -391,13 +414,16 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
             @Override
             protected void populateViewHolder(final MeetupViewHolder viewHolder, final Meetup model, int position)
             {
+                // Updates the status of the Meetup
                 model.updateStatus();
+                // Populates a viewHolder with the found Meetup
                 populateMeetupViewHolder(viewHolder, model, position);
             }
 
             @Override
             protected void onChildChanged(ChangeEventListener.EventType type, int index, int oldIndex)
             {
+                // When the data is changed call updateFilter()
                 switch (type)
                 {
                     case ADDED:
@@ -421,9 +447,11 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
                 }
             }
         };
-
     }
 
+    /**
+     * Method to get a User's hosted Meetups.
+     */
     public void getHosted(String userId)
     {
         // Database reference to get a Host's Meetups
@@ -432,6 +460,7 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
         // Check to see if any Meetups exist
         checkForEmpty(hostQuery, null);
 
+        // Loads the adapter with all the Meetups returned by the query
         mAdapter = new FirebaseRecyclerAdapter<Meetup, MeetupViewHolder>(
                 Meetup.class,
                 R.layout.item_list_card,
@@ -442,13 +471,16 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
             @Override
             protected void populateViewHolder(final MeetupViewHolder viewHolder, final Meetup model, int position)
             {
+                // Updates the status of the Meetup
                 model.updateStatus();
+                // Populates a viewHolder with the found Meetup
                 populateMeetupViewHolder(viewHolder, model, position);
             }
 
             @Override
             protected void onChildChanged(ChangeEventListener.EventType type, int index, int oldIndex)
             {
+                // When the data is changed call updateFilter()
                 switch (type)
                 {
                     case ADDED:
@@ -472,10 +504,11 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
                 }
             }
         };
-
-
     }
 
+    /**
+     * Method to get a Squad's Meetups.
+     */
     public void getSquad(String squadId)
     {
         // Database reference to get a Squad's Meetups
@@ -484,6 +517,7 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
         // Check to see if any Meetups exist
         checkForEmpty(squadQuery, null);
 
+        // Loads the adapter with all the Meetups returned by the query
         mAdapter = new FirebaseRecyclerAdapter<Meetup, MeetupViewHolder>(
                 Meetup.class,
                 R.layout.item_list_card,
@@ -494,13 +528,16 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
             @Override
             protected void populateViewHolder(final MeetupViewHolder viewHolder, final Meetup model, int position)
             {
+                // Updates the status of the Meetup
                 model.updateStatus();
+                // Populates a viewHolder with the found Meetup
                 populateMeetupViewHolder(viewHolder, model, position);
             }
 
             @Override
             protected void onChildChanged(ChangeEventListener.EventType type, int index, int oldIndex)
             {
+                // When the data is changed call updateFilter()
                 switch (type)
                 {
                     case ADDED:
@@ -526,6 +563,11 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
         };
     }
 
+    /**
+     * Method to get a Place's Meetups.
+     *
+     * @param placeId The Place's id.
+     */
     public void getPlace(String placeId)
     {
         // Database reference to get all Meetups
@@ -534,6 +576,7 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
         // Check to see if any Meetups exist
         checkForEmpty(allQuery, null);
 
+        // Loads the adapter with all the Meetups returned by the query
         mAdapter = new FirebaseRecyclerAdapter<Meetup, MeetupViewHolder>(
                 Meetup.class,
                 R.layout.item_list_card,
@@ -544,13 +587,16 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
             @Override
             protected void populateViewHolder(final MeetupViewHolder viewHolder, final Meetup model, int position)
             {
+                // Updates the status of the Meetup
                 model.updateStatus();
+                // Populates a viewHolder with the found Meetup
                 populateMeetupViewHolder(viewHolder, model, position);
             }
 
             @Override
             protected void onChildChanged(ChangeEventListener.EventType type, int index, int oldIndex)
             {
+                // When the data is changed call updateFilter()
                 switch (type)
                 {
                     case ADDED:
@@ -576,9 +622,15 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
         };
     }
 
-    // Checks if Meetups in the selected query exist
+    /**
+     * Checks if Meetups exist, either in a query or an adapter.
+     *
+     * @param query   The query to check.
+     * @param adapter The adapter to check.
+     */
     public void checkForEmpty(Query query, MeetupAdapter adapter)
     {
+        // If checking a query
         if (query != null)
         {
             query.addListenerForSingleValueEvent(new ValueEventListener()
@@ -608,7 +660,7 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
 
                 }
             });
-        } else
+        } else // If checking an adapter
         {
             // Hide the loading screen
             loadingOverlay.setVisibility(View.GONE);
@@ -627,9 +679,15 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
         }
     }
 
-    // An observer on the RecyclerView to check if empty on changes
+    /**
+     * Method to add an observer on the RecyclerView to check if empty on data changes
+     *
+     * @param fbAdapter     The FireBaseRecyclerAdapter to be observed.
+     * @param meetupAdapter The MeetupAdapter to be observed.
+     */
     public void adapterObserver(final FirebaseRecyclerAdapter fbAdapter, final MeetupAdapter meetupAdapter)
     {
+        // If using FirebaseRecyclerAdapter
         if (fbAdapter != null)
         {
             mObserver = new RecyclerView.AdapterDataObserver()
@@ -662,7 +720,7 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
             };
 
             fbAdapter.registerAdapterDataObserver(mObserver);
-        } else if (meetupAdapter != null)
+        } else if (meetupAdapter != null) // If using MeetupAdapter
         {
             mObserver = new RecyclerView.AdapterDataObserver()
             {
@@ -691,18 +749,24 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
                 }
             };
 
+            // Registering the observer
             meetupAdapter.registerAdapterDataObserver(mObserver);
-        } else
-        {
-            // something wrong
         }
     }
 
+    /**
+     * Method that populates the viewHolder with the info it needs.
+     *
+     * @param viewHolder The ViewHolder to be populated.
+     * @param model      The Meetup to be displayed.
+     * @param position   The position of the ViewHolder.
+     */
     public void populateMeetupViewHolder(final MeetupViewHolder viewHolder, final Meetup model, int position)
     {
         // Displaying the name
         viewHolder.nameField.setText(model.getName());
 
+        // Displaying the description
         String description = model.getDescription().replace("\n", "");
         viewHolder.descriptionfield.setText(description);
 
@@ -712,6 +776,7 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
+                // Displaying the Squad name
                 viewHolder.squadField.setText(dataSnapshot.child("name").getValue(String.class));
             }
 
@@ -739,8 +804,10 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
             viewHolder.attendingField.setText("0 attendees");
         }
 
-        // Getting status
+        // Upating the status of the Meetup
         model.updateStatus();
+
+        // Displaying the status of the Meetup
         int status = model.gimmeStatus();
         if (status == 0)
             viewHolder.statusField.setText("Upcoming");
@@ -751,7 +818,7 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
         else
             viewHolder.statusField.setText("Deleted");
 
-
+        // Setting the onClick to send the User to the Meetup's MeetupDetailActivity
         viewHolder.mView.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -771,27 +838,38 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
         StorageReference meetupStorage = firebaseStorage.getReference().child("meetups/" + model.getId() + ".jpg");
 
         // If the meetup has an image display it
-        meetupStorage.getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+        meetupStorage.getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>()
+        {
             @Override
-            public void onSuccess(byte[] bytes) {
+            public void onSuccess(byte[] bytes)
+            {
                 Bitmap meetupImage = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                 viewHolder.image.setVisibility(View.VISIBLE);
                 viewHolder.image.setImageBitmap(meetupImage);
 
             }
-        }).addOnFailureListener(new OnFailureListener() {
+        }).addOnFailureListener(new OnFailureListener()
+        {
             @Override
-            public void onFailure(@NonNull Exception exception) {
+            public void onFailure(@NonNull Exception exception)
+            {
                 viewHolder.image.setVisibility(View.GONE);
             }
         });
 
     }
 
+    /**
+     * Method that searches for a Meetup with a name that contains the searchText.
+     *
+     * @param searchText The String to be searched for.
+     */
     public void search(String searchText)
     {
+        // Search mode
         search = true;
 
+        // Clearing the previous searchList
         searchList.clear();
 
         if (!searchText.isEmpty())
@@ -809,21 +887,28 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
 
             searchText = searchText.toLowerCase();
 
+            // Finds the Meetups that contain the search
             for (Meetup meetup : filteredList)
             {
                 if (meetup.getName().toLowerCase().contains(searchText))
                 {
+                    // Adds the Meetup to the list
                     searchList.add(meetup);
                 }
             }
 
+            // Creating an adapter using the searchList
             MeetupAdapter searchAdapter = new MeetupAdapter(searchList);
 
+            // Checking for empty and adding an observer
             checkForEmpty(null, searchAdapter);
 
+            // Displaying the new adapter
             mRecyclerView.setAdapter(searchAdapter);
         } else
         {
+            search = false;
+
             if (filter == 0)
             {
                 mRecyclerView.setAdapter(mAdapter);
@@ -834,6 +919,9 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
         }
     }
 
+    /**
+     * Method to update a filteredList when the data has changed.
+     */
     public void updateFilter()
     {
         if (filter == 1)
@@ -846,19 +934,25 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
             filterStart();
         } else
         {
+            // Original list
             mRecyclerView.setAdapter(mAdapter);
         }
 
+        // If there is a search
         if (search = true)
         {
             search(searchBar.getText().toString());
         }
     }
 
+    /**
+     * Method that creates a filteredList based on the User's distance to the Meetups.
+     */
     public void filterDistance()
     {
         if (mGoogleApiClient.isConnected())
         {
+            // Get the User's latest location
             getNewLocation();
         }
 
@@ -868,11 +962,11 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
             loadingOverlay.setVisibility(View.VISIBLE);
             loadingText.setText("Filtering...");
 
+            // Filtered mode
             filter = 1;
 
             // List sorted by distance
             filteredList = new ArrayList<>();
-
 
             // Filling the list with data retrieved from Firebase
             for (int i = 0; i < mAdapter.getItemCount(); i++)
@@ -958,12 +1052,16 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
         }
     }
 
+    /**
+     * Method that creates a filteredList based on the Meetup's start time.
+     */
     public void filterStart()
     {
         // Displaying the loading overlay
         loadingOverlay.setVisibility(View.VISIBLE);
         loadingText.setText("Filtering...");
 
+        // Filtered mode
         filter = 2;
 
         // List sorted by start time
@@ -1025,29 +1123,39 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
         }
     }
 
+    /**
+     * Method to get the User's latest location
+     */
     public void getNewLocation()
     {
+        // If no location permission
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
         {
+            // Request the permission
             ActivityCompat.requestPermissions(MeetupsListActivity.this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
         }
 
-
+        // Request location updates
         LocationServices.FusedLocationApi.requestLocationUpdates(
                 mGoogleApiClient, mLocationRequest, this);
 
+        // Store the User's latest location
         userLoc = LocationServices.FusedLocationApi.getLastLocation(
                 mGoogleApiClient);
     }
 
+
     @Override
     public void onConnected(@Nullable Bundle bundle)
     {
+        // If no location permission
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
         {
+            // Request the permission
             ActivityCompat.requestPermissions(MeetupsListActivity.this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
         } else
         {
+            // Get the latest location
             getNewLocation();
         }
     }
@@ -1061,10 +1169,9 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
     {
-
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE)
         {
-
+            // If permission granted
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
             {
                 getNewLocation();
@@ -1087,6 +1194,9 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
 
     }
 
+    /**
+     * Static class to be filled by populateMeetupViewHolder.
+     */
     public static class MeetupViewHolder extends RecyclerView.ViewHolder
     {
         View mView;
@@ -1110,14 +1220,14 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
             attendingField = (TextView) v.findViewById(R.id.listCard_text4);
             statusField = (TextView) v.findViewById(R.id.listCard_text5);
             layout = (RelativeLayout) v.findViewById(R.id.layout);
-
-            //squadField.setText("loading...");
         }
     }
 
+    /**
+     * Class used to display Meetups in a RecyclerView Adapter, used in filtering.
+     */
     public class MeetupAdapter extends RecyclerView.Adapter<MeetupViewHolder>
     {
-
         private List<Meetup> meetupList;
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
@@ -1126,6 +1236,13 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
             this.meetupList = meetupList;
         }
 
+        /**
+         * Method to create a MeetupViewHolder using a layout as a template.
+         *
+         * @param parent   The ViewGroup the MeetupViewHolder belongs to
+         * @param viewType The viewType to be used.
+         * @return A MeetupViewHolder to be filled.
+         */
         @Override
         public MeetupViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
         {
@@ -1136,6 +1253,12 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
             return new MeetupViewHolder(itemView);
         }
 
+        /**
+         * Fills a MeetupViewHolder with the needed info.
+         *
+         * @param holder   The MeetupViewHolder to be filled.
+         * @param position The position of the MeetupViewHolder.
+         */
         @Override
         public void onBindViewHolder(final MeetupViewHolder holder, int position)
         {
@@ -1213,17 +1336,21 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
             StorageReference meetupStorage = firebaseStorage.getReference().child("meetups/" + meetup.getId() + ".jpg");
 
             // If the meetup has an image display it
-            meetupStorage.getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            meetupStorage.getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>()
+            {
                 @Override
-                public void onSuccess(byte[] bytes) {
+                public void onSuccess(byte[] bytes)
+                {
                     Bitmap meetupImage = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                     holder.image.setVisibility(View.VISIBLE);
                     holder.image.setImageBitmap(meetupImage);
 
                 }
-            }).addOnFailureListener(new OnFailureListener() {
+            }).addOnFailureListener(new OnFailureListener()
+            {
                 @Override
-                public void onFailure(@NonNull Exception exception) {
+                public void onFailure(@NonNull Exception exception)
+                {
                     holder.image.setVisibility(View.GONE);
                 }
             });
@@ -1236,6 +1363,11 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
         }
     }
 
+    /**
+     * Method to open and close the burger menu when the FloatingActionButton is pressed.
+     *
+     * @param view The FloatingActionButton that was pressed.
+     */
     public void fab(View view)
     {
         if (burger == false)
@@ -1253,17 +1385,28 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
         }
     }
 
+    /**
+     * Method to send the User to the NewMeetupActivity.
+     *
+     * @param view The Button that was pressed.
+     */
     public void createNew(View view)
     {
         Intent intent = new Intent(this, NewMeetupActivity.class);
         startActivity(intent);
     }
 
+    /**
+     * Method to display expired Meetups.
+     *
+     * @param view The Button that was pressed.
+     */
     public void showPast(View view)
     {
+        // If no filter
         if (filter == 0)
         {
-            if(past == true)
+            if (past == true)
             {
                 // Hide expired
                 past = false;
