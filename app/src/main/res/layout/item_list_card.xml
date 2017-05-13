@@ -41,7 +41,7 @@
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="16dp"
                     android:text="Text 1"
                     android:id="@+id/listCard_text1"
                     android:textColor="@color/tw__composer_white"
