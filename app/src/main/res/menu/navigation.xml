@@ -2,18 +2,21 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     >
     <item
-        android:id="@+id/menu_home"
-        android:title="@string/menu_home"
-        android:icon="@drawable/ic_home" />
-    <item
         android:id="@+id/menu_squads"
         android:title="@string/menu_squads"
         android:icon="@drawable/ic_squads" />
-
     <item
         android:id="@+id/menu_meetups"
         android:title="@string/menu_meetups"
         android:icon="@drawable/ic_meetups" />
+    <item
+        android:id="@+id/menu_places"
+        android:title="@string/menu_places"
+        android:icon="@drawable/ic_places"/>
+    <item
+        android:id="@+id/menu_map"
+        android:title="@string/menu_map"
+        android:icon="@drawable/ic_maps" />
     <item
         android:id="@+id/menu_profile"
         android:title="@string/menu_profile"

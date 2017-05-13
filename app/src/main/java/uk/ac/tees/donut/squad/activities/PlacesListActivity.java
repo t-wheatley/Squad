@@ -53,7 +53,7 @@ import uk.ac.tees.donut.squad.posts.Meetup;
 import uk.ac.tees.donut.squad.posts.Place;
 import uk.ac.tees.donut.squad.squads.Squad;
 
-public class PlacesListActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener
+public class PlacesListActivity extends BaseActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener
 {
 
     private DatabaseReference mDatabase;
@@ -95,8 +95,7 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_places_list);
-
+        System.out.println("PlacesListActivity: oncreate method");
         // Display loading overlay
         loadingOverlay = (RelativeLayout) this.findViewById(R.id.loading_overlay);
         loadingText = (TextView) this.findViewById(R.id.loading_overlay_text);
@@ -194,6 +193,16 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
     {
         mGoogleApiClient.connect();
         super.onStart();
+    }
+
+    @Override
+    int getContentViewId() {
+        return R.layout.activity_places_list;
+    }
+
+    @Override
+    int getNavigationMenuItemId() {
+        return R.id.menu_places;
     }
 
     @Override
