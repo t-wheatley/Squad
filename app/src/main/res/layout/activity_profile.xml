@@ -24,6 +24,7 @@
             android:layout_margin="15dp"
             android:onClick="fab"
             android:src="@drawable/ic_burger"
+            app:fabSize="normal"
             />
 
         <!-- AppBar at top -->
@@ -78,21 +79,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:cardBackgroundColor="@color/colorPrimary"
-                    app:cardCornerRadius="5dp">
+                    app:cardCornerRadius="2dp">
 
-                    <RelativeLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="10dp">
 
                         <ImageView
                             android:id="@+id/profileImage_ImageView"
-                            android:layout_width="90dp"
-                            android:layout_height="90dp"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
                             android:layout_centerHorizontal="true"
                             android:src="@drawable/com_facebook_profile_picture_blank_portrait" />
 
-                    </RelativeLayout>
                 </android.support.v7.widget.CardView>
 
                 <!-- Bio Card -->
