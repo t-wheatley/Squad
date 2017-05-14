@@ -51,7 +51,6 @@ import uk.ac.tees.donut.squad.posts.LocPlace;
 /**
  * Activity which allows the user to view a list of Places.
  */
-
 public class PlacesListActivity extends BaseActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener
 {
     // Firebase
@@ -191,7 +190,7 @@ public class PlacesListActivity extends BaseActivity implements GoogleApiClient.
         mLocationRequest.setPriority(102);
         mLocationRequest.setInterval(5);
 
-        // Displaying the mAdapter in he recyclerVIew
+        // Displaying the mAdapter in the recyclerView
         mRecyclerView.setAdapter(mAdapter);
     }
 
@@ -434,7 +433,7 @@ public class PlacesListActivity extends BaseActivity implements GoogleApiClient.
     }
 
     /**
-     * Method to add an observer on the RecyclerView to check if empty on data changes
+     * Method to add an observer on the RecyclerView to check if empty on data changes.
      *
      * @param fbAdapter    The FireBaseRecyclerAdapter to be observed.
      * @param placeAdapter The PlaceAdapter to be observed.

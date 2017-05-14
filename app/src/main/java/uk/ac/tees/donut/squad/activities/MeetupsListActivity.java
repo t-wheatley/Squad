@@ -262,7 +262,7 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
         mLocationRequest.setPriority(102);
         mLocationRequest.setInterval(5);
 
-        // Displaying the mAdapter in he recyclerVIew
+        // Displaying the mAdapter in the recyclerView
         mRecyclerView.setAdapter(mAdapter);
     }
 
@@ -682,7 +682,7 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
     }
 
     /**
-     * Method to add an observer on the RecyclerView to check if empty on data changes
+     * Method to add an observer on the RecyclerView to check if empty on data changes.
      *
      * @param fbAdapter     The FireBaseRecyclerAdapter to be observed.
      * @param meetupAdapter The MeetupAdapter to be observed.

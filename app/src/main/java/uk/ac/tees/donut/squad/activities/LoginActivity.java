@@ -130,7 +130,7 @@ public class LoginActivity extends AppCompatActivity implements
     {
         super.onStart();
 
-        // Adding a listener for the AuthSate
+        // Adding a listener for the AuthState
         mAuth.addAuthStateListener(mAuthListener);
     }
 
@@ -140,7 +140,7 @@ public class LoginActivity extends AppCompatActivity implements
         super.onStop();
         if (mAuthListener != null)
         {
-            // Removing the listener for the AuthSate
+            // Removing the listener for the AuthState
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }

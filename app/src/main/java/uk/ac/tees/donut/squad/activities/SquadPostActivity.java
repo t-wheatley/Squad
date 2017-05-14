@@ -39,29 +39,41 @@ import uk.ac.tees.donut.squad.R;
 import uk.ac.tees.donut.squad.posts.Post;
 import uk.ac.tees.donut.squad.users.FBUser;
 
+/**
+ * Activity which allows the user to view a Squad's posts.
+ */
 public class SquadPostActivity extends AppCompatActivity
 {
-
-    private Button btnPost;
-    private RecyclerView mRecyclerView;
-    private static final String TAG = "Auth";
-    private EditText Txtbox;
+    // Firebase
+    FirebaseUser firebaseUser;
+    private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    private String squadId;
-    private String post;
-    private DatabaseReference mDatabase;
-    private LinearLayoutManager mLayoutManager;
     private FirebaseRecyclerAdapter mAdapter;
+
+    // Loading Overlay
+    RelativeLayout loadingOverlay;
+    TextView loadingText;
+
+    // Activity UI
+    private Button btnPost;
+    private EditText Txtbox;
     private TextView listText;
-    private RecyclerView.AdapterDataObserver mObserver;
     private ImageView profileImage;
 
-    FirebaseUser firebaseUser;
-    TextView loadingText;
+    // RecyclerView
+    private RecyclerView mRecyclerView;
+    private LinearLayoutManager mLayoutManager;
+    private RecyclerView.AdapterDataObserver mObserver;
+
+    // Variables
     int loadingCount;
-    RelativeLayout loadingOverlay;
     FBUser user;
+    private String squadId;
+    private String post;
+
+    // Final values
+    private static final String TAG = "Auth";
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -69,7 +81,14 @@ public class SquadPostActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_squad_post);
 
-        // Declaring everything
+        // Display loading overlay
+        loadingOverlay = (RelativeLayout) this.findViewById(R.id.loading_overlay);
+        loadingText = (TextView) this.findViewById(R.id.loading_overlay_text);
+        loadingText.setText("Loading Posts...");
+        loadingOverlay.setVisibility(View.VISIBLE);
+        loadingCount = 1;
+
+        // Initialising UI Elements
         Txtbox = (EditText) findViewById(R.id.txtboxPost);
         btnPost = (Button) findViewById(R.id.btnPost);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
@@ -79,13 +98,6 @@ public class SquadPostActivity extends AppCompatActivity
 
         // Getting the reference for the Firebase Realtime Database
         mDatabase = FirebaseDatabase.getInstance().getReference();
-
-        // Display loading overlay
-        loadingOverlay = (RelativeLayout) this.findViewById(R.id.loading_overlay);
-        loadingText = (TextView) this.findViewById(R.id.loading_overlay_text);
-        loadingText.setText("Loading Posts...");
-        loadingOverlay.setVisibility(View.VISIBLE);
-        loadingCount = 1;
 
         // Gets the extra passed from the last activity
         Intent detail = getIntent();
@@ -126,7 +138,7 @@ public class SquadPostActivity extends AppCompatActivity
             }
         });
 
-
+        // AuthListener used to check if the user is signed in
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener()
         {
@@ -162,36 +174,48 @@ public class SquadPostActivity extends AppCompatActivity
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
+        // Get the Squad's Posts
         getPost(squadId);
 
-        // specify an adapter
+        // Displaying the mAdapter in the recyclerView
         mRecyclerView.setAdapter(mAdapter);
     }
 
+    /**
+     * Method to get all of the Squad's Posts.
+     *
+     * @param squadId The Squad to get Posts from.
+     */
     public void getPost(String squadId)
     {
         // Database reference to get posts
-        Query userQuery = mDatabase.child("posts").orderByChild("squad").equalTo(squadId);
+        Query postsQuery = mDatabase.child("posts").orderByChild("squad").equalTo(squadId);
 
-        // Check to see if any Meetups exist
-        checkForEmpty(userQuery);
+        // Check to see if any Posts exist
+        checkForEmpty(postsQuery);
 
+        // Loads the adapter with all the Posts returned by the query
         mAdapter = new FirebaseRecyclerAdapter<Post, PostViewHolder>(
                 Post.class,
                 R.layout.item_post,
                 PostViewHolder.class,
-                userQuery
+                postsQuery
         )
         {
             @Override
             protected void populateViewHolder(PostViewHolder viewHolder, final Post model, int position)
             {
-                populateSquadViewHolder(viewHolder, model, position);
+                // Populates a viewHolder with the found Post
+                populatePostViewHolder(viewHolder, model, position);
             }
         };
     }
 
-    // Checks if post in the selected query exist
+    /**
+     * Checks if Posts exist.
+     *
+     * @param query The query to check.
+     */
     public void checkForEmpty(Query query)
     {
         query.addListenerForSingleValueEvent(new ValueEventListener()
@@ -223,6 +247,9 @@ public class SquadPostActivity extends AppCompatActivity
         });
     }
 
+    /**
+     * Method to add an observer on the RecyclerView to check if empty on data changes.
+     */
     public void adapterObserver()
     {
         mObserver = new RecyclerView.AdapterDataObserver()
@@ -258,6 +285,7 @@ public class SquadPostActivity extends AppCompatActivity
     public void onStart()
     {
         super.onStart();
+        // Adding a listener for the AuthState
         mAuth.addAuthStateListener(mAuthListener);
     }
 
@@ -267,11 +295,17 @@ public class SquadPostActivity extends AppCompatActivity
         super.onStop();
         if (mAuthListener != null)
         {
+            // Removing the listener for the AuthState
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
 
-    // Takes a post and pushes it to the Firebase Realtime Database (Without extras)
+    /**
+     * Method to post a Post to the Firebase Realtime Database.
+     *
+     * @param post    The text of the Post.
+     * @param squadId The Squad the Post belongs to.
+     */
     public void createPost(String post, String squadId)
     {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -302,7 +336,14 @@ public class SquadPostActivity extends AppCompatActivity
 
     }
 
-    public void populateSquadViewHolder(final SquadPostActivity.PostViewHolder viewHolder, final Post model, int position)
+    /**
+     * Method that populates the viewHolder with the info it needs.
+     *
+     * @param viewHolder The ViewHolder to be populated.
+     * @param model      The Post to be displayed.
+     * @param position   The position of the ViewHolder.
+     */
+    public void populatePostViewHolder(final SquadPostActivity.PostViewHolder viewHolder, final Post model, int position)
     {
         // Display the Post
         viewHolder.postField.setText(model.getPost());
@@ -390,6 +431,9 @@ public class SquadPostActivity extends AppCompatActivity
         loadingCount++;
     }
 
+    /**
+     * Static class to be filled by populatePostViewHolder.
+     */
     public static class PostViewHolder extends RecyclerView.ViewHolder
     {
         View mView;
@@ -406,8 +450,6 @@ public class SquadPostActivity extends AppCompatActivity
             profilePic = (ImageView) v.findViewById(R.id.userPP);
         }
     }
-
-
 }
 
 
