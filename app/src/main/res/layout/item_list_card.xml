@@ -57,7 +57,7 @@
                     android:layout_alignParentEnd="true"
                     android:id="@+id/listCard_text2"
                     android:layout_marginStart="3dp"
-                    style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"
+                    android:textColor="@color/tw__solid_white"
                     />
 
             </RelativeLayout>
