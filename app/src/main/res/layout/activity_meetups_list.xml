@@ -153,13 +153,16 @@
         </android.support.v7.widget.RecyclerView>
     </RelativeLayout>
     </ScrollView>
-        </RelativeLayout>
+
         <include
             layout="@layout/element_bottom_navigation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_gravity="bottom" />
+            android:layout_gravity="bottom"
+            />
+        </RelativeLayout>
+
 
     <!-- Loading overlay; -->
     <include layout="@layout/loading_overlay"/>

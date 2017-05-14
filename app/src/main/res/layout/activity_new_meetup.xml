@@ -14,19 +14,23 @@
         android:layout_height="0px"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:id="@+id/linearLayout" />
+        android:id="@+id/linearLayout"
+        android:orientation="vertical"
+        />
+
+
 
     <RelativeLayout
         android:id="@+id/newMeetup_appBar"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:background="@color/colorPrimary"
-        android:elevation="10dp">
+        android:elevation="5dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="88dp"
             android:layout_marginStart="16dp"
             android:gravity="center"
             android:text="New Meetup"
@@ -35,144 +39,22 @@
             android:textStyle="bold" />
     </RelativeLayout>
 
-    <!-- OLD
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin">
-
-        <RelativeLayout
-            android:padding="5dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            android:id="@+id/descriptionLayout">
-            <TextView
-                android:text="Name:"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true"
-                android:id="@+id/newMeetup_textViewName"
-                style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
-
-
-
-            <TextView
-                android:text="Squad:"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/newMeetup_textEditName"
-                android:layout_alignParentStart="true"
-                android:id="@+id/newMeetup_textSquad"
-                style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
-
-
-
-            <TextView
-                android:text="From:"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/newMeetup_spinnerSquad"
-                android:layout_alignParentStart="true"
-                android:id="@+id/newMeetup_textFrom"
-                style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
-
-
-
-            <TextView
-                android:text="Until:"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/newMeetup_buttonFromDate"
-                android:layout_alignParentStart="true"
-                android:id="@+id/newMeetup_textUntil"
-                style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
-
-
-
-
-            <TextView
-                android:text="Description:"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/newMeetup_textDescription"
-                android:layout_below="@+id/newMeetup_buttonUntilDate"
-                android:layout_alignParentStart="true"
-                style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
-
-
-
-
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Address:"
-                android:layout_below="@+id/newMeetup_buttonFromPlace"
-                android:id="@+id/newMeetup_textAddress"
-                style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
-
-
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/newMeetup_layoutNewAddress"
-                android:layout_below="@+id/newMeetup_textAddress">
-
-
-
-
-
-
-
-
-
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPersonName"
-                    android:id="@+id/newMeetup_textEditAddressPC"
-                    android:layout_below="@+id/newMeetup_textEditAddressCounty"
-                    android:layout_alignParentStart="true"
-                    android:hint="Postcode" />
-            </RelativeLayout>
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_marginTop="10dp"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/descriptionLayout"
-            android:layout_centerHorizontal="true"
-            android:background="@color/colorPrimary"
-            android:padding="5dp">
-            <Button
-                android:text="Submit"
-                android:layout_width="500dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/newMeetup_buttonSubmit"
-                style="@style/Widget.AppCompat.Button.Colored"/>
-        </RelativeLayout>
-    </RelativeLayout>
-    </ScrollView>
-    -->
-    <!-- Loading overlay; -->
-    <include layout="@layout/loading_overlay" />
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:layout_alignParentEnd="true"
+        app:fabSize="normal"
+        android:elevation="15dp"
+        android:src="@drawable/ic_tick"
+        android:id="@+id/newMeetup_buttonSubmit"
+        />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
-        android:layout_toEndOf="@+id/linearLayout">
+        android:layout_below="@id/newMeetup_appBar">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -463,8 +345,6 @@
                             android:layout_height="1dp"
                             android:background="@color/colorPrimaryDark"
                             android:layout_marginBottom="10dp"
-                            android:layout_marginStart="10dp"
-                            android:layout_marginEnd="10dp"
                             android:layout_marginTop="5dp"
                             >
                         </RelativeLayout>
@@ -595,9 +475,19 @@
                             android:layout_height="wrap_content"
                             app:cardBackgroundColor="@color/colorAccent"
                             app:cardCornerRadius="2dp"
+                            android:id="@+id/newMeetup_existingPlace"
+                            android:visibility="gone"
+                            android:layout_marginStart="10dp"
                             >
 
-                            
+                            <Spinner
+                                android:layout_width="match_parent"
+                                android:layout_height="38dp"
+                                android:layout_below="@+id/newMeetup_textAddress"
+                                android:layout_alignParentStart="true"
+                                android:layout_alignParentEnd="true"
+                                android:id="@+id/newMeetup_spinnerPlace"
+                                />
 
                         </android.support.v7.widget.CardView>
 
@@ -608,5 +498,8 @@
         </LinearLayout>
 
     </ScrollView>
+
+    <!-- Loading overlay; -->
+    <include layout="@layout/loading_overlay" />
 
 </RelativeLayout>

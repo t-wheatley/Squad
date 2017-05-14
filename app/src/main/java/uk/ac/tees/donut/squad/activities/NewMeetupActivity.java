@@ -10,8 +10,10 @@ import android.os.Handler;
 import android.os.ResultReceiver;
 import android.support.annotation.BoolRes;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -19,6 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -77,7 +80,7 @@ public class NewMeetupActivity extends AppCompatActivity
     // Boolean to determine whether the address is coming from the spinner or user input
     boolean spinnerAddress;
 
-    private RelativeLayout newAddressLayout;
+    private LinearLayout newAddressLayout;
     private EditText editName;
     private EditText editAddress1;
     private EditText editAddress2;
@@ -87,13 +90,14 @@ public class NewMeetupActivity extends AppCompatActivity
     private Spinner spinnerSquad;
     private Spinner spinnerPlace;
     private EditText editDescription;
-    private Button btnSubmit;
+    private FloatingActionButton btnSubmit;
     private Button btnFromDate;
     private Button btnFromTime;
     private Button btnUntilDate;
     private Button btnUntilTime;
     private Button btnNewAddress;
     private Button btnFromPlace;
+    private CardView placeCard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -114,7 +118,7 @@ public class NewMeetupActivity extends AppCompatActivity
         untilDateTime = Calendar.getInstance();
 
         // Links the variables to their layout items.
-        newAddressLayout = (RelativeLayout) findViewById(R.id.newMeetup_layoutNewAddress);
+        newAddressLayout = (LinearLayout) findViewById(R.id.newMeetup_manualAddress);
         editAddress1 = (EditText) findViewById(R.id.newMeetup_textEditAddress1);
         editAddress2 = (EditText) findViewById(R.id.newMeetup_textEditAddress2);
         editAddressTC = (EditText) findViewById(R.id.newMeetup_textEditAddressTC);
@@ -123,9 +127,10 @@ public class NewMeetupActivity extends AppCompatActivity
 
         editName = (EditText) findViewById(R.id.newMeetup_textEditName);
         spinnerSquad = (Spinner) findViewById(R.id.newMeetup_spinnerSquad);
+        placeCard = (CardView) findViewById(R.id.newMeetup_existingPlace);
         spinnerPlace = (Spinner) findViewById(R.id.newMeetup_spinnerPlace);
         editDescription = (EditText) findViewById(R.id.newMeetup_textEditDescription);
-        btnSubmit = (Button) findViewById(R.id.newMeetup_buttonSubmit);
+        btnSubmit = (FloatingActionButton) findViewById(R.id.newMeetup_buttonSubmit);
         btnFromDate = (Button) findViewById(R.id.newMeetup_buttonFromDate);
         btnFromTime = (Button) findViewById(R.id.newMeetup_buttonFromTime);
         btnUntilDate = (Button) findViewById(R.id.newMeetup_buttonUntilDate);
@@ -666,7 +671,7 @@ public class NewMeetupActivity extends AppCompatActivity
         spinnerAddress = false;
 
         newAddressLayout.setVisibility(View.VISIBLE);
-        spinnerPlace.setVisibility(View.GONE);
+        placeCard.setVisibility(View.GONE);
 
 
     }
@@ -676,7 +681,7 @@ public class NewMeetupActivity extends AppCompatActivity
         spinnerAddress = true;
 
         newAddressLayout.setVisibility(View.GONE);
-        spinnerPlace.setVisibility(View.VISIBLE);
+        placeCard.setVisibility(View.VISIBLE);
         fillPlaceSpinner(squads.get(spinnerSquad.getSelectedItem().toString().trim()));
 
     }
