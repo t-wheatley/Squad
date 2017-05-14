@@ -3,12 +3,14 @@ package uk.ac.tees.donut.squad.activities;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageSwitcher;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,7 +28,7 @@ import uk.ac.tees.donut.squad.location.PlaceMapsActivity;
 import uk.ac.tees.donut.squad.posts.AddressPlace;
 import uk.ac.tees.donut.squad.posts.LocPlace;
 
-public class PlaceDetailsActivity extends AppCompatActivity
+public class PlaceDetailsActivity extends BaseActivity
 {
 
     String placeId;
@@ -51,7 +53,11 @@ public class PlaceDetailsActivity extends AppCompatActivity
     double longitude;
 
     ImageSwitcher gallery;
-    RelativeLayout galleryLayout;
+
+    boolean burger = false;
+    FloatingActionButton fab;
+    LinearLayout burgerMenu;
+    LinearLayout hostMenu;
 
 
     @Override
@@ -95,6 +101,10 @@ public class PlaceDetailsActivity extends AppCompatActivity
 
         gallery = (ImageSwitcher) findViewById(R.id.placeDetails_gallery);
 
+        fab = (FloatingActionButton) findViewById(R.id.placeDetails_fab);
+        burgerMenu = (LinearLayout) findViewById(R.id.placeDetails_burgerMenu);
+        hostMenu = (LinearLayout) findViewById(R.id.placeDetails_hostMenu);
+
         //if there are no pictures
         boolean noPics = true; //TEMPORARY TILL WE CAN ATTEMPT AT LOADING PICS
         if (noPics)
@@ -107,9 +117,6 @@ public class PlaceDetailsActivity extends AppCompatActivity
             noPic.setVisibility(View.GONE);
             gallery.setVisibility(View.VISIBLE);
         }
-
-
-
 
         //gets extras passd from last activity
         Intent detail = getIntent();
@@ -143,6 +150,16 @@ public class PlaceDetailsActivity extends AppCompatActivity
         // Starts the loading chain
         // loadMeetup -> loadSquad
         loadPlace();
+    }
+
+    @Override
+    int getContentViewId() {
+        return R.layout.activity_place_details;
+    }
+
+    @Override
+    int getNavigationMenuItemId() {
+        return R.id.menu_places;
     }
 
     public void loadPlace()
@@ -227,4 +244,21 @@ public class PlaceDetailsActivity extends AppCompatActivity
         intent.putExtra("placeId", placeId);
         startActivity(intent);
     }
+
+    public void fab(View view)
+    {
+        if(burger == false)
+        {
+            burger = true;
+            burgerMenu.setVisibility(View.VISIBLE);
+            fab.setImageResource(R.drawable.ic_cross);
+        }
+        else
+        {
+            burger = false;
+            burgerMenu.setVisibility(View.GONE);
+            fab.setImageResource(R.drawable.ic_burger);
+        }
+    }
+
 }

@@ -2,24 +2,12 @@ package uk.ac.tees.donut.squad.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import uk.ac.tees.donut.squad.R;
-import uk.ac.tees.donut.squad.debug.SquadDebug;
-import uk.ac.tees.donut.squad.location.GeocoderActivity;
-import uk.ac.tees.donut.squad.location.MapActivity;
 
 public class MenuActivity extends BaseActivity
 {
@@ -33,12 +21,12 @@ public class MenuActivity extends BaseActivity
 
     @Override
     int getContentViewId() {
-        return R.layout.activity_menu;
+        return R.layout.activity_map;
     }
 
     @Override
     int getNavigationMenuItemId() {
-        return R.id.menu_home;
+        return R.id.menu_map;
     }
 
 

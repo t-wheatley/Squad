@@ -22,15 +22,15 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.LoginActivity"/>
-        <activity android:name=".activities.MenuActivity" />
+        <activity android:name=".activities.SquadListActivity" />
         <activity android:name=".location.GeocoderActivity" />
         <activity android:name=".activities.NewMeetupActivity" />
         <activity
             android:name=".activities.MeetupDetailActivity"
             android:configChanges="orientation|screenSize" />
         <activity android:name=".activities.ProfileActivity" />
-        <activity android:name=".activities.SquadListActivity" />
         <activity android:name=".activities.SquadDetailActivity" />
+        <activity android:name=".activities.PlacesListActivity"/>
         <activity
             android:name=".activities.SettingsActivity"
             android:label="@string/title_activity_settings" />
@@ -52,7 +52,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".location.MapActivity"
+            android:name=".activities.MapActivity"
             android:label="@string/title_activity_map" />
         <activity android:name=".activities.MeetupsListActivity" />
         <activity android:name=".activities.PlaceDetailsActivity" />
