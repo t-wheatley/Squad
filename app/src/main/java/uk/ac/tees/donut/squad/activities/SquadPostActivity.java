@@ -2,10 +2,10 @@ package uk.ac.tees.donut.squad.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -36,11 +36,11 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import uk.ac.tees.donut.squad.R;
-import uk.ac.tees.donut.squad.UserGridViewAdapter;
 import uk.ac.tees.donut.squad.posts.Post;
 import uk.ac.tees.donut.squad.users.FBUser;
 
-public class SquadPostActivity extends AppCompatActivity {
+public class SquadPostActivity extends AppCompatActivity
+{
 
     private Button btnPost;
     private RecyclerView mRecyclerView;
@@ -64,7 +64,8 @@ public class SquadPostActivity extends AppCompatActivity {
     FBUser user;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_squad_post);
 
@@ -90,15 +91,19 @@ public class SquadPostActivity extends AppCompatActivity {
         Intent detail = getIntent();
         Bundle b = detail.getExtras();
 
-        if (b != null) {
+        if (b != null)
+        {
             // Collects the squadId passed from the RecyclerView
             squadId = (String) b.get("squadId");
-        } else {
+        } else
+        {
             new AlertDialog.Builder(SquadPostActivity.this)
                     .setTitle("Error")
                     .setMessage("The squad went missing somewhere, please try again.")
-                    .setPositiveButton("Back", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
+                    .setPositiveButton("Back", new DialogInterface.OnClickListener()
+                    {
+                        public void onClick(DialogInterface dialog, int which)
+                        {
                             finish();
                         }
                     })
@@ -107,12 +112,15 @@ public class SquadPostActivity extends AppCompatActivity {
         }
 
         // onClick listener for the post button
-        btnPost.setOnClickListener(new View.OnClickListener() {
+        btnPost.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 // When pressed calls the createPost method
-                if (Txtbox.getText().toString() != "") {
-                    post=Txtbox.getText().toString();
+                if (Txtbox.getText().toString() != "")
+                {
+                    post = Txtbox.getText().toString();
                     createPost(post, squadId);
                 }
             }
@@ -120,21 +128,27 @@ public class SquadPostActivity extends AppCompatActivity {
 
 
         mAuth = FirebaseAuth.getInstance();
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
+        mAuthListener = new FirebaseAuth.AuthStateListener()
+        {
             @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if (firebaseUser != null) {
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth)
+            {
+                if (firebaseUser != null)
+                {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + firebaseUser.getUid());
-                } else {
+                } else
+                {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
 
                     new AlertDialog.Builder(SquadPostActivity.this)
                             .setTitle("Sign-in Error")
                             .setMessage("You do not appear to be signed in, please try again.")
-                            .setPositiveButton("Back", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
+                            .setPositiveButton("Back", new DialogInterface.OnClickListener()
+                            {
+                                public void onClick(DialogInterface dialog, int which)
+                                {
                                     finish();
                                 }
                             })
@@ -180,22 +194,27 @@ public class SquadPostActivity extends AppCompatActivity {
     // Checks if post in the selected query exist
     public void checkForEmpty(Query query)
     {
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        query.addListenerForSingleValueEvent(new ValueEventListener()
+        {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
                 // Hide the loading screen
                 loadingOverlay.setVisibility(View.GONE);
 
                 // Checks if Squads will be found
-                if (dataSnapshot.hasChildren()) {
+                if (dataSnapshot.hasChildren())
+                {
                     listText.setVisibility(View.GONE);
-                } else {
+                } else
+                {
                     listText.setVisibility(View.VISIBLE);
                 }
 
                 // Add an Observer to the RecyclerView
                 adapterObserver();
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError)
             {
@@ -297,11 +316,13 @@ public class SquadPostActivity extends AppCompatActivity {
         mDatabase.child("users").child(model.getUser()).addListenerForSingleValueEvent(new ValueEventListener()
         {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
                 // Getting user
                 user = dataSnapshot.getValue(FBUser.class);
 
-                if (user != null) {
+                if (user != null)
+                {
 
                     // Displaying the user's name
                     viewHolder.nameField.setText(user.getName());
@@ -311,16 +332,20 @@ public class SquadPostActivity extends AppCompatActivity {
                             .load(user.getPicture().trim())
                             .diskCacheStrategy(DiskCacheStrategy.NONE)
                             .skipMemoryCache(true)
-                            .listener(new RequestListener<String, GlideDrawable>() {
+                            .listener(new RequestListener<String, GlideDrawable>()
+                            {
                                 @Override
-                                public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                                public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource)
+                                {
                                     return false;
                                 }
 
                                 @Override
-                                public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                                public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource)
+                                {
                                     // If profileName != default and profileImage isnt null
-                                    if (profileImage != null) {
+                                    if (profileImage != null)
+                                    {
                                         // Hiding loading overlay
                                         loadingOverlay.setVisibility(View.GONE);
                                     }
@@ -355,9 +380,6 @@ public class SquadPostActivity extends AppCompatActivity {
         });
 
 
-
-
-
         // If loading the last item
         if (mAdapter.getItemCount() == loadingCount)
         {
@@ -384,7 +406,6 @@ public class SquadPostActivity extends AppCompatActivity {
             profilePic = (ImageView) v.findViewById(R.id.userPP);
         }
     }
-
 
 
 }

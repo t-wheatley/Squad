@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -16,7 +15,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -24,8 +22,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,7 +35,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.mvc.imagepicker.ImagePicker;
-import com.twitter.sdk.android.core.models.Card;
 
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
@@ -52,6 +47,9 @@ import uk.ac.tees.donut.squad.UserGridViewAdapter;
 import uk.ac.tees.donut.squad.posts.Meetup;
 import uk.ac.tees.donut.squad.users.FBUser;
 
+/**
+ * Activity which allows the user to view the details of a Meetup.
+ */
 public class MeetupDetailActivity extends BaseActivity
 {
     // Firebase
@@ -88,17 +86,16 @@ public class MeetupDetailActivity extends BaseActivity
     LinearLayout hostOptions;
     boolean burger = false;
 
-    // Variables
-    String meetupId;
-    Meetup meetup;
-    Boolean attending;
-
     // Members display
     GridView attendeesGrid;
     List<String> userNames;
     List<String> userPics;
     List<String> userIds;
 
+    // Variables
+    String meetupId;
+    Meetup meetup;
+    Boolean attending;
     int secretCount;
     int memberCount;
 
@@ -115,7 +112,7 @@ public class MeetupDetailActivity extends BaseActivity
         loadingOverlay.setVisibility(View.VISIBLE);
         loadingImage.setVisibility(View.VISIBLE);
 
-        // Declaring everything
+        // Initialising UI Elements
         nameDisplay = (TextView) findViewById(R.id.meetupDetail_meetupName);
         squadDisplay = (TextView) findViewById(R.id.meetupDetail_squadName);
         hostDisplay = (TextView) findViewById(R.id.meetupDetail_host);
@@ -185,15 +182,20 @@ public class MeetupDetailActivity extends BaseActivity
     }
 
     @Override
-    int getContentViewId() {
+    int getContentViewId()
+    {
         return R.layout.activity_meetup_detail;
     }
 
     @Override
-    int getNavigationMenuItemId() {
+    int getNavigationMenuItemId()
+    {
         return R.id.menu_meetups;
     }
 
+    /**
+     * Uses the meetupId to create a Meetup object and display its details.
+     */
     public void loadMeetup()
     {
         // Reads the data from the meetupId in Firebase
@@ -205,35 +207,39 @@ public class MeetupDetailActivity extends BaseActivity
                 // Gets the data from Firebase and stores it in a Meetup class
                 meetup = dataSnapshot.getValue(Meetup.class);
 
-                // Displays the found meetup's attributes
+                // Displays the found Meetup's attributes
                 nameDisplay.setText(meetup.getName());
                 descriptionDisplay.setText(meetup.getDescription());
 
+                // Gets the start and end date of the Meetup
                 SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy 'at' h:mm a");
                 String startDate = sdf.format(meetup.getStartDateTime() * 1000L);
                 String endDate = sdf.format(meetup.getEndDateTime() * 1000L);
-
                 startDateDisplay.setText(startDate);
                 endDateDisplay.setText(endDate);
 
+                // Checking if the Meetup has changed state
                 meetup.updateStatus();
+
+                // Displaying the state of the Meetup
                 int status = meetup.gimmeStatus();
-                if(status == 0)
+                if (status == 0)
                     statusDisplay.setText("Upcoming");
-                else if(status == 1)
+                else if (status == 1)
                     statusDisplay.setText("Ongoing");
-                else if(status == 2)
+                else if (status == 2)
                     statusDisplay.setText("Expired");
                 else
                     statusDisplay.setText("Deleted");
 
-                // If user is the host
+                // If signed-in user is the Host of the Meetup
                 if (firebaseUser.getUid().equals(meetup.getHost()))
                 {
+                    // Display editing controls
                     editMode();
                 }
 
-                // Creating the reference for the meetup's Firebase Storage
+                // Creating the reference for the meetup's Firebase Storage, used to store pictures
                 meetupStorage = firebaseStorage.getReference().child("meetups/" + meetup.getId() + ".jpg");
 
                 // Load the name of the Squad
@@ -248,6 +254,9 @@ public class MeetupDetailActivity extends BaseActivity
         });
     }
 
+    /**
+     * Uses the squadId of the Meetup to load the name of the Squad it belongs to.
+     */
     public void loadSquad()
     {
         // Setting the loading text
@@ -259,6 +268,7 @@ public class MeetupDetailActivity extends BaseActivity
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
+                // Displays the Squad's name
                 squadDisplay.setText(dataSnapshot.child("name").getValue(String.class));
 
                 // Load the name of the Host
@@ -273,15 +283,22 @@ public class MeetupDetailActivity extends BaseActivity
         });
     }
 
+    /**
+     * Method to load the SquadDetailActivity of the selected squad.
+     *
+     * @param view The TextEdit holding the Squad's name.
+     */
     public void viewSquad(View view)
     {
-        //Sends the id to the details activity
+        //Sends the id to the SquadDetailActivity
         Intent detail = new Intent(MeetupDetailActivity.this, SquadDetailActivity.class);
         detail.putExtra("squadId", meetup.getSquad());
         startActivity(detail);
     }
 
-
+    /**
+     * Uses the hostId of the Meetup to load the name of the Host it belongs to.
+     */
     public void loadHost()
     {
         // Setting the loading text
@@ -293,6 +310,7 @@ public class MeetupDetailActivity extends BaseActivity
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
+                // Displays the Host's name
                 hostDisplay.setText(dataSnapshot.child("name").getValue(String.class));
 
                 // Load the attendees of the Meetup
@@ -307,15 +325,22 @@ public class MeetupDetailActivity extends BaseActivity
         });
     }
 
+    /**
+     * Method to load the ProfileActivity of the Host.
+     *
+     * @param view The TextEdit holding the Host's name.
+     */
     public void viewHost(View view)
     {
-        //Sends the id to the details activity
+        //Sends the id to the ProfileActivity
         Intent detail = new Intent(MeetupDetailActivity.this, ProfileActivity.class);
         detail.putExtra("uId", meetup.getHost());
         startActivity(detail);
     }
 
-
+    /**
+     * Method to load the Users attending the Meetup and display them in a GridView.
+     */
     public void loadUsers()
     {
         // Array of names
@@ -334,7 +359,6 @@ public class MeetupDetailActivity extends BaseActivity
         // If the HashMap isnt empty
         if (users != null)
         {
-
             // Getting the amount of users
             final int usersSize = users.size();
 
@@ -357,7 +381,7 @@ public class MeetupDetailActivity extends BaseActivity
                         FBUser user = dataSnapshot.getValue(FBUser.class);
 
                         // Checks if the user is not secret
-                        if(user.getSecret() == null || user.getSecret() == false)
+                        if (user.getSecret() == null || user.getSecret() == false)
                         {
                             userNames.add(user.getName());
                             userPics.add(user.getPicture());
@@ -367,22 +391,26 @@ public class MeetupDetailActivity extends BaseActivity
                             secretCount++;
                         }
 
+                        // Incrementing the memberCount
                         memberCount++;
-                        // If all members added
+
+                        // If all members have been added
                         if (usersSize == memberCount)
                         {
+                            // Get the amount of members
                             String memberString = "" + memberCount;
 
                             // If there is secret members
-                            if(secretCount != 0)
+                            if (secretCount != 0)
                             {
+                                // Get the amount of secret members
                                 memberString = memberString + " (" + secretCount + " Secret)";
                             }
 
                             // Display the amount of members
                             memberCountDisplay.setText(memberString);
 
-                            // Display the members
+                            // Display the members in the GridView
                             UserGridViewAdapter gridAdapter = new UserGridViewAdapter(MeetupDetailActivity.this, userNames, userPics, userIds);
                             attendeesGrid.setAdapter(gridAdapter);
 
@@ -409,24 +437,32 @@ public class MeetupDetailActivity extends BaseActivity
         }
     }
 
+    /**
+     * Method to load the picture of the Meetup and display it in an ImageView.
+     */
     public void loadPicture()
     {
         // Setting the loading text
         loadingText.setText("Getting the Meetup's picture...");
 
         // If the meetup has an image display it
-        meetupStorage.getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+        meetupStorage.getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>()
+        {
             @Override
-            public void onSuccess(byte[] bytes) {
+            public void onSuccess(byte[] bytes)
+            {
                 Bitmap image = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                 imageViewCard.setVisibility(View.VISIBLE);
                 meetupImage.setImageBitmap(image);
                 loadingImage.setVisibility(View.GONE);
 
             }
-        }).addOnFailureListener(new OnFailureListener() {
+        }).addOnFailureListener(new OnFailureListener()
+        {
             @Override
-            public void onFailure(@NonNull Exception exception) {
+            public void onFailure(@NonNull Exception exception)
+            {
+                // If something went wrong
                 imageViewCard.setVisibility(View.GONE);
                 loadingImage.setVisibility(View.GONE);
             }
@@ -436,8 +472,13 @@ public class MeetupDetailActivity extends BaseActivity
         loadingOverlay.setVisibility(View.GONE);
     }
 
+
+    /**
+     * Method to display an AlertDialog warning the user they are about to delete the Meetup.
+     */
     public void deleteMeetupPrompt()
     {
+        // Display AlertDialog
         new AlertDialog.Builder(MeetupDetailActivity.this)
                 .setTitle("Delete Meetup")
                 .setMessage("Are you sure you want to delete this Meetup?" +
@@ -459,6 +500,9 @@ public class MeetupDetailActivity extends BaseActivity
                 .show();
     }
 
+    /**
+     * Method to delete the Meetup from the Firebase Database.
+     */
     public void deleteMeetup()
     {
         // Displaying the loading overlay
@@ -482,7 +526,7 @@ public class MeetupDetailActivity extends BaseActivity
         mDatabase.child("users").child(firebaseUser.getUid()).child("hosting").child(meetupId).removeValue();
 
         // Removing the meetup from the place's meetups
-        if(meetup.getPlace() != null)
+        if (meetup.getPlace() != null)
         {
             mDatabase.child("places").child(meetup.getPlace()).child("meetups").child(meetupId).removeValue();
         }
@@ -492,6 +536,9 @@ public class MeetupDetailActivity extends BaseActivity
         finish();
     }
 
+    /**
+     * Method that displays editing controls for the Meetup if the signed-in User is the Host.
+     */
     public void editMode()
     {
         hostOptions.setVisibility(View.VISIBLE);
@@ -544,6 +591,10 @@ public class MeetupDetailActivity extends BaseActivity
         });
     }
 
+    /**
+     * Method used to edit the Meetup's description. Displays an AlertDialog asking for input then
+     * calls the updateDesc method with the new description.
+     */
     public void editDesc()
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -582,6 +633,11 @@ public class MeetupDetailActivity extends BaseActivity
         builder.show();
     }
 
+    /**
+     * Method used to post the new description for the Meetup to the FirebaseDatabase.
+     *
+     * @param desc The new description to be posted.
+     */
     public void updateDesc(String desc)
     {
         if (firebaseUser != null)
@@ -595,6 +651,10 @@ public class MeetupDetailActivity extends BaseActivity
         }
     }
 
+    /**
+     * Method used to edit the Meetup's name. Displays an AlertDialog asking for input then
+     * calls the updateName method with the new name.
+     */
     public void editName()
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -633,6 +693,11 @@ public class MeetupDetailActivity extends BaseActivity
         builder.show();
     }
 
+    /**
+     * Method used to post the new name for the Meetup to the FirebaseDatabase.
+     *
+     * @param name The new name to be posted.
+     */
     public void updateName(String name)
     {
         if (firebaseUser != null)
@@ -659,18 +724,24 @@ public class MeetupDetailActivity extends BaseActivity
         }
     }
 
+    /**
+     * Method to make a User attend a Meetup.
+     */
     public void attendMeetup()
     {
-        // Adds the user to the squad and changes the button
+        // Adds the user to the Meetup and changes the button
         mDatabase.child("users").child(firebaseUser.getUid()).child("meetups").child(meetupId).setValue(true);
         mDatabase.child("meetups").child(meetupId).child("users").child(firebaseUser.getUid()).setValue(true);
         attending = true;
         attendBtn.setText("Leave Meetup");
     }
 
+    /**
+     * Method to make a User leave a Meetup.
+     */
     public void leaveMeetup()
     {
-        // Removes the user from the squad and changes the button
+        // Removes the user from the Meetup and changes the button
         mDatabase.child("users").child(firebaseUser.getUid()).child("meetups").child(meetupId).removeValue();
         mDatabase.child("meetups").child(meetupId).child("users").child(firebaseUser.getUid()).removeValue();
         attending = false;
@@ -678,15 +749,26 @@ public class MeetupDetailActivity extends BaseActivity
         finish();
     }
 
+    /**
+     * Method called on result of the ImagePicker Intent.
+     *
+     * @param requestCode The request code that was passed to startActivityForResult().
+     * @param resultCode  The result code, RESULT_OK if successful, RESULT_CANCELED if not.
+     * @param data        An Intent that carries the data of the result.
+     */
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // If picture selected
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        // Getting a bitmap from the Intent
         final Bitmap bitmap = ImagePicker.getImageFromResult(this, requestCode, resultCode, data);
-        if(bitmap != null)
+
+        // If Bitmap exists
+        if (bitmap != null)
         {
             loadingText.setText("Uploading photo...");
             loadingOverlay.setVisibility(View.VISIBLE);
 
+            // Creating a ByteArray from the bitmap
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             byte[] bytes = baos.toByteArray();
@@ -694,16 +776,23 @@ public class MeetupDetailActivity extends BaseActivity
             // Upload to Firebase Storage
             UploadTask uploadTask = meetupStorage.putBytes(bytes);
 
-            uploadTask.addOnFailureListener(new OnFailureListener() {
+            // Upload Listener
+            uploadTask.addOnFailureListener(new OnFailureListener()
+            {
                 @Override
-                public void onFailure(@NonNull Exception exception) {
+                public void onFailure(@NonNull Exception exception)
+                {
+                    // If upload failed
                     loadingOverlay.setVisibility(View.GONE);
                     Toast.makeText(MeetupDetailActivity.this, "Upload failed, please try again!"
                             , Toast.LENGTH_SHORT);
                 }
-            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>()
+            {
                 @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
+                {
+                    // If upload successful
                     meetupImage.setImageBitmap(bitmap);
                     loadingOverlay.setVisibility(View.GONE);
                     Toast.makeText(MeetupDetailActivity.this, "Photo uploaded!", Toast.LENGTH_SHORT);
@@ -712,21 +801,31 @@ public class MeetupDetailActivity extends BaseActivity
         }
     }
 
-    public void selectImage(View view) {
+    /**
+     * Method that displays an ImagePicker intent.
+     *
+     * @param view The ImageView holding the Meetup's picture.
+     */
+    public void selectImage(View view)
+    {
         // Click on image button
         ImagePicker.pickImage(this, "Select your image:");
     }
 
 
+    /**
+     * Method to open and close the burger menu when the FloatingActionButton is pressed.
+     *
+     * @param view The FloatingActionButton that was pressed.
+     */
     public void fab(View view)
     {
-        if(burger == false)
+        if (burger == false)
         {
             burger = true;
             fab.setImageResource(R.drawable.ic_cross);
             burgerMenu.setVisibility(View.VISIBLE);
-        }
-        else
+        } else
         {
             burger = false;
             fab.setImageResource(R.drawable.ic_burger);
