@@ -2,6 +2,9 @@ package uk.ac.tees.donut.squad.squads;
 
 import java.util.HashMap;
 
+/**
+ * Class used to represent a Squad.
+ */
 public class Squad
 {
     String id;
@@ -9,11 +12,21 @@ public class Squad
     String description;
     HashMap<String, Boolean> users;
 
+    /**
+     * Empty constructor for Firebase.
+     */
     public Squad()
     {
 
     }
 
+    /**
+     * Default constructor for a new Squad.
+     *
+     * @param i The unique id of the Squad.
+     * @param n The name of the Squad.
+     * @param d The description of the Squad.
+     */
     public Squad(String i, String n, String d)
     {
         id = i;

@@ -30,6 +30,5 @@ public class SquadDebug
 
         // Pushing the squad to the "squads" node using the squadId
         mDatabase.child("squads").child(squadId).setValue(squad);
-
     }
 }

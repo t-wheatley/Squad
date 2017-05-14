@@ -2,6 +2,9 @@ package uk.ac.tees.donut.squad.posts;
 
 import java.util.HashMap;
 
+/**
+ * Class used to represent a Meetup.
+ */
 public class Meetup
 {
     // Info
@@ -18,37 +21,34 @@ public class Meetup
     // DateTime
     Long startDateTime, endDateTime;
 
-    // Chasing Status
-    int status; //0 = upcoming, 1 = ongoing, 2 = happened/expired, 3 = deleted (? so people who were originally in it are notified of its deletion ?)
+    //  Status
+    //0 = upcoming, 1 = ongoing, 2 = happened/expired
+    int status;
 
     // Location
     Double longitude, latitude;
 
+    /**
+     * Empty constructor for Firebase.
+     */
     public Meetup()
     {
-        // Empty constructor
+
     }
 
-    // Constructor for meetup to be post to Firebase
-    public Meetup(String i, String n, String d, String s, String h)
-    {
-        id = i;
-        name = n;
-        description = d;
-        squad = s;
-        host = h;
-    }
-
-    // Constructor for meetup lists
-    public Meetup(String i, String n, String s)
-    {
-        id = i;
-        name = n;
-        squad = s;
-    }
-
-
-    // Constructor with datetime and location
+    /**
+     * Default constructor for a new Meetup.
+     *
+     * @param i     The unique id of the Meetup.
+     * @param n     The name of the Meetup.
+     * @param d     The description of the Meetup.
+     * @param s     The Squad the Meetup belongs to.
+     * @param h     The Host User of the Meetup.
+     * @param sd    The starting DateTime of the Meetup.
+     * @param ed    The ending DateTime of the Meetup.
+     * @param longi The longitude of the Meetup.
+     * @param lat   The latitude of the Meetup.
+     */
     public Meetup(String i, String n, String d, String s, String h, long sd, long ed, double longi, double lat)
     {
         id = i;
@@ -63,8 +63,6 @@ public class Meetup
 
         updateStatus();
     }
-
-
 
     // GETTERS
     public String getId()
@@ -92,7 +90,8 @@ public class Meetup
         return host;
     }
 
-    public String getPlace() {
+    public String getPlace()
+    {
         return place;
     }
 
@@ -152,7 +151,8 @@ public class Meetup
         this.host = h;
     }
 
-    public void setPlace(String place) {
+    public void setPlace(String place)
+    {
         this.place = place;
     }
 
@@ -190,9 +190,9 @@ public class Meetup
     public void updateStatus()
     {
         Long current = System.currentTimeMillis() / 1000L;
-        if(current < getStartDateTime())
+        if (current < getStartDateTime())
             status = 0;
-        else if(current > getStartDateTime() && current < getEndDateTime())
+        else if (current > getStartDateTime() && current < getEndDateTime())
             status = 1;
         else
             status = 2;
