@@ -104,11 +104,9 @@ public class ProfileActivity extends BaseActivity implements GoogleApiClient.OnC
         // Getting the current user
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        // Getting ui elements
+        // Getting UI elements
         profileImage = (ImageView) findViewById(R.id.profileImage_ImageView);
-
         profileName = (TextView) findViewById(R.id.profile_name);
-
         bio = (TextView) findViewById(R.id.bio);
 
         fab = (FloatingActionButton) findViewById(R.id.profile_fab);
@@ -369,8 +367,6 @@ public class ProfileActivity extends BaseActivity implements GoogleApiClient.OnC
             // Displays the photo in the ImageView
             Glide.with(ProfileActivity.this)
                     .load(user.getPicture().trim())
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .skipMemoryCache(true)
                     .listener(new RequestListener<String, GlideDrawable>()
                     {
                         @Override
