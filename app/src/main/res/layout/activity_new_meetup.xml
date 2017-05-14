@@ -1,252 +1,505 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_new_meetup"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="uk.ac.tees.donut.squad.activities.NewMeetupActivity"
-    android:background="@color/cardview_dark_background">
+    android:background="@color/cardview_dark_background"
+    tools:context="uk.ac.tees.donut.squad.activities.NewMeetupActivity">
 
-    <!-- Dummy layout to prevent searchBar from receiving focus -->
+    <!-- Dummy layout to prevent editTexts from receiving focus -->
     <LinearLayout
+        android:layout_width="0px"
+        android:layout_height="0px"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:layout_width="0px"
-        android:layout_height="0px"/>
+        android:id="@+id/linearLayout"
+        android:orientation="vertical"
+        />
 
+
+
+    <RelativeLayout
+        android:id="@+id/newMeetup_appBar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/colorPrimary"
+        android:elevation="5dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="88dp"
+            android:layout_marginStart="16dp"
+            android:gravity="center"
+            android:text="New Meetup"
+            android:textColor="@color/tw__solid_white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:layout_alignParentEnd="true"
+        app:fabSize="normal"
+        android:elevation="15dp"
+        android:src="@drawable/ic_tick"
+        android:id="@+id/newMeetup_buttonSubmit"
+        />
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    <RelativeLayout
-        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin">
+        android:layout_alignParentBottom="true"
+        android:layout_below="@id/newMeetup_appBar">
 
-        <RelativeLayout
-            android:padding="5dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            android:id="@+id/descriptionLayout">
-            <TextView
-                android:text="Name:"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true"
-                android:id="@+id/newMeetup_textViewName"
-                style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="10dp">
 
-            <EditText
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:layout_below="@+id/newMeetup_textViewName"
-                android:layout_alignParentStart="true"
-                android:id="@+id/newMeetup_textEditName"
-                android:layout_alignParentEnd="true"/>
+                android:elevation="3dp"
+                app:cardBackgroundColor="@color/colorPrimary"
+                app:cardCornerRadius="2dp">
 
-            <TextView
-                android:text="Squad:"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/newMeetup_textEditName"
-                android:layout_alignParentStart="true"
-                android:id="@+id/newMeetup_textSquad"
-                style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
-
-            <Spinner
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_below="@+id/newMeetup_textSquad"
-                android:layout_alignParentStart="true"
-                android:id="@+id/newMeetup_spinnerSquad"
-                android:layout_alignParentEnd="true"
-                style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
-
-            <TextView
-                android:text="From:"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/newMeetup_spinnerSquad"
-                android:layout_alignParentStart="true"
-                android:id="@+id/newMeetup_textFrom"
-                style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
-
-            <Button
-                android:text="00/00/0000"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/newMeetup_textFrom"
-                android:layout_alignParentLeft="true"
-                android:id="@+id/newMeetup_buttonFromDate"
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_width="wrap_content"/>
-
-            <Button
-                android:text="00:00"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/newMeetup_textFrom"
-                android:layout_alignParentRight="true"
-                android:id="@+id/newMeetup_buttonFromTime"
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_width="wrap_content"/>
-
-            <TextView
-                android:text="Until:"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/newMeetup_buttonFromDate"
-                android:layout_alignParentStart="true"
-                android:id="@+id/newMeetup_textUntil"
-                style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
-
-            <Button
-                android:text="00/00/0000"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/newMeetup_textUntil"
-                android:layout_alignParentLeft="true"
-                android:id="@+id/newMeetup_buttonUntilDate"
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_width="wrap_content"/>
-
-            <Button
-                android:text="00:00"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/newMeetup_textUntil"
-                android:layout_alignParentRight="true"
-                android:id="@+id/newMeetup_buttonUntilTime"
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_width="wrap_content"/>
-
-
-            <TextView
-                android:text="Description:"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/newMeetup_textDescription"
-                android:layout_below="@+id/newMeetup_buttonUntilDate"
-                android:layout_alignParentStart="true"
-                style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textMultiLine"
-                android:layout_below="@+id/newMeetup_textDescription"
-                android:id="@+id/newMeetup_textEditDescription"/>
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/newMeetup_textEditDescription"
-                android:id="@+id/newMeetup_buttonNewAddress"
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_alignParentLeft="true"
-                android:text="New Address" />
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/newMeetup_textEditDescription"
-                android:id="@+id/newMeetup_buttonFromPlace"
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_alignParentRight="true"
-                android:text="Existing Place" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Address:"
-                android:layout_below="@+id/newMeetup_buttonFromPlace"
-                android:id="@+id/newMeetup_textAddress"
-                style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
-
-            <Spinner
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_below="@+id/newMeetup_textAddress"
-                android:layout_alignParentStart="true"
-                android:id="@+id/newMeetup_spinnerPlace"
-                android:layout_alignParentEnd="true"
-                android:visibility="gone"
-                style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/newMeetup_layoutNewAddress"
-                android:layout_below="@+id/newMeetup_textAddress">
-
-                <EditText
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPersonName"
-                    android:id="@+id/newMeetup_textEditAddress1"
+                    android:orientation="vertical">
 
-                    android:layout_alignParentStart="true"
-                    android:hint="Address Line 1" />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorPrimaryDark">
 
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPersonName"
-                    android:id="@+id/newMeetup_textEditAddress2"
-                    android:layout_below="@+id/newMeetup_textEditAddress1"
-                    android:layout_alignParentStart="true"
-                    android:hint="Address Line 2" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:gravity="center"
+                            android:text="Basic Info"
+                            android:textColor="@color/tw__solid_white"
+                            android:textStyle="bold" />
 
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPersonName"
-                    android:id="@+id/newMeetup_textEditAddressTC"
-                    android:layout_below="@+id/newMeetup_textEditAddress2"
-                    android:layout_alignParentStart="true"
-                    android:hint="Town/City" />
+                    </RelativeLayout>
 
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPersonName"
-                    android:id="@+id/newMeetup_textEditAddressCounty"
-                    android:layout_below="@+id/newMeetup_textEditAddressTC"
-                    android:layout_alignParentStart="true"
-                    android:hint="County" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="10dp">
 
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPersonName"
-                    android:id="@+id/newMeetup_textEditAddressPC"
-                    android:layout_below="@+id/newMeetup_textEditAddressCounty"
-                    android:layout_alignParentStart="true"
-                    android:hint="Postcode" />
-            </RelativeLayout>
-        </RelativeLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="2dp"
+                            android:text="Name" />
 
-        <RelativeLayout
-            android:layout_marginTop="10dp"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/descriptionLayout"
-            android:layout_centerHorizontal="true"
-            android:background="@color/colorPrimary"
-            android:padding="5dp">
-            <Button
-                android:text="Submit"
-                android:layout_width="500dp"
+                        <android.support.v7.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            app:cardBackgroundColor="@color/colorAccent"
+                            app:cardCornerRadius="2dp">
+
+                            <EditText
+                                android:id="@+id/newMeetup_textEditName"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_alignParentStart="true"
+                                android:layout_below="@+id/newMeetup_textViewName"
+                                android:hint="Enter Meetup Name Here"
+                                android:inputType="textPersonName"
+                                android:textSize="14sp"
+                                android:layout_marginStart="5dp"
+                                android:layout_marginEnd="5dp"
+                                />
+
+                        </android.support.v7.widget.CardView>
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="2dp"
+                            android:text="Squad" />
+
+                        <android.support.v7.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            app:cardBackgroundColor="@color/colorAccent"
+                            app:cardCornerRadius="2dp">
+
+                            <Spinner
+                                android:id="@+id/newMeetup_spinnerSquad"
+                                android:layout_width="match_parent"
+                                android:layout_height="38dp"
+                                android:layout_alignParentEnd="true"
+                                android:layout_alignParentStart="true"
+                                android:layout_below="@+id/newMeetup_textSquad"
+                                android:layout_marginStart="5dp" />
+
+                        </android.support.v7.widget.CardView>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="2dp"
+                            android:text="Description" />
+
+                        <android.support.v7.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:cardBackgroundColor="@color/colorAccent">
+
+                            <EditText
+                                android:id="@+id/newMeetup_textEditDescription"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/newMeetup_textDescription"
+                                android:hint="Enter Meetup Description Here"
+                                android:inputType="textMultiLine"
+                                android:textSize="14sp"
+                                android:layout_marginStart="5dp"
+                                android:layout_marginEnd="5dp"
+                                />
+
+                        </android.support.v7.widget.CardView>
+                    </LinearLayout>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/newMeetup_buttonSubmit"
-                style="@style/Widget.AppCompat.Button.Colored"/>
-        </RelativeLayout>
-    </RelativeLayout>
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:elevation="3dp"
+                app:cardBackgroundColor="@color/colorPrimary"
+                app:cardCornerRadius="2dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorPrimaryDark"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="Time of Meetup"
+                            android:textColor="@color/tw__solid_white"
+                            android:textStyle="bold" />
+
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="5dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center">
+
+                            <TextView
+                                android:layout_width="50dp"
+                                android:layout_height="wrap_content"
+                                android:text="Start" />
+
+                            <Button
+                                android:id="@+id/newMeetup_buttonFromDate"
+                                style="@style/Widget.AppCompat.Button.Colored"
+                                android:layout_width="120dp"
+                                android:layout_height="wrap_content"
+                                android:text="00/00/0000" />
+
+                            <Button
+                                android:id="@+id/newMeetup_buttonFromTime"
+                                style="@style/Widget.AppCompat.Button.Colored"
+                                android:layout_width="100dp"
+                                android:layout_height="wrap_content"
+                                android:text="00:00" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_marginBottom="5dp"
+                            >
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center">
+
+                                <TextView
+                                    android:layout_width="50dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="End" />
+
+                                <Button
+                                    android:text="00/00/0000"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/newMeetup_buttonUntilDate"
+                                    style="@style/Widget.AppCompat.Button.Colored"
+                                    android:layout_width="120dp"/>
+
+                                <Button
+                                    android:text="00:00"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@+id/newMeetup_textUntil"
+                                    android:layout_alignParentRight="true"
+                                    android:id="@+id/newMeetup_buttonUntilTime"
+                                    style="@style/Widget.AppCompat.Button.Colored"
+                                    android:layout_width="100dp"/>
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/colorPrimary"
+                app:cardCornerRadius="2dp"
+                android:elevation="3dp"
+                android:layout_marginBottom="10dp"
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    >
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorPrimaryDark"
+                        >
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:layout_margin="10dp"
+                            android:textStyle="bold"
+                            android:textColor="@color/tw__solid_white"
+                            android:text="Address"
+                            />
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:orientation="vertical"
+                        >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            >
+
+                            <Button
+                                android:layout_width="150dp"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/newMeetup_buttonNewAddress"
+                                style="@style/Widget.AppCompat.Button.Colored"
+                                android:text="Manual Entry" />
+
+                            <Button
+                                android:layout_width="150dp"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/newMeetup_buttonFromPlace"
+                                style="@style/Widget.AppCompat.Button.Colored"
+                                android:text="Existing Place" />
+
+                        </LinearLayout>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorPrimaryDark"
+                            android:layout_marginBottom="10dp"
+                            android:layout_marginTop="5dp"
+                            >
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/newMeetup_manualAddress"
+                            android:orientation="vertical"
+                            >
+
+                            <android.support.v7.widget.CardView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:cardBackgroundColor="@color/colorAccent"
+                                app:cardCornerRadius="2dp"
+                                android:layout_marginBottom="10dp"
+                                >
+
+                                <EditText
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:inputType="textPersonName"
+                                    android:id="@+id/newMeetup_textEditAddress1"
+                                    android:textSize="14sp"
+                                    android:layout_alignParentStart="true"
+                                    android:hint="Address Line 1"
+                                    android:layout_marginStart="5dp"
+                                    android:layout_marginEnd="5dp"/>
+
+                            </android.support.v7.widget.CardView>
+
+                            <android.support.v7.widget.CardView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:cardBackgroundColor="@color/colorAccent"
+                                app:cardCornerRadius="2dp"
+                                android:layout_marginBottom="10dp"
+                                >
+
+                                <EditText
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:inputType="textPersonName"
+                                    android:id="@+id/newMeetup_textEditAddress2"
+                                    android:layout_below="@+id/newMeetup_textEditAddress1"
+                                    android:layout_alignParentStart="true"
+                                    android:hint="Address Line 2"
+                                    android:textSize="14sp"
+                                    android:layout_marginStart="5dp"
+                                    android:layout_marginEnd="5dp"
+                                    />
+
+                            </android.support.v7.widget.CardView>
+
+                            <android.support.v7.widget.CardView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:cardBackgroundColor="@color/colorAccent"
+                                app:cardCornerRadius="2dp"
+                                android:layout_marginBottom="10dp"
+                                >
+
+                                <EditText
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:inputType="textPersonName"
+                                    android:id="@+id/newMeetup_textEditAddressTC"
+                                    android:layout_below="@+id/newMeetup_textEditAddress2"
+                                    android:layout_alignParentStart="true"
+                                    android:hint="Town/City"
+                                    android:textSize="14sp"
+                                    android:layout_marginStart="5dp"
+                                    android:layout_marginEnd="5dp"
+                                    />
+
+                            </android.support.v7.widget.CardView>
+
+                            <android.support.v7.widget.CardView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:cardBackgroundColor="@color/colorAccent"
+                                app:cardCornerRadius="2dp"
+                                android:layout_marginBottom="10dp"
+                                >
+
+                                <EditText
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:inputType="textPersonName"
+                                    android:id="@+id/newMeetup_textEditAddressCounty"
+                                    android:layout_below="@+id/newMeetup_textEditAddressTC"
+                                    android:layout_alignParentStart="true"
+                                    android:hint="County"
+                                    android:textSize="14sp"
+                                    android:layout_marginStart="5dp"
+                                    android:layout_marginEnd="5dp"
+                                    />
+
+                            </android.support.v7.widget.CardView>
+
+                            <android.support.v7.widget.CardView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:cardBackgroundColor="@color/colorAccent"
+                                app:cardCornerRadius="2dp"
+                                android:layout_marginBottom="10dp"
+                                >
+
+                                <EditText
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:inputType="textPersonName"
+                                    android:id="@+id/newMeetup_textEditAddressPC"
+                                    android:layout_below="@+id/newMeetup_textEditAddressCounty"
+                                    android:layout_alignParentStart="true"
+                                    android:hint="Postcode"
+                                    android:textSize="14sp"
+                                    android:layout_marginStart="5dp"
+                                    android:layout_marginEnd="5dp"
+                                    />
+
+                            </android.support.v7.widget.CardView>
+                        </LinearLayout>
+
+                        <android.support.v7.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:cardBackgroundColor="@color/colorAccent"
+                            app:cardCornerRadius="2dp"
+                            android:id="@+id/newMeetup_existingPlace"
+                            android:visibility="gone"
+                            android:layout_marginStart="10dp"
+                            >
+
+                            <Spinner
+                                android:layout_width="match_parent"
+                                android:layout_height="38dp"
+                                android:layout_below="@+id/newMeetup_textAddress"
+                                android:layout_alignParentStart="true"
+                                android:layout_alignParentEnd="true"
+                                android:id="@+id/newMeetup_spinnerPlace"
+                                />
+
+                        </android.support.v7.widget.CardView>
+
+                    </LinearLayout>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+        </LinearLayout>
+
     </ScrollView>
+
     <!-- Loading overlay; -->
-    <include layout="@layout/loading_overlay"/>
+    <include layout="@layout/loading_overlay" />
 
 </RelativeLayout>
