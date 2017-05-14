@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -62,7 +63,7 @@ public class NewPlaceActivity extends AppCompatActivity
     private EditText editAddressC;
     private EditText editAddressPC;
     private Spinner spinnerSquad;
-    private Button btnSubmit;
+    private FloatingActionButton btnSubmit;
 
     // Location
     private AddressResultReceiver mResultReceiver;
@@ -104,7 +105,7 @@ public class NewPlaceActivity extends AppCompatActivity
         editName = (EditText) findViewById(R.id.textEditName);
         spinnerSquad = (Spinner) findViewById(R.id.spinnerSquad);
         editDescription = (EditText) findViewById(R.id.textEditDescription);
-        btnSubmit = (Button) findViewById(R.id.buttonSubmit);
+        btnSubmit = (FloatingActionButton) findViewById(R.id.buttonSubmit);
         editAddress1 = (EditText) findViewById(R.id.textEditAddress1);
         editAddress2 = (EditText) findViewById(R.id.textEditAddress2);
         editAddressTC = (EditText) findViewById(R.id.textEditAddressTC);
