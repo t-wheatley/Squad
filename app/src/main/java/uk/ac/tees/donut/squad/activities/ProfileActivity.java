@@ -7,15 +7,12 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.IntentCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -198,7 +195,7 @@ public class ProfileActivity extends BaseActivity implements GoogleApiClient.OnC
             {
                 personal = true;
                 personalMode();
-            }  else
+            } else
             {
                 personal = false;
             }
@@ -229,12 +226,14 @@ public class ProfileActivity extends BaseActivity implements GoogleApiClient.OnC
     }
 
     @Override
-    int getContentViewId() {
+    int getContentViewId()
+    {
         return R.layout.activity_profile;
     }
 
     @Override
-    int getNavigationMenuItemId() {
+    int getNavigationMenuItemId()
+    {
         return R.id.menu_profile;
     }
 
@@ -450,11 +449,11 @@ public class ProfileActivity extends BaseActivity implements GoogleApiClient.OnC
         if (user.getSecret() == null || user.getSecret() == false)
         {
             enableSecret();
-            Toast.makeText(this, "Secret mode enabled, your profile is now hidden on meetup's and squad's", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Secret mode enabled, your profile is now hidden on meetups and squads", Toast.LENGTH_LONG).show();
         } else
         {
             disableSecret();
-            Toast.makeText(this, "Secret mode disabled, your profile is now visible on meetup's and squad's", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Secret mode disabled, your profile is now visible on meetups and squads", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -567,13 +566,12 @@ public class ProfileActivity extends BaseActivity implements GoogleApiClient.OnC
 
     public void fab(View view)
     {
-        if(burger == false)
+        if (burger == false)
         {
             burgerMenu.setVisibility(View.VISIBLE);
             fab.setImageResource(R.drawable.ic_cross);
             burger = true;
-        }
-        else
+        } else
         {
             burgerMenu.setVisibility(View.GONE);
             fab.setImageResource(R.drawable.ic_burger);

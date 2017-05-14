@@ -1171,8 +1171,8 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
     /**
      * Method to handle the result of the permission request.
      *
-     * @param requestCode The request code passed to requestPermissions.
-     * @param permissions The requested permissions.
+     * @param requestCode  The request code passed to requestPermissions.
+     * @param permissions  The requested permissions.
      * @param grantResults The permission granting results.
      */
     @Override

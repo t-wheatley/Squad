@@ -6,13 +6,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -34,7 +32,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.vision.text.Text;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -49,14 +46,13 @@ import java.util.List;
 
 import uk.ac.tees.donut.squad.R;
 import uk.ac.tees.donut.squad.posts.LocPlace;
-import uk.ac.tees.donut.squad.posts.Meetup;
-import uk.ac.tees.donut.squad.posts.Place;
-import uk.ac.tees.donut.squad.squads.Squad;
+
 
 /**
  * Activity which allows the user to view a list of Places.
  */
-public class PlacesListActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener
+
+public class PlacesListActivity extends BaseActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener
 {
     // Firebase
     private DatabaseReference mDatabase;
@@ -104,7 +100,7 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_places_list);
+        System.out.println("PlacesListActivity: oncreate method");
 
         // Display loading overlay
         loadingOverlay = (RelativeLayout) this.findViewById(R.id.loading_overlay);
@@ -117,6 +113,9 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         listText = (TextView) findViewById(R.id.placesList_textView);
         btnDistance = (Button) findViewById(R.id.placesList_btnDistance);
+        searchMenu = (RelativeLayout) findViewById(R.id.placesList_searchLayout);
+        burgerMenu = (LinearLayout) findViewById(R.id.placesList_burgerMenu);
+        burgerButton = (FloatingActionButton) findViewById(R.id.placesList_fab);
         btnDistance.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -125,9 +124,6 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
                 filterDistance();
             }
         });
-        searchMenu = (RelativeLayout) findViewById(R.id.placesList_searchLayout);
-        burgerMenu = (LinearLayout) findViewById(R.id.placesList_burgerMenu);
-        burgerButton = (FloatingActionButton) findViewById(R.id.placesList_fab);
         searchBar = (EditText) findViewById(R.id.placesList_searchBar);
         searchBar.addTextChangedListener(new TextWatcher()
         {
@@ -207,6 +203,18 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
     }
 
     @Override
+    int getContentViewId()
+    {
+        return R.layout.activity_places_list;
+    }
+
+    @Override
+    int getNavigationMenuItemId()
+    {
+        return R.id.menu_places;
+    }
+
+    @Override
     protected void onDestroy()
     {
         mGoogleApiClient.disconnect();
@@ -231,7 +239,7 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
     public void onBackPressed()
     {
         // If burger menu is open
-        if(burger == true)
+        if (burger == true)
         {
             // Close the burger menu
             fab(burgerButton);
@@ -428,7 +436,7 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
     /**
      * Method to add an observer on the RecyclerView to check if empty on data changes
      *
-     * @param fbAdapter     The FireBaseRecyclerAdapter to be observed.
+     * @param fbAdapter    The FireBaseRecyclerAdapter to be observed.
      * @param placeAdapter The PlaceAdapter to be observed.
      */
     public void adapterObserver(final FirebaseRecyclerAdapter fbAdapter, final PlaceAdapter placeAdapter)
@@ -518,7 +526,7 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
         viewHolder.descriptionField.setText(description);
 
         // Number of Meetups at place
-        if(model.getMeetups() == null)
+        if (model.getMeetups() == null)
         {
             viewHolder.meetupNo.setText("0 Meetups");
         } else
@@ -778,7 +786,7 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
             getNewLocation();
 
             // If cant get a location
-            if(userLoc == null)
+            if (userLoc == null)
             {
                 new AlertDialog.Builder(PlacesListActivity.this)
                         .setTitle("No Location")
@@ -792,7 +800,7 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
                         })
                         .setCancelable(false)
                         .show();
-            }else
+            } else
             {
                 // If came from 'View Places' button on Squad
                 if (squad)
@@ -817,12 +825,13 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
     /**
      * Method to handle the result of the permission request.
      *
-     * @param requestCode The request code passed to requestPermissions.
-     * @param permissions The requested permissions.
+     * @param requestCode  The request code passed to requestPermissions.
+     * @param permissions  The requested permissions.
      * @param grantResults The permission granting results.
      */
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
+    {
 
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE)
         {
@@ -832,7 +841,7 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
                 // Get the latest location
                 getNewLocation();
 
-                if(userLoc == null)
+                if (userLoc == null)
                 {
                     new AlertDialog.Builder(PlacesListActivity.this)
                             .setTitle("No Location")
@@ -857,7 +866,8 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
                         getAll();
                     }
                 }
-            } else { // if permission is not granted
+            } else
+            { // if permission is not granted
                 finish();
             }
         }
@@ -956,7 +966,7 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
             holder.descriptionField.setText(description);
 
             // Number of Meetups at place
-            if(place.getMeetups() == null)
+            if (place.getMeetups() == null)
             {
                 holder.meetupNo.setText("0 Meetups");
             } else
@@ -1036,14 +1046,13 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
      */
     public void fab(View view)
     {
-        if(burger == false)
+        if (burger == false)
         {
             searchBar.setVisibility(View.INVISIBLE);
             burgerMenu.setVisibility(View.VISIBLE);
             burgerButton.setImageResource(R.drawable.ic_cross);
             burger = true;
-        }
-        else
+        } else
         {
             burgerMenu.setVisibility(View.GONE);
             searchBar.setVisibility(View.VISIBLE);

@@ -8,7 +8,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import uk.ac.tees.donut.squad.R;
-import uk.ac.tees.donut.squad.location.MapActivity;
+
 
 /**
  * Activity which displays all the features of the application to the User.
@@ -29,13 +29,13 @@ public class MenuActivity extends BaseActivity
     @Override
     int getContentViewId()
     {
-        return R.layout.activity_menu;
+        return R.layout.activity_map;
     }
 
     @Override
     int getNavigationMenuItemId()
     {
-        return R.id.menu_home;
+        return R.id.menu_map;
     }
 
     /**

@@ -13,7 +13,7 @@
         android:layout_height="50dp"
         android:layout_marginTop="15dp"
         app:civ_border_width="2dp"
-        app:civ_border_color="#FFFFFFFF"/>
+        app:civ_border_color="@color/colorPrimaryDark"/>
 
     <TextView
         android:id="@+id/gridview_user_text"
@@ -21,6 +21,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:textSize="12sp"
-        style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
+        android:textStyle="bold"/>
 
 </LinearLayout>

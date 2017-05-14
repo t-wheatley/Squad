@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
@@ -120,12 +119,14 @@ public class SquadDetailActivity extends BaseActivity
     }
 
     @Override
-    int getContentViewId() {
+    int getContentViewId()
+    {
         return R.layout.activity_squad_detail;
     }
 
     @Override
-    int getNavigationMenuItemId() {
+    int getNavigationMenuItemId()
+    {
         return R.id.menu_squads;
     }
 
@@ -199,7 +200,7 @@ public class SquadDetailActivity extends BaseActivity
                         FBUser user = dataSnapshot.getValue(FBUser.class);
 
                         // Checks if the user is not secret
-                        if(user.getSecret() == null || user.getSecret() == false)
+                        if (user.getSecret() == null || user.getSecret() == false)
                         {
                             userNames.add(user.getName());
                             userPics.add(user.getPicture());
@@ -216,7 +217,7 @@ public class SquadDetailActivity extends BaseActivity
                             String memberString = "Members: " + memberCount;
 
                             // If there is secret members
-                            if(secretCount != 0)
+                            if (secretCount != 0)
                             {
                                 memberString = memberString + " (" + secretCount + " Secret)";
                             }

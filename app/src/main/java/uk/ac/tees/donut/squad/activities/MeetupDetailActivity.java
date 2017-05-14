@@ -6,15 +6,17 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -72,10 +74,17 @@ public class MeetupDetailActivity extends BaseActivity
     TextView attendingDisplay;
     TextView memberCountDisplay;
     ImageView meetupImage;
-    ImageButton editName;
-    ImageButton editDesc;
+    Button editName;
+    Button editDesc;
     Button attendBtn;
     Button deleteBtn;
+    CardView imageViewCard;
+
+    //Burger Menu
+    FloatingActionButton fab;
+    RelativeLayout burgerMenu;
+    LinearLayout hostOptions;
+    boolean burger = false;
 
     // Members display
     GridView attendeesGrid;
@@ -110,28 +119,22 @@ public class MeetupDetailActivity extends BaseActivity
         descriptionDisplay = (TextView) findViewById(R.id.meetupDetail_textEditDescription);
         statusDisplay = (TextView) findViewById(R.id.meetupDetail_textStatus);
         startDateDisplay = (TextView) findViewById(R.id.meetupDetail_startDate);
-        endDateDisplay = (TextView) findViewById(R.id.meetupId_endDate);
+        endDateDisplay = (TextView) findViewById(R.id.meetupDetail_endDate);
         attendeesGrid = (GridView) findViewById(R.id.meetupDetail_userGrid);
         attendBtn = (Button) findViewById(R.id.meetupDetail_attendBtn);
         deleteBtn = (Button) findViewById(R.id.meetupDetail_deleteBtn);
-        editName = (ImageButton) findViewById(R.id.meetupDetail_imageButtonEditName);
-        editDesc = (ImageButton) findViewById(R.id.meetupDetail_imageButtonEditDescription);
-        attendingDisplay = (TextView) findViewById(R.id.meetupDetail_textEditAttendees);
-        memberCountDisplay = (TextView) findViewById(R.id.meetupDetail_textViewAttendees);
+        editName = (Button) findViewById(R.id.meetupDetail_editNameBtn);
+        editDesc = (Button) findViewById(R.id.meetupDetail_editDescriptionBtn);
+        attendingDisplay = (TextView) findViewById(R.id.meetupDetail_noAttendees);
+        memberCountDisplay = (TextView) findViewById(R.id.meetupDetail_attendeeCount);
         meetupImage = (ImageView) findViewById(R.id.meetupDetail_ImageView);
+        fab = (FloatingActionButton) findViewById(R.id.meetupDetail_fab);
+        burgerMenu = (RelativeLayout) findViewById(R.id.meetupDetail_burgerMenu);
+        hostOptions = (LinearLayout) findViewById(R.id.meetupDetail_hostBurgerMenu);
+        imageViewCard = (CardView) findViewById(R.id.meetupDetail_ImageViewCard);
 
         // Disabling the edit ImageButtons and delete Button
-        editName.setEnabled(false);
-        editName.setVisibility(View.GONE);
-        editDesc.setEnabled(false);
-        editDesc.setVisibility(View.GONE);
-        deleteBtn.setEnabled(false);
-        deleteBtn.setVisibility(View.GONE);
-        meetupImage.setEnabled(false);
-
-        // Disabling the editTexts
-        nameDisplay.setEnabled(false);
-        descriptionDisplay.setEnabled(false);
+        hostOptions.setVisibility(View.GONE);
 
         // Getting the current user
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -168,7 +171,7 @@ public class MeetupDetailActivity extends BaseActivity
 
         // Defaults
         attending = false;
-        attendBtn.setText("Attend Meetup");
+        attendBtn.setText("Attend");
         secretCount = 0;
         memberCount = 0;
 
@@ -362,7 +365,7 @@ public class MeetupDetailActivity extends BaseActivity
             if (users.containsKey(firebaseUser.getUid()))
             {
                 attending = true;
-                attendBtn.setText("Leave Meetup");
+                attendBtn.setText("Unattend");
             }
 
             // Displaying members of the Meetup
@@ -394,7 +397,7 @@ public class MeetupDetailActivity extends BaseActivity
                         if (usersSize == memberCount)
                         {
                             // Get the amount of members
-                            String memberString = "Members: " + memberCount;
+                            String memberString = "" + memberCount;
 
                             // If there is secret members
                             if (secretCount != 0)
@@ -425,8 +428,8 @@ public class MeetupDetailActivity extends BaseActivity
         } else
         {
             // If the squad has no members
-            attendingDisplay.setText("This Meetup has no one attending!");
-            memberCountDisplay.setText("Members: 0");
+            attendingDisplay.setVisibility(View.VISIBLE);
+            memberCountDisplay.setText("0");
 
             // Load the meetup's picture
             loadPicture();
@@ -448,7 +451,7 @@ public class MeetupDetailActivity extends BaseActivity
             public void onSuccess(byte[] bytes)
             {
                 Bitmap image = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                meetupImage.setVisibility(View.VISIBLE);
+                imageViewCard.setVisibility(View.VISIBLE);
                 meetupImage.setImageBitmap(image);
                 loadingImage.setVisibility(View.GONE);
 
@@ -458,8 +461,8 @@ public class MeetupDetailActivity extends BaseActivity
             @Override
             public void onFailure(@NonNull Exception exception)
             {
-                // If something went wrong.
-                meetupImage.setVisibility(View.VISIBLE);
+                // If something went wrong
+                imageViewCard.setVisibility(View.GONE);
                 loadingImage.setVisibility(View.GONE);
             }
         });
@@ -467,6 +470,7 @@ public class MeetupDetailActivity extends BaseActivity
         // Hiding loading overlay
         loadingOverlay.setVisibility(View.GONE);
     }
+
 
     /**
      * Method to display an AlertDialog warning the user they are about to delete the Meetup.
@@ -536,6 +540,8 @@ public class MeetupDetailActivity extends BaseActivity
      */
     public void editMode()
     {
+        hostOptions.setVisibility(View.VISIBLE);
+
         // Enabling the edit ImageButtons
         editName.setEnabled(true);
         editName.setVisibility(View.VISIBLE);
@@ -806,4 +812,23 @@ public class MeetupDetailActivity extends BaseActivity
     }
 
 
+    /**
+     * Method to open and close the burger menu when the FloatingActionButton is pressed.
+     *
+     * @param view The FloatingActionButton that was pressed.
+     */
+    public void fab(View view)
+    {
+        if (burger == false)
+        {
+            burger = true;
+            fab.setImageResource(R.drawable.ic_cross);
+            burgerMenu.setVisibility(View.VISIBLE);
+        } else
+        {
+            burger = false;
+            fab.setImageResource(R.drawable.ic_burger);
+            burgerMenu.setVisibility(View.GONE);
+        }
+    }
 }

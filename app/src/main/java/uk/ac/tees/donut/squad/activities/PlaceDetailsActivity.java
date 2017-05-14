@@ -3,11 +3,12 @@ package uk.ac.tees.donut.squad.activities;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageSwitcher;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -28,7 +29,8 @@ import uk.ac.tees.donut.squad.posts.LocPlace;
 /**
  * Activity which allows the user to view the details of a Place.
  */
-public class PlaceDetailsActivity extends AppCompatActivity
+
+public class PlaceDetailsActivity extends BaseActivity
 {
     // Firebase
     DatabaseReference mDatabase;
@@ -49,7 +51,11 @@ public class PlaceDetailsActivity extends AppCompatActivity
     Button mapBtn;
     Button meetupsBtn;
     ImageSwitcher gallery;
-    RelativeLayout galleryLayout;
+
+    boolean burger = false;
+    FloatingActionButton fab;
+    LinearLayout burgerMenu;
+    LinearLayout hostMenu;
 
     // Variables
     String placeId;
@@ -75,7 +81,9 @@ public class PlaceDetailsActivity extends AppCompatActivity
         noPic = (TextView) findViewById(R.id.noPic);
         address = (TextView) findViewById(R.id.placeDetails_address);
         squad = (TextView) findViewById(R.id.placeDetails_squadName);
-
+        fab = (FloatingActionButton) findViewById(R.id.placeDetails_fab);
+        burgerMenu = (LinearLayout) findViewById(R.id.placeDetails_burgerMenu);
+        hostMenu = (LinearLayout) findViewById(R.id.placeDetails_hostMenu);
         mapBtn = (Button) findViewById(R.id.mapButton);
         mapBtn.setOnClickListener(new View.OnClickListener()
         {
@@ -85,7 +93,6 @@ public class PlaceDetailsActivity extends AppCompatActivity
                 openMapLocation();
             }
         });
-
         meetupsBtn = (Button) findViewById(R.id.meetupsButton);
         meetupsBtn.setOnClickListener(new View.OnClickListener()
         {
@@ -98,8 +105,8 @@ public class PlaceDetailsActivity extends AppCompatActivity
 
         gallery = (ImageSwitcher) findViewById(R.id.placeDetails_gallery);
 
-        // If there are no pictures
-        boolean noPics = true; // TEMPORARY TILL WE CAN ATTEMPT AT LOADING PICS
+        //if there are no pictures
+        boolean noPics = true; //TEMPORARY TILL WE CAN ATTEMPT AT LOADING PICS
         if (noPics)
         {
             //keeps the noPic text, and changes the height of the layout so it's not too big
@@ -147,6 +154,18 @@ public class PlaceDetailsActivity extends AppCompatActivity
         // Starts the loading chain
         // loadMeetup -> loadSquad
         loadPlace();
+    }
+
+    @Override
+    int getContentViewId()
+    {
+        return R.layout.activity_place_details;
+    }
+
+    @Override
+    int getNavigationMenuItemId()
+    {
+        return R.id.menu_places;
     }
 
     /**
@@ -247,4 +266,20 @@ public class PlaceDetailsActivity extends AppCompatActivity
         intent.putExtra("placeId", placeId);
         startActivity(intent);
     }
+
+    public void fab(View view)
+    {
+        if (burger == false)
+        {
+            burger = true;
+            burgerMenu.setVisibility(View.VISIBLE);
+            fab.setImageResource(R.drawable.ic_cross);
+        } else
+        {
+            burger = false;
+            burgerMenu.setVisibility(View.GONE);
+            fab.setImageResource(R.drawable.ic_burger);
+        }
+    }
+
 }

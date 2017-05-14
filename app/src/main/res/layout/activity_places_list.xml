@@ -54,9 +54,11 @@
         </RelativeLayout>
 
         <ScrollView
+            android:id="@+id/scrollPL"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/placesList_searchLayout">
+            android:layout_height="match_parent"
+            android:layout_below="@+id/placesList_searchLayout"
+            android:layout_above="@+id/navigation">
 
             <RelativeLayout
                 android:id="@+id/recyclerViewLayout"
@@ -88,8 +90,8 @@
                     android:layout_below="@+id/gap"
                     android:scrollbars="vertical"></android.support.v7.widget.RecyclerView>
             </RelativeLayout>
-        </ScrollView>
 
+        </ScrollView>
         <LinearLayout
             android:id="@+id/placesList_burgerMenu"
             android:layout_width="match_parent"
@@ -99,8 +101,8 @@
             android:elevation="5dp"
             android:gravity="center"
             android:orientation="vertical"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
             android:visibility="gone">
 
             <Button
@@ -128,8 +130,14 @@
 
         </LinearLayout>
 
-        <!-- Loading overlay; -->
-        <include layout="@layout/loading_overlay" />
     </RelativeLayout>
-
+    <!-- Loading overlay; -->
+    <include layout="@layout/loading_overlay" />
+    <include
+        layout="@layout/element_bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        />
 </RelativeLayout>

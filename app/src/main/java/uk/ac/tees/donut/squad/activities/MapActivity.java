@@ -1,4 +1,4 @@
-package uk.ac.tees.donut.squad.location;
+package uk.ac.tees.donut.squad.activities;
 
 import android.Manifest;
 import android.content.DialogInterface;
@@ -14,11 +14,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,24 +47,18 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-
 import uk.ac.tees.donut.squad.R;
-import uk.ac.tees.donut.squad.activities.MeetupDetailActivity;
-import uk.ac.tees.donut.squad.activities.MeetupsListActivity;
 import uk.ac.tees.donut.squad.posts.Meetup;
-import uk.ac.tees.donut.squad.squads.Squad;
 
 /**
  * Created by Anthony Ward
  */
 
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
+public class MapActivity extends BaseActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener, DirectionCallback, GoogleMap.OnMarkerClickListener
 {
 
@@ -115,7 +107,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_map);
+
         currentDateTime = Calendar.getInstance();
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -163,25 +155,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         Bundle b = detail.getExtras();
         if (b != null)
         {
-         userId = (String) b.get("uId");
+            userId = (String) b.get("uId");
         }
 
-        mDatabase.child("squads").child("users").addListenerForSingleValueEvent(new ValueEventListener()
-        {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot)
-            {
-                Squad squad = dataSnapshot.getValue(Squad.class);
-                squadId = dataSnapshot.child(userId).getValue(String.class);
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError)
-            {
-
-            }
-        });
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         mapFrag = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -224,7 +200,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         addMarkers(mMap);
 
 
-
     }
 
 
@@ -236,36 +211,42 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             requestDirection();
             btnRequest.setVisibility(View.GONE);
         }
-        if (id == R.id.btn_filter_ongoing){
+        if (id == R.id.btn_filter_ongoing)
+        {
             mMap.clear();
             mMap.addMarker(new MarkerOptions().title("Current Position").position(currentLocation).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA)));
             filter = 2;
             addMarkers(mMap);
         }
-        if (id ==R.id.btn_filter_all){
+        if (id == R.id.btn_filter_all)
+        {
             mMap.clear();
             mMap.addMarker(new MarkerOptions().title("Current Position").position(currentLocation).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA)));
             filter = 1;
             addMarkers(mMap);
         }
-        if (id==R.id.btn_filter_upcoming){
+        if (id == R.id.btn_filter_upcoming)
+        {
             mMap.clear();
             mMap.addMarker(new MarkerOptions().title("Current Position").position(currentLocation).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA)));
             filter = 3;
             addMarkers(mMap);
         }
-        if (id==R.id.btn_filter_expired){
+        if (id == R.id.btn_filter_expired)
+        {
             mMap.clear();
             mMap.addMarker(new MarkerOptions().title("Current Position").position(currentLocation).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA)));
             filter = 4;
             addMarkers(mMap);
         }
-        if (id==R.id.btn_show_meetup){
+        if (id == R.id.btn_show_meetup)
+        {
             Intent detail = new Intent(MapActivity.this, MeetupDetailActivity.class);
             detail.putExtra("meetupId", meetupID);
             startActivity(detail);
         }
-        if (id==R.id.btn_Clear){
+        if (id == R.id.btn_Clear)
+        {
             mMap.clear();
             mMap.addMarker(new MarkerOptions().title("Current Position").position(currentLocation).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA)));
             addMarkers(mMap);
@@ -281,7 +262,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void onBackPressed()
     {
-        if(burger == true)
+        if (burger == true)
         {
             fab(burgerButton);
         } else
@@ -312,8 +293,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         if (currentLocation == null || destination == null)
         {
             Toast.makeText(this, "Invalid Destination", Toast.LENGTH_LONG).show();
-        }
-        else {
+        } else
+        {
             //Generate Directions
             GoogleDirection.withServerKey(directionAPIKey)
                     .from(currentLocation)
@@ -323,12 +304,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     .execute(this);
         }
     }
+
     public void addMarkers(final GoogleMap map)
     {
-
-        mChildEventListener = mDatabase.child("meetups").addChildEventListener(new ChildEventListener() {
+        mChildEventListener = mDatabase.child("meetups").addChildEventListener(new ChildEventListener()
+        {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            public void onChildAdded(DataSnapshot dataSnapshot, String s)
+            {
                 Meetup meetup = dataSnapshot.getValue(Meetup.class);
                 double lat = meetup.getLatitude();
                 double lng = meetup.getLongitude();
@@ -336,45 +319,56 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 String description = meetup.getDescription();
                 long strtDateTime = meetup.getStartDateTime();
                 long endDateTime = meetup.getEndDateTime();
-                LatLng location = new LatLng(lat,lng);
-                if(filter == 2){
-                    if (currentDateTime.getTimeInMillis() / 1000L > strtDateTime && currentDateTime.getTimeInMillis() / 1000L < endDateTime) {
+                LatLng location = new LatLng(lat, lng);
+                if (filter == 2)
+                {
+                    if (currentDateTime.getTimeInMillis() / 1000L > strtDateTime && currentDateTime.getTimeInMillis() / 1000L < endDateTime)
+                    {
                         Marker marker = map.addMarker(new MarkerOptions().position(location).title(name).snippet(description).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
                         marker.setTag(meetup);
                     }
-                } else if(filter == 3) {
-                    if (currentDateTime.getTimeInMillis() / 1000L < strtDateTime) {
+                } else if (filter == 3)
+                {
+                    if (currentDateTime.getTimeInMillis() / 1000L < strtDateTime)
+                    {
                         Marker marker = map.addMarker(new MarkerOptions().position(location).title(name).snippet(description).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
                         marker.setTag(meetup);
                     }
-                } else if(filter == 4) {
-                    if (currentDateTime.getTimeInMillis() / 1000L > endDateTime) {
+                } else if (filter == 4)
+                {
+                    if (currentDateTime.getTimeInMillis() / 1000L > endDateTime)
+                    {
                         Marker marker = map.addMarker(new MarkerOptions().position(location).title(name).snippet(description).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
                         marker.setTag(meetup);
                     }
-                }else{
+                } else
+                {
                     Marker marker = map.addMarker(new MarkerOptions().position(location).title(name).snippet(description));
                     marker.setTag(meetup);
                 }
             }
 
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            public void onChildChanged(DataSnapshot dataSnapshot, String s)
+            {
 
             }
 
             @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            public void onChildRemoved(DataSnapshot dataSnapshot)
+            {
 
             }
 
             @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            public void onChildMoved(DataSnapshot dataSnapshot, String s)
+            {
 
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(DatabaseError databaseError)
+            {
 
             }
         });
@@ -382,8 +376,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
 
-    public void displayMessage(){
-        Toast.makeText(this, "No meetups to display " , Toast.LENGTH_LONG).show();
+    public void displayMessage()
+    {
+        Toast.makeText(this, "No meetups to display ", Toast.LENGTH_LONG).show();
 
     }
 
@@ -397,6 +392,18 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         }
+    }
+
+    @Override
+    int getContentViewId()
+    {
+        return R.layout.activity_map;
+    }
+
+    @Override
+    int getNavigationMenuItemId()
+    {
+        return R.id.menu_map;
     }
 
 
@@ -592,27 +599,35 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     @Override
-    public boolean onMarkerClick(Marker marker) {
-        if(marker.getPosition().equals(currentLocation)){
+    public boolean onMarkerClick(Marker marker)
+    {
+        if (marker.getPosition().equals(currentLocation))
+        {
             return false;
-        }else {
+        } else
+        {
             Meetup meetup = (Meetup) marker.getTag();
             meetupID = meetup.getId();
             btnShowMeetup.setVisibility(View.VISIBLE);
             btnRequest.setVisibility(View.VISIBLE);
             destination = marker.getPosition();
-            if(filter == 1){
-                if(meetup.getEndDateTime() < currentDateTime.getTimeInMillis() /1000L){
+            if (filter == 1)
+            {
+                if (meetup.getEndDateTime() < currentDateTime.getTimeInMillis() / 1000L)
+                {
                     Toast.makeText(this, "Expired", Toast.LENGTH_LONG).show();
-                    return  false;
-                } else if(meetup.getStartDateTime() > currentDateTime.getTimeInMillis() /1000L){
+                    return false;
+                } else if (meetup.getStartDateTime() > currentDateTime.getTimeInMillis() / 1000L)
+                {
                     Toast.makeText(this, "Upcoming", Toast.LENGTH_LONG).show();
                     return false;
-                } else{
+                } else
+                {
                     Toast.makeText(this, "Ongoing", Toast.LENGTH_LONG).show();
                     return false;
                 }
-            } else{
+            } else
+            {
                 return false;
             }
         }
