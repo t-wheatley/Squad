@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -22,6 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -443,27 +445,28 @@ public class MeetupDetailActivity extends BaseActivity
     {
         // Setting the loading text
         loadingText.setText("Getting the Meetup's picture...");
+        loadingImage.setVisibility(View.VISIBLE);
 
-        // If the meetup has an image display it
-        meetupStorage.getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>()
-        {
+        // Gets the Uri to download
+        meetupStorage.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
-            public void onSuccess(byte[] bytes)
-            {
-                Bitmap image = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            public void onSuccess(Uri uri) {
+                // If a picture exist
                 imageViewCard.setVisibility(View.VISIBLE);
-                meetupImage.setImageBitmap(image);
-                loadingImage.setVisibility(View.GONE);
 
-            }
-        }).addOnFailureListener(new OnFailureListener()
-        {
-            @Override
-            public void onFailure(@NonNull Exception exception)
-            {
-                // If something went wrong
-                imageViewCard.setVisibility(View.GONE);
+                // Download and display using Glide
+                Glide.with(MeetupDetailActivity.this)
+                        .load(uri)
+                        .error(R.drawable.com_facebook_profile_picture_blank_portrait)
+                        .into(meetupImage);
+
                 loadingImage.setVisibility(View.GONE);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // If no picture exists
+                imageViewCard.setVisibility(View.GONE);
             }
         });
 

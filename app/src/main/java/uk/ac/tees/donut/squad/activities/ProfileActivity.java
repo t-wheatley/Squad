@@ -367,8 +367,6 @@ public class ProfileActivity extends BaseActivity implements GoogleApiClient.OnC
             // Displays the photo in the ImageView
             Glide.with(ProfileActivity.this)
                     .load(user.getPicture().trim())
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .skipMemoryCache(true)
                     .listener(new RequestListener<String, GlideDrawable>()
                     {
                         @Override
