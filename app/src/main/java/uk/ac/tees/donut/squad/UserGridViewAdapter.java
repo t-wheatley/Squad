@@ -24,7 +24,6 @@ import uk.ac.tees.donut.squad.activities.ProfileActivity;
  */
 public class UserGridViewAdapter extends BaseAdapter
 {
-
     private Context mContext;
 
     // Array of names
@@ -37,10 +36,10 @@ public class UserGridViewAdapter extends BaseAdapter
     /**
      * The constructor the a view in the UserGrid.
      *
-     * @param context The context.
+     * @param context   The context.
      * @param userNames A list of the User's names.
-     * @param userPics A list of the User's pictures.
-     * @param userIds A list of the User's ids.
+     * @param userPics  A list of the User's pictures.
+     * @param userIds   A list of the User's ids.
      */
     public UserGridViewAdapter(Context context, List<String> userNames, List<String> userPics,
                                List<String> userIds)

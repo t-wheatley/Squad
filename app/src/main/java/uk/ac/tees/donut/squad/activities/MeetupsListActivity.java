@@ -4,8 +4,6 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,18 +23,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.firebase.ui.database.ChangeEventListener;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -849,23 +845,44 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
         StorageReference meetupStorage = firebaseStorage.getReference().child("meetups/" + model.getId() + ".jpg");
 
         // Gets the Uri to download
-        meetupStorage.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+        meetupStorage.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>()
+        {
             @Override
-            public void onSuccess(Uri uri) {
+            public void onSuccess(Uri uri)
+            {
                 // If a picture exist
+                viewHolder.imageLayout.setVisibility(View.VISIBLE);
                 viewHolder.image.setVisibility(View.VISIBLE);
+                viewHolder.imageLoading.setVisibility(View.VISIBLE);
 
                 // Download and display using Glide
                 Glide.with(MeetupsListActivity.this)
                         .load(uri)
-                        .error(R.drawable.com_facebook_profile_picture_blank_portrait)
+                        .listener(new RequestListener<Uri, GlideDrawable>()
+                        {
+                            @Override
+                            public boolean onException(Exception e, Uri model, Target<GlideDrawable> target, boolean isFirstResource)
+                            {
+                                viewHolder.imageLayout.setVisibility(View.GONE);
+                                return false;
+                            }
+
+                            @Override
+                            public boolean onResourceReady(GlideDrawable resource, Uri model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource)
+                            {
+                                viewHolder.imageLoading.setVisibility(View.GONE);
+                                return false;
+                            }
+                        })
                         .into(viewHolder.image);
             }
-        }).addOnFailureListener(new OnFailureListener() {
+        }).addOnFailureListener(new OnFailureListener()
+        {
             @Override
-            public void onFailure(@NonNull Exception exception) {
+            public void onFailure(@NonNull Exception exception)
+            {
                 // If no picture exists
-                viewHolder.image.setVisibility(View.GONE);
+                viewHolder.imageLayout.setVisibility(View.GONE);
             }
         });
     }
@@ -1219,12 +1236,14 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
     {
         View mView;
         ImageView image;
+        ProgressBar imageLoading;
         TextView nameField;
         TextView descriptionfield;
         TextView squadField;
         TextView attendingField;
         TextView statusField;
         RelativeLayout layout;
+        LinearLayout imageLayout;
 
 
         public MeetupViewHolder(View v)
@@ -1232,12 +1251,14 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
             super(v);
             mView = v;
             image = (ImageView) v.findViewById(R.id.listCard_image);
+            imageLoading = (ProgressBar) v.findViewById(R.id.listCard_imageProgress);
             nameField = (TextView) v.findViewById(R.id.listCard_text1);
             descriptionfield = (TextView) v.findViewById(R.id.listCard_text3);
             squadField = (TextView) v.findViewById(R.id.listCard_text2);
             attendingField = (TextView) v.findViewById(R.id.listCard_text4);
             statusField = (TextView) v.findViewById(R.id.listCard_text5);
             layout = (RelativeLayout) v.findViewById(R.id.layout);
+            imageLayout = (LinearLayout) v.findViewById(R.id.listCard_imageLayout);
         }
     }
 
@@ -1334,8 +1355,7 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
                 holder.statusField.setText("Expired");
             else
                 holder.statusField.setText("Deleted");
-
-
+            
             // OnClick
             holder.mView.setOnClickListener(new View.OnClickListener()
             {
@@ -1356,23 +1376,44 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
             StorageReference meetupStorage = firebaseStorage.getReference().child("meetups/" + meetup.getId() + ".jpg");
 
             // Gets the Uri to download
-            meetupStorage.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            meetupStorage.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>()
+            {
                 @Override
-                public void onSuccess(Uri uri) {
+                public void onSuccess(Uri uri)
+                {
                     // If a picture exist
+                    holder.imageLayout.setVisibility(View.VISIBLE);
                     holder.image.setVisibility(View.VISIBLE);
+                    holder.imageLoading.setVisibility(View.VISIBLE);
 
                     // Download and display using Glide
                     Glide.with(MeetupsListActivity.this)
                             .load(uri)
-                            .error(R.drawable.com_facebook_profile_picture_blank_portrait)
+                            .listener(new RequestListener<Uri, GlideDrawable>()
+                            {
+                                @Override
+                                public boolean onException(Exception e, Uri model, Target<GlideDrawable> target, boolean isFirstResource)
+                                {
+                                    holder.imageLayout.setVisibility(View.GONE);
+                                    return false;
+                                }
+
+                                @Override
+                                public boolean onResourceReady(GlideDrawable resource, Uri model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource)
+                                {
+                                    holder.imageLoading.setVisibility(View.GONE);
+                                    return false;
+                                }
+                            })
                             .into(holder.image);
                 }
-            }).addOnFailureListener(new OnFailureListener() {
+            }).addOnFailureListener(new OnFailureListener()
+            {
                 @Override
-                public void onFailure(@NonNull Exception exception) {
+                public void onFailure(@NonNull Exception exception)
+                {
                     // If no picture exists
-                    holder.image.setVisibility(View.GONE);
+                    holder.imageLayout.setVisibility(View.GONE);
                 }
             });
         }
