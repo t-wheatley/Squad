@@ -113,11 +113,11 @@ public class MeetupDetailActivity extends BaseActivity
         loadingImage.setVisibility(View.VISIBLE);
 
         // Initialising UI Elements
-        nameDisplay = (TextView) findViewById(R.id.meetupDetail_textEditName);
-        squadDisplay = (TextView) findViewById(R.id.meetupDetail_textEditSquad);
-        hostDisplay = (TextView) findViewById(R.id.meetupDetail_textEditHost);
-        descriptionDisplay = (TextView) findViewById(R.id.meetupDetail_textEditDescription);
-        statusDisplay = (TextView) findViewById(R.id.meetupDetail_textStatus);
+        nameDisplay = (TextView) findViewById(R.id.meetupDetail_meetupName);
+        squadDisplay = (TextView) findViewById(R.id.meetupDetail_squadName);
+        hostDisplay = (TextView) findViewById(R.id.meetupDetail_host);
+        descriptionDisplay = (TextView) findViewById(R.id.meetupDetail_description);
+        statusDisplay = (TextView) findViewById(R.id.meetupDetail_status);
         startDateDisplay = (TextView) findViewById(R.id.meetupDetail_startDate);
         endDateDisplay = (TextView) findViewById(R.id.meetupDetail_endDate);
         attendeesGrid = (GridView) findViewById(R.id.meetupDetail_userGrid);
@@ -132,6 +132,7 @@ public class MeetupDetailActivity extends BaseActivity
         burgerMenu = (RelativeLayout) findViewById(R.id.meetupDetail_burgerMenu);
         hostOptions = (LinearLayout) findViewById(R.id.meetupDetail_hostBurgerMenu);
         imageViewCard = (CardView) findViewById(R.id.meetupDetail_ImageViewCard);
+
 
         // Disabling the edit ImageButtons and delete Button
         hostOptions.setVisibility(View.GONE);

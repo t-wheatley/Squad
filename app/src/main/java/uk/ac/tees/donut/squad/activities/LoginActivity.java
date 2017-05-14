@@ -390,7 +390,7 @@ public class LoginActivity extends AppCompatActivity implements
         }
 
         // Start the main menu
-        Intent i = new Intent(LoginActivity.this, MenuActivity.class);
+        Intent i = new Intent(LoginActivity.this, SquadListActivity.class);
         startActivity(i);
         finish();
 
