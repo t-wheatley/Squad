@@ -132,7 +132,7 @@ public class NewPlaceActivity extends AppCompatActivity
             }
         });
 
-        // Load interests and display loading overlay
+        // Load Squads and display loading overlay
         loadingOverlay = (RelativeLayout) this.findViewById(R.id.loading_overlay);
         loadingText = (TextView) this.findViewById(R.id.loading_overlay_text);
         loadingText.setText("Loading...");

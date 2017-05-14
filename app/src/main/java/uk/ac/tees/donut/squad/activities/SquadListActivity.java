@@ -32,25 +32,31 @@ import java.util.HashMap;
 import uk.ac.tees.donut.squad.R;
 import uk.ac.tees.donut.squad.squads.Squad;
 
+/**
+ * Activity which allows the user to view a list of Squads.
+ */
 public class SquadListActivity extends BaseActivity
 {
 
+    // Firebase
     private DatabaseReference mDatabase;
     private FirebaseStorage firebaseStorage;
 
+    // Loading Overlay
+    RelativeLayout loadingOverlay;
+    TextView loadingText;
+
+    // Activity UI
     private RecyclerView mRecyclerView;
     private StaggeredGridLayoutManager mLayoutManager;
     private FirebaseRecyclerAdapter mAdapter;
     private RecyclerView.AdapterDataObserver mObserver;
+    TextView listText;
 
+    // Variables
     FirebaseUser firebaseUser;
     String userId;
     Boolean member;
-
-    RelativeLayout loadingOverlay;
-    TextView loadingText;
-    TextView listText;
-
     int loadingCount;
 
     @Override
@@ -65,11 +71,18 @@ public class SquadListActivity extends BaseActivity
         loadingOverlay.setVisibility(View.VISIBLE);
         loadingCount = 1;
 
-        // Initialising RecyclerView
+        // Initialising UI Elements
         mRecyclerView = (RecyclerView) findViewById(R.id.squadList_recyclerView);
         listText = (TextView) findViewById(R.id.squadList_textView);
 
+        // Getting the reference for the Firebase Realtime Database
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        firebaseStorage = FirebaseStorage.getInstance();
+
+        // Getting the currently signed-in User
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        // Initialising variables
         member = false;
 
         // Gets the extra passed from the last activity
@@ -81,10 +94,6 @@ public class SquadListActivity extends BaseActivity
             userId = (String) b.get("userId");
             member = true;
         }
-
-        // Getting the reference for the Firebase Realtime Database
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        firebaseStorage = FirebaseStorage.getInstance();
 
         if (mRecyclerView != null)
         {
@@ -104,6 +113,7 @@ public class SquadListActivity extends BaseActivity
             getAll();
         }
 
+        // Displaying the mAdapter in the recyclerVIew
         mRecyclerView.setAdapter(mAdapter);
     }
 
@@ -119,14 +129,18 @@ public class SquadListActivity extends BaseActivity
         return R.id.menu_squads;
     }
 
+    /**
+     * Method to get all of the Squads.
+     */
     public void getAll()
     {
         // Database reference to get a Squad's Meetups
         Query allQuery = mDatabase.child("squads");
 
-        // Check to see if any Meetups exist
+        // Check to see if any Squads exist
         checkForEmpty(allQuery);
 
+        // Loads the adapter with all the Squads returned by the query
         mAdapter = new FirebaseRecyclerAdapter<Squad, SquadViewHolder>(
                 Squad.class,
                 R.layout.item_squad,
@@ -137,19 +151,24 @@ public class SquadListActivity extends BaseActivity
             @Override
             protected void populateViewHolder(SquadViewHolder viewHolder, final Squad model, int position)
             {
+                // Populates a viewHolder with the found Squad
                 populateSquadViewHolder(viewHolder, model, position);
             }
         };
     }
 
+    /**
+     * Method to get a User's Squads.
+     */
     public void getUsers(String userId)
     {
         // Database reference to get a Squad's Meetups
         Query userQuery = mDatabase.child("squads").orderByChild("users/" + userId).equalTo(true);
 
-        // Check to see if any Meetups exist
+        // Check to see if any Squads exist
         checkForEmpty(userQuery);
 
+        // Loads the adapter with all the Squads returned by the query
         mAdapter = new FirebaseRecyclerAdapter<Squad, SquadViewHolder>(
                 Squad.class,
                 R.layout.item_squad,
@@ -160,12 +179,17 @@ public class SquadListActivity extends BaseActivity
             @Override
             protected void populateViewHolder(SquadViewHolder viewHolder, final Squad model, int position)
             {
+                // Populates a viewHolder with the found Squad
                 populateSquadViewHolder(viewHolder, model, position);
             }
         };
     }
 
-    // Checks if Squads in the selected query exist
+    /**
+     * Checks if Squads exist.
+     *
+     * @param query The query to check.
+     */
     public void checkForEmpty(Query query)
     {
         query.addListenerForSingleValueEvent(new ValueEventListener()
@@ -197,7 +221,9 @@ public class SquadListActivity extends BaseActivity
         });
     }
 
-    // An observer on the RecyclerView to check if empty on changes
+    /**
+     * Method to add an observer on the RecyclerView to check if empty on data changes
+     */
     public void adapterObserver()
     {
         mObserver = new RecyclerView.AdapterDataObserver()
@@ -229,14 +255,23 @@ public class SquadListActivity extends BaseActivity
         mAdapter.registerAdapterDataObserver(mObserver);
     }
 
+    /**
+     * Method that populates the viewHolder with the info it needs.
+     *
+     * @param viewHolder The ViewHolder to be populated.
+     * @param model      The Squad to be displayed.
+     * @param position   The position of the ViewHolder.
+     */
     public void populateSquadViewHolder(final SquadViewHolder viewHolder, final Squad model, int position)
     {
         // Displaying the image loading
         viewHolder.imageLoading.setVisibility(View.VISIBLE);
         viewHolder.squadImage.setVisibility(View.INVISIBLE);
 
+        // Displaying the name
         viewHolder.nameField.setText(model.getName());
 
+        // Displaying the description
         String description = model.getDescription().replace("\n", "");
         String elipsis = "";
         if (description.length() > 54)
@@ -327,6 +362,9 @@ public class SquadListActivity extends BaseActivity
         loadingCount++;
     }
 
+    /**
+     * Static class to be filled by populateSquadViewHolder.
+     */
     public static class SquadViewHolder extends RecyclerView.ViewHolder
     {
         View mView;
