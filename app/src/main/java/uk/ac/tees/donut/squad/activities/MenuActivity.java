@@ -2,47 +2,47 @@ package uk.ac.tees.donut.squad.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import uk.ac.tees.donut.squad.R;
-import uk.ac.tees.donut.squad.debug.SquadDebug;
-import uk.ac.tees.donut.squad.location.GeocoderActivity;
 import uk.ac.tees.donut.squad.location.MapActivity;
 
+/**
+ * Activity which displays all the features of the application to the User.
+ */
 public class MenuActivity extends BaseActivity
 {
     FirebaseUser firebaseUser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+        // Gets the signed-in User
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
     }
 
     @Override
-    int getContentViewId() {
+    int getContentViewId()
+    {
         return R.layout.activity_menu;
     }
 
     @Override
-    int getNavigationMenuItemId() {
+    int getNavigationMenuItemId()
+    {
         return R.id.menu_home;
     }
 
-
-    //Click functionality
+    /**
+     * Method to send the User to their ProfileActivity.
+     *
+     * @param view The profile button.
+     */
     public void openProfile(View view)
     {
         if (firebaseUser != null)
@@ -54,6 +54,11 @@ public class MenuActivity extends BaseActivity
         }
     }
 
+    /**
+     * Method to send the User to the SquadListActivity, to view Squads.
+     *
+     * @param view The squads button.
+     */
     public void openSquads(View view)
     {
         Intent intent = new Intent(this, SquadListActivity.class);
@@ -61,6 +66,11 @@ public class MenuActivity extends BaseActivity
         startActivity(intent);
     }
 
+    /**
+     * Method to send the User to the MeetupsListActivity, to view Meetups.
+     *
+     * @param view The events button.
+     */
     public void openEvents(View view)
     {
         Intent intent = new Intent(this, MeetupsListActivity.class);
@@ -68,6 +78,11 @@ public class MenuActivity extends BaseActivity
         startActivity(intent);
     }
 
+    /**
+     * Method to send the User to the NewMeetupActivity, to create a new Meetup.
+     *
+     * @param view The host button.
+     */
     public void openHost(View view)
     {
         Intent intent = new Intent(this, NewMeetupActivity.class);
@@ -75,19 +90,33 @@ public class MenuActivity extends BaseActivity
         startActivity(intent);
     }
 
+    /**
+     * Method to send the User to the NewPlaceActivity, to create a new Place.
+     *
+     * @param view The new place button.
+     */
     public void openNewPlace(View view)
     {
         Intent intent = new Intent(this, NewPlaceActivity.class);
         startActivity(intent);
     }
 
+    /**
+     * Method to send the User to the PlacesListActivity, to view Places.
+     *
+     * @param view places host button.
+     */
     public void openPlaces(View view)
     {
         Intent intent = new Intent(this, PlacesListActivity.class);
         startActivity(intent);
     }
-    
 
+    /**
+     * Method to send the User to the MapActivity, to view nearby Meetups.
+     *
+     * @param view The map button.
+     */
     public void openMap(View view)
     {
         Intent detail = new Intent(MenuActivity.this, MapActivity.class);

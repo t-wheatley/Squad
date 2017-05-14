@@ -53,43 +53,52 @@ import uk.ac.tees.donut.squad.posts.Meetup;
 import uk.ac.tees.donut.squad.posts.Place;
 import uk.ac.tees.donut.squad.squads.Squad;
 
+/**
+ * Activity which allows the user to view a list of Places.
+ */
 public class PlacesListActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener
 {
-
+    // Firebase
     private DatabaseReference mDatabase;
 
+    // Location
+    GoogleApiClient mGoogleApiClient;
+    LocationRequest mLocationRequest;
+    Location userLoc;
+
+    // Loading Overlay
+    RelativeLayout loadingOverlay;
+    TextView loadingText;
+
+    // Activity UI
+    RelativeLayout searchMenu;
+    TextView listText;
+    Button btnDistance;
+    EditText searchBar;
+
+    // RecyclerView
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
     private FirebaseRecyclerAdapter mAdapter;
     private RecyclerView.AdapterDataObserver mObserver;
 
-    RelativeLayout loadingOverlay;
-    TextView loadingText;
-    TextView listText;
-    Button btnDistance;
-    EditText searchBar;
-
-    String squadId;
-    Boolean squad;
-
-    RelativeLayout searchMenu;
+    // BurgerMenu
     LinearLayout burgerMenu;
     FloatingActionButton burgerButton;
-    //for whenever the burger menu is open or not
-    boolean burger = false;
 
+    // Variables
     List<LocPlace> searchList;
     List<LocPlace> filteredList;
     PlaceAdapter filteredAdapter;
-    boolean search;
+    String squadId;
     int filter;
-
-    GoogleApiClient mGoogleApiClient;
-    LocationRequest mLocationRequest;
-    Location userLoc;
-    final int LOCATION_PERMISSION_REQUEST_CODE = 1;
-
     int loadingCount;
+    boolean squad;
+    boolean search;
+    boolean burger = false;
+
+    // Final values
+    final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -104,7 +113,7 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
         loadingOverlay.setVisibility(View.VISIBLE);
         loadingCount = 1;
 
-        //initialising RecyclerView
+        // Initialising UI Elements
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         listText = (TextView) findViewById(R.id.placesList_textView);
         btnDistance = (Button) findViewById(R.id.placesList_btnDistance);
@@ -116,11 +125,9 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
                 filterDistance();
             }
         });
-
         searchMenu = (RelativeLayout) findViewById(R.id.placesList_searchLayout);
         burgerMenu = (LinearLayout) findViewById(R.id.placesList_burgerMenu);
         burgerButton = (FloatingActionButton) findViewById(R.id.placesList_fab);
-
         searchBar = (EditText) findViewById(R.id.placesList_searchBar);
         searchBar.addTextChangedListener(new TextWatcher()
         {
@@ -150,11 +157,12 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
             }
         });
 
+        // Initialising variables
         squad = false;
+        filter = 0;
 
         searchList = new ArrayList<LocPlace>();
         filteredList = new ArrayList<LocPlace>();
-        filter = 0;
 
         // Gets the extra passed from the last activity
         Intent detail = getIntent();
@@ -166,7 +174,7 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
             squad = true;
         }
 
-        // Getting the reference for the Firebase Realtime Database
+        // Base database reference
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
         if (mRecyclerView != null)
@@ -178,14 +186,16 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-
+        // Connecting to the GoogleApiClient
         buildGoogleApiClient();
         mGoogleApiClient.connect();
 
+        // Initialising the LocationRequest
         mLocationRequest = new LocationRequest();
         mLocationRequest.setPriority(102);
         mLocationRequest.setInterval(5);
 
+        // Displaying the mAdapter in he recyclerVIew
         mRecyclerView.setAdapter(mAdapter);
     }
 
@@ -220,15 +230,21 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
     @Override
     public void onBackPressed()
     {
+        // If burger menu is open
         if(burger == true)
         {
+            // Close the burger menu
             fab(burgerButton);
         } else
         {
+            // Close the activity
             PlacesListActivity.this.finish();
         }
     }
 
+    /**
+     * Method to build a GoogleApiClient if one doesn't already exist.
+     */
     public void buildGoogleApiClient()
     {
         // Create an instance of GoogleAPIClient.
@@ -242,6 +258,9 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
         }
     }
 
+    /**
+     * Method to get all of the Places.
+     */
     public void getAll()
     {
         // Database reference to get a Squad's Places
@@ -261,12 +280,14 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
             protected void populateViewHolder(PlacesListActivity.PlaceViewHolder viewHolder, final LocPlace model, int position)
             {
                 listText.setVisibility(View.GONE);
+                // Populates a viewHolder with the found Place
                 populatePlaceViewHolder(viewHolder, model, position);
             }
 
             @Override
             protected void onChildChanged(ChangeEventListener.EventType type, int index, int oldIndex)
             {
+                // When the data is changed call updateFilter()
                 switch (type)
                 {
                     case ADDED:
@@ -292,6 +313,9 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
         };
     }
 
+    /**
+     * Method to get a Squad's Places.
+     */
     public void getSquad(String squadId)
     {
         // Database reference to get a Squad's Places
@@ -311,12 +335,14 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
             protected void populateViewHolder(PlacesListActivity.PlaceViewHolder viewHolder, final LocPlace model, int position)
             {
                 listText.setVisibility(View.GONE);
+                // Populates a viewHolder with the found Place
                 populatePlaceViewHolder(viewHolder, model, position);
             }
 
             @Override
             protected void onChildChanged(ChangeEventListener.EventType type, int index, int oldIndex)
             {
+                // When the data is changed call updateFilter()
                 switch (type)
                 {
                     case ADDED:
@@ -342,9 +368,15 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
         };
     }
 
-    // Checks if Places in the selected query exist
+    /**
+     * Checks if Places exist, either in a query or an adapter.
+     *
+     * @param query   The query to check.
+     * @param adapter The adapter to check.
+     */
     public void checkForEmpty(Query query, PlaceAdapter adapter)
     {
+        // If checking a query
         if (query != null)
         {
             query.addListenerForSingleValueEvent(new ValueEventListener()
@@ -374,7 +406,7 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
 
                 }
             });
-        } else
+        } else // If checking an adapter
         {
             // Hide the loading screen
             loadingOverlay.setVisibility(View.GONE);
@@ -393,9 +425,15 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
         }
     }
 
-    // An observer on the RecyclerView to check if empty on changes
+    /**
+     * Method to add an observer on the RecyclerView to check if empty on data changes
+     *
+     * @param fbAdapter     The FireBaseRecyclerAdapter to be observed.
+     * @param placeAdapter The PlaceAdapter to be observed.
+     */
     public void adapterObserver(final FirebaseRecyclerAdapter fbAdapter, final PlaceAdapter placeAdapter)
     {
+        // If using FirebaseRecyclerAdapter
         if (fbAdapter != null)
         {
             mObserver = new RecyclerView.AdapterDataObserver()
@@ -427,8 +465,9 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
                 }
             };
 
+            // Registering the observer
             fbAdapter.registerAdapterDataObserver(mObserver);
-        } else if (placeAdapter != null)
+        } else if (placeAdapter != null) // If using PlaceAdapter
         {
             mObserver = new RecyclerView.AdapterDataObserver()
             {
@@ -457,19 +496,24 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
                 }
             };
 
+            // Registering the observer
             placeAdapter.registerAdapterDataObserver(mObserver);
-        } else
-        {
-            // something wrong
         }
     }
 
+    /**
+     * Method that populates the viewHolder with the info it needs.
+     *
+     * @param viewHolder The ViewHolder to be populated.
+     * @param model      The Place to be displayed.
+     * @param position   The position of the ViewHolder.
+     */
     public void populatePlaceViewHolder(final PlacesListActivity.PlaceViewHolder viewHolder, final LocPlace model, int position)
     {
-
+        // Displaying the name
         viewHolder.nameField.setText(model.getName());
 
-        //getting description
+        // Displaying the description
         String description = model.getDescription().replace("\n", "");
         viewHolder.descriptionField.setText(description);
 
@@ -488,7 +532,7 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
             }
         }
 
-        //distance of place
+        // Calculates the distance to the Place and displays it
         Location placeLocation = new Location("place");
         placeLocation.setLatitude(model.getLocLat());
         placeLocation.setLongitude(model.getLocLong());
@@ -537,10 +581,17 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
         loadingCount++;
     }
 
+    /**
+     * Method that searches for a Meetup with a name that contains the searchText.
+     *
+     * @param searchText The String to be searched for.
+     */
     public void search(String searchText)
     {
+        // Search mode
         search = true;
 
+        // Clearing the previous searchList
         searchList.clear();
 
         if (!searchText.isEmpty())
@@ -566,13 +617,18 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
                 }
             }
 
+            // Creating an adapter using the searchList
             PlaceAdapter searchAdapter = new PlaceAdapter(searchList);
 
+            // Checking for empty and adding an observer
             checkForEmpty(null, searchAdapter);
 
+            // Displaying the new adapter
             mRecyclerView.setAdapter(searchAdapter);
         } else
         {
+            search = false;
+
             if (filter == 0)
             {
                 mRecyclerView.setAdapter(mAdapter);
@@ -583,6 +639,9 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
         }
     }
 
+    /**
+     * Method to update a filteredList when the data has changed.
+     */
     public void updateFilter()
     {
         if (filter == 1)
@@ -600,10 +659,14 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
         }
     }
 
+    /**
+     * Method that creates a filteredList based on the User's distance to the Places.
+     */
     public void filterDistance()
     {
         if (mGoogleApiClient.isConnected())
         {
+            // Get the User's latest location
             getNewLocation();
         }
 
@@ -613,15 +676,19 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
             loadingOverlay.setVisibility(View.VISIBLE);
             loadingText.setText("Filtering...");
 
+            // Filtered mode
             filter = 1;
 
+            // List sorted by distance
             filteredList = new ArrayList<>();
 
+            // Filling the list with data retrieved from Firebase
             for (int i = 0; i < mAdapter.getItemCount(); i++)
             {
                 filteredList.add((LocPlace) mAdapter.getItem(i));
             }
 
+            // Sorting the list in order of distance
             Collections.sort(filteredList, new Comparator<LocPlace>()
             {
                 public int compare(LocPlace p1, LocPlace p2)
@@ -643,15 +710,20 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
                 }
             });
 
+            // List sorted by distance with expired meetups
             filteredAdapter = new PlaceAdapter(filteredList);
 
+            // Checking for empty and adding an observer
             checkForEmpty(null, filteredAdapter);
 
+            // If there is a search term entered
             if (search = true)
             {
+                // Call search()
                 search(searchBar.getText().toString());
             } else
             {
+                // Display the adapter
                 mRecyclerView.setAdapter(filteredAdapter);
             }
         } else
@@ -671,17 +743,23 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
         }
     }
 
+    /**
+     * Method to get the User's latest location
+     */
     public void getNewLocation()
     {
+        // If no location permission
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
         {
+            // Request the permission
             ActivityCompat.requestPermissions(PlacesListActivity.this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
         }
 
-
+        // Request location updates
         LocationServices.FusedLocationApi.requestLocationUpdates(
                 mGoogleApiClient, mLocationRequest, this);
 
+        // Store the User's latest location
         userLoc = LocationServices.FusedLocationApi.getLastLocation(
                 mGoogleApiClient);
     }
@@ -689,13 +767,17 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
     @Override
     public void onConnected(@Nullable Bundle bundle)
     {
+        // If no location permission
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
         {
+            // Request the permission
             ActivityCompat.requestPermissions(PlacesListActivity.this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
         } else
         {
+            // Get the latest location
             getNewLocation();
 
+            // If cant get a location
             if(userLoc == null)
             {
                 new AlertDialog.Builder(PlacesListActivity.this)
@@ -715,9 +797,11 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
                 // If came from 'View Places' button on Squad
                 if (squad)
                 {
+                    // Get the Squad's Places.
                     getSquad(squadId);
                 } else
                 {
+                    // Get all the Places.
                     getAll();
                 }
             }
@@ -730,12 +814,22 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
 
     }
 
+    /**
+     * Method to handle the result of the permission request.
+     *
+     * @param requestCode The request code passed to requestPermissions.
+     * @param permissions The requested permissions.
+     * @param grantResults The permission granting results.
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
 
-        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
-
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE)
+        {
+            // If permission granted
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            {
+                // Get the latest location
                 getNewLocation();
 
                 if(userLoc == null)
@@ -781,6 +875,9 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
 
     }
 
+    /**
+     * Static class to be filled by populateMeetupViewHolder.
+     */
     public static class PlaceViewHolder extends RecyclerView.ViewHolder
     {
         View mView;
@@ -808,6 +905,9 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
         }
     }
 
+    /**
+     * Class used to display Places in a RecyclerView Adapter, used in filtering.
+     */
     public class PlaceAdapter extends RecyclerView.Adapter<PlaceViewHolder>
     {
 
@@ -819,6 +919,13 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
             this.placeList = placeList;
         }
 
+        /**
+         * Method to create a PlaceViewHolder using a layout as a template.
+         *
+         * @param parent   The ViewGroup the PlaceViewHolder belongs to
+         * @param viewType The viewType to be used.
+         * @return A PlaceViewHolder to be filled.
+         */
         @Override
         public PlaceViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
         {
@@ -829,10 +936,19 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
             return new PlaceViewHolder(itemView);
         }
 
+        /**
+         * Fills a PlaceViewHolder with the needed info.
+         *
+         * @param holder   The PlaceViewHolder to be filled.
+         * @param position The position of the PlaceViewHolder.
+         */
         @Override
         public void onBindViewHolder(final PlaceViewHolder holder, int position)
         {
+            // Getting the Place
             final LocPlace place = placeList.get(position);
+
+            // Getting name
             holder.nameField.setText(place.getName());
 
             // Getting description
@@ -902,12 +1018,22 @@ public class PlacesListActivity extends AppCompatActivity implements GoogleApiCl
         }
     }
 
+    /**
+     * Method to send the User to the NewPlaceActivity.
+     *
+     * @param view The Button that was pressed.
+     */
     public void createNew(View view)
     {
         Intent intent = new Intent(this, NewPlaceActivity.class);
         startActivity(intent);
     }
 
+    /**
+     * Method to open and close the burger menu when the FloatingActionButton is pressed.
+     *
+     * @param view The FloatingActionButton that was pressed.
+     */
     public void fab(View view)
     {
         if(burger == false)

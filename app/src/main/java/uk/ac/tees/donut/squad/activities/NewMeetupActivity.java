@@ -8,7 +8,6 @@ import android.location.Address;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
-import android.support.annotation.BoolRes;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -35,7 +34,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -145,13 +143,13 @@ public class NewMeetupActivity extends AppCompatActivity
             public void onClick(View v)
             {
                 // If at least one location field is filled
-                if(spinnerAddress)
+                if (spinnerAddress)
                 {
-                    if(fromDateTime == null)
+                    if (fromDateTime == null)
                     {
                         Toast.makeText(NewMeetupActivity.this, "Please provide a start date and time"
                                 , Toast.LENGTH_SHORT).show();
-                    } else if(untilDateTime == null)
+                    } else if (untilDateTime == null)
                     {
                         Toast.makeText(NewMeetupActivity.this, "Please provide an end date and time"
                                 , Toast.LENGTH_SHORT).show();
@@ -164,11 +162,11 @@ public class NewMeetupActivity extends AppCompatActivity
 
                     if (checkEditTexts())
                     {
-                        if(fromDateTime == null)
+                        if (fromDateTime == null)
                         {
                             Toast.makeText(NewMeetupActivity.this, "Please provide a start date and time"
                                     , Toast.LENGTH_SHORT).show();
-                        } else if(untilDateTime == null)
+                        } else if (untilDateTime == null)
                         {
                             Toast.makeText(NewMeetupActivity.this, "Please provide an end date and time"
                                     , Toast.LENGTH_SHORT).show();
@@ -193,11 +191,13 @@ public class NewMeetupActivity extends AppCompatActivity
             {
                 // Launch Date Picker Dialog
                 DatePickerDialog datePickerDialog = new DatePickerDialog(NewMeetupActivity.this,
-                        new DatePickerDialog.OnDateSetListener() {
+                        new DatePickerDialog.OnDateSetListener()
+                        {
 
                             @Override
                             public void onDateSet(DatePicker view, int year,
-                                                  int monthOfYear, int dayOfMonth) {
+                                                  int monthOfYear, int dayOfMonth)
+                            {
                                 btnFromDate.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
                                 fromDateTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                                 fromDateTime.set(Calendar.MONTH, monthOfYear);
@@ -215,12 +215,14 @@ public class NewMeetupActivity extends AppCompatActivity
             {
                 // Launch Time Picker Dialog
                 TimePickerDialog timePickerDialog = new TimePickerDialog(NewMeetupActivity.this,
-                        new TimePickerDialog.OnTimeSetListener() {
+                        new TimePickerDialog.OnTimeSetListener()
+                        {
 
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay,
-                                                  int minute) {
-                                if(minute < 10)
+                                                  int minute)
+                            {
+                                if (minute < 10)
                                 {
                                     btnFromTime.setText(hourOfDay + ":0" + minute);
                                 } else
@@ -242,11 +244,13 @@ public class NewMeetupActivity extends AppCompatActivity
             {
                 // Launch Date Picker Dialog
                 DatePickerDialog datePickerDialog = new DatePickerDialog(NewMeetupActivity.this,
-                        new DatePickerDialog.OnDateSetListener() {
+                        new DatePickerDialog.OnDateSetListener()
+                        {
 
                             @Override
                             public void onDateSet(DatePicker view, int year,
-                                                  int monthOfYear, int dayOfMonth) {
+                                                  int monthOfYear, int dayOfMonth)
+                            {
                                 btnUntilDate.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
                                 untilDateTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                                 untilDateTime.set(Calendar.MONTH, monthOfYear);
@@ -265,12 +269,14 @@ public class NewMeetupActivity extends AppCompatActivity
             {
                 // Launch Time Picker Dialog
                 TimePickerDialog timePickerDialog = new TimePickerDialog(NewMeetupActivity.this,
-                        new TimePickerDialog.OnTimeSetListener() {
+                        new TimePickerDialog.OnTimeSetListener()
+                        {
 
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay,
-                                                  int minute) {
-                                if(minute < 10)
+                                                  int minute)
+                            {
+                                if (minute < 10)
                                 {
                                     btnUntilTime.setText(hourOfDay + ":0" + minute);
                                 } else
@@ -285,31 +291,38 @@ public class NewMeetupActivity extends AppCompatActivity
             }
         });
 
-        btnNewAddress.setOnClickListener(new View.OnClickListener() {
+        btnNewAddress.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 newAddress();
             }
         });
 
-        btnFromPlace.setOnClickListener(new View.OnClickListener() {
+        btnFromPlace.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 fromPlace();
             }
         });
 
-        spinnerSquad.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinnerSquad.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(spinnerAddress)
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            {
+                if (spinnerAddress)
                 {
                     fillPlaceSpinner(squads.get(spinnerSquad.getSelectedItem().toString().trim()));
                 }
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+            public void onNothingSelected(AdapterView<?> parent)
+            {
 
             }
         });
@@ -409,38 +422,40 @@ public class NewMeetupActivity extends AppCompatActivity
         squadId = squads.get(spinnerSquad.getSelectedItem().toString().trim());
 
         // Start and End time validation
-        if(fromDateTime.getTimeInMillis() == currentDateTime.getTimeInMillis())
+        if (fromDateTime.getTimeInMillis() == currentDateTime.getTimeInMillis())
         {
             loadingOverlay.setVisibility(View.GONE);
             Toast.makeText(NewMeetupActivity.this, "Please change the Meetup's Start from the " +
                     "default", Toast.LENGTH_SHORT).show();
-        }  else if (untilDateTime.getTimeInMillis() == currentDateTime.getTimeInMillis())
+        } else if (untilDateTime.getTimeInMillis() == currentDateTime.getTimeInMillis())
         {
             loadingOverlay.setVisibility(View.GONE);
             Toast.makeText(NewMeetupActivity.this, "Please change the Meetup's End from the " +
                     "default", Toast.LENGTH_SHORT).show();
-        } else if(fromDateTime.getTimeInMillis() < currentDateTime.getTimeInMillis())
+        } else if (fromDateTime.getTimeInMillis() < currentDateTime.getTimeInMillis())
         {
             loadingOverlay.setVisibility(View.GONE);
             Toast.makeText(NewMeetupActivity.this, "A Meetup can not start in the past",
                     Toast.LENGTH_SHORT).show();
-        }else if(untilDateTime.getTimeInMillis() < currentDateTime.getTimeInMillis())
+        } else if (untilDateTime.getTimeInMillis() < currentDateTime.getTimeInMillis())
         {
             loadingOverlay.setVisibility(View.GONE);
             Toast.makeText(NewMeetupActivity.this, "A Meetup can not end in the past",
                     Toast.LENGTH_SHORT).show();
-        } else if(untilDateTime.getTimeInMillis() < fromDateTime.getTimeInMillis())
+        } else if (untilDateTime.getTimeInMillis() < fromDateTime.getTimeInMillis())
         {
             loadingOverlay.setVisibility(View.GONE);
             Toast.makeText(NewMeetupActivity.this, "A Meetup can not end before it starts",
                     Toast.LENGTH_SHORT).show();
-        } else if(spinnerAddress)
+        } else if (spinnerAddress)
         {
             // If using a Place instead of an address
             String placeId = places.get(spinnerPlace.getSelectedItem().toString().trim());
-            mDatabase.child("places").child(placeId).addListenerForSingleValueEvent(new ValueEventListener() {
+            mDatabase.child("places").child(placeId).addListenerForSingleValueEvent(new ValueEventListener()
+            {
                 @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
+                public void onDataChange(DataSnapshot dataSnapshot)
+                {
                     // Gets the data from Firebase and stores it in a LocPlace class
                     LocPlace firebasePlace = dataSnapshot.getValue(LocPlace.class);
 
@@ -448,7 +463,7 @@ public class NewMeetupActivity extends AppCompatActivity
                     longitude = firebasePlace.getLocLong();
                     latitude = firebasePlace.getLocLat();
 
-                    if(longitude != 0 && latitude != 0)
+                    if (longitude != 0 && latitude != 0)
                     {
                         createMeetup(name, description, squadId);
                     } else
@@ -458,7 +473,8 @@ public class NewMeetupActivity extends AppCompatActivity
                 }
 
                 @Override
-                public void onCancelled(DatabaseError databaseError) {
+                public void onCancelled(DatabaseError databaseError)
+                {
                     // No place found
                     Toast.makeText(NewMeetupActivity.this, "Something went wrong, please try again.", Toast.LENGTH_SHORT).show();
                 }
@@ -475,14 +491,15 @@ public class NewMeetupActivity extends AppCompatActivity
     }
 
     /**
-     * Method to post a meetup to the Firebase Realtime Database.
+     * Method to post a Meetup to the Firebase Realtime Database.
      *
-     * @param name The name for the Meetup.
-     * @param desc The description for the Meetup.
+     * @param name    The name for the Meetup.
+     * @param desc    The description for the Meetup.
      * @param squadId The Squad for the Meetup.
      */
     public void createMeetup(String name, String desc, String squadId)
     {
+        // Gets the currently signed-in User
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null)
         {
@@ -498,7 +515,7 @@ public class NewMeetupActivity extends AppCompatActivity
             Meetup meetup = new Meetup(meetupId, name, desc, squadId, user.getUid(), fromUnix, untilUnix, longitude, latitude);
 
             // If at a existing place
-            if(spinnerAddress)
+            if (spinnerAddress)
             {
                 String placeId = places.get(spinnerPlace.getSelectedItem().toString().trim());
                 meetup.setPlace(placeId);
@@ -612,7 +629,8 @@ public class NewMeetupActivity extends AppCompatActivity
     /**
      * Method to display an AlertDialog to validate address.
      */
-    public void CreateAlertDiolog(){
+    public void CreateAlertDiolog()
+    {
         new AlertDialog.Builder(NewMeetupActivity.this)
                 .setTitle("Confirm Address")
                 .setMessage("" + geocodeAddress + "\n" + "Is this the correct address?")
@@ -629,17 +647,21 @@ public class NewMeetupActivity extends AppCompatActivity
 
                     }
                 })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener()
+                {
                     @Override
-                    public void onClick(DialogInterface dialogInterface, int i){
+                    public void onClick(DialogInterface dialogInterface, int i)
+                    {
                         loadingOverlay.setVisibility(View.INVISIBLE);
                         return;
                     }
                 })
-                .setOnDismissListener(new DialogInterface.OnDismissListener(){
+                .setOnDismissListener(new DialogInterface.OnDismissListener()
+                {
 
                     @Override
-                    public void onDismiss(DialogInterface dialog) {
+                    public void onDismiss(DialogInterface dialog)
+                    {
                         loadingOverlay.setVisibility(View.INVISIBLE);
                         return;
                     }
@@ -680,7 +702,8 @@ public class NewMeetupActivity extends AppCompatActivity
 
                     }
                 });
-            } else{
+            } else
+            {
                 runOnUiThread(new Runnable()
                 {
                     @Override
@@ -732,7 +755,7 @@ public class NewMeetupActivity extends AppCompatActivity
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
-                if(dataSnapshot.getChildrenCount() == 0)
+                if (dataSnapshot.getChildrenCount() == 0)
                 {
                     // Hide the loading overlay
                     loadingOverlay.setVisibility(View.GONE);
@@ -796,7 +819,7 @@ public class NewMeetupActivity extends AppCompatActivity
         btnFromDate.setText(currentDay + "/" + (currentMonth + 1) + "/" + currentYear);
         btnUntilDate.setText(currentDay + "/" + (currentMonth + 1) + "/" + currentYear);
 
-        if(currentMinute < 10)
+        if (currentMinute < 10)
         {
             btnFromTime.setText(currentHour + ":0" + currentMinute);
             btnUntilTime.setText(currentHour + ":0" + currentMinute);

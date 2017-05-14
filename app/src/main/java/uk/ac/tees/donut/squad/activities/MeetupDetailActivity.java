@@ -190,7 +190,7 @@ public class MeetupDetailActivity extends BaseActivity
     }
 
     /**
-     * Uses the meetupId to create a Meetup class and display its details.
+     * Uses the meetupId to create a Meetup object and display its details.
      */
     public void loadMeetup()
     {

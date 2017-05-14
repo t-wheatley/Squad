@@ -69,9 +69,11 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
     LocationRequest mLocationRequest;
     Location userLoc;
 
-    // Activity UI
+    // Loading Overlay
     RelativeLayout loadingOverlay;
     TextView loadingText;
+
+    // Activity UI
     TextView listText;
     Button btnDistance;
     Button btnStartTime;
@@ -719,6 +721,7 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
                 }
             };
 
+            // Registering the observer
             fbAdapter.registerAdapterDataObserver(mObserver);
         } else if (meetupAdapter != null) // If using MeetupAdapter
         {
@@ -1022,19 +1025,19 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
                 filteredAdapter = new MeetupAdapter(filteredList);
             }
 
+            // Checking for empty and adding an observer
             checkForEmpty(null, filteredAdapter);
 
             // If there is a search term entered
             if (search == true)
             {
-                // call search()
+                // Call search()
                 search(searchBar.getText().toString());
             } else
             {
-                // display the adapter
+                // Display the adapter
                 mRecyclerView.setAdapter(filteredAdapter);
             }
-
         } else
         {
             new AlertDialog.Builder(MeetupsListActivity.this)
@@ -1144,7 +1147,6 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
                 mGoogleApiClient);
     }
 
-
     @Override
     public void onConnected(@Nullable Bundle bundle)
     {
@@ -1166,6 +1168,13 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
 
     }
 
+    /**
+     * Method to handle the result of the permission request.
+     *
+     * @param requestCode The request code passed to requestPermissions.
+     * @param permissions The requested permissions.
+     * @param grantResults The permission granting results.
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
     {
@@ -1174,9 +1183,10 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
             // If permission granted
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
             {
+                // Get the latest location
                 getNewLocation();
             } else
-            { // if permission is not granted
+            { // If permission is not granted
                 finish();
             }
         }
@@ -1262,7 +1272,9 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
         @Override
         public void onBindViewHolder(final MeetupViewHolder holder, int position)
         {
+            // Getting the Meetup
             final Meetup meetup = meetupList.get(position);
+
             // Getting name
             holder.nameField.setText(meetup.getName());
 
