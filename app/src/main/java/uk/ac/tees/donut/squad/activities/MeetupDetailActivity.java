@@ -733,7 +733,7 @@ public class MeetupDetailActivity extends BaseActivity
         mDatabase.child("users").child(firebaseUser.getUid()).child("meetups").child(meetupId).setValue(true);
         mDatabase.child("meetups").child(meetupId).child("users").child(firebaseUser.getUid()).setValue(true);
         attending = true;
-        attendBtn.setText("Leave Meetup");
+        attendBtn.setText("Un-Attend");
     }
 
     /**
@@ -745,7 +745,7 @@ public class MeetupDetailActivity extends BaseActivity
         mDatabase.child("users").child(firebaseUser.getUid()).child("meetups").child(meetupId).removeValue();
         mDatabase.child("meetups").child(meetupId).child("users").child(firebaseUser.getUid()).removeValue();
         attending = false;
-        attendBtn.setText("Attend Meetup");
+        attendBtn.setText("Attend");
         finish();
     }
 

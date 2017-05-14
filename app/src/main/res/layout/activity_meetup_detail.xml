@@ -324,6 +324,7 @@
                                android:layout_toStartOf="@+id/meetupDetail_attendBtn"
                                android:ellipsize="marquee"
                                android:id="@+id/meetupDetail_attendeeCount"
+                               android:textStyle="bold"
                                />
 
                             <Button
