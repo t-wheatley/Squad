@@ -5,8 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
@@ -16,10 +14,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.android.gms.ads.formats.NativeAd;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.vision.text.Text;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -112,12 +108,14 @@ public class SquadListActivity extends BaseActivity
     }
 
     @Override
-    int getContentViewId() {
+    int getContentViewId()
+    {
         return R.layout.activity_squad_list;
     }
 
     @Override
-    int getNavigationMenuItemId() {
+    int getNavigationMenuItemId()
+    {
         return R.id.menu_squads;
     }
 
@@ -262,13 +260,13 @@ public class SquadListActivity extends BaseActivity
             {
                 viewHolder.joined.setVisibility(View.GONE);
             }
-        }else
+        } else
         {
             viewHolder.joined.setVisibility(View.GONE);
         }
 
         // Get member count
-        if(users != null)
+        if (users != null)
         {
             viewHolder.squadMembers.setText(String.valueOf(users.size()));
         } else
@@ -281,18 +279,22 @@ public class SquadListActivity extends BaseActivity
         StorageReference squadStorage = firebaseStorage.getReference().child("squads/" + model.getId() + ".png");
 
         // If the meetup has an image display it
-        squadStorage.getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+        squadStorage.getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>()
+        {
             @Override
-            public void onSuccess(byte[] bytes) {
+            public void onSuccess(byte[] bytes)
+            {
                 Bitmap meetupImage = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                 viewHolder.imageLoading.setVisibility(View.GONE);
                 viewHolder.squadImage.setVisibility(View.VISIBLE);
                 viewHolder.squadImage.setImageBitmap(meetupImage);
 
             }
-        }).addOnFailureListener(new OnFailureListener() {
+        }).addOnFailureListener(new OnFailureListener()
+        {
             @Override
-            public void onFailure(@NonNull Exception exception) {
+            public void onFailure(@NonNull Exception exception)
+            {
                 // Display default
                 viewHolder.imageLoading.setVisibility(View.GONE);
                 viewHolder.squadImage.setVisibility(View.VISIBLE);

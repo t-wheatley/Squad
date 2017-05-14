@@ -1,0 +1,61 @@
+﻿Merge remote-tracking branch 'refs/remotes/origin/master' into Firebase
+
+# Conflicts:
+#	app/src/main/java/uk/ac/tees/donut/squad/activities/LoginActivity.java
+#	app/src/main/java/uk/ac/tees/donut/squad/activities/MeetupDetailActivity.java
+#	app/src/main/java/uk/ac/tees/donut/squad/activities/MenuActivity.java
+#	app/src/main/java/uk/ac/tees/donut/squad/activities/PlaceDetailsActivity.java
+#	app/src/main/java/uk/ac/tees/donut/squad/activities/PlacesListActivity.java
+#
+# It looks like you may be committing a merge.
+# If this is not correct, please remove the file
+#	.git/MERGE_HEAD
+# and try again.
+
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch Firebase
+# Your branch is up-to-date with 'origin/Firebase'.
+#
+# All conflicts fixed but you are still merging.
+#
+# Changes to be committed:
+#	modified:   app/src/main/AndroidManifest.xml
+#	modified:   app/src/main/java/uk/ac/tees/donut/squad/activities/BaseActivity.java
+#	modified:   app/src/main/java/uk/ac/tees/donut/squad/activities/LoginActivity.java
+#	renamed:    app/src/main/java/uk/ac/tees/donut/squad/location/MapActivity.java -> app/src/main/java/uk/ac/tees/donut/squad/activities/MapActivity.java
+#	modified:   app/src/main/java/uk/ac/tees/donut/squad/activities/MeetupDetailActivity.java
+#	modified:   app/src/main/java/uk/ac/tees/donut/squad/activities/MeetupsListActivity.java
+#	modified:   app/src/main/java/uk/ac/tees/donut/squad/activities/MenuActivity.java
+#	modified:   app/src/main/java/uk/ac/tees/donut/squad/activities/PlaceDetailsActivity.java
+#	modified:   app/src/main/java/uk/ac/tees/donut/squad/activities/PlacesListActivity.java
+#	modified:   app/src/main/java/uk/ac/tees/donut/squad/activities/ProfileActivity.java
+#	modified:   app/src/main/java/uk/ac/tees/donut/squad/activities/SplashScreen.java
+#	modified:   app/src/main/java/uk/ac/tees/donut/squad/activities/SquadDetailActivity.java
+#	modified:   app/src/main/java/uk/ac/tees/donut/squad/activities/SquadListActivity.java
+#	modified:   app/src/main/java/uk/ac/tees/donut/squad/activities/SquadPostActivity.java
+#	modified:   app/src/main/res/drawable-hdpi/ic_maps.png
+#	modified:   app/src/main/res/drawable-hdpi/ic_places.png
+#	modified:   app/src/main/res/drawable-mdpi/ic_maps.png
+#	modified:   app/src/main/res/drawable-mdpi/ic_places.png
+#	modified:   app/src/main/res/drawable-xhdpi/ic_maps.png
+#	modified:   app/src/main/res/drawable-xhdpi/ic_places.png
+#	modified:   app/src/main/res/drawable-xxhdpi/ic_maps.png
+#	modified:   app/src/main/res/drawable-xxhdpi/ic_places.png
+#	modified:   app/src/main/res/layout/activity_map.xml
+#	modified:   app/src/main/res/layout/activity_meetup_detail.xml
+#	modified:   app/src/main/res/layout/activity_meetups_list.xml
+#	modified:   app/src/main/res/layout/activity_menu.xml
+#	modified:   app/src/main/res/layout/activity_place_details.xml
+#	modified:   app/src/main/res/layout/activity_place_maps.xml
+#	modified:   app/src/main/res/layout/activity_places_list.xml
+#	modified:   app/src/main/res/layout/activity_profile.xml
+#	modified:   app/src/main/res/layout/element_bottom_navigation.xml
+#	modified:   app/src/main/res/layout/gridview_user.xml
+#	modified:   app/src/main/res/layout/item_list_card.xml
+#	modified:   app/src/main/res/layout/item_squad.xml
+#	modified:   app/src/main/res/menu/navigation.xml
+#	modified:   app/src/main/res/values/strings.xml
+#
+

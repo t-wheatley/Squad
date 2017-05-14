@@ -13,12 +13,15 @@ import com.google.firebase.auth.FirebaseUser;
 
 import uk.ac.tees.donut.squad.R;
 
-public abstract class BaseActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+public abstract class BaseActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener
+{
 
     protected BottomNavigationView navigationView;
     FirebaseUser firebaseUser;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(getContentViewId());
 
@@ -28,29 +31,33 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
     }
 
     @Override
-    protected void onStart() {
+    protected void onStart()
+    {
         super.onStart();
         updateNavigationBarState();
     }
 
     // Remove inter-activity transition to avoid screen tossing on tapping bottom navigation items
     @Override
-    public void onPause() {
+    public void onPause()
+    {
         super.onPause();
         overridePendingTransition(0, 0);
     }
 
     @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item)
+    {
         Intent intent;
-        switch(item.getItemId()){
+        switch (item.getItemId())
+        {
             case R.id.menu_squads:
-                intent = new Intent(this,SquadListActivity.class);
+                intent = new Intent(this, SquadListActivity.class);
                 startActivity(intent);
                 break;
             case R.id.menu_meetups:
                 System.out.println("----------------------Booting up meetups");
-                intent = new Intent(this,MeetupsListActivity.class);
+                intent = new Intent(this, MeetupsListActivity.class);
                 startActivity(intent);
                 break;
             case R.id.menu_places:
@@ -64,7 +71,8 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
                 startActivity(intent);
                 break;
             case R.id.menu_profile:
-                if (firebaseUser != null) {
+                if (firebaseUser != null)
+                {
                     //Sends the user's id to the profile activity
                     System.out.println("---------------------------------Booting up profile");
                     intent = new Intent(this, ProfileActivity.class);
@@ -76,17 +84,21 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
         return true;
     }
 
-    private void updateNavigationBarState(){
+    private void updateNavigationBarState()
+    {
         int actionId = getNavigationMenuItemId();
         selectBottomNavigationBarItem(actionId);
     }
 
-    void selectBottomNavigationBarItem(int itemId) {
+    void selectBottomNavigationBarItem(int itemId)
+    {
         Menu menu = navigationView.getMenu();
-        for (int i = 0, size = menu.size(); i < size; i++) {
+        for (int i = 0, size = menu.size(); i < size; i++)
+        {
             MenuItem item = menu.getItem(i);
             boolean shouldBeChecked = item.getItemId() == itemId;
-            if (shouldBeChecked) {
+            if (shouldBeChecked)
+            {
                 item.setChecked(true);
                 break;
             }
