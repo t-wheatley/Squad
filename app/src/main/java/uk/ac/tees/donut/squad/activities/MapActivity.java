@@ -89,7 +89,6 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
     private Button btnShowMeetup;
     private TextView showDistance;
     private TextView showDuration;
-    private TextView mapTitle;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     protected Location mLastLocation;
@@ -124,9 +123,6 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
 
         showDuration = (TextView) findViewById(R.id.textDuration);
         showDuration.setVisibility(View.GONE);
-
-        mapTitle = (TextView) findViewById(R.id.textTitle);
-        mapTitle.setVisibility(View.VISIBLE);
 
         burgerMenu = (LinearLayout) findViewById(R.id.map_burgerMenu);
         burgerButton = (FloatingActionButton) findViewById(R.id.map_fab);
@@ -276,13 +272,11 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
         {
             burgerMenu.setVisibility(View.VISIBLE);
             burgerButton.setImageResource(R.drawable.ic_cross);
-            mapTitle.setVisibility(View.GONE);
             burger = true;
         } else
         {
             burgerMenu.setVisibility(View.GONE);
             burgerButton.setImageResource(R.drawable.ic_burger);
-            mapTitle.setVisibility(View.VISIBLE);
             burger = false;
         }
     }
