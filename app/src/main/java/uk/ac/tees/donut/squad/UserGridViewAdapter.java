@@ -24,7 +24,6 @@ import uk.ac.tees.donut.squad.activities.ProfileActivity;
  */
 public class UserGridViewAdapter extends BaseAdapter
 {
-
     private Context mContext;
 
     // Array of names

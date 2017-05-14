@@ -3,6 +3,7 @@ package uk.ac.tees.donut.squad.activities;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +14,10 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -310,29 +315,49 @@ public class SquadListActivity extends BaseActivity
         }
 
 
-        // Diplaying the picture
+        // Gets the storage reference of the Squad's picture
         StorageReference squadStorage = firebaseStorage.getReference().child("squads/" + model.getId() + ".png");
 
-        // If the meetup has an image display it
-        squadStorage.getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>()
+        // Display picture loading
+        viewHolder.imageLoading.setVisibility(View.VISIBLE);
+        viewHolder.squadImage.setVisibility(View.VISIBLE);
+
+        // Gets the Uri to download
+        squadStorage.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>()
         {
             @Override
-            public void onSuccess(byte[] bytes)
+            public void onSuccess(Uri uri)
             {
-                Bitmap meetupImage = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                viewHolder.imageLoading.setVisibility(View.GONE);
-                viewHolder.squadImage.setVisibility(View.VISIBLE);
-                viewHolder.squadImage.setImageBitmap(meetupImage);
+                // If a picture exists
+                // Download and display using Glide
+                Glide.with(SquadListActivity.this)
+                        .load(uri)
+                        .listener(new RequestListener<Uri, GlideDrawable>()
+                        {
+                            @Override
+                            public boolean onException(Exception e, Uri model, Target<GlideDrawable> target, boolean isFirstResource)
+                            {
+                                viewHolder.imageLoading.setVisibility(View.GONE);
+                                return false;
+                            }
 
+                            @Override
+                            public boolean onResourceReady(GlideDrawable resource, Uri model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource)
+                            {
+                                viewHolder.imageLoading.setVisibility(View.GONE);
+                                return false;
+                            }
+                        })
+                        .error(R.drawable.ic_donut_minim)
+                        .into(viewHolder.squadImage);
             }
         }).addOnFailureListener(new OnFailureListener()
         {
             @Override
             public void onFailure(@NonNull Exception exception)
             {
-                // Display default
+                // If no picture exists
                 viewHolder.imageLoading.setVisibility(View.GONE);
-                viewHolder.squadImage.setVisibility(View.VISIBLE);
             }
         });
 
