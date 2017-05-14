@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+/**
+ * Activity which displays while the app is loading, used to avoid the white cold start screen.
+ */
 public class SplashScreen extends AppCompatActivity
 {
 

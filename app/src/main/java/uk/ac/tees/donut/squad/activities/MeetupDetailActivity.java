@@ -133,7 +133,6 @@ public class MeetupDetailActivity extends BaseActivity
         hostOptions = (LinearLayout) findViewById(R.id.meetupDetail_hostBurgerMenu);
         imageViewCard = (CardView) findViewById(R.id.meetupDetail_ImageViewCard);
 
-
         // Disabling the edit ImageButtons and delete Button
         hostOptions.setVisibility(View.GONE);
 
