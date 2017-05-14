@@ -1355,8 +1355,7 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
                 holder.statusField.setText("Expired");
             else
                 holder.statusField.setText("Deleted");
-
-
+            
             // OnClick
             holder.mView.setOnClickListener(new View.OnClickListener()
             {
