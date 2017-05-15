@@ -19,9 +19,11 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 import uk.ac.tees.donut.squad.activities.ProfileActivity;
 
+/**
+ * Class used to fill a GridView.
+ */
 public class UserGridViewAdapter extends BaseAdapter
 {
-
     private Context mContext;
 
     // Array of names
@@ -31,7 +33,14 @@ public class UserGridViewAdapter extends BaseAdapter
     // Array of uIds
     private final List<String> userIds;
 
-
+    /**
+     * The constructor the a view in the UserGrid.
+     *
+     * @param context   The context.
+     * @param userNames A list of the User's names.
+     * @param userPics  A list of the User's pictures.
+     * @param userIds   A list of the User's ids.
+     */
     public UserGridViewAdapter(Context context, List<String> userNames, List<String> userPics,
                                List<String> userIds)
     {
@@ -50,10 +59,8 @@ public class UserGridViewAdapter extends BaseAdapter
 
         if (convertView == null)
         {
-
-            view = new View(mContext);
+            // UI Elements
             view = inflater.inflate(R.layout.gridview_user, null);
-
             TextView userNameView = (TextView) view.findViewById(R.id.gridview_user_text);
             ImageView userPicView = (CircleImageView) view.findViewById(R.id.gridview_user_image);
 
