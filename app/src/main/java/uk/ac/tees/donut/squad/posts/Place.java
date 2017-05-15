@@ -14,6 +14,7 @@ public class Place
     public String squad;
     public String host;
     HashMap<String, Boolean> meetups;
+    HashMap<String, String> pictures;
 
     /**
      * Empty constructor for Firebase.
@@ -73,6 +74,11 @@ public class Place
         return meetups;
     }
 
+    public HashMap<String, String> getPictures()
+    {
+        return pictures;
+    }
+
     //SETTERS
     public void setPlaceId(String pi)
     {
@@ -102,5 +108,10 @@ public class Place
     public void setMeetups(HashMap<String, Boolean> meetups)
     {
         this.meetups = meetups;
+    }
+
+    public void setPictures(HashMap<String, String> pictures)
+    {
+        this.pictures = pictures;
     }
 }

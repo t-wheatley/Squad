@@ -2,16 +2,30 @@ package uk.ac.tees.donut.squad.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageSwitcher;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ViewSwitcher;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -21,6 +35,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.mvc.imagepicker.ImagePicker;
+
+import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import uk.ac.tees.donut.squad.R;
 import uk.ac.tees.donut.squad.location.PlaceMapsActivity;
@@ -41,6 +61,7 @@ public class PlaceDetailsActivity extends BaseActivity
     // Loading Overlay
     RelativeLayout loadingOverlay;
     TextView loadingText;
+    ProgressBar imageLoading;
 
     // Activity UI
     TextView placeName;
@@ -62,6 +83,8 @@ public class PlaceDetailsActivity extends BaseActivity
     LocPlace place;
     double latitude;
     double longitude;
+    ArrayList<String> images;
+    int imagePosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -72,6 +95,7 @@ public class PlaceDetailsActivity extends BaseActivity
         // Initialising loading overlay and displaying
         loadingOverlay = (RelativeLayout) this.findViewById(R.id.loading_overlay);
         loadingText = (TextView) this.findViewById(R.id.loading_overlay_text);
+        imageLoading = (ProgressBar) findViewById(R.id.placeDetails_imageProgress);
         loadingText.setText("Loading Place...");
         loadingOverlay.setVisibility(View.VISIBLE);
 
@@ -104,6 +128,12 @@ public class PlaceDetailsActivity extends BaseActivity
         });
 
         gallery = (ImageSwitcher) findViewById(R.id.placeDetails_gallery);
+        gallery.setFactory(new ViewSwitcher.ViewFactory() {
+
+        public View makeView() {
+            return new ImageView(PlaceDetailsActivity.this);
+        }
+    });
 
         //if there are no pictures
         boolean noPics = true; //TEMPORARY TILL WE CAN ATTEMPT AT LOADING PICS
@@ -151,8 +181,11 @@ public class PlaceDetailsActivity extends BaseActivity
         // Getting the reference for the Firebase Storage
         firebaseStorage = FirebaseStorage.getInstance();
 
+        images = new ArrayList<String>();
+        imagePosition = 0;
+
         // Starts the loading chain
-        // loadMeetup -> loadSquad
+        // loadMeetup -> loadSquad -> loadPictures
         loadPlace();
     }
 
@@ -189,6 +222,13 @@ public class PlaceDetailsActivity extends BaseActivity
                 longitude = place.getLocLong();
                 latitude = place.getLocLat();
 
+                // If signed-in user is the Host of the Meetup
+                if (firebaseUser.getUid().equals(place.getHost()))
+                {
+                    // Display editing controls
+                    editMode();
+                }
+
                 // Load the name of the Squad
                 loadSquad();
             }
@@ -218,8 +258,7 @@ public class PlaceDetailsActivity extends BaseActivity
                 // Displays the Squad's name
                 squad.setText(dataSnapshot.child("name").getValue(String.class));
 
-                // Hiding loading overlay
-                loadingOverlay.setVisibility(View.GONE);
+                loadPictures();
             }
 
             @Override
@@ -228,6 +267,148 @@ public class PlaceDetailsActivity extends BaseActivity
 
             }
         });
+    }
+
+    /**
+     * Method to download and display the Place's pictures.
+     */
+    public void loadPictures()
+    {
+        HashMap<String, String> pictures = place.getPictures();
+
+        if(pictures != null)
+        {
+            noPic.setVisibility(View.GONE);
+            gallery.setVisibility(View.VISIBLE);
+
+            for(final String pictureUrl : pictures.values())
+            {
+                images.add(pictureUrl);
+
+            }
+
+            displayImage(images.get(0));
+
+
+            // Hiding loading overlay
+            loadingOverlay.setVisibility(View.GONE);
+        } else
+        {
+            // No pictures
+            // Hiding loading overlay
+            loadingOverlay.setVisibility(View.GONE);
+        }
+    }
+
+    public void displayImage(String pictureUrl)
+    {
+        imageLoading.setVisibility(View.VISIBLE);
+
+        // Download and display using Glide
+        Glide.with(PlaceDetailsActivity.this)
+                .load(pictureUrl)
+                .asBitmap()
+                .listener(new RequestListener<String, Bitmap>() {
+                    @Override
+                    public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
+                        Toast.makeText(PlaceDetailsActivity.this, "Something went wrong loading the image", Toast.LENGTH_SHORT);
+                        imageLoading.setVisibility(View.GONE);
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                        gallery.setImageDrawable(new BitmapDrawable(getResources(), resource));
+                        imageLoading.setVisibility(View.GONE);
+                        return true;
+                    }
+                })
+                .into((ImageView) gallery.getCurrentView());
+    }
+
+    public void nextImage(View view)
+    {
+        imagePosition++;
+        if (imagePosition == images.size()) {
+            imagePosition = 0;
+        }
+        displayImage(images.get(imagePosition));
+    }
+
+
+    /**
+     * Method called on result of the ImagePicker Intent.
+     *
+     * @param requestCode The request code that was passed to startActivityForResult().
+     * @param resultCode  The result code, RESULT_OK if successful, RESULT_CANCELED if not.
+     * @param data        An Intent that carries the data of the result.
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        // Getting a bitmap from the Intent
+        final Bitmap bitmap = ImagePicker.getImageFromResult(this, requestCode, resultCode, data);
+
+        // The user's id and current time in millis is used to create a unique id
+        final String uniqueId = firebaseUser.getUid() + System.currentTimeMillis();
+
+        // Creating the reference for the meetup's Firebase Storage, used to store pictures,
+        placeStorage = firebaseStorage.getReference().child("places/" + place.getPlaceId() + "/" +
+                uniqueId);
+
+        // If Bitmap exists
+        if (bitmap != null)
+        {
+            loadingText.setText("Uploading photo...");
+            loadingOverlay.setVisibility(View.VISIBLE);
+
+            // Creating a ByteArray from the bitmap
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] bytes = baos.toByteArray();
+
+            // Upload to Firebase Storage
+            UploadTask uploadTask = placeStorage.putBytes(bytes);
+
+            // Upload Listener
+            uploadTask.addOnFailureListener(new OnFailureListener()
+            {
+                @Override
+                public void onFailure(@NonNull Exception exception)
+                {
+                    // If upload failed
+                    loadingOverlay.setVisibility(View.GONE);
+                    Toast.makeText(PlaceDetailsActivity.this, "Upload failed, please try again!"
+                            , Toast.LENGTH_SHORT);
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>()
+            {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
+                {
+                    // If upload successful
+                    // Push the download URL to the Place's pictures
+                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                    mDatabase.child("places").child(placeId).child("pictures").child(uniqueId).setValue(downloadUrl.toString());
+                    images.add(downloadUrl.toString());
+
+                    // Notify user
+                    loadingOverlay.setVisibility(View.GONE);
+                    Toast.makeText(PlaceDetailsActivity.this, "Photo uploaded!", Toast.LENGTH_SHORT);
+                }
+            });
+        }
+    }
+
+    /**
+     * Method that displays an ImagePicker intent.
+     *
+     * @param view The ImageView holding the Meetup's picture.
+     */
+    public void selectImage(View view)
+    {
+        // Click on image button
+        ImagePicker.pickImage(this, "Select your image:");
     }
 
     /**
@@ -265,6 +446,14 @@ public class PlaceDetailsActivity extends BaseActivity
         Intent intent = new Intent(this, MeetupsListActivity.class);
         intent.putExtra("placeId", placeId);
         startActivity(intent);
+    }
+
+    /**
+     * Method that displays editing controls for the Place if the signed-in User is the Host.
+     */
+    public void editMode()
+    {
+        hostMenu.setVisibility(View.VISIBLE);
     }
 
     public void fab(View view)
