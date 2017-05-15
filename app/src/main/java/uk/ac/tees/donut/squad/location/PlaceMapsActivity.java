@@ -15,15 +15,12 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.akexorcist.googledirection.DirectionCallback;
 import com.akexorcist.googledirection.GoogleDirection;
-import com.akexorcist.googledirection.constant.TransitMode;
 import com.akexorcist.googledirection.constant.TransportMode;
 import com.akexorcist.googledirection.constant.Unit;
 import com.akexorcist.googledirection.model.Direction;
@@ -37,7 +34,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -45,14 +41,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
 import java.util.ArrayList;
 
 import uk.ac.tees.donut.squad.R;
@@ -74,6 +62,7 @@ public class PlaceMapsActivity extends AppCompatActivity implements OnMapReadyCa
     protected Location mLastLocation;
     private Marker mCurrLocationMarker;
     private GoogleMap mMap;
+    //Google Direction API key
     private String directionAPIKey = "AIzaSyBPSyzwv_Lr4JyCgKRswRhBRebSi8htqt8";
     private LatLng currentLocation;
     private LatLng destination;
@@ -103,17 +92,29 @@ public class PlaceMapsActivity extends AppCompatActivity implements OnMapReadyCa
 
     }
 
+    /**
+     * Mehtod sets the target destination for navigating
+     *
+     * @param lat desired latitude
+     * @param lng desired longitude
+     */
     public void setDestination(double lat, double lng){
         destination = new LatLng(lat, lng);
     }
 
+
+    /**
+     * Called when map is ready
+     *
+     * @param googleMap
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         //gets extras passd from last activity
         Intent detail = getIntent();
         Bundle b = detail.getExtras();
 
-
+        //Sets longitude, latitude name and details from previous activity
         if(b != null)
         {
             longitude = (Double) b.get("longitude");
@@ -123,6 +124,7 @@ public class PlaceMapsActivity extends AppCompatActivity implements OnMapReadyCa
 
             this.setTitle("Place Details");
         }
+        //Create error dialog if unable to get place
         else
         {
             new AlertDialog.Builder(PlaceMapsActivity.this)
@@ -139,7 +141,7 @@ public class PlaceMapsActivity extends AppCompatActivity implements OnMapReadyCa
         }
 
 
-
+        //Set target destination
         setDestination(latitude, longitude);
 
         mMap=googleMap;
@@ -162,11 +164,7 @@ public class PlaceMapsActivity extends AppCompatActivity implements OnMapReadyCa
             mMap.setMyLocationEnabled(true);
         }
 
-        // Add a marker at home
-        LatLng Home = new LatLng(54.6993131, -1.5103871);
-        setDestination(latitude, longitude);
-
-
+        //Add marker to destination
         mMap.addMarker(new MarkerOptions().position(destination).snippet(placeDetails).title(placeName));
 
         //move map camera
@@ -177,7 +175,11 @@ public class PlaceMapsActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
 
-
+    /**
+     * on click listener method
+     *
+     * @param v
+     */
     public void onClick(View v){
         int id = v.getId();
     }

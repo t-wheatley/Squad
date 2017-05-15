@@ -411,7 +411,7 @@ public class NewMeetupActivity extends AppCompatActivity
     }
 
     /**
-     * Method called on submit button press, validates the proposed Meetup.
+     * Method called on submit button press, validates the proposed meetup.
      */
     private void submitMeetup()
     {

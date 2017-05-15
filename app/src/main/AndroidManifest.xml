@@ -23,7 +23,6 @@
         </activity>
         <activity android:name=".activities.LoginActivity"/>
         <activity android:name=".activities.SquadListActivity" />
-        <activity android:name=".location.GeocoderActivity" />
         <activity android:name=".activities.NewMeetupActivity" />
         <activity
             android:name=".activities.MeetupDetailActivity"
