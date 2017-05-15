@@ -46,40 +46,33 @@ import uk.ac.tees.donut.squad.users.FBUser;
  */
 public class SquadPostActivity extends AppCompatActivity
 {
-    // Firebase
+    private static final String TAG = "Auth";
+    boolean burger = false;
     FirebaseUser firebaseUser;
-    private DatabaseReference mDatabase;
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
-    private FirebaseRecyclerAdapter mAdapter;
-
-    // Loading Overlay
-    RelativeLayout loadingOverlay;
     TextView loadingText;
-
-    // Activity UI
+    int loadingCount;
+    RelativeLayout loadingOverlay;
+    FBUser user;
     private Button btnPost;
-    private EditText Txtbox;
-    private TextView listText;
-    private ImageView profileImage;
     private LinearLayout burgerMenu;
     private FloatingActionButton fab;
     private TextView title;
-    boolean burger = false;
-
-    // RecyclerView
     private RecyclerView mRecyclerView;
-    private LinearLayoutManager mLayoutManager;
-    private RecyclerView.AdapterDataObserver mObserver;
-
-    // Variables
-    int loadingCount;
-    FBUser user;
+    private EditText txtBox;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
     private String squadId;
     private String post;
-
-    // Final values
-    private static final String TAG = "Auth";
+    private DatabaseReference mDatabase;
+    private LinearLayoutManager mLayoutManager;
+    private FirebaseRecyclerAdapter mAdapter;
+    private FirebaseRecyclerAdapter pAdapter;
+    private TextView listText;
+    private RecyclerView.AdapterDataObserver mObserver;
+    private ImageView profileImage;
+    private EditText txtComment;
+    private View btnView;
+    private RecyclerView commentsRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -87,17 +80,10 @@ public class SquadPostActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_squad_post);
 
-        // Display loading overlay
-        loadingOverlay = (RelativeLayout) this.findViewById(R.id.loading_overlay);
-        loadingText = (TextView) this.findViewById(R.id.loading_overlay_text);
-        loadingText.setText("Loading Posts...");
-        loadingOverlay.setVisibility(View.VISIBLE);
-        loadingCount = 1;
-
-        // Initialising UI Elements
-        Txtbox = (EditText) findViewById(R.id.txtboxPost);
+        txtBox = (EditText) findViewById(R.id.txtboxPost);
         btnPost = (Button) findViewById(R.id.btnPost);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        commentsRecyclerView = (RecyclerView) findViewById(R.id.commentRV);
         listText = (TextView) findViewById(R.id.squadPost_textView);
         profileImage = (ImageView) findViewById(R.id.userPP);
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -108,23 +94,26 @@ public class SquadPostActivity extends AppCompatActivity
         // Getting the reference for the Firebase Realtime Database
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
+        // Display loading overlay
+        loadingOverlay = (RelativeLayout) this.findViewById(R.id.loading_overlay);
+        loadingText = (TextView) this.findViewById(R.id.loading_overlay_text);
+        loadingText.setText("Loading Posts...");
+        loadingOverlay.setVisibility(View.VISIBLE);
+        loadingCount = 1;
+
         // Gets the extra passed from the last activity
         Intent detail = getIntent();
         Bundle b = detail.getExtras();
 
-        if (b != null)
-        {
+        if (b != null) {
             // Collects the squadId passed from the RecyclerView
             squadId = (String) b.get("squadId");
-        } else
-        {
+        } else {
             new AlertDialog.Builder(SquadPostActivity.this)
                     .setTitle("Error")
                     .setMessage("The squad went missing somewhere, please try again.")
-                    .setPositiveButton("Back", new DialogInterface.OnClickListener()
-                    {
-                        public void onClick(DialogInterface dialog, int which)
-                        {
+                    .setPositiveButton("Back", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
                             finish();
                         }
                     })
@@ -133,15 +122,12 @@ public class SquadPostActivity extends AppCompatActivity
         }
 
         // onClick listener for the post button
-        btnPost.setOnClickListener(new View.OnClickListener()
-        {
+        btnPost.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 // When pressed calls the createPost method
-                if (Txtbox.getText().toString() != "")
-                {
-                    post = Txtbox.getText().toString();
+                if (txtBox.getText().toString() != "") {
+                    post=txtBox.getText().toString();
                     createPost(post, squadId);
                     burgerMenu.setVisibility(View.GONE);
                     fab.setImageResource(R.drawable.ic_speechbubble);
@@ -150,29 +136,22 @@ public class SquadPostActivity extends AppCompatActivity
             }
         });
 
-        // AuthListener used to check if the user is signed in
         mAuth = FirebaseAuth.getInstance();
-        mAuthListener = new FirebaseAuth.AuthStateListener()
-        {
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth)
-            {
-                if (firebaseUser != null)
-                {
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                if (firebaseUser != null) {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + firebaseUser.getUid());
-                } else
-                {
+                } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
 
                     new AlertDialog.Builder(SquadPostActivity.this)
                             .setTitle("Sign-in Error")
                             .setMessage("You do not appear to be signed in, please try again.")
-                            .setPositiveButton("Back", new DialogInterface.OnClickListener()
-                            {
-                                public void onClick(DialogInterface dialog, int which)
-                                {
+                            .setPositiveButton("Back", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
                                     finish();
                                 }
                             })
@@ -186,12 +165,14 @@ public class SquadPostActivity extends AppCompatActivity
         mLayoutManager = new LinearLayoutManager(this);
         mLayoutManager.setStackFromEnd(true); //supposed to reverse order.. but don't think it does
         mRecyclerView.setLayoutManager(mLayoutManager);
+        commentsRecyclerView.setLayoutManager();
 
-        // Get the Squad's Posts
+        //Get the Squad's Posts
         getPost(squadId);
 
-        // Displaying the mAdapter in the recyclerView
+        //Display the Adapter in the recyclerView
         mRecyclerView.setAdapter(mAdapter);
+        commentsRecyclerView.setAdapter(pAdapter);
     }
 
     /**
@@ -202,17 +183,17 @@ public class SquadPostActivity extends AppCompatActivity
     public void getPost(String squadId)
     {
         // Database reference to get posts
-        Query postsQuery = mDatabase.child("posts").orderByChild("squad").equalTo(squadId);
+        Query userQuery = mDatabase.child("posts").orderByChild("squad").equalTo(squadId);
 
         // Check to see if any Posts exist
-        checkForEmpty(postsQuery);
+        checkForEmpty(userQuery);
 
         // Loads the adapter with all the Posts returned by the query
         mAdapter = new FirebaseRecyclerAdapter<Post, PostViewHolder>(
                 Post.class,
                 R.layout.item_post,
                 PostViewHolder.class,
-                postsQuery
+                userQuery
         )
         {
             @Override
@@ -231,20 +212,16 @@ public class SquadPostActivity extends AppCompatActivity
      */
     public void checkForEmpty(Query query)
     {
-        query.addListenerForSingleValueEvent(new ValueEventListener()
-        {
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot)
-            {
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 // Hide the loading screen
                 loadingOverlay.setVisibility(View.GONE);
 
-                // Checks if Squads will be found
-                if (dataSnapshot.hasChildren())
-                {
+                // Checks if posts will be found
+                if (dataSnapshot.hasChildren()) {
                     listText.setVisibility(View.GONE);
-                } else
-                {
+                } else {
                     listText.setVisibility(View.VISIBLE);
                 }
 
@@ -294,68 +271,6 @@ public class SquadPostActivity extends AppCompatActivity
         mAdapter.registerAdapterDataObserver(mObserver);
     }
 
-    @Override
-    public void onStart()
-    {
-        super.onStart();
-        // Adding a listener for the AuthState
-        mAuth.addAuthStateListener(mAuthListener);
-    }
-
-    @Override
-    public void onStop()
-    {
-        super.onStop();
-        if (mAuthListener != null)
-        {
-            // Removing the listener for the AuthState
-            mAuth.removeAuthStateListener(mAuthListener);
-        }
-    }
-
-    /**
-     * Method to post a Post to the Firebase Realtime Database.
-     *
-     * @param post    The text of the Post.
-     * @param squadId The Squad the Post belongs to.
-     */
-    public void createPost(String post, String squadId)
-    {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null)
-        {
-            // User is signed in
-            // Creating a new post node and getting the key value
-            String postId = mDatabase.child("posts").push().getKey();
-
-            // Getting current DateTime
-            Calendar currentDateTime = Calendar.getInstance();
-            Long dateTime = currentDateTime.getTimeInMillis() / 1000L;
-
-            // Creating a post object
-            Post postObject = new Post(user.getUid(), squadId, post, postId, dateTime);
-
-            // Pushing the post to the "posts" node using the postId
-            mDatabase.child("posts").child(postId).setValue(postObject);
-
-            finish();
-            startActivity(getIntent());
-        } else
-        {
-            // No user is signed in
-            Toast.makeText(this, "Something went wrong, please try again.", Toast.LENGTH_SHORT).show();
-        }
-
-
-    }
-
-    /**
-     * Method that populates the viewHolder with the info it needs.
-     *
-     * @param viewHolder The ViewHolder to be populated.
-     * @param model      The Post to be displayed.
-     * @param position   The position of the ViewHolder.
-     */
     public void populatePostViewHolder(final SquadPostActivity.PostViewHolder viewHolder, final Post model, int position)
     {
         // Display the Post
@@ -363,21 +278,20 @@ public class SquadPostActivity extends AppCompatActivity
 
         // Display the post DateTime
         SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy 'at' h:mm a");
-        String startDate = sdf.format(model.getDateTime() * 1000L);
-        // Display here
+        String postDate = sdf.format(model.getDateTime() * 1000L);
+
+        viewHolder.date.setText(postDate);
+        viewHolder.postId=model.getId();
 
         // Getting the user's name and picture
         mDatabase.child("users").child(model.getUser()).addListenerForSingleValueEvent(new ValueEventListener()
         {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot)
-            {
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 // Getting user
                 user = dataSnapshot.getValue(FBUser.class);
 
-                if (user != null)
-                {
-
+                if (user != null) {
                     // Displaying the user's name
                     viewHolder.nameField.setText(user.getName());
 
@@ -386,20 +300,16 @@ public class SquadPostActivity extends AppCompatActivity
                             .load(user.getPicture().trim())
                             .diskCacheStrategy(DiskCacheStrategy.NONE)
                             .skipMemoryCache(true)
-                            .listener(new RequestListener<String, GlideDrawable>()
-                            {
+                            .listener(new RequestListener<String, GlideDrawable>() {
                                 @Override
-                                public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource)
-                                {
+                                public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
                                     return false;
                                 }
 
                                 @Override
-                                public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource)
-                                {
-                                    // If profileName != default and profileImage isnt null
-                                    if (profileImage != null)
-                                    {
+                                public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                                    // If profileImage isnt null
+                                    if (profileImage != null) {
                                         // Hiding loading overlay
                                         loadingOverlay.setVisibility(View.GONE);
                                     }
@@ -433,6 +343,21 @@ public class SquadPostActivity extends AppCompatActivity
             }
         });
 
+        //OnClick
+        viewHolder.btnComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //get the post id the button that was clicked in
+                String pId = model.getId();
+
+                //get the view the button that was clicked in
+                btnView=viewHolder.mView;
+
+                txtComment= (EditText) btnView.findViewById(R.id.commentBox);
+                createComment(txtComment.getText().toString(), pId);
+            }
+        });
+        getComment(model.getId());
 
         // If loading the last item
         if (mAdapter.getItemCount() == loadingCount)
@@ -444,23 +369,177 @@ public class SquadPostActivity extends AppCompatActivity
         loadingCount++;
     }
 
-    /**
-     * Static class to be filled by populatePostViewHolder.
-     */
-    public static class PostViewHolder extends RecyclerView.ViewHolder
-    {
-        View mView;
-        TextView nameField;
-        TextView postField;
-        ImageView profilePic;
+    public void getComment(String squadId) {
+        // Database reference to get posts
+        Query userQuery = mDatabase.child("posts").child("comments");
 
-        public PostViewHolder(View v)
+        pAdapter = new FirebaseRecyclerAdapter<Post, CommentViewHolder>(
+                Post.class,
+                R.layout.item_comment,
+                CommentViewHolder.class,
+                userQuery
+        ) {
+            @Override
+            protected void populateViewHolder(CommentViewHolder viewHolder, final Post model, int position) {
+                populateCommentViewHolder(viewHolder, model, position);
+            }
+        };
+    }
+
+    public void populateCommentViewHolder(final SquadPostActivity.CommentViewHolder viewHolder, final Post model, int position)
+    {
+        // Display the Post
+        viewHolder.postField.setText(model.getPost());
+
+        // Display the post DateTime
+        SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy 'at' h:mm a");
+        String postDate = sdf.format(model.getDateTime() * 1000L);
+        viewHolder.date.setText(postDate);
+
+        // Getting the user's name and picture
+        mDatabase.child("users").child(model.getUser()).addListenerForSingleValueEvent(new ValueEventListener()
         {
-            super(v);
-            mView = v;
-            nameField = (TextView) v.findViewById(R.id.userName);
-            postField = (TextView) v.findViewById(R.id.txtPost);
-            profilePic = (ImageView) v.findViewById(R.id.userPP);
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Getting user
+                user = dataSnapshot.getValue(FBUser.class);
+
+                if (user != null) {
+
+                    // Displaying the user's name
+                    viewHolder.nameField.setText(user.getName());
+
+                    // Displays the user's photo in the ImageView
+                    Glide.with(SquadPostActivity.this)
+                            .load(user.getPicture().trim())
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .skipMemoryCache(true)
+                            .listener(new RequestListener<String, GlideDrawable>() {
+                                @Override
+                                public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                                    return false;
+                                }
+
+                                @Override
+                                public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                                    // If profileImage isnt null
+                                    if (profileImage != null) {
+                                        // Hiding loading overlay
+                                        loadingOverlay.setVisibility(View.GONE);
+                                    }
+                                    return false;
+                                }
+                            })
+                            .dontAnimate()
+                            .fitCenter()
+                            .error(R.drawable.com_facebook_profile_picture_blank_portrait)
+                            .into(viewHolder.profilePic);
+                } else
+                {
+                    new AlertDialog.Builder(SquadPostActivity.this)
+                            .setTitle("Something went wrong!")
+                            .setMessage("We do not appear to be able to find this user, please try again.")
+                            .setPositiveButton("Back", new DialogInterface.OnClickListener()
+                            {
+                                public void onClick(DialogInterface dialog, int which)
+                                {
+                                    finish();
+                                }
+                            })
+                            .setCancelable(false)
+                            .show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError)
+            {
+            }
+        });
+
+        getComment(model.getId());
+
+        // If loading the last item
+        if (mAdapter.getItemCount() == loadingCount)
+        {
+            // Hide the loading overlay
+            loadingOverlay.setVisibility(View.GONE);
+        }
+
+        loadingCount++;
+    }
+
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    public void onStop()
+    {
+        super.onStop();
+        if (mAuthListener != null)
+        {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
+    }
+
+    // Takes a post and pushes it to the Firebase Realtime Database (Without extras)
+    public void createPost(String post, String squadId)
+    {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null)
+        {
+            // User is signed in
+            // Creating a new post node and getting the key value
+            String postId = mDatabase.child("posts").push().getKey();
+
+            // Getting current DateTime
+            Calendar currentDateTime = Calendar.getInstance();
+            Long dateTime = currentDateTime.getTimeInMillis() / 1000L;
+
+            // Creating a post object
+            Post postObject = new Post(user.getUid(), squadId, post, postId, dateTime);
+
+            // Pushing the post to the "posts" node using the postId
+            mDatabase.child("posts").child(postId).setValue(postObject);
+
+            finish();
+            startActivity(getIntent());
+        } else
+        {
+            // No user is signed in
+            Toast.makeText(this, "Something went wrong, please try again.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // Take a comment and pushes it to the Firebase Realtime Database
+    public void createComment(String post, String pId){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null)
+        {
+            // User is signed in
+            // Creating a new comment node and getting the key value
+            String postId = mDatabase.child("posts").child(pId).child("comments").push().getKey();
+
+            // Getting current DateTime
+            Calendar currentDateTime = Calendar.getInstance();
+            Long dateTime = currentDateTime.getTimeInMillis() / 1000L;
+
+            // Creating a post object
+            Post postObject = new Post(user.getUid(), post, postId, dateTime);
+
+            // Pushing the post to the "comment" node using the postId
+            mDatabase.child("posts").child(pId).child("comments").child(postId).setValue(postObject);
+
+            finish();
+            startActivity(getIntent());
+        } else
+        {
+            // No user is signed in
+            Toast.makeText(this, "Something went wrong, please try again.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -477,6 +556,50 @@ public class SquadPostActivity extends AppCompatActivity
             burger = false;
             fab.setImageResource(R.drawable.ic_speechbubble);
             burgerMenu.setVisibility(View.GONE);
+        }
+    }
+
+    public static class PostViewHolder extends RecyclerView.ViewHolder
+    {
+        View mView;
+        Button btnComment;
+        TextView nameField;
+        TextView postField;
+        ImageView profilePic;
+        TextView date;
+        String postId;
+
+        public PostViewHolder(View v)
+        {
+            super(v);
+            mView = v;
+            btnComment = (Button) v.findViewById(R.id.postBtn);
+            nameField = (TextView) v.findViewById(R.id.userName);
+            postField = (TextView) v.findViewById(R.id.txtPost);
+            profilePic = (ImageView) v.findViewById(R.id.userPP);
+            date = (TextView) v.findViewById((R.id.txtDate));
+        }
+    }
+
+    /**
+     * Static class to be filled by populatePostViewHolder.
+     */
+    public static class CommentViewHolder extends RecyclerView.ViewHolder
+    {
+        View mView;
+        TextView nameField;
+        TextView postField;
+        ImageView profilePic;
+        TextView date;
+
+        public CommentViewHolder(View v)
+        {
+            super(v);
+            mView = v;
+            nameField = (TextView) v.findViewById(R.id.cUserName);
+            postField = (TextView) v.findViewById(R.id.cTxtPost);
+            profilePic = (ImageView) v.findViewById(R.id.cUserPP);
+            date = (TextView) v.findViewById((R.id.cTxtDate));
         }
     }
 }
