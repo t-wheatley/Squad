@@ -83,7 +83,6 @@ public class SquadPostActivity extends AppCompatActivity
         txtBox = (EditText) findViewById(R.id.txtboxPost);
         btnPost = (Button) findViewById(R.id.btnPost);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        commentsRecyclerView = (RecyclerView) findViewById(R.id.commentRV);
         listText = (TextView) findViewById(R.id.squadPost_textView);
         profileImage = (ImageView) findViewById(R.id.userPP);
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -165,14 +164,12 @@ public class SquadPostActivity extends AppCompatActivity
         mLayoutManager = new LinearLayoutManager(this);
         mLayoutManager.setStackFromEnd(true); //supposed to reverse order.. but don't think it does
         mRecyclerView.setLayoutManager(mLayoutManager);
-        commentsRecyclerView.setLayoutManager();
 
         //Get the Squad's Posts
         getPost(squadId);
 
         //Display the Adapter in the recyclerView
         mRecyclerView.setAdapter(mAdapter);
-        commentsRecyclerView.setAdapter(pAdapter);
     }
 
     /**
@@ -295,6 +292,7 @@ public class SquadPostActivity extends AppCompatActivity
                     // Displaying the user's name
                     viewHolder.nameField.setText(user.getName());
 
+
                     // Displays the user's photo in the ImageView
                     Glide.with(SquadPostActivity.this)
                             .load(user.getPicture().trim())
@@ -320,6 +318,9 @@ public class SquadPostActivity extends AppCompatActivity
                             .fitCenter()
                             .error(R.drawable.com_facebook_profile_picture_blank_portrait)
                             .into(viewHolder.profilePic);
+
+                    //comments
+
                 } else
                 {
                     new AlertDialog.Builder(SquadPostActivity.this)
@@ -568,6 +569,7 @@ public class SquadPostActivity extends AppCompatActivity
         ImageView profilePic;
         TextView date;
         String postId;
+        RecyclerView commentRV;
 
         public PostViewHolder(View v)
         {
@@ -577,6 +579,7 @@ public class SquadPostActivity extends AppCompatActivity
             nameField = (TextView) v.findViewById(R.id.userName);
             postField = (TextView) v.findViewById(R.id.txtPost);
             profilePic = (ImageView) v.findViewById(R.id.userPP);
+            commentRV = (RecyclerView) v.findViewById(R.id.commentRV);
             date = (TextView) v.findViewById((R.id.txtDate));
         }
     }

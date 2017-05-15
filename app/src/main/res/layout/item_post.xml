@@ -12,7 +12,7 @@
         app:cardBackgroundColor="@color/colorPrimary"
         app:cardCornerRadius="2dp"
         android:elevation="3dp"
-        >
+        android:id="@+id/cardView">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -49,6 +49,14 @@
                     android:id="@+id/userName"
                     />
 
+                <TextView
+                    android:text="TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txtDate"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true" />
+
             </RelativeLayout>
 
             <TextView
@@ -63,7 +71,7 @@
                 />
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyclerView"
+                android:id="@+id/commentRV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:scrollbars="vertical"
