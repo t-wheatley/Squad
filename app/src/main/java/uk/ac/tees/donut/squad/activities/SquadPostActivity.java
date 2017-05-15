@@ -184,6 +184,7 @@ public class SquadPostActivity extends AppCompatActivity
 
         // Setting up the layout manager
         mLayoutManager = new LinearLayoutManager(this);
+        mLayoutManager.setStackFromEnd(true); //supposed to reverse order.. but don't think it does
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // Get the Squad's Posts
