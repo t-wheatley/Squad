@@ -160,10 +160,10 @@
 
         <include
             layout="@layout/element_bottom_navigation"
+            android:id="@+id/navigation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_below="@+id/fragmentHolder"
             />
 
 </RelativeLayout>
