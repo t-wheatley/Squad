@@ -24,8 +24,10 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -50,8 +52,7 @@ import uk.ac.tees.donut.squad.posts.LocPlace;
  * Activity which allows the user to view the details of a Place.
  */
 
-public class PlaceDetailsActivity extends BaseActivity
-{
+public class PlaceDetailsActivity extends BaseActivity {
     // Firebase
     DatabaseReference mDatabase;
     FirebaseUser firebaseUser;
@@ -87,8 +88,7 @@ public class PlaceDetailsActivity extends BaseActivity
     int imagePosition;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_details);
 
@@ -109,20 +109,16 @@ public class PlaceDetailsActivity extends BaseActivity
         burgerMenu = (LinearLayout) findViewById(R.id.placeDetails_burgerMenu);
         hostMenu = (LinearLayout) findViewById(R.id.placeDetails_hostMenu);
         mapBtn = (Button) findViewById(R.id.mapButton);
-        mapBtn.setOnClickListener(new View.OnClickListener()
-        {
+        mapBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 openMapLocation();
             }
         });
         meetupsBtn = (Button) findViewById(R.id.meetupsButton);
-        meetupsBtn.setOnClickListener(new View.OnClickListener()
-        {
+        meetupsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 viewMeetups();
             }
         });
@@ -130,19 +126,17 @@ public class PlaceDetailsActivity extends BaseActivity
         gallery = (ImageSwitcher) findViewById(R.id.placeDetails_gallery);
         gallery.setFactory(new ViewSwitcher.ViewFactory() {
 
-        public View makeView() {
-            return new ImageView(PlaceDetailsActivity.this);
-        }
-    });
+            public View makeView() {
+                return new ImageView(PlaceDetailsActivity.this);
+            }
+        });
 
         //if there are no pictures
         boolean noPics = true; //TEMPORARY TILL WE CAN ATTEMPT AT LOADING PICS
-        if (noPics)
-        {
+        if (noPics) {
             //keeps the noPic text, and changes the height of the layout so it's not too big
             gallery.setVisibility(View.GONE);
-        } else
-        {
+        } else {
             //gets rid of the noPic text
             noPic.setVisibility(View.GONE);
             gallery.setVisibility(View.VISIBLE);
@@ -154,20 +148,16 @@ public class PlaceDetailsActivity extends BaseActivity
         // Gets extras passd from last activity
         Intent detail = getIntent();
         Bundle b = detail.getExtras();
-        if (b != null)
-        {
+        if (b != null) {
             placeId = (String) b.get("placeId");
             this.setTitle("Place Details");
-        } else
-        {
+        } else {
             new AlertDialog.Builder(PlaceDetailsActivity.this)
                     .setTitle("Error")
                     .setMessage("The place went missing somewhere, please try again")
-                    .setPositiveButton("Back", new DialogInterface.OnClickListener()
-                    {
+                    .setPositiveButton("Back", new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which)
-                        {
+                        public void onClick(DialogInterface dialog, int which) {
                             finish();
                         }
                     })
@@ -190,28 +180,23 @@ public class PlaceDetailsActivity extends BaseActivity
     }
 
     @Override
-    int getContentViewId()
-    {
+    int getContentViewId() {
         return R.layout.activity_place_details;
     }
 
     @Override
-    int getNavigationMenuItemId()
-    {
+    int getNavigationMenuItemId() {
         return R.id.menu_places;
     }
 
     /**
      * Uses the placeId to create a Place object and display its details.
      */
-    public void loadPlace()
-    {
+    public void loadPlace() {
         // Reads the data from the placeId in Firebase
-        mDatabase.child("places").child(placeId).addListenerForSingleValueEvent(new ValueEventListener()
-        {
+        mDatabase.child("places").child(placeId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot)
-            {
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 // Gets the data from Firebase and stores it in a Place class
                 place = dataSnapshot.getValue(LocPlace.class);
 
@@ -223,8 +208,7 @@ public class PlaceDetailsActivity extends BaseActivity
                 latitude = place.getLocLat();
 
                 // If signed-in user is the Host of the Meetup
-                if (firebaseUser.getUid().equals(place.getHost()))
-                {
+                if (firebaseUser.getUid().equals(place.getHost())) {
                     // Display editing controls
                     editMode();
                 }
@@ -234,8 +218,7 @@ public class PlaceDetailsActivity extends BaseActivity
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError)
-            {
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         });
@@ -244,17 +227,14 @@ public class PlaceDetailsActivity extends BaseActivity
     /**
      * Uses the squadId of the Meetup to load the name of the Squad it belongs to.
      */
-    public void loadSquad()
-    {
+    public void loadSquad() {
         // Setting the loading text
         loadingText.setText("Getting the Place's Squad...");
 
         // Get Squad name from id
-        mDatabase.child("squads").child(place.getSquad()).addListenerForSingleValueEvent(new ValueEventListener()
-        {
+        mDatabase.child("squads").child(place.getSquad()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot)
-            {
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 // Displays the Squad's name
                 squad.setText(dataSnapshot.child("name").getValue(String.class));
 
@@ -262,8 +242,7 @@ public class PlaceDetailsActivity extends BaseActivity
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError)
-            {
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         });
@@ -272,17 +251,14 @@ public class PlaceDetailsActivity extends BaseActivity
     /**
      * Method to download and display the Place's pictures.
      */
-    public void loadPictures()
-    {
+    public void loadPictures() {
         HashMap<String, String> pictures = place.getPictures();
 
-        if(pictures != null)
-        {
+        if (pictures != null) {
             noPic.setVisibility(View.GONE);
             gallery.setVisibility(View.VISIBLE);
 
-            for(final String pictureUrl : pictures.values())
-            {
+            for (final String pictureUrl : pictures.values()) {
                 images.add(pictureUrl);
 
             }
@@ -292,16 +268,14 @@ public class PlaceDetailsActivity extends BaseActivity
 
             // Hiding loading overlay
             loadingOverlay.setVisibility(View.GONE);
-        } else
-        {
+        } else {
             // No pictures
             // Hiding loading overlay
             loadingOverlay.setVisibility(View.GONE);
         }
     }
 
-    public void displayImage(String pictureUrl)
-    {
+    public void displayImage(String pictureUrl) {
         imageLoading.setVisibility(View.VISIBLE);
 
         // Download and display using Glide
@@ -326,8 +300,7 @@ public class PlaceDetailsActivity extends BaseActivity
                 .into((ImageView) gallery.getCurrentView());
     }
 
-    public void nextImage(View view)
-    {
+    public void nextImage(View view) {
         imagePosition++;
         if (imagePosition == images.size()) {
             imagePosition = 0;
@@ -344,8 +317,7 @@ public class PlaceDetailsActivity extends BaseActivity
      * @param data        An Intent that carries the data of the result.
      */
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Getting a bitmap from the Intent
         final Bitmap bitmap = ImagePicker.getImageFromResult(this, requestCode, resultCode, data);
 
@@ -357,8 +329,7 @@ public class PlaceDetailsActivity extends BaseActivity
                 uniqueId);
 
         // If Bitmap exists
-        if (bitmap != null)
-        {
+        if (bitmap != null) {
             loadingText.setText("Uploading photo...");
             loadingOverlay.setVisibility(View.VISIBLE);
 
@@ -371,30 +342,38 @@ public class PlaceDetailsActivity extends BaseActivity
             UploadTask uploadTask = placeStorage.putBytes(bytes);
 
             // Upload Listener
-            uploadTask.addOnFailureListener(new OnFailureListener()
-            {
+            uploadTask.addOnFailureListener(new OnFailureListener() {
                 @Override
-                public void onFailure(@NonNull Exception exception)
-                {
+                public void onFailure(@NonNull Exception exception) {
                     // If upload failed
                     loadingOverlay.setVisibility(View.GONE);
                     Toast.makeText(PlaceDetailsActivity.this, "Upload failed, please try again!"
                             , Toast.LENGTH_SHORT);
                 }
-            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>()
-            {
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
-                {
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     // If upload successful
                     // Push the download URL to the Place's pictures
-                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                    mDatabase.child("places").child(placeId).child("pictures").child(uniqueId).setValue(downloadUrl.toString());
-                    images.add(downloadUrl.toString());
+                    final Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                    mDatabase.child("places").child(placeId).child("pictures").child(uniqueId).setValue(downloadUrl.toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            // Notify user
+                            loadingOverlay.setVisibility(View.GONE);
+                            Toast.makeText(PlaceDetailsActivity.this, "Photo uploaded!", Toast.LENGTH_SHORT);
 
-                    // Notify user
-                    loadingOverlay.setVisibility(View.GONE);
-                    Toast.makeText(PlaceDetailsActivity.this, "Photo uploaded!", Toast.LENGTH_SHORT);
+                            if (images.isEmpty()) {
+                                gallery.setVisibility(View.VISIBLE);
+                                noPic.setVisibility(View.GONE);
+
+                                images.add(downloadUrl.toString());
+                                displayImage(downloadUrl.toString());
+                            } else {
+                                images.add(downloadUrl.toString());
+                            }
+                        }
+                    });
                 }
             });
         }
@@ -405,17 +384,17 @@ public class PlaceDetailsActivity extends BaseActivity
      *
      * @param view The ImageView holding the Meetup's picture.
      */
-    public void selectImage(View view)
-    {
+    public void selectImage(View view) {
         // Click on image button
         ImagePicker.pickImage(this, "Select your image:");
+
+        fab(view);
     }
 
     /**
      * Method to display the Place on the PlaceMapsActivity.
      */
-    private void openMapLocation()
-    {
+    private void openMapLocation() {
         Intent newDetail = new Intent(PlaceDetailsActivity.this, PlaceMapsActivity.class);
         newDetail.putExtra("latitude", latitude);
         newDetail.putExtra("longitude", longitude);
@@ -429,8 +408,7 @@ public class PlaceDetailsActivity extends BaseActivity
      *
      * @param view The TextEdit holding the Squad's name.
      */
-    public void viewSquad(View view)
-    {
+    public void viewSquad(View view) {
         //Sends the id to the details activity
         Intent detail = new Intent(PlaceDetailsActivity.this, SquadDetailActivity.class);
         detail.putExtra("squadId", place.getSquad());
@@ -440,8 +418,7 @@ public class PlaceDetailsActivity extends BaseActivity
     /**
      * Method to view the Place's Meetups.
      */
-    public void viewMeetups()
-    {
+    public void viewMeetups() {
         // Loads the MeetupsList activity displaying the Meetups that are at this place
         Intent intent = new Intent(this, MeetupsListActivity.class);
         intent.putExtra("placeId", placeId);
@@ -451,20 +428,16 @@ public class PlaceDetailsActivity extends BaseActivity
     /**
      * Method that displays editing controls for the Place if the signed-in User is the Host.
      */
-    public void editMode()
-    {
+    public void editMode() {
         hostMenu.setVisibility(View.VISIBLE);
     }
 
-    public void fab(View view)
-    {
-        if (burger == false)
-        {
+    public void fab(View view) {
+        if (burger == false) {
             burger = true;
             burgerMenu.setVisibility(View.VISIBLE);
             fab.setImageResource(R.drawable.ic_cross);
-        } else
-        {
+        } else {
             burger = false;
             burgerMenu.setVisibility(View.GONE);
             fab.setImageResource(R.drawable.ic_burger);
