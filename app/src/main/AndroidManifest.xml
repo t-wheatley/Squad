@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="uk.ac.tees.donut.squad">
+          package="uk.ac.tees.donut.squad">
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -55,7 +55,8 @@
             android:name=".activities.MapActivity"
             android:label="@string/title_activity_map" />
         <activity android:name=".activities.MeetupsListActivity" />
-        <activity android:name=".activities.PlaceDetailsActivity" />
+        <activity android:name=".activities.PlaceDetailsActivity"
+            android:configChanges="orientation|screenSize" />
         <activity android:name=".activities.NewPlaceActivity" />
         <activity android:name=".activities.SquadPostActivity"></activity>
         <activity android:name=".activities.PlacesListActivity"/>
