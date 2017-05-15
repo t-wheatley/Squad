@@ -101,6 +101,9 @@ public class SquadPostActivity extends AppCompatActivity
         listText = (TextView) findViewById(R.id.squadPost_textView);
         profileImage = (ImageView) findViewById(R.id.userPP);
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        fab = (FloatingActionButton) findViewById(R.id.squadPost_fab);
+        burgerMenu = (LinearLayout) findViewById(R.id.squadPost_burgerMenu);
+        title = (TextView) findViewById(R.id.squadPost_title);
 
         // Getting the reference for the Firebase Realtime Database
         mDatabase = FirebaseDatabase.getInstance().getReference();

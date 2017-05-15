@@ -23,9 +23,11 @@
             android:id="@+id/userPP"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_margin="16dp"
+            android:layout_margin="10dp"
             app:civ_border_width="2dp"
-            app:civ_border_color="@color/colorPrimaryDark"/>
+            app:civ_border_color="@color/colorPrimaryDark"
+                android:elevation="10dp"
+                />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -40,7 +42,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
                     android:layout_marginEnd="10dp"
-                    android:paddingStart="82dp"
+                    android:paddingStart="76dp"
                     android:text="User Name"
                     android:textColor="@color/tw__solid_white"
                     android:textStyle="bold"
@@ -53,7 +55,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/nameBar"
-                android:paddingStart="82dp"
+                android:paddingStart="76dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginBottom="10dp"
