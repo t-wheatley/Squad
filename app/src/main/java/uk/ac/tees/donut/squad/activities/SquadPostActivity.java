@@ -72,7 +72,6 @@ public class SquadPostActivity extends AppCompatActivity
     private ImageView profileImage;
     private EditText txtComment;
     private View btnView;
-    private RecyclerView commentsRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -319,7 +318,9 @@ public class SquadPostActivity extends AppCompatActivity
                             .error(R.drawable.com_facebook_profile_picture_blank_portrait)
                             .into(viewHolder.profilePic);
 
-                    //comments
+                    viewHolder.commentRV.setLayoutManager(mLayoutManager);
+
+                    viewHolder.commentRV.setAdapter(pAdapter);
 
                 } else
                 {
@@ -435,6 +436,8 @@ public class SquadPostActivity extends AppCompatActivity
                             .fitCenter()
                             .error(R.drawable.com_facebook_profile_picture_blank_portrait)
                             .into(viewHolder.profilePic);
+
+
                 } else
                 {
                     new AlertDialog.Builder(SquadPostActivity.this)
@@ -461,7 +464,7 @@ public class SquadPostActivity extends AppCompatActivity
         getComment(model.getId());
 
         // If loading the last item
-        if (mAdapter.getItemCount() == loadingCount)
+        if (pAdapter.getItemCount() == loadingCount)
         {
             // Hide the loading overlay
             loadingOverlay.setVisibility(View.GONE);
