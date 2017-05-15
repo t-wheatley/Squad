@@ -141,6 +141,7 @@ public class SquadPostActivity extends AppCompatActivity
                     post = Txtbox.getText().toString();
                     createPost(post, squadId);
                     burgerMenu.setVisibility(View.GONE);
+                    fab.setImageResource(R.drawable.ic_speechbubble);
                     burger = false;
                 }
             }
@@ -470,7 +471,7 @@ public class SquadPostActivity extends AppCompatActivity
         else
         {
             burger = false;
-            fab.setImageResource(R.drawable.ic_speechBubble);
+            fab.setImageResource(R.drawable.ic_speechbubble);
             burgerMenu.setVisibility(View.GONE);
         }
     }
