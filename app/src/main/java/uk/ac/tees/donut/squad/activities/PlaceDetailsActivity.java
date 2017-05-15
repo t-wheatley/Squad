@@ -5,15 +5,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageSwitcher;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -22,25 +19,30 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import uk.ac.tees.donut.squad.R;
 import uk.ac.tees.donut.squad.location.PlaceMapsActivity;
-import uk.ac.tees.donut.squad.posts.AddressPlace;
 import uk.ac.tees.donut.squad.posts.LocPlace;
+
+/**
+ * Activity which allows the user to view the details of a Place.
+ */
 
 public class PlaceDetailsActivity extends BaseActivity
 {
-
-    String placeId;
-
+    // Firebase
     DatabaseReference mDatabase;
     FirebaseUser firebaseUser;
+    FirebaseStorage firebaseStorage;
+    StorageReference placeStorage;
 
+    // Loading Overlay
     RelativeLayout loadingOverlay;
     TextView loadingText;
 
-    LocPlace place;
-
+    // Activity UI
     TextView placeName;
     TextView description;
     TextView noPic;
@@ -48,10 +50,6 @@ public class PlaceDetailsActivity extends BaseActivity
     TextView squad;
     Button mapBtn;
     Button meetupsBtn;
-
-    double latitude;
-    double longitude;
-
     ImageSwitcher gallery;
 
     boolean burger = false;
@@ -59,6 +57,11 @@ public class PlaceDetailsActivity extends BaseActivity
     LinearLayout burgerMenu;
     LinearLayout hostMenu;
 
+    // Variables
+    String placeId;
+    LocPlace place;
+    double latitude;
+    double longitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -72,13 +75,15 @@ public class PlaceDetailsActivity extends BaseActivity
         loadingText.setText("Loading Place...");
         loadingOverlay.setVisibility(View.VISIBLE);
 
-        //getting UI Elements
+        // Initialising UI Elements
         placeName = (TextView) findViewById(R.id.placeDetails_placeName);
         description = (TextView) findViewById(R.id.placeDetails_description);
         noPic = (TextView) findViewById(R.id.noPic);
         address = (TextView) findViewById(R.id.placeDetails_address);
         squad = (TextView) findViewById(R.id.placeDetails_squadName);
-
+        fab = (FloatingActionButton) findViewById(R.id.placeDetails_fab);
+        burgerMenu = (LinearLayout) findViewById(R.id.placeDetails_burgerMenu);
+        hostMenu = (LinearLayout) findViewById(R.id.placeDetails_hostMenu);
         mapBtn = (Button) findViewById(R.id.mapButton);
         mapBtn.setOnClickListener(new View.OnClickListener()
         {
@@ -88,7 +93,6 @@ public class PlaceDetailsActivity extends BaseActivity
                 openMapLocation();
             }
         });
-
         meetupsBtn = (Button) findViewById(R.id.meetupsButton);
         meetupsBtn.setOnClickListener(new View.OnClickListener()
         {
@@ -100,10 +104,6 @@ public class PlaceDetailsActivity extends BaseActivity
         });
 
         gallery = (ImageSwitcher) findViewById(R.id.placeDetails_gallery);
-
-        fab = (FloatingActionButton) findViewById(R.id.placeDetails_fab);
-        burgerMenu = (LinearLayout) findViewById(R.id.placeDetails_burgerMenu);
-        hostMenu = (LinearLayout) findViewById(R.id.placeDetails_hostMenu);
 
         //if there are no pictures
         boolean noPics = true; //TEMPORARY TILL WE CAN ATTEMPT AT LOADING PICS
@@ -118,12 +118,12 @@ public class PlaceDetailsActivity extends BaseActivity
             gallery.setVisibility(View.VISIBLE);
         }
 
-        //gets extras passd from last activity
-        Intent detail = getIntent();
-        Bundle b = detail.getExtras();
-
+        // Getting the current user
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
+        // Gets extras passd from last activity
+        Intent detail = getIntent();
+        Bundle b = detail.getExtras();
         if (b != null)
         {
             placeId = (String) b.get("placeId");
@@ -145,7 +145,11 @@ public class PlaceDetailsActivity extends BaseActivity
                     .show();
         }
 
+        // Getting the reference for the Firebase Realtime Database
         mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        // Getting the reference for the Firebase Storage
+        firebaseStorage = FirebaseStorage.getInstance();
 
         // Starts the loading chain
         // loadMeetup -> loadSquad
@@ -153,15 +157,20 @@ public class PlaceDetailsActivity extends BaseActivity
     }
 
     @Override
-    int getContentViewId() {
+    int getContentViewId()
+    {
         return R.layout.activity_place_details;
     }
 
     @Override
-    int getNavigationMenuItemId() {
+    int getNavigationMenuItemId()
+    {
         return R.id.menu_places;
     }
 
+    /**
+     * Uses the placeId to create a Place object and display its details.
+     */
     public void loadPlace()
     {
         // Reads the data from the placeId in Firebase
@@ -180,7 +189,7 @@ public class PlaceDetailsActivity extends BaseActivity
                 longitude = place.getLocLong();
                 latitude = place.getLocLat();
 
-
+                // Load the name of the Squad
                 loadSquad();
             }
 
@@ -192,11 +201,13 @@ public class PlaceDetailsActivity extends BaseActivity
         });
     }
 
+    /**
+     * Uses the squadId of the Meetup to load the name of the Squad it belongs to.
+     */
     public void loadSquad()
     {
         // Setting the loading text
         loadingText.setText("Getting the Place's Squad...");
-
 
         // Get Squad name from id
         mDatabase.child("squads").child(place.getSquad()).addListenerForSingleValueEvent(new ValueEventListener()
@@ -204,6 +215,7 @@ public class PlaceDetailsActivity extends BaseActivity
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
+                // Displays the Squad's name
                 squad.setText(dataSnapshot.child("name").getValue(String.class));
 
                 // Hiding loading overlay
@@ -218,17 +230,24 @@ public class PlaceDetailsActivity extends BaseActivity
         });
     }
 
+    /**
+     * Method to display the Place on the PlaceMapsActivity.
+     */
     private void openMapLocation()
     {
-
         Intent newDetail = new Intent(PlaceDetailsActivity.this, PlaceMapsActivity.class);
         newDetail.putExtra("latitude", latitude);
         newDetail.putExtra("longitude", longitude);
-        newDetail.putExtra("placeName",placeName.getText().toString());
+        newDetail.putExtra("placeName", placeName.getText().toString());
         newDetail.putExtra("placeDescription", description.getText().toString());
         startActivity(newDetail);
     }
 
+    /**
+     * Method to load the SquadDetailActivity of the selected squad.
+     *
+     * @param view The TextEdit holding the Squad's name.
+     */
     public void viewSquad(View view)
     {
         //Sends the id to the details activity
@@ -237,6 +256,9 @@ public class PlaceDetailsActivity extends BaseActivity
         startActivity(detail);
     }
 
+    /**
+     * Method to view the Place's Meetups.
+     */
     public void viewMeetups()
     {
         // Loads the MeetupsList activity displaying the Meetups that are at this place
@@ -247,13 +269,12 @@ public class PlaceDetailsActivity extends BaseActivity
 
     public void fab(View view)
     {
-        if(burger == false)
+        if (burger == false)
         {
             burger = true;
             burgerMenu.setVisibility(View.VISIBLE);
             fab.setImageResource(R.drawable.ic_cross);
-        }
-        else
+        } else
         {
             burger = false;
             burgerMenu.setVisibility(View.GONE);

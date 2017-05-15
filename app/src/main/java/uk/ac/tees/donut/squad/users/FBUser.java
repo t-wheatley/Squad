@@ -2,6 +2,9 @@ package uk.ac.tees.donut.squad.users;
 
 import java.util.HashMap;
 
+/**
+ * Class used to represent a User in Firebase.
+ */
 public class FBUser
 {
     private String name;
@@ -12,16 +15,12 @@ public class FBUser
     private HashMap<String, Boolean> hosting;
     private Boolean secret;
 
+    /**
+     * Empty constructor for Firebase.
+     */
     public FBUser()
     {
 
-    }
-
-    public FBUser(String name, String bio, String picture)
-    {
-        this.name = name;
-        this.bio = bio;
-        this.picture = picture;
     }
 
     // Getters

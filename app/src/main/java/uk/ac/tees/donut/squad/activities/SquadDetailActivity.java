@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
@@ -28,23 +27,26 @@ import uk.ac.tees.donut.squad.UserGridViewAdapter;
 import uk.ac.tees.donut.squad.squads.Squad;
 import uk.ac.tees.donut.squad.users.FBUser;
 
+/**
+ * Activity which allows the user to view the details of a Squad.
+ */
 public class SquadDetailActivity extends BaseActivity
 {
-
+    // Firebase
     DatabaseReference mDatabase;
     FirebaseUser firebaseUser;
 
+    // Loading Overlay
     RelativeLayout loadingOverlay;
     TextView loadingText;
 
-    Squad squad;
-    Boolean member;
-
+    // Activity UI
     TextView nameDisplay;
     TextView descriptionDisplay;
     TextView memberCountDisplay;
     TextView memberDisplay;
     String squadId;
+    Button joinBtn;
 
     // Members display
     GridView membersGrid;
@@ -52,16 +54,16 @@ public class SquadDetailActivity extends BaseActivity
     List<String> userPics;
     List<String> userIds;
 
+    // Variables
+    Squad squad;
+    Boolean member;
     int secretCount;
     int memberCount;
-
-    Button joinBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
 
         // Initialising loading overlay and displaying
         loadingOverlay = (RelativeLayout) this.findViewById(R.id.loading_overlay);
@@ -69,7 +71,7 @@ public class SquadDetailActivity extends BaseActivity
         loadingText.setText("Loading Squad...");
         loadingOverlay.setVisibility(View.VISIBLE);
 
-        // Declaring everything
+        // Initialising UI Elements
         nameDisplay = (TextView) findViewById(R.id.squadDetail_textEditName);
         descriptionDisplay = (TextView) findViewById(R.id.squadDetail_textEditDescription);
         memberDisplay = (TextView) findViewById(R.id.squadDetail_textEditMembers);
@@ -120,15 +122,20 @@ public class SquadDetailActivity extends BaseActivity
     }
 
     @Override
-    int getContentViewId() {
+    int getContentViewId()
+    {
         return R.layout.activity_squad_detail;
     }
 
     @Override
-    int getNavigationMenuItemId() {
+    int getNavigationMenuItemId()
+    {
         return R.id.menu_squads;
     }
 
+    /**
+     * Uses the squadId to create a Squad object and display its details.
+     */
     public void loadSquad()
     {
         // Reads the data from the squadId in Firebase
@@ -156,6 +163,9 @@ public class SquadDetailActivity extends BaseActivity
         });
     }
 
+    /**
+     * Method to load the Users in the Squad and display them in a GridView.
+     */
     public void loadUsers()
     {
         // Array of names
@@ -199,7 +209,7 @@ public class SquadDetailActivity extends BaseActivity
                         FBUser user = dataSnapshot.getValue(FBUser.class);
 
                         // Checks if the user is not secret
-                        if(user.getSecret() == null || user.getSecret() == false)
+                        if (user.getSecret() == null || user.getSecret() == false)
                         {
                             userNames.add(user.getName());
                             userPics.add(user.getPicture());
@@ -216,7 +226,7 @@ public class SquadDetailActivity extends BaseActivity
                             String memberString = "Members: " + memberCount;
 
                             // If there is secret members
-                            if(secretCount != 0)
+                            if (secretCount != 0)
                             {
                                 memberString = memberString + " (" + secretCount + " Secret)";
                             }
@@ -250,6 +260,11 @@ public class SquadDetailActivity extends BaseActivity
         }
     }
 
+    /**
+     * Method to let the User join or leave the Squad.
+     *
+     * @param view The button that was pressed.
+     */
     public void squadButton(View view)
     {
         if (member)
@@ -263,6 +278,9 @@ public class SquadDetailActivity extends BaseActivity
         }
     }
 
+    /**
+     * Method to add the User to the Squad.
+     */
     public void joinSquad()
     {
         // Adds the user to the squad and changes the button
@@ -272,6 +290,9 @@ public class SquadDetailActivity extends BaseActivity
         joinBtn.setText("Leave Squad");
     }
 
+    /**
+     * Method to remove the User from the Squad.
+     */
     public void leaveSquad()
     {
         // Removes the user from the squad and changes the button
@@ -282,14 +303,23 @@ public class SquadDetailActivity extends BaseActivity
         finish();
     }
 
+    /**
+     * Method to load the MeetupsListActivity displaying the Meetups belonging to this Squad.
+     *
+     * @param view The button that was pressed.
+     */
     public void viewMeetups(View view)
     {
-        // Loads the MeetupsList activity displaying the Meetups that are part of the Squad
         Intent intent = new Intent(this, MeetupsListActivity.class);
         intent.putExtra("squadId", squadId);
         startActivity(intent);
     }
 
+    /**
+     * Method to load the PlacesListActivity displaying the Places belonging to this Squad.
+     *
+     * @param view The button that was pressed.
+     */
     public void viewPlaces(View view)
     {
         Intent intent = new Intent(this, PlacesListActivity.class);
@@ -297,6 +327,11 @@ public class SquadDetailActivity extends BaseActivity
         startActivity(intent);
     }
 
+    /**
+     * Method to load the SquadPostActivity displaying the Posts belonging to this Squad.
+     *
+     * @param view The button that was pressed.
+     */
     public void openPost(View view)
     {
         Intent intent = new Intent(this, SquadPostActivity.class);

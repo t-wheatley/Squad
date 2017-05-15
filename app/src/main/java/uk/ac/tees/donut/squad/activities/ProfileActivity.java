@@ -7,15 +7,12 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.IntentCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,6 +37,9 @@ import com.google.firebase.database.ValueEventListener;
 import uk.ac.tees.donut.squad.R;
 import uk.ac.tees.donut.squad.users.FBUser;
 
+/**
+ * Activity which allows displays a user's profile.
+ */
 public class ProfileActivity extends BaseActivity implements GoogleApiClient.OnConnectionFailedListener
 {
     // Firebase + Google
@@ -62,7 +62,6 @@ public class ProfileActivity extends BaseActivity implements GoogleApiClient.OnC
     Button signOutBtn;
     Button editBioBtn;
     ImageView profileImage;
-
     FloatingActionButton fab;
     boolean burger = false;
     RelativeLayout burgerMenu;
@@ -105,11 +104,9 @@ public class ProfileActivity extends BaseActivity implements GoogleApiClient.OnC
         // Getting the current user
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        // Getting ui elements
+        // Getting UI elements
         profileImage = (ImageView) findViewById(R.id.profileImage_ImageView);
-
         profileName = (TextView) findViewById(R.id.profile_name);
-
         bio = (TextView) findViewById(R.id.bio);
 
         fab = (FloatingActionButton) findViewById(R.id.profile_fab);
@@ -198,7 +195,7 @@ public class ProfileActivity extends BaseActivity implements GoogleApiClient.OnC
             {
                 personal = true;
                 personalMode();
-            }  else
+            } else
             {
                 personal = false;
             }
@@ -229,15 +226,21 @@ public class ProfileActivity extends BaseActivity implements GoogleApiClient.OnC
     }
 
     @Override
-    int getContentViewId() {
+    int getContentViewId()
+    {
         return R.layout.activity_profile;
     }
 
     @Override
-    int getNavigationMenuItemId() {
+    int getNavigationMenuItemId()
+    {
         return R.id.menu_profile;
     }
 
+    /**
+     * Method to check if the requested profile is in secret mode or not. If the profile is secret,
+     * it will not let the user see it.
+     */
     public void secretCheck()
     {
         if (firebaseUser != null)
@@ -313,7 +316,9 @@ public class ProfileActivity extends BaseActivity implements GoogleApiClient.OnC
         }
     }
 
-
+    /**
+     * Method to load the Profile's info.
+     */
     public void loadInfo()
     {
         if (user != null)
@@ -362,8 +367,6 @@ public class ProfileActivity extends BaseActivity implements GoogleApiClient.OnC
             // Displays the photo in the ImageView
             Glide.with(ProfileActivity.this)
                     .load(user.getPicture().trim())
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .skipMemoryCache(true)
                     .listener(new RequestListener<String, GlideDrawable>()
                     {
                         @Override
@@ -395,6 +398,9 @@ public class ProfileActivity extends BaseActivity implements GoogleApiClient.OnC
         }
     }
 
+    /**
+     * Method to view the selected user's Squads.
+     */
     public void showSquads()
     {
         // If a user has squads
@@ -411,6 +417,9 @@ public class ProfileActivity extends BaseActivity implements GoogleApiClient.OnC
         }
     }
 
+    /**
+     * Method to view the selected user's attended Meetups.
+     */
     public void showAttending()
     {
         // If a user has meetups
@@ -427,6 +436,9 @@ public class ProfileActivity extends BaseActivity implements GoogleApiClient.OnC
         }
     }
 
+    /**
+     * Method to view the selected user's hosted Meetups.
+     */
     public void showHosted()
     {
         // If a user is hosting meetups
@@ -444,6 +456,9 @@ public class ProfileActivity extends BaseActivity implements GoogleApiClient.OnC
         }
     }
 
+    /**
+     * Method to change the User's secret mode.
+     */
     public void secretMode()
     {
         // If user not secret
@@ -458,6 +473,9 @@ public class ProfileActivity extends BaseActivity implements GoogleApiClient.OnC
         }
     }
 
+    /**
+     * Method to enable the User's secret mode.
+     */
     public void enableSecret()
     {
         // Sets the user to secret and changes the button
@@ -466,6 +484,9 @@ public class ProfileActivity extends BaseActivity implements GoogleApiClient.OnC
         secretBtn.setText("Disable Secret Mode");
     }
 
+    /**
+     * Method to disable the User's secret mode.
+     */
     public void disableSecret()
     {
         // Disables the user's secret mode and changes the button
@@ -474,6 +495,9 @@ public class ProfileActivity extends BaseActivity implements GoogleApiClient.OnC
         secretBtn.setText("Enable Secret Mode");
     }
 
+    /**
+     * Method to sign the user out of the app.
+     */
     public void signOut()
     {
         // Signs the user out of Firebase Auth and then Google Sign In
@@ -489,6 +513,9 @@ public class ProfileActivity extends BaseActivity implements GoogleApiClient.OnC
         finish();
     }
 
+    /**
+     * Method that displays a dialog for the User to enter a new bio.
+     */
     public void editBio()
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -528,6 +555,11 @@ public class ProfileActivity extends BaseActivity implements GoogleApiClient.OnC
         builder.show();
     }
 
+    /**
+     * Method to update the User's bio in the Firebase Database.
+     *
+     * @param bio The new bio entered in the previous dialog.
+     */
     public void updateBio(String bio)
     {
         if (firebaseUser != null)
@@ -542,6 +574,9 @@ public class ProfileActivity extends BaseActivity implements GoogleApiClient.OnC
         }
     }
 
+    /**
+     * Method to display the features that a User only see's on their own profile.
+     */
     public void personalMode()
     {
         // Displaying what the user should see on their own profile
@@ -565,15 +600,19 @@ public class ProfileActivity extends BaseActivity implements GoogleApiClient.OnC
 
     }
 
+    /**
+     * Method to open and close the burger menu when the FloatingActionButton is pressed.
+     *
+     * @param view The FloatingActionButton that was pressed.
+     */
     public void fab(View view)
     {
-        if(burger == false)
+        if (burger == false)
         {
             burgerMenu.setVisibility(View.VISIBLE);
             fab.setImageResource(R.drawable.ic_cross);
             burger = true;
-        }
-        else
+        } else
         {
             burgerMenu.setVisibility(View.GONE);
             fab.setImageResource(R.drawable.ic_burger);

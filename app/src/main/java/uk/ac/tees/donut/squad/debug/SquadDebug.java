@@ -6,12 +6,17 @@ import com.google.firebase.database.FirebaseDatabase;
 import uk.ac.tees.donut.squad.squads.Squad;
 
 /**
- * Created by q5071488 on 21/04/2017.
+ * Class that contains debug methods for Squads.
  */
-
 public class SquadDebug
 {
 
+    /**
+     * Method that creates a new Squad.
+     *
+     * @param name Name of the new Squad.
+     * @param desc Description of the new Squad.
+     */
     public static void addSquad(String name, String desc)
     {
         // Getting the reference for the Firebase Realtime Database
@@ -25,6 +30,5 @@ public class SquadDebug
 
         // Pushing the squad to the "squads" node using the squadId
         mDatabase.child("squads").child(squadId).setValue(squad);
-
     }
 }

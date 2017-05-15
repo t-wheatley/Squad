@@ -34,27 +34,29 @@ import com.google.firebase.database.ValueEventListener;
 
 import uk.ac.tees.donut.squad.R;
 import uk.ac.tees.donut.squad.users.FBUser;
-import uk.ac.tees.donut.squad.activities.MenuActivity;
-/**
- * Created by jlc-1 on 21/03/2017.
- */
 
+/**
+ * Activity which allows the user to sign in using their Google account.
+ */
 public class LoginActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener, View.OnClickListener
 {
+    // Google
     private GoogleApiClient mGoogleApiClient;
-    private static final int RC_SIGN_IN = 9001;
-    private static final String TAG = "Auth";
+    private GoogleSignInAccount googleSignInAccount;
 
+    // Firebase
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference mDatabase;
-    private GoogleSignInAccount googleSignInAccount;
 
+    // Loading Overlay
     RelativeLayout loadingOverlay;
     TextView loadingText;
 
-    Boolean startedActivity;
+    // Final Values
+    private static final int RC_SIGN_IN = 9001;
+    private static final String TAG = "Auth";
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -62,6 +64,7 @@ public class LoginActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        // Getting an instance of FirebaseAuth
         mAuth = FirebaseAuth.getInstance();
 
         // Initialising loading overlay
@@ -72,6 +75,7 @@ public class LoginActivity extends AppCompatActivity implements
         // Getting the reference for the Firebase Realtime Database
         mDatabase = FirebaseDatabase.getInstance().getReference("users");
 
+        // Setting the onClick for the Google sign in button
         findViewById(R.id.sign_in_button).setOnClickListener(this);
 
         // Configure sign-in to request the user's ID, email address, and basic
@@ -88,9 +92,7 @@ public class LoginActivity extends AppCompatActivity implements
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
-        startedActivity = false;
-
-        // AuthListener used to check if the user has previously signed in
+        // AuthListener used to check if the user is signed in
         mAuthListener = new FirebaseAuth.AuthStateListener()
         {
             @Override
@@ -127,6 +129,8 @@ public class LoginActivity extends AppCompatActivity implements
     public void onStart()
     {
         super.onStart();
+
+        // Adding a listener for the AuthState
         mAuth.addAuthStateListener(mAuthListener);
     }
 
@@ -136,6 +140,7 @@ public class LoginActivity extends AppCompatActivity implements
         super.onStop();
         if (mAuthListener != null)
         {
+            // Removing the listener for the AuthState
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
@@ -143,12 +148,13 @@ public class LoginActivity extends AppCompatActivity implements
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult)
     {
-
+        Toast.makeText(LoginActivity.this, "Connection failed, please try again.", Toast.LENGTH_SHORT);
     }
 
     @Override
     public void onClick(View v)
     {
+        // When the Google sign in button is pressed call the signIn() method
         switch (v.getId())
         {
             case R.id.sign_in_button:
@@ -158,12 +164,22 @@ public class LoginActivity extends AppCompatActivity implements
         }
     }
 
+    /**
+     * Method called when Google sign in button is pressed, starts the Google sign in intent.
+     */
     private void signIn()
     {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
+    /**
+     * Method called on result of the Google sign in Intent.
+     *
+     * @param requestCode The request code that was passed to startActivityForResult().
+     * @param resultCode  The result code, RESULT_OK if successful, RESULT_CANCELED if not.
+     * @param data        An Intent that carries the data of the result.
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -194,11 +210,19 @@ public class LoginActivity extends AppCompatActivity implements
         }
     }
 
+    /**
+     * Method that creates an AuthCredential and tries to sign into Firebase.
+     *
+     * @param acct The GoogleSignInAccount the user has signed-in with.
+     */
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct)
     {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
 
+        // Getting the AuthCredential from the GoogleSignInAccount
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+
+        // Trying to sign into Firebase
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
                 {
@@ -219,17 +243,21 @@ public class LoginActivity extends AppCompatActivity implements
                             // Hiding loading overlay
                             loadingOverlay.setVisibility(View.GONE);
                         }
-                        // ...
                     }
                 });
     }
 
+    /**
+     * Method that handles the GoogleSignInResult, will remove the loading overlay if failed.
+     *
+     * @param result GoogleSignInResult
+     */
     private void handleSignInResult(GoogleSignInResult result)
     {
         Log.d(TAG, "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess())
         {
-            // Signed in successfully, update profile info, show authenticated UI.
+            // Signed in successfully
             Log.d(TAG, "GoogleSignInResult successful");
         } else
         {
@@ -243,7 +271,11 @@ public class LoginActivity extends AppCompatActivity implements
         }
     }
 
-    // Method to try update from getProviderData
+    /**
+     * Method to try update the FirebaseUser's details using getProviderData
+     *
+     * @param firebaseUser The Signed-in FirebaseUser.
+     */
     private void tryUpdate(FirebaseUser firebaseUser)
     {
         final FirebaseUser user = firebaseUser;
@@ -277,7 +309,11 @@ public class LoginActivity extends AppCompatActivity implements
         }
     }
 
-    // Method for guaranteed update using GoogleSignInAccount
+    /**
+     * Method for guaranteed FirebaseUser's details using  using GoogleSignInAccount.
+     *
+     * @param firebaseUser The Signed-in FirebaseUser.
+     */
     public void updateGuarantee(FirebaseUser firebaseUser)
     {
         // GoogleSignInAccount update
@@ -303,6 +339,13 @@ public class LoginActivity extends AppCompatActivity implements
         });
     }
 
+    /**
+     * Method to send the new FirebaseUser details to the Firebase database.
+     *
+     * @param uId      The unique ID of the FirebaseUser
+     * @param name     The new name of the FirebaseUser
+     * @param photoUrl The new photo of the FirebaseUser
+     */
     public void updateFBUser(final String uId, final String name, final Uri photoUrl)
     {
         if (uId != null)
@@ -312,23 +355,29 @@ public class LoginActivity extends AppCompatActivity implements
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot)
                 {
-                    // Gets the data from Firebase and stores it in a Squad class
+                    // Gets the data from Firebase and stores it in a FBUser class
                     FBUser user = dataSnapshot.getValue(FBUser.class);
 
-                    // If the user does not exist(first time)
+                    // If the user does not exist (Signed-in for the first time)
                     if (user == null)
                     {
+                        // Create a new FBUser
                         user = new FBUser();
                     }
 
+                    // If there is a new picture
                     if (photoUrl != null)
                     {
                         user.setPicture(photoUrl.toString());
                     }
+
+                    // If there is a new name
                     if (name != null)
                     {
                         user.setName(name);
                     }
+
+                    // Update the Firebase Database
                     mDatabase.child(uId).setValue(user);
                 }
 
@@ -340,12 +389,10 @@ public class LoginActivity extends AppCompatActivity implements
             });
         }
 
-        if (startedActivity == false)
-        {
-            startedActivity = true;
-            Intent i = new Intent(LoginActivity.this, SquadListActivity.class);
-            startActivity(i);
-            finish();
-        }
+        // Start the main menu
+        Intent i = new Intent(LoginActivity.this, SquadListActivity.class);
+        startActivity(i);
+        finish();
+
     }
 }
