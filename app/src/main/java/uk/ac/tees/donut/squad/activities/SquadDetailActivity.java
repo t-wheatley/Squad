@@ -7,9 +7,11 @@ import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.vision.text.Text;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -47,6 +49,9 @@ public class SquadDetailActivity extends BaseActivity
     TextView memberDisplay;
     String squadId;
     Button joinBtn;
+    ImageView image;
+    TextView meetupCount;
+    TextView placeCount;
 
     // Members display
     GridView membersGrid;
@@ -72,12 +77,16 @@ public class SquadDetailActivity extends BaseActivity
         loadingOverlay.setVisibility(View.VISIBLE);
 
         // Initialising UI Elements
-        nameDisplay = (TextView) findViewById(R.id.squadDetail_textEditName);
-        descriptionDisplay = (TextView) findViewById(R.id.squadDetail_textEditDescription);
-        memberDisplay = (TextView) findViewById(R.id.squadDetail_textEditMembers);
+        nameDisplay = (TextView) findViewById(R.id.squadDetail_squadName);
+        descriptionDisplay = (TextView) findViewById(R.id.squadDetail_description);
+        memberDisplay = (TextView) findViewById(R.id.squadDetail_noMembers);
         membersGrid = (GridView) findViewById(R.id.squadDetail_userGrid);
-        memberCountDisplay = (TextView) findViewById(R.id.squadDetail_textViewMembers);
+        memberCountDisplay = (TextView) findViewById(R.id.squadDetail_memberCount);
         joinBtn = (Button) findViewById(R.id.squadDetail_joinBtn);
+        meetupCount = (TextView) findViewById(R.id.squadDetail_meetupsCount);
+        placeCount = (TextView) findViewById(R.id.squadDetail_placesCount);
+        image = (ImageView) findViewById(R.id.squadDetail_image);
+
 
         // Gets the extra passed from the last activity
         Intent detail = getIntent();
@@ -194,7 +203,7 @@ public class SquadDetailActivity extends BaseActivity
             if (users.containsKey(firebaseUser.getUid()))
             {
                 member = true;
-                joinBtn.setText("Leave Squad");
+                joinBtn.setText("Leave");
             }
 
             // Displaying members of the Squad
@@ -287,7 +296,7 @@ public class SquadDetailActivity extends BaseActivity
         mDatabase.child("users").child(firebaseUser.getUid()).child("squads").child(squadId).setValue(true);
         mDatabase.child("squads").child(squadId).child("users").child(firebaseUser.getUid()).setValue(true);
         member = true;
-        joinBtn.setText("Leave Squad");
+        joinBtn.setText("Leave");
     }
 
     /**
@@ -299,7 +308,7 @@ public class SquadDetailActivity extends BaseActivity
         mDatabase.child("users").child(firebaseUser.getUid()).child("squads").child(squadId).removeValue();
         mDatabase.child("squads").child(squadId).child("users").child(firebaseUser.getUid()).removeValue();
         member = false;
-        joinBtn.setText("Join Squad");
+        joinBtn.setText("Join");
         finish();
     }
 
