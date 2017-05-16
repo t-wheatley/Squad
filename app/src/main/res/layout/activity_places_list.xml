@@ -95,7 +95,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_below="@+id/gap"
-                    android:scrollbars="vertical"></android.support.v7.widget.RecyclerView>
+                    android:scrollbars="vertical">
+                </android.support.v7.widget.RecyclerView>
             </RelativeLayout>
 
         </ScrollView>
@@ -111,11 +112,13 @@
             android:orientation="vertical"
             android:paddingBottom="16dp"
             android:paddingTop="16dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="88dp"
             android:visibility="gone">
 
             <Button
                 style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_width="170dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="createNew"
                 android:text="Create New" />
@@ -130,7 +133,7 @@
             <Button
                 android:id="@+id/placesList_btnDistance"
                 style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_width="170dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="By Distance" />

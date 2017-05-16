@@ -169,8 +169,6 @@
                                 style="@style/Base.Widget.AppCompat.Button.Colored"
                                 android:layout_width="190dp"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentLeft="true"
-                                android:layout_alignParentRight="true"
                                 android:text="View Squads" />
 
                             <!-- Meetups -->
@@ -179,8 +177,6 @@
                                 style="@style/Base.Widget.AppCompat.Button.Colored"
                                 android:layout_width="190dp"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentLeft="true"
-                                android:layout_alignParentRight="true"
                                 android:text="View Meetups" />
 
                             <!-- Hosted -->
@@ -189,8 +185,6 @@
                                 style="@style/Base.Widget.AppCompat.Button.Colored"
                                 android:layout_width="190dp"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentLeft="true"
-                                android:layout_alignParentRight="true"
                                 android:text="View Hosted" />
 
                         </LinearLayout>
@@ -243,6 +237,7 @@
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:text="Sign Out"
                     android:id="@+id/profile_signOutBtn"
                     style="@style/Widget.AppCompat.Button.Colored"
