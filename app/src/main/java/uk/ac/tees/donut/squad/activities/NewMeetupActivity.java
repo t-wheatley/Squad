@@ -466,6 +466,7 @@ public class NewMeetupActivity extends AppCompatActivity
                     // Gets the latitude and longitude from the Place
                     longitude = firebasePlace.getLocLong();
                     latitude = firebasePlace.getLocLat();
+                    a1 = firebasePlace.getAddress1();
 
                     if (longitude != 0 && latitude != 0)
                     {
