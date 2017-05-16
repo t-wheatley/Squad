@@ -413,6 +413,7 @@
             android:background="@color/colorPrimary"
             android:id="@+id/meetupDetail_burgerMenu"
             android:elevation="5dp"
+            android:visibility="gone"
             >
 
             <LinearLayout
@@ -422,7 +423,7 @@
                 android:paddingStart="16dp"
                 android:orientation="vertical"
                 android:gravity="center"
-                android:visibility="gone"
+                android:visibility="visible"
                 >
 
                 <Button
