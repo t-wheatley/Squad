@@ -76,6 +76,7 @@ public class PlaceDetailsActivity extends BaseActivity {
     LinearLayout galleryLayout;
     ImageSwitcher gallery;
     TextView galleryCounter;
+    TextView meetupCounter;
 
     boolean burger = false;
     FloatingActionButton fab;
@@ -127,6 +128,7 @@ public class PlaceDetailsActivity extends BaseActivity {
             }
         });
         galleryCounter = (TextView) findViewById(R.id.placeDetails_galleryCounter);
+        meetupCounter = (TextView) findViewById(R.id.placeDetail_meetupsCount);
 
         gallery = (ImageSwitcher) findViewById(R.id.placeDetails_gallery);
         gallery.setFactory(new ViewSwitcher.ViewFactory() {
@@ -213,6 +215,15 @@ public class PlaceDetailsActivity extends BaseActivity {
                 longitude = place.getLocLong();
                 latitude = place.getLocLat();
 
+                // Display the amount of Meetups at the Place
+                if(place.getMeetups() != null)
+                {
+                    meetupCounter.setText(place.getMeetups().size() + "");
+                } else
+                {
+                    meetupCounter.setText("0");
+                }
+
                 // If signed-in user is the Host of the Meetup
                 if (firebaseUser.getUid().equals(place.getHost())) {
                     // Display editing controls
@@ -271,6 +282,7 @@ public class PlaceDetailsActivity extends BaseActivity {
             }
 
             displayImage(images.get(0));
+            galleryCounter.setText("1/" + images.size());
 
 
             // Hiding loading overlay
@@ -282,6 +294,11 @@ public class PlaceDetailsActivity extends BaseActivity {
         }
     }
 
+    /**
+     * Method that takes the pictureUrl and displays it with Glide.
+     *
+     * @param pictureUrl Url of the picture to be loaded.
+     */
     public void displayImage(String pictureUrl) {
         imageLoading.setVisibility(View.VISIBLE);
 
@@ -307,19 +324,33 @@ public class PlaceDetailsActivity extends BaseActivity {
                 .into((ImageView) gallery.getCurrentView());
     }
 
+    /**
+     * Method to display the next image in the gallery.
+     *
+     * @param view The Button that was pressed.
+     */
     public void nextImage(View view) {
         imagePosition++;
         if (imagePosition == images.size()) {
             imagePosition = 0;
         }
+        int counter = (imagePosition + 1);
+        galleryCounter.setText(counter + "/" + images.size());
         displayImage(images.get(imagePosition));
     }
 
+    /**
+     * Method to display the previous image in the gallery.
+     *
+     * @param view The Button that was pressed.
+     */
     public void previousImage(View view) {
         imagePosition--;
         if (imagePosition == -1) {
             imagePosition = images.size() - 1;
         }
+        int counter = (imagePosition + 1);
+        galleryCounter.setText(counter + "/" + images.size());
         displayImage(images.get(imagePosition));
     }
 
@@ -387,6 +418,8 @@ public class PlaceDetailsActivity extends BaseActivity {
                                 displayImage(downloadUrl.toString());
                             } else {
                                 images.add(downloadUrl.toString());
+                                int counter = (imagePosition + 1);
+                                galleryCounter.setText(counter + "/" + images.size());
                             }
                         }
                     });
