@@ -138,6 +138,12 @@ public class NewMeetupActivity extends AppCompatActivity
         btnNewAddress = (Button) findViewById(R.id.newMeetup_buttonNewAddress);
         btnFromPlace = (Button) findViewById(R.id.newMeetup_buttonFromPlace);
 
+        a1= "";
+        a2 = "";
+        tc = "";
+        county ="";
+        pc = "";
+
         // onClick listener for the submit button
         btnSubmit.setOnClickListener(new View.OnClickListener()
         {
