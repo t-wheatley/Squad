@@ -111,6 +111,12 @@ public class NewPlaceActivity extends AppCompatActivity
         editAddressC = (EditText) findViewById(R.id.textEditAddressCounty);
         editAddressPC = (EditText) findViewById(R.id.textEditAddressPC);
 
+        a1 = "";
+        a2 = "";
+        tc = "";
+        c = "";
+        pc = "";
+
         // onClick listener for the submit button
         btnSubmit.setOnClickListener(new View.OnClickListener()
         {
@@ -220,12 +226,6 @@ public class NewPlaceActivity extends AppCompatActivity
         // Gets the strings from the editTexts
         name = editName.getText().toString().trim();
         description = editDescription.getText().toString().trim();
-
-        a1 = editAddress1.getText().toString().trim();
-        a2 = editAddress2.getText().toString().trim();
-        tc = editAddressTC.getText().toString().trim();
-        c = editAddressC.getText().toString().trim();
-        pc = editAddressPC.getText().toString().trim();
 
         addressFull = editAddress1.getText().toString().trim() + " " +
                 editAddress2.getText().toString().trim() + " " +
@@ -502,7 +502,7 @@ public class NewPlaceActivity extends AppCompatActivity
                                 break;
                             case 3:
                                 a1 = address.getAddressLine(0);
-                                a2 = address.getAddressLine(1);
+                                tc = address.getAddressLine(1);
                                 pc = address.getAddressLine(2);
                                 break;
                             case 4:
