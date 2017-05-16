@@ -65,11 +65,11 @@ public class Meetup
         endDateTime = ed;
         longitude = longi;
         latitude = lat;
-        address1 = a1;
-        address2 = a2;
-        townCity = town;
-        county = c;
-        postCode = pc;
+        address1 = a1.trim();
+        address2 = a2.trim();
+        townCity = town.trim();
+        county = c.trim();
+        postCode = pc.trim();
 
         updateStatus();
     }
