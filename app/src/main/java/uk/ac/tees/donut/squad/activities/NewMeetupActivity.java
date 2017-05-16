@@ -411,7 +411,7 @@ public class NewMeetupActivity extends AppCompatActivity
     }
 
     /**
-     * Method called on submit button press, validates the proposed Meetup.
+     * Method called on submit button press, validates the proposed meetup.
      */
     private void submitMeetup()
     {
@@ -690,8 +690,10 @@ public class NewMeetupActivity extends AppCompatActivity
         @Override
         protected void onReceiveResult(int resultCode, final Bundle resultData)
         {
+            //If address was found
             if (resultCode == LocContants.SUCCESS_RESULT)
             {
+                //Create address object
                 final Address address = resultData.getParcelable(LocContants.RESULT_ADDRESS);
                 runOnUiThread(new Runnable()
                 {
@@ -699,6 +701,7 @@ public class NewMeetupActivity extends AppCompatActivity
                     public void run()
                     {
 
+                        //Get longitude, latittude and addresss from addresss
                         latitude = address.getLatitude();
                         longitude = address.getLongitude();
 
@@ -708,6 +711,7 @@ public class NewMeetupActivity extends AppCompatActivity
 
                     }
                 });
+                //if unable to get address
             } else
             {
                 runOnUiThread(new Runnable()

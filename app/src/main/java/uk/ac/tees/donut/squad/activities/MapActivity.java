@@ -96,12 +96,6 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
     private String directionAPIKey = "AIzaSyBPSyzwv_Lr4JyCgKRswRhBRebSi8htqt8";
     private LatLng currentLocation;
     private LatLng destination;
-    private double longitude;
-    private double latitude;
-
-
-    private String userId;
-    private String squadId;
     private String meetupID;
 
 
@@ -110,13 +104,16 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
     {
         super.onCreate(savedInstanceState);
 
+        //Get the current Date and Time
         currentDateTime = Calendar.getInstance();
 
+        //Create database reference
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
         //Set's map base filter to show all meetups
         filter = 1;
 
+        //Create UI elements
         showDistance = (TextView) findViewById(R.id.textDistance);
         showDistance.setVisibility(View.GONE);
 
@@ -151,13 +148,6 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
         btnOngoing = (Button) findViewById(R.id.btn_filter_ongoing);
         btnOngoing.setOnClickListener(this);
 
-        // Gets the extra passed from the last activity
-        Intent detail = getIntent();
-        Bundle b = detail.getExtras();
-        if (b != null)
-        {
-            userId = (String) b.get("uId");
-        }
 
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -165,11 +155,12 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
         mapFrag.getMapAsync(this);
     }
 
-    public void setDestination(double lat, double lng)
-    {
-        destination = new LatLng(latitude, longitude);
-    }
 
+    /**
+     * Called when map is ready
+     *
+     * @param googleMap
+     */
     @Override
     public void onMapReady(GoogleMap googleMap)
     {
@@ -203,7 +194,11 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
 
     }
 
-
+    /**
+     * On click listener method for UI elements
+     *
+     * @param v
+     */
     public void onClick(View v)
     {
         int id = v.getId();
@@ -260,6 +255,9 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
         }
     }
 
+    /**
+     * Method called when back button is pressed, if burger menu is active closes the menu else ends activity
+     */
     @Override
     public void onBackPressed()
     {
@@ -272,6 +270,9 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
         }
     }
 
+    /**
+     * Method called when burger button is pressed, controls whether butger menu is displayed or not
+     */
     public void fab(View view)
     {
         if (burger == false)
@@ -287,8 +288,12 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
         }
     }
 
+    /**
+     * Method creates request for directions from currentLocation to destination
+     */
     public void requestDirection()
     {
+        //Checks to ensure users current location and desired destination are set
         if (currentLocation == null || destination == null)
         {
             Toast.makeText(this, "Invalid Destination", Toast.LENGTH_LONG).show();
@@ -304,13 +309,20 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
         }
     }
 
+    /**
+     * Method to add markers at meetup locations
+     *
+     * @param map Google map
+     */
     public void addMarkers(final GoogleMap map)
     {
+        //Create child listener for meetups within firebase
         mChildEventListener = mDatabase.child("meetups").addChildEventListener(new ChildEventListener()
         {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s)
             {
+                //Create meetup object for each meetup with in firebase
                 Meetup meetup = dataSnapshot.getValue(Meetup.class);
                 double lat = meetup.getLatitude();
                 double lng = meetup.getLongitude();
@@ -319,6 +331,8 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
                 long strtDateTime = meetup.getStartDateTime();
                 long endDateTime = meetup.getEndDateTime();
                 LatLng location = new LatLng(lat, lng);
+
+                //If statements checks what filter is active before adding markers
                 if (filter == 2)
                 {
                     if (currentDateTime.getTimeInMillis() / 1000L > strtDateTime && currentDateTime.getTimeInMillis() / 1000L < endDateTime)
@@ -375,12 +389,9 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
     }
 
 
-    public void displayMessage()
-    {
-        Toast.makeText(this, "No meetups to display ", Toast.LENGTH_LONG).show();
-
-    }
-
+    /**
+     * Method called when activity is not active
+     */
     @Override
     public void onPause()
     {
@@ -393,12 +404,22 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
         }
     }
 
+    /**
+     * Mehtod gets content view ID
+     *
+     * @return xml file related to activity
+     */
     @Override
     int getContentViewId()
     {
         return R.layout.activity_map;
     }
 
+    /**
+     * method gets navigation bat
+     *
+     * @return navigation bar
+     */
     @Override
     int getNavigationMenuItemId()
     {
@@ -406,6 +427,9 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
     }
 
 
+    /**
+     * Mehtod to build the API client for google location services
+     */
     protected synchronized void buildGoogleApiClient()
     {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -417,12 +441,23 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
     }
 
 
+    /**
+     * Method called if unable to connect to google API client
+     *
+     * @param connectionResult
+     */
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult)
     {
 
     }
 
+
+    /**
+     * Mehtod calls get location when connected to google API client
+     *
+     * @param bundle
+     */
     @Override
     public void onConnected(@Nullable Bundle bundle)
     {
@@ -430,12 +465,17 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
 
     }
 
+
+    /**
+     * Method gets users current location
+     */
     public void getLocation()
     {
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(1000);
         mLocationRequest.setFastestInterval(1000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        //Checks if app has permission to access users location
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED)
@@ -444,15 +484,27 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
         }
     }
 
+    /**
+     * method called when connection to google API client is suspended
+     *
+     * @param i
+     */
     @Override
     public void onConnectionSuspended(int i)
     {
     }
 
+    /**
+     * Method called when users location is changed, adds a marker to the users current position
+     *
+     * @param location users location
+     */
     @Override
     public void onLocationChanged(Location location)
     {
         mLastLocation = location;
+
+        //Removes any pre-existing markers
         if (mCurrLocationMarker != null)
         {
             mCurrLocationMarker.remove();
@@ -479,6 +531,9 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
+    /**
+     * Method called to check the current location permissions
+     */
     private void checkLocationPermission()
     {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -489,9 +544,7 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
                     Manifest.permission.ACCESS_FINE_LOCATION))
             {
 
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
+              //Dialog informs the user of no location permission and asks for permission
                 new AlertDialog.Builder(this)
                         .setTitle("Location Permission Needed")
                         .setMessage("This app needs the Location permission, please accept to use location functionality")
@@ -520,7 +573,13 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
         }
     }
 
-
+    /**
+     * Mehtod called when requesting permission to use location
+     *
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults)
@@ -559,58 +618,91 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
         }
     }
 
+
+    /**
+     * Mehtod called if direction result is successful, creates a polyline between current location and destination
+     *
+     * @param direction direction details passed in from getDirections
+     * @param rawBody
+     */
     @Override
     public void onDirectionSuccess(Direction direction, String rawBody)
     {
+        // Check that direction is ok
         if (direction.isOK())
         {
             ArrayList<LatLng> directionPositionList = direction.getRouteList().get(0).getLegList().get(0).getDirectionPoint();
             Route route = direction.getRouteList().get(0);
             Leg leg = route.getLegList().get(0);
 
+            //Get information about leg for directions
             Info distanceInfo = leg.getDistance();
             Info durationInfo = leg.getDuration();
             String distance = distanceInfo.getText();
             String duration = durationInfo.getText();
 
+            //Set text boxes to show direction distance and driving time
             showDistance.setText("Distance: " + distance);
             showDuration.setText("Driving time: " + duration);
 
+            //Make text boxes visible
             showDistance.setVisibility(View.VISIBLE);
             showDuration.setVisibility(View.VISIBLE);
 
             btnClear.setVisibility(View.VISIBLE);
 
+            //Clear map of previous polylines
             mMap.clear();
+            //add marker to current position
             mMap.addMarker(new MarkerOptions().position(currentLocation).title("Current Postion").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA)));
+            //Add meetup markers again
             addMarkers(mMap);
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(destination, 11));
+            //Move camera to destination
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(destination, 14));
+            //Draw polyline
             mMap.addPolyline(DirectionConverter.createPolyline(this, directionPositionList, 5, Color.RED));
-
+            //set request button to invisible
             btnRequest.setVisibility(View.GONE);
         }
     }
 
+    /**
+     * Method called when getting direction fails
+     *
+     * @param t
+     */
     @Override
     public void onDirectionFailure(Throwable t)
     {
 
     }
 
+    /**
+     * Method called when map marker is selected by user
+     *
+     * @param marker marker selected by user
+     * @return ruturn false when complete
+     */
     @Override
     public boolean onMarkerClick(Marker marker)
     {
+        //Checks if the current marker selected is current location
         if (marker.getPosition().equals(currentLocation))
         {
             return false;
         } else
         {
+            //Get meetup object passed in from marker
             Meetup meetup = (Meetup) marker.getTag();
             meetupID = meetup.getId();
             detailsBar.setVisibility(View.VISIBLE);
+
+            //Set interactive buttons to visible
             btnShowMeetup.setVisibility(View.VISIBLE);
             btnRequest.setVisibility(View.VISIBLE);
+            //Set direction desrination to current markers position
             destination = marker.getPosition();
+            //If filter is set to one display meesage showing if meetup has expired or not
             if (filter == 1)
             {
                 if (meetup.getEndDateTime() < currentDateTime.getTimeInMillis() / 1000L)
@@ -636,6 +728,3 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
     }
 
 }
-
-
-//https://github.com/akexorcist/Android-GoogleDirectionLibrary

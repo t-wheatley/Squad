@@ -14,7 +14,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -466,8 +465,10 @@ public class NewPlaceActivity extends AppCompatActivity
         @Override
         protected void onReceiveResult(int resultCode, final Bundle resultData)
         {
+            //If address was found
             if (resultCode == LocContants.SUCCESS_RESULT)
             {
+                //Create address object
                 final Address address = resultData.getParcelable(LocContants.RESULT_ADDRESS);
                 runOnUiThread(new Runnable()
                 {
@@ -475,13 +476,14 @@ public class NewPlaceActivity extends AppCompatActivity
                     public void run()
                     {
 
+                        //Get longitude, latittude and addresss from addresss
                         latitude = address.getLatitude();
                         longitude = address.getLongitude();
                         geocodeAddress = resultData.getString(LocContants.RESULT_DATA_KEY);
 
                         int addressLength = address.getMaxAddressLineIndex();
 
-
+                        //Switch used to sort how to display app dependent on address length
                         switch (addressLength)
                         {
 
@@ -527,6 +529,7 @@ public class NewPlaceActivity extends AppCompatActivity
 
                     }
                 });
+                //if unable to get address
             } else
             {
                 runOnUiThread(new Runnable()

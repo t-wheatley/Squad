@@ -23,7 +23,6 @@
         </activity>
         <activity android:name=".activities.LoginActivity"/>
         <activity android:name=".activities.SquadListActivity" />
-        <activity android:name=".location.GeocoderActivity" />
         <activity android:name=".activities.NewMeetupActivity" />
         <activity
             android:name=".activities.MeetupDetailActivity"
@@ -61,7 +60,7 @@
         <activity android:name=".activities.SquadPostActivity"></activity>
         <activity android:name=".activities.PlacesListActivity"/>
         <activity
-            android:name=".location.PlaceMapsActivity"
+            android:name=".activities.PlaceMapsActivity"
             android:label="@string/title_activity_place_maps" />
     </application>
 
