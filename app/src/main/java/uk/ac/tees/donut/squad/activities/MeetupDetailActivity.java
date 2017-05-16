@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.vision.text.Text;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -81,6 +82,7 @@ public class MeetupDetailActivity extends BaseActivity
     Button attendBtn;
     Button deleteBtn;
     CardView imageViewCard;
+    TextView addressDisplay;
 
     //Burger Menu
     FloatingActionButton fab;
@@ -134,6 +136,7 @@ public class MeetupDetailActivity extends BaseActivity
         burgerMenu = (RelativeLayout) findViewById(R.id.meetupDetail_burgerMenu);
         hostOptions = (LinearLayout) findViewById(R.id.meetupDetail_hostBurgerMenu);
         imageViewCard = (CardView) findViewById(R.id.meetupDetail_ImageViewCard);
+        addressDisplay = (TextView) findViewById(R.id.meetupDetail_address);
 
         // Disabling the edit ImageButtons and delete Button
         hostOptions.setVisibility(View.GONE);
@@ -833,5 +836,14 @@ public class MeetupDetailActivity extends BaseActivity
             fab.setImageResource(R.drawable.ic_burger);
             burgerMenu.setVisibility(View.GONE);
         }
+    }
+
+    public void mapLocation(View view)
+    {
+        //get location on map
+    }
+    public void getDirections(View view)
+    {
+        //get directions
     }
 }
