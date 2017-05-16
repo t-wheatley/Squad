@@ -4,6 +4,8 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -22,9 +24,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.firebase.ui.database.ChangeEventListener;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.common.ConnectionResult;
@@ -32,6 +39,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.nearby.messages.Strategy;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -42,6 +50,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 
 import uk.ac.tees.donut.squad.R;
@@ -564,6 +573,44 @@ public class PlacesListActivity extends BaseActivity implements GoogleApiClient.
             }
         });
 
+        // loading the picture
+        if(model.getPictures() != null)
+        {
+            // Get the first picture's url
+            HashMap<String, String> pictures = model.getPictures();
+            String pictureUrl = pictures.values().toArray()[0].toString();
+
+            // Displaying the needed UI
+            viewHolder.imageLayout.setVisibility(View.VISIBLE);
+            viewHolder.image.setVisibility(View.VISIBLE);
+            viewHolder.imageLoading.setVisibility(View.VISIBLE);
+
+            // Download and display using Glide
+            Glide.with(PlacesListActivity.this)
+                    .load(pictureUrl)
+                    .asBitmap()
+                    .listener(new RequestListener<String, Bitmap>() {
+                        @Override
+                        public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
+                            // Displaying the needed UI
+                            viewHolder.imageLayout.setVisibility(View.GONE);
+                            viewHolder.image.setVisibility(View.GONE);
+                            viewHolder.imageLoading.setVisibility(View.GONE);
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                            viewHolder.image.setImageDrawable(new BitmapDrawable(getResources(), resource));
+                            viewHolder.imageLoading.setVisibility(View.GONE);
+                            return true;
+                        }
+                    })
+                    .into(viewHolder.image);
+        }
+
+
+        // onClick
         viewHolder.mView.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -891,12 +938,14 @@ public class PlacesListActivity extends BaseActivity implements GoogleApiClient.
     {
         View mView;
         ImageView image;
+        ProgressBar imageLoading;
         TextView nameField;
         TextView descriptionField;
         TextView squadField;
         ImageView icon;
         TextView meetupNo;
         TextView distance;
+        LinearLayout imageLayout;
 
         public PlaceViewHolder(View v)
         {
@@ -907,8 +956,10 @@ public class PlacesListActivity extends BaseActivity implements GoogleApiClient.
             squadField = (TextView) v.findViewById(R.id.listCard_text2);
             icon = (ImageView) v.findViewById(R.id.icon);
             image = (ImageView) v.findViewById(R.id.listCard_image);
+            imageLoading = (ProgressBar) v.findViewById(R.id.listCard_imageProgress);
             meetupNo = (TextView) v.findViewById(R.id.listCard_text4);
             distance = (TextView) v.findViewById(R.id.listCard_text5);
+            imageLayout = (LinearLayout) v.findViewById(R.id.listCard_imageLayout);
 
             icon.setImageResource(R.drawable.ic_meetup_icon);
         }
