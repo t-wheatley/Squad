@@ -534,6 +534,9 @@ public class NewMeetupActivity extends AppCompatActivity
             // Adding the Meetup to the user's hosted
             mDatabase.child("users").child(user.getUid()).child("hosting").child(meetupId).setValue(true);
 
+            // Pushing the place to the squad it belongs to
+            mDatabase.child("squads").child(squadId).child("meetups").child(meetupId).setValue(true);
+
             // Send user to their meetup on the MeetupDetailActivity activity
             Intent intent = new Intent(NewMeetupActivity.this, MeetupDetailActivity.class);
             intent.putExtra("meetupId", meetupId);

@@ -194,7 +194,7 @@
                                 android:layout_width="200dp"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentEnd="true"
-                                android:onClick="viewMeetups"
+                                android:onClick="viewPlaces"
                                 android:text="View Places" />
 
                         </RelativeLayout>

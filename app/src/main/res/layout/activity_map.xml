@@ -55,42 +55,10 @@
             android:paddingTop="16dp"
             android:visibility="gone">
 
-            <Button
-                android:id="@+id/btn_request_direction"
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Directions" />
 
-            <TextView
-                android:text=""
-                android:padding="5dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
-                android:background="@color/colorPrimary"
-                android:id="@+id/textDistance"
-                android:textStyle="bold"
-                android:textColor="@color/tw__solid_white"
-                />
 
-            <TextView
-                android:text=""
-                android:padding="5dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:background="@color/colorPrimary"
-                android:id="@+id/textDuration"
-                style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
 
-            <Button
-                android:id="@+id/btn_show_meetup"
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="View meetup" />
+
 
 
             <TextView
@@ -147,7 +115,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/map_appBar"
-            android:layout_above="@+id/navigation"
+            android:layout_above="@+id/detailsBar"
             >
 
             <fragment
@@ -157,6 +125,99 @@
                 tools:context=".activities.MapActivity"
                 android:name="com.google.android.gms.maps.SupportMapFragment" />
         </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/navigation"
+        android:id="@+id/detailsBar"
+        android:orientation="vertical"
+        android:background="@color/colorPrimary"
+        android:visibility="gone"
+        >
+
+
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:elevation="10dp"
+            >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_toStartOf="@+id/middle"
+                >
+
+                <Button
+                    android:id="@+id/btn_request_direction"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Directions"
+                    android:layout_marginEnd="5dp"
+                    />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_centerVertical="true"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    >
+
+                    <TextView
+                        android:text=""
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:id="@+id/textDistance"
+                        android:textStyle="bold"
+                        android:visibility="gone"
+                        />
+
+                    <TextView
+                        android:text=""
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textDuration"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        />
+
+                </LinearLayout>
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/middle"
+                android:layout_centerHorizontal="true"
+                >
+                <!-- Dummy middle area -->
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/btn_show_meetup"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="View meetup"
+                android:layout_alignParentEnd="true"
+                android:layout_toEndOf="@+id/middle"
+                android:layout_marginStart="10dp"
+                />
+
+        </RelativeLayout>
+
+    </LinearLayout>
 
         <include
             layout="@layout/element_bottom_navigation"
