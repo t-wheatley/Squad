@@ -70,8 +70,9 @@ public class PlaceDetailsActivity extends BaseActivity {
     TextView squad;
     Button mapBtn;
     Button meetupsBtn;
-    RelativeLayout galleryLayout;
+    LinearLayout galleryLayout;
     ImageSwitcher gallery;
+    TextView galleryCounter;
 
     boolean burger = false;
     FloatingActionButton fab;
@@ -107,7 +108,7 @@ public class PlaceDetailsActivity extends BaseActivity {
         fab = (FloatingActionButton) findViewById(R.id.placeDetails_fab);
         burgerMenu = (LinearLayout) findViewById(R.id.placeDetails_burgerMenu);
         hostMenu = (LinearLayout) findViewById(R.id.placeDetails_hostMenu);
-        galleryLayout = (RelativeLayout) findViewById(R.id.placeDetails_galleryLayout);
+        galleryLayout = (LinearLayout) findViewById(R.id.placeDetails_galleryLayout);
         mapBtn = (Button) findViewById(R.id.mapButton);
         mapBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,6 +123,7 @@ public class PlaceDetailsActivity extends BaseActivity {
                 viewMeetups();
             }
         });
+        galleryCounter = (TextView) findViewById(R.id.placeDetails_galleryCounter);
 
         gallery = (ImageSwitcher) findViewById(R.id.placeDetails_gallery);
         gallery.setFactory(new ViewSwitcher.ViewFactory() {
