@@ -67,11 +67,13 @@
         android:gravity="center"
         android:visibility="gone"
         android:paddingTop="16dp"
+        android:paddingEnd="88dp"
+        android:paddingStart="16dp"
         android:paddingBottom="16dp"
         >
 
         <Button
-            android:layout_width="170dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Create New"
             style="@style/Widget.AppCompat.Button.Colored"
@@ -88,7 +90,7 @@
             />
 
         <Button
-            android:layout_width="170dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="By Distance"
             android:id="@+id/meetupsList_btnDistance"
@@ -96,7 +98,7 @@
             />
 
         <Button
-            android:layout_width="170dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="By Start Time"
             android:id="@+id/meetupsList_btnStartTime"
@@ -104,7 +106,7 @@
             />
 
         <Button
-            android:layout_width="170dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Show Past"
             android:id="@+id/meetupsList_showPast"
