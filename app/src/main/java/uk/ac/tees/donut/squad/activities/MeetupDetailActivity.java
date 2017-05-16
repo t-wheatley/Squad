@@ -3,7 +3,6 @@ package uk.ac.tees.donut.squad.activities;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -26,7 +25,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.vision.text.Text;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -102,6 +100,8 @@ public class MeetupDetailActivity extends BaseActivity
     Boolean attending;
     int secretCount;
     int memberCount;
+    double latitude;
+    double longitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -214,6 +214,11 @@ public class MeetupDetailActivity extends BaseActivity
                 // Displays the found Meetup's attributes
                 nameDisplay.setText(meetup.getName());
                 descriptionDisplay.setText(meetup.getDescription());
+                addressDisplay.setText(meetup.fullAddress());
+
+                //get longitude and latitude of meetup
+                latitude = meetup.getLatitude();
+                longitude = meetup.getLongitude();
 
                 // Gets the start and end date of the Meetup
                 SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy 'at' h:mm a");
@@ -840,10 +845,11 @@ public class MeetupDetailActivity extends BaseActivity
 
     public void mapLocation(View view)
     {
-        //get location on map
-    }
-    public void getDirections(View view)
-    {
-        //get directions
+        Intent newDetail = new Intent(MeetupDetailActivity.this, PlaceMapsActivity.class);
+        newDetail.putExtra("latitude", latitude);
+        newDetail.putExtra("longitude", longitude);
+        newDetail.putExtra("placeName", nameDisplay.getText().toString());
+        newDetail.putExtra("placeDescription", descriptionDisplay.getText().toString());
+        startActivity(newDetail);
     }
 }

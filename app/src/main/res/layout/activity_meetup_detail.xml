@@ -413,6 +413,7 @@
             android:background="@color/colorPrimary"
             android:id="@+id/meetupDetail_burgerMenu"
             android:elevation="5dp"
+            android:visibility="gone"
             >
 
             <LinearLayout
@@ -422,24 +423,26 @@
                 android:paddingStart="16dp"
                 android:orientation="vertical"
                 android:gravity="center"
-                android:visibility="gone"
+                android:visibility="visible"
+                android:layout_marginBottom="16dp"
                 >
 
-                <Button
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    style="@style/Base.Widget.AppCompat.Button.Colored"
-                    android:text="Map Location"
-                    android:onClick="mapLocation"
+                    android:text="Actions"
+                    android:layout_marginTop="16dp"
+                    android:gravity="center"
+                    android:textColor="@color/tw__solid_white"
+                    android:textStyle="bold"
                     />
 
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     style="@style/Base.Widget.AppCompat.Button.Colored"
-                    android:text="Get Directions"
-                    android:onClick="getDirections"
+                    android:text="Map Location"
+                    android:onClick="mapLocation"
                     />
 
                 <!-- Host Options -->
@@ -449,7 +452,6 @@
                     android:orientation="vertical"
                     android:gravity="center"
                     android:id="@+id/meetupDetail_hostBurgerMenu"
-                    android:layout_marginBottom="16dp"
                     android:layout_marginTop="6dp"
                     android:visibility="gone"
                     >
