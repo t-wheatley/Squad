@@ -852,8 +852,4 @@ public class MeetupDetailActivity extends BaseActivity
         newDetail.putExtra("placeDescription", descriptionDisplay.getText().toString());
         startActivity(newDetail);
     }
-    public void getDirections(View view)
-    {
-        //get directions
-    }
 }
