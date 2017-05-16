@@ -29,6 +29,11 @@ public class FetchAddressIntentService extends IntentService
         super("FetchAddressIntentService");
     }
 
+    /**
+     * Mehtod handles geocode intent
+     *
+     * @param intent
+     */
     @Override
     protected void onHandleIntent(Intent intent)
     {
@@ -110,6 +115,13 @@ public class FetchAddressIntentService extends IntentService
         }
     }
 
+    /**
+     * method delivers results of intent
+     *
+     * @param resultCode
+     * @param message
+     * @param address
+     */
     private void deliverResultToReceiver(int resultCode, String message, Address address)
     {
         Bundle bundle = new Bundle();

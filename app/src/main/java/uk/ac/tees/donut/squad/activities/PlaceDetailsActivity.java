@@ -21,7 +21,6 @@ import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -45,7 +44,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import uk.ac.tees.donut.squad.R;
-import uk.ac.tees.donut.squad.location.PlaceMapsActivity;
 import uk.ac.tees.donut.squad.posts.LocPlace;
 
 /**
