@@ -70,6 +70,7 @@ public class PlaceDetailsActivity extends BaseActivity {
     TextView squad;
     Button mapBtn;
     Button meetupsBtn;
+    RelativeLayout galleryLayout;
     ImageSwitcher gallery;
 
     boolean burger = false;
@@ -106,6 +107,7 @@ public class PlaceDetailsActivity extends BaseActivity {
         fab = (FloatingActionButton) findViewById(R.id.placeDetails_fab);
         burgerMenu = (LinearLayout) findViewById(R.id.placeDetails_burgerMenu);
         hostMenu = (LinearLayout) findViewById(R.id.placeDetails_hostMenu);
+        galleryLayout = (RelativeLayout) findViewById(R.id.placeDetails_galleryLayout);
         mapBtn = (Button) findViewById(R.id.mapButton);
         mapBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,6 +139,7 @@ public class PlaceDetailsActivity extends BaseActivity {
         } else {
             //gets rid of the noPic text
             noPic.setVisibility(View.GONE);
+            galleryLayout.setVisibility(View.VISIBLE);
             gallery.setVisibility(View.VISIBLE);
         }
 
@@ -254,6 +257,7 @@ public class PlaceDetailsActivity extends BaseActivity {
 
         if (pictures != null) {
             noPic.setVisibility(View.GONE);
+            galleryLayout.setVisibility(View.VISIBLE);
             gallery.setVisibility(View.VISIBLE);
 
             for (final String pictureUrl : pictures.values()) {
@@ -302,6 +306,14 @@ public class PlaceDetailsActivity extends BaseActivity {
         imagePosition++;
         if (imagePosition == images.size()) {
             imagePosition = 0;
+        }
+        displayImage(images.get(imagePosition));
+    }
+
+    public void previousImage(View view) {
+        imagePosition--;
+        if (imagePosition == -1) {
+            imagePosition = images.size() - 1;
         }
         displayImage(images.get(imagePosition));
     }
@@ -363,6 +375,7 @@ public class PlaceDetailsActivity extends BaseActivity {
 
                             if (images.isEmpty()) {
                                 gallery.setVisibility(View.VISIBLE);
+                                galleryLayout.setVisibility(View.VISIBLE);
                                 noPic.setVisibility(View.GONE);
 
                                 images.add(downloadUrl.toString());
