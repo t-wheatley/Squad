@@ -11,6 +11,8 @@ public class Squad
     String name;
     String description;
     HashMap<String, Boolean> users;
+    HashMap<String, Boolean> meetups;
+    HashMap<String, Boolean> places;
 
     /**
      * Empty constructor for Firebase.
@@ -55,6 +57,16 @@ public class Squad
         this.users = users;
     }
 
+    public HashMap<String, Boolean> getMeetups()
+    {
+        return meetups;
+    }
+
+    public HashMap<String, Boolean> getPlaces()
+    {
+        return places;
+    }
+
     //SETTERS
     public void setId(String id)
     {
@@ -74,5 +86,15 @@ public class Squad
     public HashMap<String, Boolean> getUsers()
     {
         return users;
+    }
+
+    public void setMeetups(HashMap<String, Boolean> meetups)
+    {
+        this.meetups = meetups;
+    }
+
+    public void setPlaces(HashMap<String, Boolean> places)
+    {
+        this.places = places;
     }
 }
