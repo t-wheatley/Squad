@@ -23,7 +23,6 @@
         </activity>
         <activity android:name=".activities.LoginActivity"/>
         <activity android:name=".activities.SquadListActivity" />
-        <activity android:name=".location.GeocoderActivity" />
         <activity android:name=".activities.NewMeetupActivity" />
         <activity
             android:name=".activities.MeetupDetailActivity"
@@ -55,12 +54,13 @@
             android:name=".activities.MapActivity"
             android:label="@string/title_activity_map" />
         <activity android:name=".activities.MeetupsListActivity" />
-        <activity android:name=".activities.PlaceDetailsActivity" />
+        <activity android:name=".activities.PlaceDetailsActivity"
+            android:configChanges="orientation|screenSize" />
         <activity android:name=".activities.NewPlaceActivity" />
         <activity android:name=".activities.SquadPostActivity"></activity>
         <activity android:name=".activities.PlacesListActivity"/>
         <activity
-            android:name=".location.PlaceMapsActivity"
+            android:name=".activities.PlaceMapsActivity"
             android:label="@string/title_activity_place_maps" />
     </application>
 
