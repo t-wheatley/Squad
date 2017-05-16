@@ -206,6 +206,26 @@ public class SquadDetailActivity extends BaseActivity
                 joinBtn.setText("Leave");
             }
 
+            // Getting the placeCount
+            if(squad.getPlaces() != null)
+            {
+                placeCount.setText(squad.getPlaces().size() + " Places");
+
+            } else
+            {
+                placeCount.setText("0 Places");
+            }
+
+            // Getting the meetupCount
+            if(squad.getMeetups() != null)
+            {
+                meetupCount.setText(squad.getMeetups().size() + " Meetups");
+
+            } else
+            {
+                meetupCount.setText("0 Meetups");
+            }
+
             // Displaying members of the Squad
             for (final String uId : users.keySet())
             {

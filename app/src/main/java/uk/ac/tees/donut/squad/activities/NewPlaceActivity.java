@@ -283,16 +283,19 @@ public class NewPlaceActivity extends AppCompatActivity
         if (user != null)
         {
             // User is signed in
-            // Creating a new meetup node and getting the key value
+            // Creating a new place node and getting the key value
             String placeId = mDatabase.child("places").push().getKey();
 
             // Creating a place object
             Place place = new LocPlace(placeId, n, d, s, user.getUid(), a1, a2, tc, c, pc, lon, lat);
 
-            // Pushing the meetup to the "meetups" node using the placeId
+            // Pushing the place to the "place" node using the placeId
             mDatabase.child("places").child(placeId).setValue(place);
 
-            // Send user to their meetup on the MeetupDetailActivity activity
+            // Pushing the place to the squad it belongs to
+            mDatabase.child("squads").child(s).child("places").child(placeId).setValue(true);
+
+            // Send user to their place on the PlaceDetailsActivity activity
             Intent intent = new Intent(NewPlaceActivity.this, PlaceDetailsActivity.class);
             intent.putExtra("placeId", placeId);
             startActivity(intent);
