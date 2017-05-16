@@ -662,6 +662,11 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
         }
     }
 
+    /**
+     * Method called when getting direction fails
+     *
+     * @param t
+     */
     @Override
     public void onDirectionFailure(Throwable t)
     {
