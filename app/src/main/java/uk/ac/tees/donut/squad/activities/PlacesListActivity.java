@@ -609,7 +609,6 @@ public class PlacesListActivity extends BaseActivity implements GoogleApiClient.
                     .into(viewHolder.image);
         }
 
-
         // onClick
         viewHolder.mView.setOnClickListener(new View.OnClickListener()
         {
@@ -1053,6 +1052,42 @@ public class PlacesListActivity extends BaseActivity implements GoogleApiClient.
 
                 }
             });
+
+            // loading the picture
+            if(place.getPictures() != null)
+            {
+                // Get the first picture's url
+                HashMap<String, String> pictures = place.getPictures();
+                String pictureUrl = pictures.values().toArray()[0].toString();
+
+                // Displaying the needed UI
+                holder.imageLayout.setVisibility(View.VISIBLE);
+                holder.image.setVisibility(View.VISIBLE);
+                holder.imageLoading.setVisibility(View.VISIBLE);
+
+                // Download and display using Glide
+                Glide.with(PlacesListActivity.this)
+                        .load(pictureUrl)
+                        .asBitmap()
+                        .listener(new RequestListener<String, Bitmap>() {
+                            @Override
+                            public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
+                                // Displaying the needed UI
+                                holder.imageLayout.setVisibility(View.GONE);
+                                holder.image.setVisibility(View.GONE);
+                                holder.imageLoading.setVisibility(View.GONE);
+                                return false;
+                            }
+
+                            @Override
+                            public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                                holder.image.setImageDrawable(new BitmapDrawable(getResources(), resource));
+                                holder.imageLoading.setVisibility(View.GONE);
+                                return true;
+                            }
+                        })
+                        .into(holder.image);
+            }
 
             // OnClick
             holder.mView.setOnClickListener(new View.OnClickListener()
