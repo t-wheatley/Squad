@@ -101,23 +101,51 @@
 
                     </RelativeLayout>
 
-                    <ProgressBar
-                        android:id="@+id/placeDetails_imageProgress"
-                        style="?android:attr/progressBarStyleLarge"
+
+
+                    <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:visibility="gone"/>
+                        android:id="@+id/placeDetails_galleryLayout"
+                        android:visibility="gone">
 
-                    <ImageSwitcher
-                        android:layout_width="match_parent"
-                        android:layout_height="120dp"
-                        android:layout_gravity="center"
-                        android:id="@+id/placeDetails_gallery"
-                        android:visibility="gone"
-                        android:onClick="nextImage"
-                        >
-                    </ImageSwitcher>
+                        <ImageSwitcher
+                            android:layout_width="match_parent"
+                            android:layout_height="120dp"
+                            android:layout_gravity="center"
+                            android:id="@+id/placeDetails_gallery" />
+
+                        <ProgressBar
+                            android:id="@+id/placeDetails_imageProgress"
+                            style="?android:attr/progressBarStyleLarge"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true"
+                            android:visibility="gone"/>
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/placeDetails_arrowLeft"
+                            android:src="@drawable/ic_arrowleft"
+                            android:layout_alignStart="@+id/placeDetails_gallery"
+                            android:layout_centerVertical="true"
+                            android:onClick="nextImage"/>
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/placeDetails_arrowRight"
+                            android:src="@drawable/ic_arrowright"
+                            android:layout_alignEnd="@+id/placeDetails_gallery"
+                            android:layout_centerVertical="true"
+                            android:onClick="previousImage"/>
+
+
+
+                    </RelativeLayout>
+
 
                     <TextView
                         android:layout_width="match_parent"
