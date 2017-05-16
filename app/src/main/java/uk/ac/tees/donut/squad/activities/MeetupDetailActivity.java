@@ -100,6 +100,8 @@ public class MeetupDetailActivity extends BaseActivity
     Boolean attending;
     int secretCount;
     int memberCount;
+    double latitude;
+    double longitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -213,6 +215,10 @@ public class MeetupDetailActivity extends BaseActivity
                 nameDisplay.setText(meetup.getName());
                 descriptionDisplay.setText(meetup.getDescription());
                 addressDisplay.setText(meetup.fullAddress());
+
+                //get longitude and latitude of meetup
+                latitude = meetup.getLatitude();
+                longitude = meetup.getLongitude();
 
                 // Gets the start and end date of the Meetup
                 SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy 'at' h:mm a");
@@ -839,7 +845,12 @@ public class MeetupDetailActivity extends BaseActivity
 
     public void mapLocation(View view)
     {
-        //get location on map
+        Intent newDetail = new Intent(MeetupDetailActivity.this, PlaceMapsActivity.class);
+        newDetail.putExtra("latitude", latitude);
+        newDetail.putExtra("longitude", longitude);
+        newDetail.putExtra("placeName", nameDisplay.getText().toString());
+        newDetail.putExtra("placeDescription", descriptionDisplay.getText().toString());
+        startActivity(newDetail);
     }
     public void getDirections(View view)
     {
