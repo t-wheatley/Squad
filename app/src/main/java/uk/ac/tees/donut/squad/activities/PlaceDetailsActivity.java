@@ -72,6 +72,7 @@ public class PlaceDetailsActivity extends BaseActivity {
     Button meetupsBtn;
     RelativeLayout galleryLayout;
     ImageSwitcher gallery;
+    TextView galleryCounter;
 
     boolean burger = false;
     FloatingActionButton fab;
@@ -122,6 +123,7 @@ public class PlaceDetailsActivity extends BaseActivity {
                 viewMeetups();
             }
         });
+        galleryCounter = (TextView) findViewById(R.id.placeDetails_galleryCounter);
 
         gallery = (ImageSwitcher) findViewById(R.id.placeDetails_gallery);
         gallery.setFactory(new ViewSwitcher.ViewFactory() {
