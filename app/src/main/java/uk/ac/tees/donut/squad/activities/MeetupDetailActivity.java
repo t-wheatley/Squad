@@ -216,6 +216,10 @@ public class MeetupDetailActivity extends BaseActivity
                 descriptionDisplay.setText(meetup.getDescription());
                 addressDisplay.setText(meetup.fullAddress());
 
+                //get longitude and latitude of meetup
+                latitude = meetup.getLatitude();
+                longitude = meetup.getLongitude();
+
                 // Gets the start and end date of the Meetup
                 SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy 'at' h:mm a");
                 String startDate = sdf.format(meetup.getStartDateTime() * 1000L);
