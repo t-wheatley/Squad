@@ -160,6 +160,26 @@ public class SquadDetailActivity extends BaseActivity
                 nameDisplay.setText(squad.getName());
                 descriptionDisplay.setText(squad.getDescription());
 
+                // Getting the placeCount
+                if(squad.getPlaces() != null)
+                {
+                    placeCount.setText(squad.getPlaces().size() + " Places");
+
+                } else
+                {
+                    placeCount.setText("0 Places");
+                }
+
+                // Getting the meetupCount
+                if(squad.getMeetups() != null)
+                {
+                    meetupCount.setText(squad.getMeetups().size() + " Meetups");
+
+                } else
+                {
+                    meetupCount.setText("0 Meetups");
+                }
+
                 // Load the members of the Squad
                 loadUsers();
             }
@@ -204,26 +224,6 @@ public class SquadDetailActivity extends BaseActivity
             {
                 member = true;
                 joinBtn.setText("Leave");
-            }
-
-            // Getting the placeCount
-            if(squad.getPlaces() != null)
-            {
-                placeCount.setText(squad.getPlaces().size() + " Places");
-
-            } else
-            {
-                placeCount.setText("0 Places");
-            }
-
-            // Getting the meetupCount
-            if(squad.getMeetups() != null)
-            {
-                meetupCount.setText(squad.getMeetups().size() + " Meetups");
-
-            } else
-            {
-                meetupCount.setText("0 Meetups");
             }
 
             // Displaying members of the Squad
@@ -282,7 +282,7 @@ public class SquadDetailActivity extends BaseActivity
         } else
         {
             // If the squad has no members
-            memberDisplay.setText("This Squad has no members yet!");
+            memberCountDisplay.setText("0");
 
             // Hiding loading overlay
             loadingOverlay.setVisibility(View.GONE);
