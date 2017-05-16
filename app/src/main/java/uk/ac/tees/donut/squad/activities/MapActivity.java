@@ -90,12 +90,15 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
     protected Location mLastLocation;
     private Marker mCurrLocationMarker;
     private GoogleMap mMap;
+    private LinearLayout detailsBar;
+
     //Google directions API key
     private String directionAPIKey = "AIzaSyBPSyzwv_Lr4JyCgKRswRhBRebSi8htqt8";
     private LatLng currentLocation;
     private LatLng destination;
     private double longitude;
     private double latitude;
+
 
     private String userId;
     private String squadId;
@@ -129,6 +132,8 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
         btnRequest = (Button) findViewById(R.id.btn_request_direction);
         btnRequest.setOnClickListener(this);
         btnRequest.setVisibility(View.GONE);
+
+        detailsBar = (LinearLayout) findViewById(R.id.detailsBar);
 
         btnShowMeetup = (Button) findViewById(R.id.btn_show_meetup);
         btnShowMeetup.setOnClickListener(this);
@@ -602,6 +607,7 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
         {
             Meetup meetup = (Meetup) marker.getTag();
             meetupID = meetup.getId();
+            detailsBar.setVisibility(View.VISIBLE);
             btnShowMeetup.setVisibility(View.VISIBLE);
             btnRequest.setVisibility(View.VISIBLE);
             destination = marker.getPosition();
