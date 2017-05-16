@@ -222,9 +222,34 @@
                         </RelativeLayout>
 
                         <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Description"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginBottom="5dp"
+                        android:textStyle="bold"
+                        />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:text="Description goes here"
+                            android:id="@+id/meetupDetail_description"
+                            />
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorPrimaryDark"
+                            android:layout_margin="10dp"
+                            >
+                        </RelativeLayout>
+
+                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Description"
+                            android:text="Address"
                             android:layout_marginStart="10dp"
                             android:layout_marginBottom="5dp"
                             android:textStyle="bold"
@@ -234,8 +259,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:layout_marginEnd="10dp"
-                            android:text="Description goes here"
-                            android:id="@+id/meetupDetail_description"
+                            android:text="Address goes here"
+                            android:id="@+id/meetupDetail_address"
                             />
 
                         <RelativeLayout
@@ -400,6 +425,23 @@
                 android:visibility="gone"
                 >
 
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    style="@style/Base.Widget.AppCompat.Button.Colored"
+                    android:text="Map Location"
+                    android:onClick="mapLocation"
+                    />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/Base.Widget.AppCompat.Button.Colored"
+                    android:text="Get Directions"
+                    android:onClick="getDirections"
+                    />
+
                 <!-- Host Options -->
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -416,7 +458,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textStyle="bold"
-                        android:text="Host options"
+                        android:text="Host Options"
                         android:layout_margin="10dp"
                         android:textColor="@color/tw__solid_white"
                         />
@@ -448,6 +490,7 @@
                     <Button
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
                         style="@style/Widget.AppCompat.Button.Colored"
                         android:text="Delete Meetup"
                         android:id="@+id/meetupDetail_deleteBtn"
