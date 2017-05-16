@@ -76,14 +76,13 @@
                 android:layout_height="wrap_content"
                 android:scrollbars="vertical"
                 android:layout_below="@+id/txtPost"
-                android:visibility="gone"
                 />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/colorPrimaryDark"
-                android:layout_below="@+id/txtPost"
+                android:layout_below="@+id/commentRV"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
 

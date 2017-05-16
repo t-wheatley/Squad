@@ -1,5 +1,7 @@
 package uk.ac.tees.donut.squad.posts;
 
+import java.util.HashMap;
+
 /**
  * Class used to represent a User's Post in a Squad.
  */
@@ -42,6 +44,7 @@ public class Post
     }
 
     // GETTERS
+
     public String getId()
     {
         return id;
@@ -68,6 +71,7 @@ public class Post
     }
 
     // SETTERS
+
     public void setId(String id)
     {
         this.id = id;

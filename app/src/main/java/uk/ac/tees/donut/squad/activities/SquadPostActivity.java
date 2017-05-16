@@ -182,7 +182,7 @@ public class SquadPostActivity extends AppCompatActivity
         Query userQuery = mDatabase.child("posts").orderByChild("squad").equalTo(squadId);
 
         // Check to see if any Posts exist
-        checkForEmpty(userQuery);
+        checkForEmpty(userQuery, "p");
 
         // Loads the adapter with all the Posts returned by the query
         mAdapter = new FirebaseRecyclerAdapter<Post, PostViewHolder>(
@@ -206,7 +206,7 @@ public class SquadPostActivity extends AppCompatActivity
      *
      * @param query The query to check.
      */
-    public void checkForEmpty(Query query)
+    public void checkForEmpty(Query query, final String adapter)
     {
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -222,7 +222,7 @@ public class SquadPostActivity extends AppCompatActivity
                 }
 
                 // Add an Observer to the RecyclerView
-                adapterObserver();
+                adapterObserver(adapter);
             }
 
             @Override
@@ -236,7 +236,7 @@ public class SquadPostActivity extends AppCompatActivity
     /**
      * Method to add an observer on the RecyclerView to check if empty on data changes.
      */
-    public void adapterObserver()
+    public void adapterObserver(String adapter)
     {
         mObserver = new RecyclerView.AdapterDataObserver()
         {
@@ -264,11 +264,22 @@ public class SquadPostActivity extends AppCompatActivity
                 }
             }
         };
-        mAdapter.registerAdapterDataObserver(mObserver);
+        if(adapter.equals("p")) {
+            mAdapter.registerAdapterDataObserver(mObserver);
+        }
+        else{
+            pAdapter.registerAdapterDataObserver(mObserver);
+        }
     }
 
     public void populatePostViewHolder(final SquadPostActivity.PostViewHolder viewHolder, final Post model, int position)
     {
+        viewHolder.commentRV.setLayoutManager(new LinearLayoutManager(viewHolder.mView.getContext()));
+
+        getComment(model.getId());
+
+        viewHolder.commentRV.setAdapter(pAdapter);
+
         // Display the Post
         viewHolder.postField.setText(model.getPost());
 
@@ -317,11 +328,6 @@ public class SquadPostActivity extends AppCompatActivity
                             .fitCenter()
                             .error(R.drawable.com_facebook_profile_picture_blank_portrait)
                             .into(viewHolder.profilePic);
-
-                    viewHolder.commentRV.setLayoutManager(mLayoutManager);
-
-                    viewHolder.commentRV.setAdapter(pAdapter);
-
                 } else
                 {
                     new AlertDialog.Builder(SquadPostActivity.this)
@@ -359,7 +365,6 @@ public class SquadPostActivity extends AppCompatActivity
                 createComment(txtComment.getText().toString(), pId);
             }
         });
-        getComment(model.getId());
 
         // If loading the last item
         if (mAdapter.getItemCount() == loadingCount)
@@ -371,9 +376,11 @@ public class SquadPostActivity extends AppCompatActivity
         loadingCount++;
     }
 
-    public void getComment(String squadId) {
+    public void getComment(String postId) {
         // Database reference to get posts
-        Query userQuery = mDatabase.child("posts").child("comments");
+        Query userQuery = mDatabase.child("posts").child(postId).child("comments");
+
+        checkForEmpty(userQuery, "");
 
         pAdapter = new FirebaseRecyclerAdapter<Post, CommentViewHolder>(
                 Post.class,
@@ -461,8 +468,6 @@ public class SquadPostActivity extends AppCompatActivity
             }
         });
 
-        getComment(model.getId());
-
         // If loading the last item
         if (pAdapter.getItemCount() == loadingCount)
         {
@@ -533,7 +538,7 @@ public class SquadPostActivity extends AppCompatActivity
             Long dateTime = currentDateTime.getTimeInMillis() / 1000L;
 
             // Creating a post object
-            Post postObject = new Post(user.getUid(), post, postId, dateTime);
+            Post postObject = new Post(postId, post, user.getUid(), dateTime);
 
             // Pushing the post to the "comment" node using the postId
             mDatabase.child("posts").child(pId).child("comments").child(postId).setValue(postObject);
@@ -574,15 +579,16 @@ public class SquadPostActivity extends AppCompatActivity
         String postId;
         RecyclerView commentRV;
 
+
         public PostViewHolder(View v)
         {
             super(v);
             mView = v;
+            commentRV = (RecyclerView) v.findViewById(R.id.commentRV);
             btnComment = (Button) v.findViewById(R.id.postBtn);
             nameField = (TextView) v.findViewById(R.id.userName);
             postField = (TextView) v.findViewById(R.id.txtPost);
             profilePic = (ImageView) v.findViewById(R.id.userPP);
-            commentRV = (RecyclerView) v.findViewById(R.id.commentRV);
             date = (TextView) v.findViewById((R.id.txtDate));
         }
     }
