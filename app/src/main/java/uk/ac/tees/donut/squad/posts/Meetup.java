@@ -140,6 +140,23 @@ public class Meetup
 
     public String getPostCode(){return postCode;}
 
+    public String fullAddress()
+    {
+        String a = "";
+        if (address1.length() != 0)
+            a = a + address1;
+        if (address2.length() != 0)
+            a = a + ", " + address2;
+        if (townCity.length() != 0)
+            a = a + ", " + townCity;
+        if (county.length() != 0)
+            a = a + ", " + county;
+        if (postCode.length() != 0)
+            a = a + ", " + postCode;
+
+        return a;
+    }
+
     public int gimmeStatus()    //not 'get' so doesn't get sent to firebase
     {
         return status;
