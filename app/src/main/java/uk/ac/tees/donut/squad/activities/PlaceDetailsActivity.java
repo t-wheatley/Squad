@@ -70,7 +70,7 @@ public class PlaceDetailsActivity extends BaseActivity {
     TextView squad;
     Button mapBtn;
     Button meetupsBtn;
-    RelativeLayout galleryLayout;
+    LinearLayout galleryLayout;
     ImageSwitcher gallery;
     TextView galleryCounter;
 
@@ -108,7 +108,7 @@ public class PlaceDetailsActivity extends BaseActivity {
         fab = (FloatingActionButton) findViewById(R.id.placeDetails_fab);
         burgerMenu = (LinearLayout) findViewById(R.id.placeDetails_burgerMenu);
         hostMenu = (LinearLayout) findViewById(R.id.placeDetails_hostMenu);
-        galleryLayout = (RelativeLayout) findViewById(R.id.placeDetails_galleryLayout);
+        galleryLayout = (LinearLayout) findViewById(R.id.placeDetails_galleryLayout);
         mapBtn = (Button) findViewById(R.id.mapButton);
         mapBtn.setOnClickListener(new View.OnClickListener() {
             @Override
