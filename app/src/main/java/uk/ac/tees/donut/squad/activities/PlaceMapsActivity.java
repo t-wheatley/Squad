@@ -1,4 +1,4 @@
-package uk.ac.tees.donut.squad.location;
+package uk.ac.tees.donut.squad.activities;
 
 import android.Manifest;
 import android.content.DialogInterface;
@@ -7,11 +7,10 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -28,12 +27,12 @@ import com.akexorcist.googledirection.model.Info;
 import com.akexorcist.googledirection.model.Leg;
 import com.akexorcist.googledirection.model.Route;
 import com.akexorcist.googledirection.util.DirectionConverter;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -41,6 +40,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
 import java.util.ArrayList;
 
 import uk.ac.tees.donut.squad.R;
@@ -104,7 +104,7 @@ public class PlaceMapsActivity extends AppCompatActivity implements OnMapReadyCa
 
 
     /**
-     * Called when map is ready
+     * Method called when map is ready
      *
      * @param googleMap
      */
@@ -184,20 +184,10 @@ public class PlaceMapsActivity extends AppCompatActivity implements OnMapReadyCa
         int id = v.getId();
     }
 
-    public void requestDirection(Boolean m){
-        if (currentLocation == null || destination == null){
-            Toast.makeText(this, "Invalid Destination", Toast.LENGTH_LONG).show();
-        }
-        else {
-            GoogleDirection.withServerKey(directionAPIKey)
-                    .from(currentLocation)
-                    .to(destination)
-                    .transportMode(TransportMode.DRIVING)
-                    .unit(Unit.IMPERIAL)
-                    .execute(this);
-        }
-    }
 
+    /**
+     * Method called when activity is not active
+     */
     @Override
     public void onPause() {
         super.onPause();
@@ -209,7 +199,9 @@ public class PlaceMapsActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
 
-
+    /**
+     * Mehtod to build the API client for google location services
+     */
     protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -220,18 +212,30 @@ public class PlaceMapsActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
 
-
+    /**
+     * Method called if unable to connect to google API client
+     *
+     * @param connectionResult
+     */
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
 
+    /**
+     * Mehtod calls get location when connected to google API client
+     *
+     * @param bundle
+     */
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         getLocation();
 
     }
 
+    /**
+     * Method gets users current location
+     */
     public void getLocation(){
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(1000);
@@ -244,10 +248,20 @@ public class PlaceMapsActivity extends AppCompatActivity implements OnMapReadyCa
         }
     }
 
+    /**
+     * method called when connection to google API client is suspended
+     *
+     * @param i
+     */
     @Override
     public void onConnectionSuspended(int i) {
     }
 
+    /**
+     * Method called when users location is changed, adds a marker to the users current position
+     *
+     * @param location users location
+     */
     @Override
     public void onLocationChanged(Location location) {
         mLastLocation = location;
@@ -264,10 +278,12 @@ public class PlaceMapsActivity extends AppCompatActivity implements OnMapReadyCa
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
         mCurrLocationMarker = mMap.addMarker(markerOptions);
 
+        //Set direction perameters's once user's location is set
         if (currentLocation == null || destination == null){
             Toast.makeText(this, "Invalid Destination", Toast.LENGTH_LONG).show();
         }
         else {
+            //Generate Directions
             GoogleDirection.withServerKey(directionAPIKey)
                     .from(currentLocation)
                     .to(destination)
@@ -285,6 +301,10 @@ public class PlaceMapsActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+
+    /**
+     * Method called to check the current location permissions
+     */
     private void checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -292,9 +312,7 @@ public class PlaceMapsActivity extends AppCompatActivity implements OnMapReadyCa
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.ACCESS_FINE_LOCATION)) {
 
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
+                //Dialog informs the user of no location permission and asks for permission
                 new AlertDialog.Builder(this)
                         .setTitle("Location Permission Needed")
                         .setMessage("This app needs the Location permission, please accept to use location functionality")
@@ -321,6 +339,13 @@ public class PlaceMapsActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
 
+    /**
+     * Mehtod called when requesting permission to use location
+     *
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
@@ -352,11 +377,19 @@ public class PlaceMapsActivity extends AppCompatActivity implements OnMapReadyCa
         }
     }
 
+    /**
+     * Mehtod called if direction result is successful, creates a polyline between current location and destination
+     *
+     * @param direction direction details passed in from getDirections
+     * @param rawBody
+     */
     @Override
     public void onDirectionSuccess(Direction direction, String rawBody) {
+        // Check that direction is ok
         if (direction.isOK()) {
             ArrayList<LatLng> directionPositionList = direction.getRouteList().get(0).getLegList().get(0).getDirectionPoint();
 
+            //Get information about leg for directions
             Route route = direction.getRouteList().get(0);
             Leg leg = route.getLegList().get(0);
 
@@ -366,18 +399,23 @@ public class PlaceMapsActivity extends AppCompatActivity implements OnMapReadyCa
             String distance = distanceInfo.getText();
             String duration = durationInfo.getText();
 
+            //Set text boxes to show direction distance and driving time
             showDistance.setText("Distance: " + distance);
             showDuration.setText("Driving time: " + duration);
 
             showDistance.setVisibility(View.VISIBLE);
             showDuration.setVisibility(View.VISIBLE);
-
+            //Draw polyline
             mMap.addPolyline(DirectionConverter.createPolyline(this, directionPositionList, 5, Color.RED));
 
-           // btnRequestDriving.setVisibility(View.GONE);
         }
     }
 
+    /**
+     * Method called when getting direction fails
+     *
+     * @param t
+     */
     @Override
     public void onDirectionFailure(Throwable t) {
 
