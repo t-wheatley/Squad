@@ -13,7 +13,12 @@ public class Meetup
             description,
             squad,
             host,
-            place;
+            place,
+            address1,
+            address2,
+            townCity,
+            county,
+            postCode;
 
     // Attendees
     HashMap<String, Boolean> users;
@@ -49,7 +54,7 @@ public class Meetup
      * @param longi The longitude of the Meetup.
      * @param lat   The latitude of the Meetup.
      */
-    public Meetup(String i, String n, String d, String s, String h, long sd, long ed, double longi, double lat)
+    public Meetup(String i, String n, String d, String s, String h, long sd, long ed, double longi, double lat, String a1, String a2, String town, String c, String pc)
     {
         id = i;
         name = n;
@@ -60,6 +65,11 @@ public class Meetup
         endDateTime = ed;
         longitude = longi;
         latitude = lat;
+        address1 = a1;
+        address2 = a2;
+        townCity = town;
+        county = c;
+        postCode = pc;
 
         updateStatus();
     }
@@ -120,6 +130,16 @@ public class Meetup
         return latitude;
     }
 
+    public String getAddress1(){return address1;}
+
+    public String getAddress2(){return address2;}
+
+    public String getTownCity(){return townCity;}
+
+    public String getCounty(){return county;}
+
+    public String getPostCode(){return postCode;}
+
     public int gimmeStatus()    //not 'get' so doesn't get sent to firebase
     {
         return status;
@@ -130,7 +150,6 @@ public class Meetup
     {
         this.id = i;
     }
-
     public void setName(String n)
     {
         this.name = n;
@@ -180,6 +199,19 @@ public class Meetup
     {
         this.latitude = latitude;
     }
+
+    public void setAddress2(String address2) {this.address2 = address2;}
+
+    public void setCounty(String c) {county = c;}
+
+    public void setPostCode(String postCode) {this.postCode = postCode;}
+
+    public void setStatus(int status) {this.status = status;}
+
+    public void setTownCity(String townCity) {this.townCity = townCity;}
+
+    public void setAddress1(String a1) {
+        address1 = a1;}
 
     public void changeStatus(int st)    //not 'set' so firebase api doesn't do anything with it
     {
