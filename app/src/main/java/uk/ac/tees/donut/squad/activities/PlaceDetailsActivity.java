@@ -719,6 +719,9 @@ public class PlaceDetailsActivity extends BaseActivity {
         loadingText.setText("Deleting Place...");
         loadingOverlay.setVisibility(View.VISIBLE);
 
+        // Removing the place from the squad's places
+        mDatabase.child("squads").child(place.getSquad()).child("places").child(placeId).removeValue();
+
         // Removing the Place
         mDatabase.child("places").child(placeId).removeValue();
         finish();
