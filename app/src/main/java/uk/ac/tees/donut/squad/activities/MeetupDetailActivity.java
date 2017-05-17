@@ -597,6 +597,9 @@ public class MeetupDetailActivity extends BaseActivity
             mDatabase.child("places").child(meetup.getPlace()).child("meetups").child(meetupId).removeValue();
         }
 
+        // Removing the meetup from the squad's meetups
+        mDatabase.child("squads").child(meetup.getSquad()).child("meetups").child(meetupId).removeValue();
+
         // Removing the meetup
         mDatabase.child("meetups").child(meetupId).removeValue();
         finish();
