@@ -61,10 +61,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="20dp"
                         android:layout_toLeftOf="@+id/listCard_text2"
-                        android:ellipsize="marquee"
                         android:text="Text 1"
                         android:textColor="@color/tw__composer_white"
                         android:textStyle="bold"
+                        android:ellipsize="marquee"
                         />
 
                     <TextView
