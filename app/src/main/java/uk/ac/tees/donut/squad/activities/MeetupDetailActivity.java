@@ -511,13 +511,13 @@ public class MeetupDetailActivity extends BaseActivity
                 imageViewCard.setVisibility(View.VISIBLE);
 
                 // Download and display using Glide
-                Glide.with(MeetupDetailActivity.this)
+                Glide.with(getApplicationContext())
                         .load(uri)
                         .error(R.drawable.com_facebook_profile_picture_blank_portrait)
                         .into(meetupImage);
 
                 // Also to the fullscreen
-                Glide.with(MeetupDetailActivity.this)
+                Glide.with(getApplicationContext())
                         .load(uri)
                         .error(R.drawable.com_facebook_profile_picture_blank_portrait)
                         .into(meetupImageFull);

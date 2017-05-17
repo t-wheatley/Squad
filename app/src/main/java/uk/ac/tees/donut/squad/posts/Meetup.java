@@ -1,5 +1,8 @@
 package uk.ac.tees.donut.squad.posts;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.HashMap;
 
 /**
@@ -235,15 +238,33 @@ public class Meetup
         status = st;
     }
 
-    //Updating Status
+    /**
+     * Changes the Meetup's status based on the current time. if the Meetup's status has changed the
+     * new value is pushed to Firebase.
+     */
     public void updateStatus()
     {
+        // Firebase reference
+        FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference mRef = mDatabase.getReference();
+
+        // Current Time
         Long current = System.currentTimeMillis() / 1000L;
+
         if (current < getStartDateTime())
+        {
             status = 0;
+        }
         else if (current > getStartDateTime() && current < getEndDateTime())
+        {
             status = 1;
+        }
         else
+        {
             status = 2;
+        }
+
+        // Send new status to Firebase
+        mRef.child("meetups").child(this.getId()).child("status").setValue(status);
     }
 }

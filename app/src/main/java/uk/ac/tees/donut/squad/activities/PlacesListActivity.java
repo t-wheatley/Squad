@@ -586,7 +586,7 @@ public class PlacesListActivity extends BaseActivity implements GoogleApiClient.
             viewHolder.imageLoading.setVisibility(View.VISIBLE);
 
             // Download and display using Glide
-            Glide.with(PlacesListActivity.this)
+            Glide.with(viewHolder.itemView.getContext())
                     .load(pictureUrl)
                     .asBitmap()
                     .listener(new RequestListener<String, Bitmap>() {
@@ -1066,7 +1066,7 @@ public class PlacesListActivity extends BaseActivity implements GoogleApiClient.
                 holder.imageLoading.setVisibility(View.VISIBLE);
 
                 // Download and display using Glide
-                Glide.with(PlacesListActivity.this)
+                Glide.with(holder.itemView.getContext())
                         .load(pictureUrl)
                         .asBitmap()
                         .listener(new RequestListener<String, Bitmap>() {
