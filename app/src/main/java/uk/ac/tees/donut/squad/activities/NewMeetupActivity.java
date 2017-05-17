@@ -97,6 +97,7 @@ public class NewMeetupActivity extends AppCompatActivity
     Calendar fromDateTime;
     Calendar untilDateTime;
     Calendar currentDateTime;
+    protected String a1, a2, pc, tc, county;
     int currentYear, currentMonth, currentDay, currentHour, currentMinute;
     boolean spinnerAddress;
 
@@ -136,6 +137,12 @@ public class NewMeetupActivity extends AppCompatActivity
         btnUntilTime = (Button) findViewById(R.id.newMeetup_buttonUntilTime);
         btnNewAddress = (Button) findViewById(R.id.newMeetup_buttonNewAddress);
         btnFromPlace = (Button) findViewById(R.id.newMeetup_buttonFromPlace);
+
+        a1= "";
+        a2 = "";
+        tc = "";
+        county ="";
+        pc = "";
 
         // onClick listener for the submit button
         btnSubmit.setOnClickListener(new View.OnClickListener()
@@ -411,7 +418,7 @@ public class NewMeetupActivity extends AppCompatActivity
     }
 
     /**
-     * Method called on submit button press, validates the proposed Meetup.
+     * Method called on submit button press, validates the proposed meetup.
      */
     private void submitMeetup()
     {
@@ -466,6 +473,16 @@ public class NewMeetupActivity extends AppCompatActivity
                     longitude = firebasePlace.getLocLong();
                     latitude = firebasePlace.getLocLat();
 
+                    if(firebasePlace.getAddress1() != null)
+                    {
+                        a1 = firebasePlace.getAddress1();
+                        a2 = firebasePlace.getAddress2();
+                        tc = firebasePlace.getTownCity();
+                        county = firebasePlace.getCounty();
+                        pc = firebasePlace.getPostCode();
+                    }
+
+
                     if (longitude != 0 && latitude != 0)
                     {
 
@@ -516,7 +533,7 @@ public class NewMeetupActivity extends AppCompatActivity
             long untilUnix = untilDateTime.getTimeInMillis() / 1000L;
 
             // Creating a meetup object
-            Meetup meetup = new Meetup(meetupId, name, desc, squadId, user.getUid(), fromUnix, untilUnix, longitude, latitude);
+            Meetup meetup = new Meetup(meetupId, name, desc, squadId, user.getUid(), fromUnix, untilUnix, longitude, latitude, a1, a2, tc, county,pc);
 
             // If at a existing place
             if (spinnerAddress)
@@ -531,6 +548,9 @@ public class NewMeetupActivity extends AppCompatActivity
 
             // Adding the Meetup to the user's hosted
             mDatabase.child("users").child(user.getUid()).child("hosting").child(meetupId).setValue(true);
+
+            // Pushing the place to the squad it belongs to
+            mDatabase.child("squads").child(squadId).child("meetups").child(meetupId).setValue(true);
 
             // Send user to their meetup on the MeetupDetailActivity activity
             Intent intent = new Intent(NewMeetupActivity.this, MeetupDetailActivity.class);
@@ -690,8 +710,10 @@ public class NewMeetupActivity extends AppCompatActivity
         @Override
         protected void onReceiveResult(int resultCode, final Bundle resultData)
         {
+            //If address was found
             if (resultCode == LocContants.SUCCESS_RESULT)
             {
+                //Create address object
                 final Address address = resultData.getParcelable(LocContants.RESULT_ADDRESS);
                 runOnUiThread(new Runnable()
                 {
@@ -699,15 +721,61 @@ public class NewMeetupActivity extends AppCompatActivity
                     public void run()
                     {
 
+                        //Get longitude, latittude and addresss from addresss
                         latitude = address.getLatitude();
                         longitude = address.getLongitude();
 
                         geocodeAddress = resultData.getString(LocContants.RESULT_DATA_KEY);
 
+                        int addressLength = address.getMaxAddressLineIndex();
+
+                        //Switch used to sort how to display app dependent on address length
+                        switch (addressLength)
+                        {
+
+                            default:
+                                a1 = address.getAddressLine(0);
+                                break;
+                            case 1:
+                                a1 = address.getAddressLine(0);
+                                break;
+                            case 2:
+                                a1 = address.getAddressLine(0);
+                                a2 = address.getAddressLine(1);
+                                break;
+                            case 3:
+                                a1 = address.getAddressLine(0);
+                                a2 = address.getAddressLine(1);
+                                pc = address.getAddressLine(2);
+                                break;
+                            case 4:
+                                a1 = address.getAddressLine(0);
+                                a2 = address.getAddressLine(1);
+                                tc = address.getAddressLine(2);
+                                pc = address.getAddressLine(3);
+                                break;
+                            case 5:
+                                a1 = address.getAddressLine(0);
+                                a2 = address.getAddressLine(1);
+                                tc = address.getAddressLine(2);
+                                county = address.getAddressLine(3);
+                                pc = address.getAddressLine(4);
+                                break;
+                            case 6:
+                                a1 = address.getAddressLine(0);
+                                a2 = address.getAddressLine(1) + " " + address.getAddressLine(2);
+                                tc = address.getAddressLine(4);
+                                county = address.getAddressLine(3);
+                                pc = address.getAddressLine(5);
+                                break;
+                        }
+
+
                         CreateAlertDiolog();
 
                     }
                 });
+                //if unable to get address
             } else
             {
                 runOnUiThread(new Runnable()

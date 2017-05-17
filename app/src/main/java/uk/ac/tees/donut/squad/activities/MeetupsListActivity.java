@@ -856,7 +856,7 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
                 viewHolder.imageLoading.setVisibility(View.VISIBLE);
 
                 // Download and display using Glide
-                Glide.with(MeetupsListActivity.this)
+                Glide.with(viewHolder.itemView.getContext())
                         .load(uri)
                         .listener(new RequestListener<Uri, GlideDrawable>()
                         {
@@ -1039,6 +1039,7 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
                 }
             }
 
+
             // If user wants expired
             if (past == true)
             {
@@ -1115,6 +1116,7 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
         // List sorted by start time with expired meetups
         filteredListExpired = new ArrayList<>(filteredList);
 
+
         // Removing expired from filtered list
         for (Iterator<Meetup> iterator = filteredList.iterator(); iterator.hasNext(); )
         {
@@ -1125,6 +1127,7 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
                 iterator.remove();
             }
         }
+
 
         // If user wants expired
         if (past == true)
@@ -1387,7 +1390,7 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
                     holder.imageLoading.setVisibility(View.VISIBLE);
 
                     // Download and display using Glide
-                    Glide.with(MeetupsListActivity.this)
+                    Glide.with(holder.itemView.getContext())
                             .load(uri)
                             .listener(new RequestListener<Uri, GlideDrawable>()
                             {

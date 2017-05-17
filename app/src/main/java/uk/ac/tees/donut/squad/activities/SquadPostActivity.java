@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -60,6 +62,10 @@ public class SquadPostActivity extends AppCompatActivity
     private EditText Txtbox;
     private TextView listText;
     private ImageView profileImage;
+    private LinearLayout burgerMenu;
+    private FloatingActionButton fab;
+    private TextView title;
+    boolean burger = false;
 
     // RecyclerView
     private RecyclerView mRecyclerView;
@@ -95,6 +101,9 @@ public class SquadPostActivity extends AppCompatActivity
         listText = (TextView) findViewById(R.id.squadPost_textView);
         profileImage = (ImageView) findViewById(R.id.userPP);
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        fab = (FloatingActionButton) findViewById(R.id.squadPost_fab);
+        burgerMenu = (LinearLayout) findViewById(R.id.squadPost_burgerMenu);
+        title = (TextView) findViewById(R.id.squadPost_title);
 
         // Getting the reference for the Firebase Realtime Database
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -134,6 +143,9 @@ public class SquadPostActivity extends AppCompatActivity
                 {
                     post = Txtbox.getText().toString();
                     createPost(post, squadId);
+                    burgerMenu.setVisibility(View.GONE);
+                    fab.setImageResource(R.drawable.ic_speechbubble);
+                    burger = false;
                 }
             }
         });
@@ -172,6 +184,7 @@ public class SquadPostActivity extends AppCompatActivity
 
         // Setting up the layout manager
         mLayoutManager = new LinearLayoutManager(this);
+        mLayoutManager.setStackFromEnd(true); //supposed to reverse order.. but don't think it does
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // Get the Squad's Posts
@@ -448,6 +461,22 @@ public class SquadPostActivity extends AppCompatActivity
             nameField = (TextView) v.findViewById(R.id.userName);
             postField = (TextView) v.findViewById(R.id.txtPost);
             profilePic = (ImageView) v.findViewById(R.id.userPP);
+        }
+    }
+
+    public void fab(View view)
+    {
+        if(burger == false)
+        {
+            burger = true;
+            fab.setImageResource(R.drawable.ic_cross);
+            burgerMenu.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            burger = false;
+            fab.setImageResource(R.drawable.ic_speechbubble);
+            burgerMenu.setVisibility(View.GONE);
         }
     }
 }

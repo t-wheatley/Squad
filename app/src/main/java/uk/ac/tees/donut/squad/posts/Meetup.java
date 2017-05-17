@@ -1,5 +1,8 @@
 package uk.ac.tees.donut.squad.posts;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.HashMap;
 
 /**
@@ -13,7 +16,12 @@ public class Meetup
             description,
             squad,
             host,
-            place;
+            place,
+            address1,
+            address2,
+            townCity,
+            county,
+            postCode;
 
     // Attendees
     HashMap<String, Boolean> users;
@@ -49,7 +57,7 @@ public class Meetup
      * @param longi The longitude of the Meetup.
      * @param lat   The latitude of the Meetup.
      */
-    public Meetup(String i, String n, String d, String s, String h, long sd, long ed, double longi, double lat)
+    public Meetup(String i, String n, String d, String s, String h, long sd, long ed, double longi, double lat, String a1, String a2, String town, String c, String pc)
     {
         id = i;
         name = n;
@@ -60,6 +68,11 @@ public class Meetup
         endDateTime = ed;
         longitude = longi;
         latitude = lat;
+        address1 = a1.trim();
+        address2 = a2.trim();
+        townCity = town.trim();
+        county = c.trim();
+        postCode = pc.trim();
 
         updateStatus();
     }
@@ -120,6 +133,33 @@ public class Meetup
         return latitude;
     }
 
+    public String getAddress1(){return address1;}
+
+    public String getAddress2(){return address2;}
+
+    public String getTownCity(){return townCity;}
+
+    public String getCounty(){return county;}
+
+    public String getPostCode(){return postCode;}
+
+    public String fullAddress()
+    {
+        String a = "";
+        if (address1.length() != 0)
+            a = a + address1;
+        if (address2.length() != 0)
+            a = a + ", " + address2;
+        if (townCity.length() != 0)
+            a = a + ", " + townCity;
+        if (county.length() != 0)
+            a = a + ", " + county;
+        if (postCode.length() != 0)
+            a = a + ", " + postCode;
+
+        return a;
+    }
+
     public int gimmeStatus()    //not 'get' so doesn't get sent to firebase
     {
         return status;
@@ -130,7 +170,6 @@ public class Meetup
     {
         this.id = i;
     }
-
     public void setName(String n)
     {
         this.name = n;
@@ -181,20 +220,51 @@ public class Meetup
         this.latitude = latitude;
     }
 
+    public void setAddress2(String address2) {this.address2 = address2;}
+
+    public void setCounty(String c) {county = c;}
+
+    public void setPostCode(String postCode) {this.postCode = postCode;}
+
+    public void setStatus(int status) {this.status = status;}
+
+    public void setTownCity(String townCity) {this.townCity = townCity;}
+
+    public void setAddress1(String a1) {
+        address1 = a1;}
+
     public void changeStatus(int st)    //not 'set' so firebase api doesn't do anything with it
     {
         status = st;
     }
 
-    //Updating Status
+    /**
+     * Changes the Meetup's status based on the current time. if the Meetup's status has changed the
+     * new value is pushed to Firebase.
+     */
     public void updateStatus()
     {
+        // Firebase reference
+        FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference mRef = mDatabase.getReference();
+
+        // Current Time
         Long current = System.currentTimeMillis() / 1000L;
+
         if (current < getStartDateTime())
+        {
             status = 0;
+        }
         else if (current > getStartDateTime() && current < getEndDateTime())
+        {
             status = 1;
+        }
         else
+        {
             status = 2;
+        }
+
+        // Send new status to Firebase
+        mRef.child("meetups").child(this.getId()).child("status").setValue(status);
     }
 }

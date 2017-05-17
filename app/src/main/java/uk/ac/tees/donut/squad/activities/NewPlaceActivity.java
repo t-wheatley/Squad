@@ -14,7 +14,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -111,6 +110,12 @@ public class NewPlaceActivity extends AppCompatActivity
         editAddressTC = (EditText) findViewById(R.id.textEditAddressTC);
         editAddressC = (EditText) findViewById(R.id.textEditAddressCounty);
         editAddressPC = (EditText) findViewById(R.id.textEditAddressPC);
+
+        a1 = "";
+        a2 = "";
+        tc = "";
+        c = "";
+        pc = "";
 
         // onClick listener for the submit button
         btnSubmit.setOnClickListener(new View.OnClickListener()
@@ -222,12 +227,6 @@ public class NewPlaceActivity extends AppCompatActivity
         name = editName.getText().toString().trim();
         description = editDescription.getText().toString().trim();
 
-        a1 = editAddress1.getText().toString().trim();
-        a2 = editAddress2.getText().toString().trim();
-        tc = editAddressTC.getText().toString().trim();
-        c = editAddressC.getText().toString().trim();
-        pc = editAddressPC.getText().toString().trim();
-
         addressFull = editAddress1.getText().toString().trim() + " " +
                 editAddress2.getText().toString().trim() + " " +
                 editAddressTC.getText().toString().trim() + " " +
@@ -284,16 +283,19 @@ public class NewPlaceActivity extends AppCompatActivity
         if (user != null)
         {
             // User is signed in
-            // Creating a new meetup node and getting the key value
+            // Creating a new place node and getting the key value
             String placeId = mDatabase.child("places").push().getKey();
 
             // Creating a place object
             Place place = new LocPlace(placeId, n, d, s, user.getUid(), a1, a2, tc, c, pc, lon, lat);
 
-            // Pushing the meetup to the "meetups" node using the placeId
+            // Pushing the place to the "place" node using the placeId
             mDatabase.child("places").child(placeId).setValue(place);
 
-            // Send user to their meetup on the MeetupDetailActivity activity
+            // Pushing the place to the squad it belongs to
+            mDatabase.child("squads").child(s).child("places").child(placeId).setValue(true);
+
+            // Send user to their place on the PlaceDetailsActivity activity
             Intent intent = new Intent(NewPlaceActivity.this, PlaceDetailsActivity.class);
             intent.putExtra("placeId", placeId);
             startActivity(intent);
@@ -466,8 +468,10 @@ public class NewPlaceActivity extends AppCompatActivity
         @Override
         protected void onReceiveResult(int resultCode, final Bundle resultData)
         {
+            //If address was found
             if (resultCode == LocContants.SUCCESS_RESULT)
             {
+                //Create address object
                 final Address address = resultData.getParcelable(LocContants.RESULT_ADDRESS);
                 runOnUiThread(new Runnable()
                 {
@@ -475,13 +479,14 @@ public class NewPlaceActivity extends AppCompatActivity
                     public void run()
                     {
 
+                        //Get longitude, latittude and addresss from addresss
                         latitude = address.getLatitude();
                         longitude = address.getLongitude();
                         geocodeAddress = resultData.getString(LocContants.RESULT_DATA_KEY);
 
                         int addressLength = address.getMaxAddressLineIndex();
 
-
+                        //Switch used to sort how to display app dependent on address length
                         switch (addressLength)
                         {
 
@@ -497,7 +502,7 @@ public class NewPlaceActivity extends AppCompatActivity
                                 break;
                             case 3:
                                 a1 = address.getAddressLine(0);
-                                a2 = address.getAddressLine(1);
+                                tc = address.getAddressLine(1);
                                 pc = address.getAddressLine(2);
                                 break;
                             case 4:
@@ -527,6 +532,7 @@ public class NewPlaceActivity extends AppCompatActivity
 
                     }
                 });
+                //if unable to get address
             } else
             {
                 runOnUiThread(new Runnable()
