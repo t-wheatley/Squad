@@ -77,6 +77,7 @@ public class MeetupDetailActivity extends BaseActivity
     ImageView meetupImage;
     Button editName;
     Button editDesc;
+    Button editPhoto;
     Button attendBtn;
     Button deleteBtn;
     CardView imageViewCard;
@@ -102,6 +103,7 @@ public class MeetupDetailActivity extends BaseActivity
     int memberCount;
     double latitude;
     double longitude;
+    boolean noPhoto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -129,6 +131,7 @@ public class MeetupDetailActivity extends BaseActivity
         deleteBtn = (Button) findViewById(R.id.meetupDetail_deleteBtn);
         editName = (Button) findViewById(R.id.meetupDetail_editNameBtn);
         editDesc = (Button) findViewById(R.id.meetupDetail_editDescriptionBtn);
+        editPhoto = (Button) findViewById(R.id.meetupDetail_editPhotoBtn);
         attendingDisplay = (TextView) findViewById(R.id.meetupDetail_noAttendees);
         memberCountDisplay = (TextView) findViewById(R.id.meetupDetail_attendeeCount);
         meetupImage = (ImageView) findViewById(R.id.meetupDetail_ImageView);
@@ -469,12 +472,14 @@ public class MeetupDetailActivity extends BaseActivity
                         .into(meetupImage);
 
                 loadingImage.setVisibility(View.GONE);
+                noPhoto = false;
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
                 // If no picture exists
                 imageViewCard.setVisibility(View.GONE);
+                noPhoto = true;
             }
         });
 
@@ -590,12 +595,13 @@ public class MeetupDetailActivity extends BaseActivity
             }
         });
 
-        meetupImage.setEnabled(true);
-        meetupImage.setOnClickListener(new View.OnClickListener()
+        editPhoto.setEnabled(true);
+        editPhoto.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
+                // Select and image for the Meetup
                 selectImage(v);
             }
         });
@@ -650,6 +656,9 @@ public class MeetupDetailActivity extends BaseActivity
      */
     public void updateDesc(String desc)
     {
+        // Closing the burgerMenu
+        fab(fab);
+
         if (firebaseUser != null)
         {
             // Pushing the new description to the description field of the meetup's data
@@ -710,6 +719,9 @@ public class MeetupDetailActivity extends BaseActivity
      */
     public void updateName(String name)
     {
+        // Closing the burgerMenu
+        fab(fab);
+
         if (firebaseUser != null)
         {
             // Pushing the new name to the name field of the meetup's data
@@ -803,9 +815,21 @@ public class MeetupDetailActivity extends BaseActivity
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
                 {
                     // If upload successful
+                    // Close the burger menu
+                    fab(fab);
+
+                    // Notifying the user and displaying the new image
                     meetupImage.setImageBitmap(bitmap);
                     loadingOverlay.setVisibility(View.GONE);
                     Toast.makeText(MeetupDetailActivity.this, "Photo uploaded!", Toast.LENGTH_SHORT);
+
+                    // If not photo previously, display the cardview
+                    if(noPhoto = true)
+                    {
+                        noPhoto = false;
+                        imageViewCard.setVisibility(View.VISIBLE);
+                        loadingImage.setVisibility(View.GONE);
+                    }
                 }
             });
         }
