@@ -66,7 +66,6 @@ public class ProfileActivity extends BaseActivity implements GoogleApiClient.OnC
     boolean burger = false;
     RelativeLayout burgerMenu;
 
-
     // Variables
     Boolean personal;
     String uId;
@@ -519,7 +518,7 @@ public class ProfileActivity extends BaseActivity implements GoogleApiClient.OnC
     public void editBio()
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Bio:");
+        builder.setTitle("New Bio:");
 
         // EditText for input
         final EditText editTextBio = new EditText(this);
