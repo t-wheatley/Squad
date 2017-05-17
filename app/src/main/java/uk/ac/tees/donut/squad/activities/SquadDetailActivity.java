@@ -121,7 +121,7 @@ public class SquadDetailActivity extends BaseActivity
 
         // Defaults
         member = false;
-        joinBtn.setText("Join Squad");
+        joinBtn.setText("Join");
         secretCount = 0;
         memberCount = 0;
 
@@ -159,6 +159,26 @@ public class SquadDetailActivity extends BaseActivity
                 // Displays the found squad's attributes
                 nameDisplay.setText(squad.getName());
                 descriptionDisplay.setText(squad.getDescription());
+
+                // Getting the placeCount
+                if(squad.getPlaces() != null)
+                {
+                    placeCount.setText(squad.getPlaces().size() + "");
+
+                } else
+                {
+                    placeCount.setText("0");
+                }
+
+                // Getting the meetupCount
+                if(squad.getMeetups() != null)
+                {
+                    meetupCount.setText(squad.getMeetups().size() + "");
+
+                } else
+                {
+                    meetupCount.setText("0");
+                }
 
                 // Load the members of the Squad
                 loadUsers();
@@ -232,7 +252,7 @@ public class SquadDetailActivity extends BaseActivity
                         // If all members added
                         if (usersSize == memberCount)
                         {
-                            String memberString = "Members: " + memberCount;
+                            String memberString = "" + memberCount;
 
                             // If there is secret members
                             if (secretCount != 0)
@@ -262,7 +282,7 @@ public class SquadDetailActivity extends BaseActivity
         } else
         {
             // If the squad has no members
-            memberDisplay.setText("This Squad has no members yet!");
+            memberCountDisplay.setText("0");
 
             // Hiding loading overlay
             loadingOverlay.setVisibility(View.GONE);
