@@ -856,7 +856,7 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
                 viewHolder.imageLoading.setVisibility(View.VISIBLE);
 
                 // Download and display using Glide
-                Glide.with(MeetupsListActivity.this)
+                Glide.with(viewHolder.itemView.getContext())
                         .load(uri)
                         .listener(new RequestListener<Uri, GlideDrawable>()
                         {
@@ -1387,7 +1387,7 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
                     holder.imageLoading.setVisibility(View.VISIBLE);
 
                     // Download and display using Glide
-                    Glide.with(MeetupsListActivity.this)
+                    Glide.with(holder.itemView.getContext())
                             .load(uri)
                             .listener(new RequestListener<Uri, GlideDrawable>()
                             {
