@@ -345,7 +345,7 @@ public class PlaceDetailsActivity extends BaseActivity {
         imageLoading.setVisibility(View.VISIBLE);
 
         // Download and display using Glide
-        Glide.with(PlaceDetailsActivity.this)
+        Glide.with(getApplicationContext())
                 .load(pictureUrl)
                 .asBitmap()
                 .listener(new RequestListener<String, Bitmap>() {

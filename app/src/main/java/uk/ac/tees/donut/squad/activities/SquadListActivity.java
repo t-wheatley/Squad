@@ -328,7 +328,7 @@ public class SquadListActivity extends BaseActivity
             {
                 // If a picture exists
                 // Download and display using Glide
-                Glide.with(SquadListActivity.this)
+                Glide.with(viewHolder.itemView.getContext())
                         .load(uri)
                         .listener(new RequestListener<Uri, GlideDrawable>()
                         {
