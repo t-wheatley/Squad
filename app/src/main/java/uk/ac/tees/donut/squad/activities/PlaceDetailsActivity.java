@@ -682,4 +682,45 @@ public class PlaceDetailsActivity extends BaseActivity {
             Toast.makeText(this, "Something went wrong, please try again.", Toast.LENGTH_SHORT).show();
         }
     }
+
+    /**
+     * Method to display an AlertDialog warning the user they are about to delete the Place.
+     */
+    public void deletePlacePrompt(View view)
+    {
+        // Display AlertDialog
+        new AlertDialog.Builder(PlaceDetailsActivity.this)
+                .setTitle("Delete Place")
+                .setMessage("Are you sure you want to delete this Place?" +
+                        "\nYou will not be able to get it back!")
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        deletePlace();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        // Do nothing
+                    }
+                })
+                .show();
+    }
+
+    /**
+     * Method to delete the Place from the Firebase Database.
+     */
+    public void deletePlace()
+    {
+        // Displaying the loading overlay
+        loadingText.setText("Deleting Place...");
+        loadingOverlay.setVisibility(View.VISIBLE);
+
+        // Removing the Place
+        mDatabase.child("places").child(placeId).removeValue();
+        finish();
+    }
 }
