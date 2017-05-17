@@ -77,17 +77,14 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
                 startActivity(intent);
                 break;
             case R.id.menu_meetups:
-                System.out.println("----------------------Booting up meetups");
                 intent = new Intent(this, MeetupsListActivity.class);
                 startActivity(intent);
                 break;
             case R.id.menu_places:
-                System.out.println("-----------------------Booting up places");
                 intent = new Intent(this, PlacesListActivity.class);
                 startActivity(intent);
                 break;
             case R.id.menu_map:
-                System.out.println("--------------------Booting up map");
                 intent = new Intent(this, MapActivity.class);
                 startActivity(intent);
                 break;
@@ -95,7 +92,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
                 if (firebaseUser != null)
                 {
                     //Sends the user's id to the profile activity
-                    System.out.println("---------------------------------Booting up profile");
                     intent = new Intent(this, ProfileActivity.class);
                     intent.putExtra("uId", firebaseUser.getUid());
                     startActivity(intent);
