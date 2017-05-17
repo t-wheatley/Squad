@@ -103,6 +103,7 @@ public class MeetupDetailActivity extends BaseActivity
     int memberCount;
     double latitude;
     double longitude;
+    boolean imageFullScreen;
     boolean noPhoto;
 
     @Override
@@ -134,12 +135,26 @@ public class MeetupDetailActivity extends BaseActivity
         editPhoto = (Button) findViewById(R.id.meetupDetail_editPhotoBtn);
         attendingDisplay = (TextView) findViewById(R.id.meetupDetail_noAttendees);
         memberCountDisplay = (TextView) findViewById(R.id.meetupDetail_attendeeCount);
-        meetupImage = (ImageView) findViewById(R.id.meetupDetail_ImageView);
         fab = (FloatingActionButton) findViewById(R.id.meetupDetail_fab);
         burgerMenu = (RelativeLayout) findViewById(R.id.meetupDetail_burgerMenu);
         hostOptions = (LinearLayout) findViewById(R.id.meetupDetail_hostBurgerMenu);
         imageViewCard = (CardView) findViewById(R.id.meetupDetail_ImageViewCard);
         addressDisplay = (TextView) findViewById(R.id.meetupDetail_address);
+        meetupImage = (ImageView) findViewById(R.id.meetupDetail_ImageView);
+        meetupImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(imageFullScreen) {
+                    imageFullScreen=false;
+                    meetupImage.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                    meetupImage.setAdjustViewBounds(true);
+                }else{
+                    imageFullScreen=true;
+                    meetupImage.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+                    meetupImage.setScaleType(ImageView.ScaleType.FIT_XY);
+                }
+            }
+        });
 
         // Disabling the edit ImageButtons and delete Button
         hostOptions.setVisibility(View.GONE);
@@ -182,6 +197,7 @@ public class MeetupDetailActivity extends BaseActivity
         attendBtn.setText("Attend");
         secretCount = 0;
         memberCount = 0;
+        imageFullScreen = false;
 
         // Starts the loading chain
         // loadMeetup -> loadSquad -> loadHost -> loadUsers
