@@ -13,7 +13,6 @@ public class AddressPlace extends Place
     public String townCity;
     public String county;
     public String postCode;
-    public String addressFull;
 
     public AddressPlace()
     {
