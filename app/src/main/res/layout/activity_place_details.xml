@@ -453,17 +453,12 @@
                     android:onClick="editDescription"
                     android:text="Edit Description" />
 
-                <Button
-                    style="@style/Widget.AppCompat.Button.Colored"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:text="Change Address" />
 
                 <Button
                     style="@style/Widget.AppCompat.Button.Colored"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:onClick="deletePlacePrompt"
                     android:text="Delete Place" />
 
             </LinearLayout>
