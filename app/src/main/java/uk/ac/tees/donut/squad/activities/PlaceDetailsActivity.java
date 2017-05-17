@@ -88,7 +88,6 @@ public class PlaceDetailsActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_place_details);
 
         // Initialising loading overlay and displaying
         loadingOverlay = (RelativeLayout) this.findViewById(R.id.loading_overlay);
