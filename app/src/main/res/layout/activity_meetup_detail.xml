@@ -69,18 +69,11 @@
                     app:cardCornerRadius="2dp"
                     >
 
-                    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center">
-
-                        <ImageView
-                            android:id="@+id/meetupDetail_ImageView"
-                            android:layout_width="200dp"
-                            android:layout_height="200dp"
-                            android:scaleType="centerCrop" />
-
-                    </LinearLayout>
+                    <ImageView
+                        android:id="@+id/meetupDetail_ImageView"
+                        android:layout_width="200dp"
+                        android:layout_height="200dp"
+                        android:scaleType="centerCrop" />
 
                     <ProgressBar
                         android:id="@+id/meetupDetail_imageProgress"
@@ -514,6 +507,14 @@
 
     </RelativeLayout>
 
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/meetupDetail_imageFullScreen"
+        android:visibility="gone"
+        android:scaleType="fitCenter"
+        android:background="@color/cardview_dark_background"/>
 
     <!-- Loading overlay; -->
     <include layout="@layout/loading_overlay" />

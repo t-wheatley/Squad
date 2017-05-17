@@ -75,6 +75,7 @@ public class PlaceDetailsActivity extends BaseActivity {
     Button meetupsBtn;
     LinearLayout galleryLayout;
     ImageSwitcher gallery;
+    ImageView placeImageFull;
     TextView galleryCounter;
     TextView meetupCounter;
 
@@ -90,6 +91,7 @@ public class PlaceDetailsActivity extends BaseActivity {
     double longitude;
     ArrayList<String> images;
     int imagePosition;
+    boolean fullScreen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,8 +131,29 @@ public class PlaceDetailsActivity extends BaseActivity {
         });
         galleryCounter = (TextView) findViewById(R.id.placeDetails_galleryCounter);
         meetupCounter = (TextView) findViewById(R.id.placeDetail_meetupsCount);
+        placeImageFull =(ImageView) findViewById(R.id.placeDetails_imageFullScreen);
+        placeImageFull.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                fullScreen = false;
 
+                placeImageFull.setVisibility(View.GONE);
+
+            }
+        });
         gallery = (ImageSwitcher) findViewById(R.id.placeDetails_gallery);
+        gallery.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                fullScreen = true;
+
+                placeImageFull.setVisibility(View.VISIBLE);
+            }
+        });
         gallery.setFactory(new ViewSwitcher.ViewFactory() {
 
             public View makeView() {
@@ -195,6 +218,26 @@ public class PlaceDetailsActivity extends BaseActivity {
     @Override
     int getNavigationMenuItemId() {
         return R.id.menu_places;
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        // If displaying a fullscreen image
+        if(fullScreen)
+        {
+            // Hide the fullscreen
+            fullScreen = false;
+            placeImageFull.setVisibility(View.GONE);
+        } else if (burger)
+        { // If burger menu is open
+            // Close the burger menu
+            fab(fab);
+        } else
+        {
+            // Close the activity
+            PlaceDetailsActivity.this.finish();
+        }
     }
 
     /**
@@ -317,6 +360,7 @@ public class PlaceDetailsActivity extends BaseActivity {
                     @Override
                     public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
                         gallery.setImageDrawable(new BitmapDrawable(getResources(), resource));
+                        placeImageFull.setImageDrawable(new BitmapDrawable(getResources(), resource));
                         imageLoading.setVisibility(View.GONE);
                         return true;
                     }
