@@ -32,6 +32,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+
 import uk.ac.tees.donut.squad.R;
 import uk.ac.tees.donut.squad.users.FBUser;
 
@@ -50,6 +55,9 @@ public class LoginActivity extends AppCompatActivity implements
     private FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference mDatabase;
 
+    //Other UI
+    private TextView terms;
+
     // Loading Overlay
     RelativeLayout loadingOverlay;
     TextView loadingText;
@@ -66,6 +74,10 @@ public class LoginActivity extends AppCompatActivity implements
 
         // Getting an instance of FirebaseAuth
         mAuth = FirebaseAuth.getInstance();
+
+        // Getting UI
+        terms = (TextView) findViewById(R.id.login_terms);
+        terms.setText(getTerms());
 
         // Initialising loading overlay
         loadingOverlay = (RelativeLayout) this.findViewById(R.id.loading_overlay);
@@ -395,4 +407,49 @@ public class LoginActivity extends AppCompatActivity implements
         finish();
 
     }
+
+    public String getTerms()
+    {
+        return "Legal:\n" +
+                "\n" +
+                "By signing in with Google Services 2017 I hereby agree to the ‘Squads’ app terms and conditions.\n" +
+                " \n" +
+                "Privacy Policy\n\n" +
+                "1.     Collection of Information\n\n" +
+                "We collect information such as usage statistics from your use of the app, the creation of your account and any communications with ourselves.\n" +
+                " \n" +
+                "This information collected includes your personal data such as your name and email address. Any information you choose to provide will be collected as well as any payment method data made via the app.\n" +
+                " \n\n" +
+                "Device information we collect:\n\n" +
+                "Log information: Information regarding your use of the app on your device is stored including access times, your IP address and how you’ve interacted with our platform.\n" +
+                "Hardware Information: We collect information about your mobile device used to access our product. This includes: Your operating system and version and network information.\n" +
+                "Location Information: The app uses location information to provide a better experience this data is stored from your device each time you choose to use location services within the app.\n" +
+                " \n\n" +
+                "2.    Use of Information\n\n" +
+                "We use information collected from you to improve and protect the Squads platform and it’s users.\n" +
+                " \n" +
+                "User queries and discussion\n" +
+                "We may also use information about you when:\n" +
+                "- Responding to your comments, questions and requests regarding the services provided by Squad.\n" +
+                "- Send you information, updates and support with your permission\n" +
+                "-Communicate with you about products, services and information offered by us.\n" +
+                "\n\n" +
+                "3.     Sharing Information\n\n" +
+                "We do not share any of your information without your consent. This information may be used to improve the platform but will not be sent to any third-party service providers.\n" +
+                "\n" +
+                "The product may implement sharing features across social media platforms and services. The services use of this information will be governed by their own privacy policies and conditions.\n" +
+                "\n\n" +
+                "4.     Your choices\n\n" +
+                "We would like to remind the user that the way they use the platform must adhere to our use policies and that you may be liable for any misconduct. If you do not wish to adhere to the policies outlined in this documentation. Email support@squadsapp.com to deactivate your account.\n" +
+                "\n" +
+                "These policies are subject to status and may be changed in the future when this occurs the app will be updated with the changes outlined.\n" +
+                "\n\n" +
+                "Use policies\n\n" +
+                "Any unlawful use of the app will be notified to local police services to be further investigated. Your personal information and service data will be given. \n" +
+                "\n" +
+                "We may modify, suspend or terminate your account if, in our sole discretion we decide that you have violated the policies or guidelines that are part of this agreement, or to protect the platform and its users. Your account may also be deleted after 6 months of inactivity.\n" +
+                "\n" +
+                "Any fees or payments made to the platform currently (or in the future) are paid by you the user and any queries regarding payments will be handled individually depending on outlined circumstances.\n \n \n";
+    }
+
 }

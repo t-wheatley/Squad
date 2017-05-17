@@ -1,63 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/cardview_dark_background">
 
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_above="@+id/titleLayout"
-        android:background="@color/colorPrimary"
-        android:padding="10dp"
-        android:id="@+id/donut">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="32dp"
+        >
 
-        <ImageView
-            android:id="@+id/splashscreen"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_centerHorizontal="true"
-            android:src="@mipmap/donut"
-            />
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:cardCornerRadius="2dp"
+            android:elevation="10dp"
+            app:cardBackgroundColor="@color/colorPrimary"
+            >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorPrimaryDark"
+                    android:id="@+id/login_title"
+                    >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:text="Terms and Conditions"
+                        android:layout_margin="10dp"
+                        android:textColor="@color/tw__solid_white"
+                        android:textStyle="bold"
+                        />
+
+                </RelativeLayout>
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:elevation="0dp"
+                    app:cardBackgroundColor="@color/colorAccent"
+                    android:id="@+id/login_termsCard"
+                    android:layout_below="@+id/login_title"
+                    android:layout_above="@+id/sign_in_button"
+                    >
+
+                    <ScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        >
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:id="@+id/login_terms"
+                            />
+
+                    </ScrollView>
+
+                </android.support.v7.widget.CardView>
+
+
+                <com.google.android.gms.common.SignInButton
+                    android:id="@+id/sign_in_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"
+                    />
+
+            </RelativeLayout>
+
+
+        </android.support.v7.widget.CardView>
 
     </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_marginTop="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:background="@color/colorPrimary"
-        android:padding="10dp"
-        android:layout_centerVertical="true"
-        android:id="@+id/titleLayout">
-
-        <TextView
-            android:id="@+id/splashTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:text="Squads!"
-            style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/splashTextView"
-            android:layout_centerHorizontal="true"
-            android:text="Donut Squad!"
-            style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
-
-    </RelativeLayout>
-
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/sign_in_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="13dp"
-        android:layout_below="@+id/titleLayout"
-        android:layout_centerHorizontal="true" />
 
 
     <!-- Loading overlay; -->
