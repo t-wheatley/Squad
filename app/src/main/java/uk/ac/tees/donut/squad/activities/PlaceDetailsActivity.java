@@ -9,8 +9,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
+import android.text.InputFilter;
+import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -72,7 +75,9 @@ public class PlaceDetailsActivity extends BaseActivity {
     Button meetupsBtn;
     LinearLayout galleryLayout;
     ImageSwitcher gallery;
+    ImageView placeImageFull;
     TextView galleryCounter;
+    TextView meetupCounter;
 
     boolean burger = false;
     FloatingActionButton fab;
@@ -86,11 +91,11 @@ public class PlaceDetailsActivity extends BaseActivity {
     double longitude;
     ArrayList<String> images;
     int imagePosition;
+    boolean fullScreen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_place_details);
 
         // Initialising loading overlay and displaying
         loadingOverlay = (RelativeLayout) this.findViewById(R.id.loading_overlay);
@@ -124,8 +129,30 @@ public class PlaceDetailsActivity extends BaseActivity {
             }
         });
         galleryCounter = (TextView) findViewById(R.id.placeDetails_galleryCounter);
+        meetupCounter = (TextView) findViewById(R.id.placeDetail_meetupsCount);
+        placeImageFull =(ImageView) findViewById(R.id.placeDetails_imageFullScreen);
+        placeImageFull.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                fullScreen = false;
 
+                placeImageFull.setVisibility(View.GONE);
+
+            }
+        });
         gallery = (ImageSwitcher) findViewById(R.id.placeDetails_gallery);
+        gallery.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                fullScreen = true;
+
+                placeImageFull.setVisibility(View.VISIBLE);
+            }
+        });
         gallery.setFactory(new ViewSwitcher.ViewFactory() {
 
             public View makeView() {
@@ -192,6 +219,26 @@ public class PlaceDetailsActivity extends BaseActivity {
         return R.id.menu_places;
     }
 
+    @Override
+    public void onBackPressed()
+    {
+        // If displaying a fullscreen image
+        if(fullScreen)
+        {
+            // Hide the fullscreen
+            fullScreen = false;
+            placeImageFull.setVisibility(View.GONE);
+        } else if (burger)
+        { // If burger menu is open
+            // Close the burger menu
+            fab(fab);
+        } else
+        {
+            // Close the activity
+            PlaceDetailsActivity.this.finish();
+        }
+    }
+
     /**
      * Uses the placeId to create a Place object and display its details.
      */
@@ -209,6 +256,15 @@ public class PlaceDetailsActivity extends BaseActivity {
                 address.setText(place.fullAddress());
                 longitude = place.getLocLong();
                 latitude = place.getLocLat();
+
+                // Display the amount of Meetups at the Place
+                if(place.getMeetups() != null)
+                {
+                    meetupCounter.setText(place.getMeetups().size() + "");
+                } else
+                {
+                    meetupCounter.setText("0");
+                }
 
                 // If signed-in user is the Host of the Meetup
                 if (firebaseUser.getUid().equals(place.getHost())) {
@@ -268,6 +324,7 @@ public class PlaceDetailsActivity extends BaseActivity {
             }
 
             displayImage(images.get(0));
+            galleryCounter.setText("1/" + images.size());
 
 
             // Hiding loading overlay
@@ -279,11 +336,16 @@ public class PlaceDetailsActivity extends BaseActivity {
         }
     }
 
+    /**
+     * Method that takes the pictureUrl and displays it with Glide.
+     *
+     * @param pictureUrl Url of the picture to be loaded.
+     */
     public void displayImage(String pictureUrl) {
         imageLoading.setVisibility(View.VISIBLE);
 
         // Download and display using Glide
-        Glide.with(PlaceDetailsActivity.this)
+        Glide.with(getApplicationContext())
                 .load(pictureUrl)
                 .asBitmap()
                 .listener(new RequestListener<String, Bitmap>() {
@@ -297,6 +359,7 @@ public class PlaceDetailsActivity extends BaseActivity {
                     @Override
                     public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
                         gallery.setImageDrawable(new BitmapDrawable(getResources(), resource));
+                        placeImageFull.setImageDrawable(new BitmapDrawable(getResources(), resource));
                         imageLoading.setVisibility(View.GONE);
                         return true;
                     }
@@ -304,19 +367,33 @@ public class PlaceDetailsActivity extends BaseActivity {
                 .into((ImageView) gallery.getCurrentView());
     }
 
+    /**
+     * Method to display the next image in the gallery.
+     *
+     * @param view The Button that was pressed.
+     */
     public void nextImage(View view) {
         imagePosition++;
         if (imagePosition == images.size()) {
             imagePosition = 0;
         }
+        int counter = (imagePosition + 1);
+        galleryCounter.setText(counter + "/" + images.size());
         displayImage(images.get(imagePosition));
     }
 
+    /**
+     * Method to display the previous image in the gallery.
+     *
+     * @param view The Button that was pressed.
+     */
     public void previousImage(View view) {
         imagePosition--;
         if (imagePosition == -1) {
             imagePosition = images.size() - 1;
         }
+        int counter = (imagePosition + 1);
+        galleryCounter.setText(counter + "/" + images.size());
         displayImage(images.get(imagePosition));
     }
 
@@ -384,6 +461,8 @@ public class PlaceDetailsActivity extends BaseActivity {
                                 displayImage(downloadUrl.toString());
                             } else {
                                 images.add(downloadUrl.toString());
+                                int counter = (imagePosition + 1);
+                                galleryCounter.setText(counter + "/" + images.size());
                             }
                         }
                     });
@@ -457,4 +536,191 @@ public class PlaceDetailsActivity extends BaseActivity {
         }
     }
 
+    /**
+     * Method that displays a dialog for the User to enter a new name.
+     *
+     * @param view The button that was pressed.
+     */
+    public void editName(View view)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("New Name:");
+
+        // EditText for input
+        final EditText editTextName = new EditText(this);
+        // Sets the expected input types, text, long message, auto correct and multi line
+        editTextName.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_LONG_MESSAGE |
+                InputType.TYPE_TEXT_FLAG_AUTO_COMPLETE | InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE);
+        // Sets the maximum characters to 50
+        editTextName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(50)});
+        builder.setView(editTextName);
+
+        // Buttons on the Dialog
+        builder.setPositiveButton("Submit", new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                String newName = editTextName.getText().toString();
+                placeName.setText(newName);
+                updateName(newName);
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                dialog.cancel();
+            }
+        });
+
+        // Displays the Dialog
+        builder.show();
+    }
+
+    /**
+     * Method to update the Places's name in the Firebase Database.
+     *
+     * @param newName The new name entered in the previous dialog.
+     */
+    public void updateName(String newName)
+    {
+        // Closing the burgerMenu
+        fab(fab);
+
+        if (place.getPlaceId() != null) {
+            loadingText.setText("Updating the description");
+            loadingOverlay.setVisibility(View.VISIBLE);
+
+            // Pushing the new description to the Firebase Database
+            mDatabase.child("places").child(place.getPlaceId()).child("name").setValue(newName).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    loadingOverlay.setVisibility(View.GONE);
+                    Toast.makeText(PlaceDetailsActivity.this, "Name updated!", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        } else {
+            // No user is signed in
+            Toast.makeText(this, "Something went wrong, please try again.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * Method that displays a dialog for the User to enter a new description.
+     *
+     * @param view The button that was pressed.
+     */
+    public void editDescription(View view)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("New Description:");
+
+        // EditText for input
+        final EditText editTextDesc = new EditText(this);
+        // Sets the expected input types, text, long message, auto correct and multi line
+        editTextDesc.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_LONG_MESSAGE |
+                InputType.TYPE_TEXT_FLAG_AUTO_COMPLETE | InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE);
+        // Sets the maximum characters to 120
+        editTextDesc.setFilters(new InputFilter[]{new InputFilter.LengthFilter(120)});
+        builder.setView(editTextDesc);
+
+        // Buttons on the Dialog
+        builder.setPositiveButton("Submit", new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                String newDesc = editTextDesc.getText().toString();
+                description.setText(newDesc);
+                updateDescription(newDesc);
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                dialog.cancel();
+            }
+        });
+
+        // Displays the Dialog
+        builder.show();
+    }
+
+
+    /**
+     * Method to update the Places's description in the Firebase Database.
+     *
+     * @param newDesc The new description entered in the previous dialog.
+     */
+    public void updateDescription(String newDesc)
+    {
+        // Closing the burgerMenu
+        fab(fab);
+
+        if (place.getPlaceId() != null)
+        {
+            loadingText.setText("Updating the description");
+            loadingOverlay.setVisibility(View.VISIBLE);
+
+            // Pushing the new description to the Firebase Database
+            mDatabase.child("places").child(place.getPlaceId()).child("description").setValue(newDesc).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    loadingOverlay.setVisibility(View.GONE);
+                    Toast.makeText(PlaceDetailsActivity.this, "Description updated!", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        } else
+        {
+            // No user is signed in
+            Toast.makeText(this, "Something went wrong, please try again.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * Method to display an AlertDialog warning the user they are about to delete the Place.
+     */
+    public void deletePlacePrompt(View view)
+    {
+        // Display AlertDialog
+        new AlertDialog.Builder(PlaceDetailsActivity.this)
+                .setTitle("Delete Place")
+                .setMessage("Are you sure you want to delete this Place?" +
+                        "\nYou will not be able to get it back!")
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        deletePlace();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        // Do nothing
+                    }
+                })
+                .show();
+    }
+
+    /**
+     * Method to delete the Place from the Firebase Database.
+     */
+    public void deletePlace()
+    {
+        // Displaying the loading overlay
+        loadingText.setText("Deleting Place...");
+        loadingOverlay.setVisibility(View.VISIBLE);
+
+        // Removing the Place
+        mDatabase.child("places").child(placeId).removeValue();
+        finish();
+    }
 }

@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -11,6 +12,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -75,8 +77,10 @@ public class MeetupDetailActivity extends BaseActivity
     TextView attendingDisplay;
     TextView memberCountDisplay;
     ImageView meetupImage;
+    ImageView meetupImageFull;
     Button editName;
     Button editDesc;
+    Button editPhoto;
     Button attendBtn;
     Button deleteBtn;
     CardView imageViewCard;
@@ -102,6 +106,8 @@ public class MeetupDetailActivity extends BaseActivity
     int memberCount;
     double latitude;
     double longitude;
+    boolean noPhoto;
+    boolean fullScreen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -129,14 +135,36 @@ public class MeetupDetailActivity extends BaseActivity
         deleteBtn = (Button) findViewById(R.id.meetupDetail_deleteBtn);
         editName = (Button) findViewById(R.id.meetupDetail_editNameBtn);
         editDesc = (Button) findViewById(R.id.meetupDetail_editDescriptionBtn);
+        editPhoto = (Button) findViewById(R.id.meetupDetail_editPhotoBtn);
         attendingDisplay = (TextView) findViewById(R.id.meetupDetail_noAttendees);
         memberCountDisplay = (TextView) findViewById(R.id.meetupDetail_attendeeCount);
-        meetupImage = (ImageView) findViewById(R.id.meetupDetail_ImageView);
         fab = (FloatingActionButton) findViewById(R.id.meetupDetail_fab);
         burgerMenu = (RelativeLayout) findViewById(R.id.meetupDetail_burgerMenu);
         hostOptions = (LinearLayout) findViewById(R.id.meetupDetail_hostBurgerMenu);
         imageViewCard = (CardView) findViewById(R.id.meetupDetail_ImageViewCard);
         addressDisplay = (TextView) findViewById(R.id.meetupDetail_address);
+        meetupImageFull = (ImageView) findViewById(R.id.meetupDetail_imageFullScreen);
+        meetupImageFull.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                fullScreen = false;
+
+                meetupImageFull.setVisibility(View.GONE);
+            }
+        });
+        meetupImage = (ImageView) findViewById(R.id.meetupDetail_ImageView);
+        meetupImage.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                fullScreen = true;
+
+                meetupImageFull.setVisibility(View.VISIBLE);
+            }
+        });
 
         // Disabling the edit ImageButtons and delete Button
         hostOptions.setVisibility(View.GONE);
@@ -195,6 +223,26 @@ public class MeetupDetailActivity extends BaseActivity
     int getNavigationMenuItemId()
     {
         return R.id.menu_meetups;
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        // If displaying a fullscreen image
+        if(fullScreen)
+        {
+            // Hide the fullscreen
+            fullScreen = false;
+            meetupImageFull.setVisibility(View.GONE);
+        } else if (burger)
+        { // If burger menu is open
+            // Close the burger menu
+            fab(fab);
+        } else
+        {
+            // Close the activity
+            MeetupDetailActivity.this.finish();
+        }
     }
 
     /**
@@ -463,18 +511,26 @@ public class MeetupDetailActivity extends BaseActivity
                 imageViewCard.setVisibility(View.VISIBLE);
 
                 // Download and display using Glide
-                Glide.with(MeetupDetailActivity.this)
+                Glide.with(getApplicationContext())
                         .load(uri)
                         .error(R.drawable.com_facebook_profile_picture_blank_portrait)
                         .into(meetupImage);
 
+                // Also to the fullscreen
+                Glide.with(getApplicationContext())
+                        .load(uri)
+                        .error(R.drawable.com_facebook_profile_picture_blank_portrait)
+                        .into(meetupImageFull);
+
                 loadingImage.setVisibility(View.GONE);
+                noPhoto = false;
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
                 // If no picture exists
                 imageViewCard.setVisibility(View.GONE);
+                noPhoto = true;
             }
         });
 
@@ -590,12 +646,13 @@ public class MeetupDetailActivity extends BaseActivity
             }
         });
 
-        meetupImage.setEnabled(true);
-        meetupImage.setOnClickListener(new View.OnClickListener()
+        editPhoto.setEnabled(true);
+        editPhoto.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
+                // Select and image for the Meetup
                 selectImage(v);
             }
         });
@@ -650,6 +707,9 @@ public class MeetupDetailActivity extends BaseActivity
      */
     public void updateDesc(String desc)
     {
+        // Closing the burgerMenu
+        fab(fab);
+
         if (firebaseUser != null)
         {
             // Pushing the new description to the description field of the meetup's data
@@ -710,6 +770,9 @@ public class MeetupDetailActivity extends BaseActivity
      */
     public void updateName(String name)
     {
+        // Closing the burgerMenu
+        fab(fab);
+
         if (firebaseUser != null)
         {
             // Pushing the new name to the name field of the meetup's data
@@ -803,9 +866,22 @@ public class MeetupDetailActivity extends BaseActivity
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
                 {
                     // If upload successful
+                    // Close the burger menu
+                    fab(fab);
+
+                    // Notifying the user and displaying the new image
                     meetupImage.setImageBitmap(bitmap);
+                    meetupImageFull.setImageBitmap(bitmap);
                     loadingOverlay.setVisibility(View.GONE);
                     Toast.makeText(MeetupDetailActivity.this, "Photo uploaded!", Toast.LENGTH_SHORT);
+
+                    // If not photo previously, display the cardview
+                    if(noPhoto = true)
+                    {
+                        noPhoto = false;
+                        imageViewCard.setVisibility(View.VISIBLE);
+                        loadingImage.setVisibility(View.GONE);
+                    }
                 }
             });
         }

@@ -121,7 +121,7 @@ public class SquadDetailActivity extends BaseActivity
 
         // Defaults
         member = false;
-        joinBtn.setText("Join Squad");
+        joinBtn.setText("Join");
         secretCount = 0;
         memberCount = 0;
 
@@ -163,21 +163,21 @@ public class SquadDetailActivity extends BaseActivity
                 // Getting the placeCount
                 if(squad.getPlaces() != null)
                 {
-                    placeCount.setText(squad.getPlaces().size() + " Places");
+                    placeCount.setText(squad.getPlaces().size() + "");
 
                 } else
                 {
-                    placeCount.setText("0 Places");
+                    placeCount.setText("0");
                 }
 
                 // Getting the meetupCount
                 if(squad.getMeetups() != null)
                 {
-                    meetupCount.setText(squad.getMeetups().size() + " Meetups");
+                    meetupCount.setText(squad.getMeetups().size() + "");
 
                 } else
                 {
-                    meetupCount.setText("0 Meetups");
+                    meetupCount.setText("0");
                 }
 
                 // Load the members of the Squad
@@ -252,7 +252,7 @@ public class SquadDetailActivity extends BaseActivity
                         // If all members added
                         if (usersSize == memberCount)
                         {
-                            String memberString = "Members: " + memberCount;
+                            String memberString = "" + memberCount;
 
                             // If there is secret members
                             if (secretCount != 0)
