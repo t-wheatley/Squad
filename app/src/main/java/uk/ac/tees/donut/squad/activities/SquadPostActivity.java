@@ -288,7 +288,6 @@ public class SquadPostActivity extends AppCompatActivity
         String postDate = sdf.format(model.getDateTime() * 1000L);
 
         viewHolder.date.setText(postDate);
-        viewHolder.postId=model.getId();
 
         // Getting the user's name and picture
         mDatabase.child("users").child(model.getUser()).addListenerForSingleValueEvent(new ValueEventListener()
@@ -576,7 +575,6 @@ public class SquadPostActivity extends AppCompatActivity
         TextView postField;
         ImageView profilePic;
         TextView date;
-        String postId;
         RecyclerView commentRV;
 
 
