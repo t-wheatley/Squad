@@ -59,7 +59,7 @@ import uk.ac.tees.donut.squad.posts.Meetup;
  */
 
 public class MapActivity extends BaseActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener, DirectionCallback, GoogleMap.OnMarkerClickListener
+        GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener, DirectionCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener
 {
 
     //GOOGLE MAP API V2
@@ -187,6 +187,7 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
             mMap.setMyLocationEnabled(true);
         }
 
+        mMap.setOnInfoWindowClickListener(this);
         mMap.setOnMarkerClickListener(this);
 
         addMarkers(mMap);
@@ -727,4 +728,16 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
 
     }
 
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        //Checks if the current marker selected is current location
+        if (marker.getPosition().equals(currentLocation))
+        {
+            return;
+        } else{
+            Intent detail = new Intent(MapActivity.this, MeetupDetailActivity.class);
+            detail.putExtra("meetupId", meetupID);
+            startActivity(detail);
+        }
+    }
 }
