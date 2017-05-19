@@ -413,6 +413,7 @@ public class LoginActivity extends AppCompatActivity implements
         return "Legal:\n" +
                 "\n" +
                 "By signing in with Google Services 2017 I hereby agree to the ‘Squads’ app terms and conditions.\n" +
+                "\n I am aware of the age restriction that I must be 13 years or older to use this app.\n" +
                 " \n" +
                 "Privacy Policy\n\n" +
                 "1.     Collection of Information\n\n" +
