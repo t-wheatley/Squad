@@ -7,7 +7,7 @@
     <item>
         <bitmap
             android:gravity="center"
-            android:src="@mipmap/team_donut"
+            android:src="@mipmap/splashscreen"
             />
     </item>
 </layer-list>
