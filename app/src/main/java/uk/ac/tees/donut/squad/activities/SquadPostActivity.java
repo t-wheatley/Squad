@@ -338,6 +338,9 @@ public class SquadPostActivity extends AppCompatActivity
             // Pushing the post to the "posts" node using the postId
             mDatabase.child("posts").child(postId).setValue(postObject);
 
+            // Pushing the post to the user's posts
+            mDatabase.child("users").child(user.getUid()).child("posts").child(postId).setValue(true);
+
             finish();
             startActivity(getIntent());
         } else
@@ -382,7 +385,7 @@ public class SquadPostActivity extends AppCompatActivity
                     viewHolder.nameField.setText(user.getName());
 
                     // Displays the user's photo in the ImageView
-                    Glide.with(SquadPostActivity.this)
+                    Glide.with(viewHolder.itemView.getContext())
                             .load(user.getPicture().trim())
                             .diskCacheStrategy(DiskCacheStrategy.NONE)
                             .skipMemoryCache(true)
