@@ -285,9 +285,15 @@ public class MeetupDetailActivity extends BaseActivity
                 else if (status == 1)
                     statusDisplay.setText("Ongoing");
                 else if (status == 2)
+                {
                     statusDisplay.setText("Expired");
-                else
+                    attendBtn.setEnabled(false);
+                } else
+                {
                     statusDisplay.setText("Deleted");
+                    attendBtn.setEnabled(false);
+                }
+
 
                 // If signed-in user is the Host of the Meetup
                 if (firebaseUser.getUid().equals(meetup.getHost()))
@@ -805,11 +811,18 @@ public class MeetupDetailActivity extends BaseActivity
      */
     public void attendMeetup()
     {
-        // Adds the user to the Meetup and changes the button
-        mDatabase.child("users").child(firebaseUser.getUid()).child("meetups").child(meetupId).setValue(true);
-        mDatabase.child("meetups").child(meetupId).child("users").child(firebaseUser.getUid()).setValue(true);
-        attending = true;
-        attendBtn.setText("Un-Attend");
+        // If meetup is not upcoming or ongoing
+        if(meetup.gimmeStatus() > 1)
+        {
+            Toast.makeText(MeetupDetailActivity.this, "Sorry, this Meetup can not be attended anymore!", Toast.LENGTH_SHORT);
+        } else
+        {
+            // Adds the user to the Meetup and changes the button
+            mDatabase.child("users").child(firebaseUser.getUid()).child("meetups").child(meetupId).setValue(true);
+            mDatabase.child("meetups").child(meetupId).child("users").child(firebaseUser.getUid()).setValue(true);
+            attending = true;
+            attendBtn.setText("Un-Attend");
+        }
     }
 
     /**

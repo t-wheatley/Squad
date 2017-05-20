@@ -18,7 +18,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
@@ -26,6 +25,8 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -60,6 +61,7 @@ public class ProfileActivity extends BaseActivity implements GoogleApiClient.OnC
     Button hostingBtn;
     Button secretBtn;
     Button signOutBtn;
+    Button deleteBtn;
     Button editBioBtn;
     ImageView profileImage;
     FloatingActionButton fab;
@@ -98,7 +100,7 @@ public class ProfileActivity extends BaseActivity implements GoogleApiClient.OnC
         mAuth = FirebaseAuth.getInstance();
 
         // Getting the reference for the Firebase Realtime Database
-        mDatabase = FirebaseDatabase.getInstance().getReference("users");
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         // Getting the current user
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -164,6 +166,17 @@ public class ProfileActivity extends BaseActivity implements GoogleApiClient.OnC
             }
         });
         signOutBtn.setVisibility(View.GONE);
+
+        deleteBtn = (Button) findViewById(R.id.profile_deleteBtn);
+        deleteBtn.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                deletePrompt();
+            }
+        });
+        deleteBtn.setVisibility(View.GONE);
 
         editBioBtn = (Button) findViewById(R.id.profile_editBio);
         editBioBtn.setOnClickListener(new View.OnClickListener()
@@ -245,7 +258,7 @@ public class ProfileActivity extends BaseActivity implements GoogleApiClient.OnC
         if (firebaseUser != null)
         {
             // Get the user's info
-            mDatabase.child(uId).addListenerForSingleValueEvent(new ValueEventListener()
+            mDatabase.child("users").child(uId).addListenerForSingleValueEvent(new ValueEventListener()
             {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot)
@@ -478,7 +491,7 @@ public class ProfileActivity extends BaseActivity implements GoogleApiClient.OnC
     public void enableSecret()
     {
         // Sets the user to secret and changes the button
-        mDatabase.child(firebaseUser.getUid()).child("secret").setValue(true);
+        mDatabase.child("users").child(firebaseUser.getUid()).child("secret").setValue(true);
         user.setSecret(true);
         secretBtn.setText("Disable Secret Mode");
     }
@@ -489,7 +502,7 @@ public class ProfileActivity extends BaseActivity implements GoogleApiClient.OnC
     public void disableSecret()
     {
         // Disables the user's secret mode and changes the button
-        mDatabase.child(firebaseUser.getUid()).child("secret").setValue(false);
+        mDatabase.child("users").child(firebaseUser.getUid()).child("secret").setValue(false);
         user.setSecret(false);
         secretBtn.setText("Enable Secret Mode");
     }
@@ -564,13 +577,117 @@ public class ProfileActivity extends BaseActivity implements GoogleApiClient.OnC
         if (firebaseUser != null)
         {
             // Pushing the new bio to the bio field of the User's data
-            mDatabase.child(firebaseUser.getUid()).child("bio").setValue(bio);
+            mDatabase.child("users").child(firebaseUser.getUid()).child("bio").setValue(bio);
 
         } else
         {
             // No user is signed in
             Toast.makeText(this, "Something went wrong, please try again.", Toast.LENGTH_SHORT).show();
         }
+    }
+
+
+    /**
+     * Method to display a prompt to the user warning them about deleting their account.
+     */
+    public void deletePrompt()
+    {
+        // Display AlertDialog
+        new AlertDialog.Builder(ProfileActivity.this)
+                .setTitle("Delete Account")
+                .setMessage("Are you sure you want to delete your account?" +
+                        "\nYou will not be able to get it back!")
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        deleteUser();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        // Do nothing
+                    }
+                })
+                .show();
+    }
+
+    /**
+     * Deleting the user's account.
+     */
+    public void deleteUser()
+    {
+        loadingText.setText("Deleting your account...");
+        loadingOverlay.setVisibility(View.VISIBLE);
+
+        final FirebaseUser deleteUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (deleteUser != null)
+        {
+            try
+            {
+                deleteUser.delete().addOnCompleteListener(new OnCompleteListener<Void>()
+                {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task)
+                    {
+                        if (task.isSuccessful())
+                        {
+                            // User deleted now remove their data
+                            deleteData(deleteUser);
+                        } else
+                        {
+                            Toast.makeText(ProfileActivity.this, "Something went wrong, " +
+                                    "please try again.", Toast.LENGTH_LONG).show();
+                            loadingOverlay.setVisibility(View.GONE);
+                        }
+                    }
+                });
+            } catch (Exception e)
+            {
+                loadingOverlay.setVisibility(View.GONE);
+                Toast.makeText(ProfileActivity.this, "You have not authenticated recently, " +
+                        "please sign out then try again.", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    /**
+     * Deleting the user's data.
+     *
+     * @param deleteUser The user to be deleted.
+     */
+    public void deleteData(FirebaseUser deleteUser)
+    {
+        // Removing the user's posts
+        for (String post : user.getPosts().keySet())
+        {
+            mDatabase.child("posts").child(post).removeValue();
+        }
+
+        // Removing the user from Meetups
+        for (String meetup : user.getMeetups().keySet())
+        {
+            mDatabase.child("meetups").child(meetup).child("users").child(deleteUser.getUid()).removeValue();
+        }
+
+        // Removing the user from Squads
+        for (String squad : user.getSquads().keySet())
+        {
+            mDatabase.child("squads").child(squad).child("users").child(deleteUser.getUid()).removeValue();
+        }
+
+        // Removing the user's profile data
+        mDatabase.child("users").child(deleteUser.getUid()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>()
+        {
+            @Override
+            public void onComplete(@NonNull Task<Void> task)
+            {
+                ProfileActivity.this.finishAffinity();
+            }
+        });
     }
 
     /**
@@ -585,6 +702,7 @@ public class ProfileActivity extends BaseActivity implements GoogleApiClient.OnC
         hostingBtn.setVisibility(View.VISIBLE);
         secretBtn.setVisibility(View.VISIBLE);
         signOutBtn.setVisibility(View.VISIBLE);
+        deleteBtn.setVisibility(View.VISIBLE);
         editBioBtn.setVisibility(View.VISIBLE);
 
         // Moving the user's Name if displaying the fab
