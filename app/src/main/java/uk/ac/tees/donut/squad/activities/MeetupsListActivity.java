@@ -1024,21 +1024,32 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
             {
                 public int compare(Meetup m1, Meetup m2)
                 {
-                    Location meetupLoc1 = new Location("meetup1");
-                    meetupLoc1.setLatitude(m1.getLatitude());
-                    meetupLoc1.setLongitude(m1.getLongitude());
+                    if(m1.getLatitude() != null)
+                    {
+                        if(m1.getLongitude() != null)
+                        {
+                            if(m2.getLatitude() != null)
+                            {
+                                if(m2.getLongitude() != null)
+                                {
+                                    Location meetupLoc1 = new Location("meetup1");
+                                    meetupLoc1.setLatitude(m1.getLatitude());
+                                    meetupLoc1.setLongitude(m1.getLongitude());
 
-                    Location meetupLoc2 = new Location("meetup2");
-                    meetupLoc2.setLatitude(m2.getLatitude());
-                    meetupLoc2.setLongitude(m2.getLongitude());
+                                    Location meetupLoc2 = new Location("meetup2");
+                                    meetupLoc2.setLatitude(m2.getLatitude());
+                                    meetupLoc2.setLongitude(m2.getLongitude());
 
-                    double distance1 = userLoc.distanceTo(meetupLoc1);
-                    double distance2 = userLoc.distanceTo(meetupLoc2);
+                                    double distance1 = userLoc.distanceTo(meetupLoc1);
+                                    double distance2 = userLoc.distanceTo(meetupLoc2);
 
-                    if (distance1 < distance2) return -1;
-                    if (distance1 > distance2) return 1;
+                                    if (distance1 < distance2) return -1;
+                                    if (distance1 > distance2) return 1;
+                                }
+                            }
+                        }
+                    }
                     return 0;
-
                 }
             });
 
@@ -1123,8 +1134,14 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
         {
             public int compare(Meetup m1, Meetup m2)
             {
-                if (m1.getStartDateTime() < m2.getStartDateTime()) return -1;
-                if (m1.getStartDateTime() > m2.getStartDateTime()) return 1;
+                if(m1.getStartDateTime() != null)
+                {
+                    if(m2.getStartDateTime() != null)
+                    {
+                        if (m1.getStartDateTime() < m2.getStartDateTime()) return -1;
+                        if (m1.getStartDateTime() > m2.getStartDateTime()) return 1;
+                    }
+                }
                 return 0;
             }
         });
@@ -1276,7 +1293,7 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
             squadField = (TextView) v.findViewById(R.id.listCard_text2);
             attendingField = (TextView) v.findViewById(R.id.listCard_text4);
             statusField = (TextView) v.findViewById(R.id.listCard_text5);
-            layout = (RelativeLayout) v.findViewById(R.id.layout);
+            //layout = (RelativeLayout) v.findViewById(R.id.layout);
             imageLayout = (LinearLayout) v.findViewById(R.id.listCard_imageLayout);
         }
     }
