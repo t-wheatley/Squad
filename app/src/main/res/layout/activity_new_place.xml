@@ -15,8 +15,7 @@
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:id="@+id/linearLayout"
-        android:orientation="vertical"
-        />
+        android:orientation="vertical" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -31,8 +30,7 @@
             android:layout_alignParentEnd="true"
             android:elevation="15dp"
             android:layout_margin="16dp"
-            android:id="@+id/buttonSubmit"
-            />
+            android:id="@+id/buttonSubmit" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -42,8 +40,7 @@
             android:paddingStart="16dp"
             android:paddingEnd="88dp"
             android:gravity="center"
-            android:id="@+id/newPlace_appBar"
-            >
+            android:id="@+id/newPlace_appBar">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -51,23 +48,20 @@
                 android:text="Create New Place"
                 android:textColor="@color/tw__solid_white"
                 android:textStyle="bold"
-                android:textSize="16sp"
-                />
+                android:textSize="16sp" />
 
         </RelativeLayout>
 
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/newPlace_appBar"
-            >
+            android:layout_below="@+id/newPlace_appBar">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:padding="16dp"
-                >
+                android:padding="16dp">
 
                 <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
@@ -75,49 +69,46 @@
                     app:cardBackgroundColor="@color/colorPrimary"
                     app:cardCornerRadius="2dp"
                     android:elevation="3dp"
-                    android:layout_marginBottom="10dp"
-                    >
+                    android:layout_marginBottom="10dp">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        >
+                        android:orientation="vertical">
+
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@color/colorPrimaryDark"
-                            android:gravity="center"
-                            >
+                            android:gravity="center">
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Basic Info"
                                 android:textColor="@color/tw__solid_white"
                                 android:layout_margin="10dp"
-                                android:textStyle="bold"
-                                />
+                                android:textStyle="bold" />
                         </RelativeLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
-                            android:padding="10dp"
-                            >
+                            android:padding="10dp">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Name"
-                                android:layout_marginBottom="2dp"
-                                />
+                                android:layout_marginBottom="2dp" />
+
                             <android.support.v7.widget.CardView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 app:cardBackgroundColor="@color/colorAccent"
                                 android:layout_marginBottom="10dp"
-                                app:cardCornerRadius="2dp"
-                                >
+                                app:cardCornerRadius="2dp">
 
                                 <EditText
                                     android:layout_width="match_parent"
@@ -128,8 +119,7 @@
                                     android:hint="Enter Place Name Here"
                                     android:layout_marginStart="10dp"
                                     android:layout_marginEnd="10dp"
-                                    android:textCursorDrawable="@null"
-                                    />
+                                    android:textCursorDrawable="@null" />
 
                             </android.support.v7.widget.CardView>
 
@@ -137,37 +127,36 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="2dp"
-                                android:text="Squad"
-                                />
+                                android:text="Squad" />
+
                             <android.support.v7.widget.CardView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 app:cardBackgroundColor="@color/colorAccent"
                                 android:layout_marginBottom="10dp"
-                                app:cardCornerRadius="2dp"
-                                >
+                                app:cardCornerRadius="2dp">
 
                                 <Spinner
                                     android:layout_width="match_parent"
                                     android:layout_height="40dp"
                                     android:layout_marginStart="10dp"
                                     android:id="@+id/spinnerSquad"
-                                    style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"/>
+                                    style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored" />
                             </android.support.v7.widget.CardView>
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Description"
-                                android:layout_marginBottom="2dp"
-                                />
+                                android:layout_marginBottom="2dp" />
+
                             <android.support.v7.widget.CardView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 app:cardCornerRadius="2dp"
                                 app:cardBackgroundColor="@color/colorAccent"
-                                android:layout_marginBottom="5dp"
-                                >
+                                android:layout_marginBottom="5dp">
+
                                 <EditText
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
@@ -178,8 +167,7 @@
                                     android:textSize="14sp"
                                     android:layout_marginStart="10dp"
                                     android:layout_marginEnd="10dp"
-                                    android:textCursorDrawable="@null"
-                                    />
+                                    android:textCursorDrawable="@null" />
 
                             </android.support.v7.widget.CardView>
                         </LinearLayout>
@@ -192,41 +180,40 @@
                     app:cardBackgroundColor="@color/colorPrimary"
                     app:cardCornerRadius="2dp"
                     android:elevation="3dp"
-                    android:layout_marginBottom="10dp"
-                    >
+                    android:layout_marginBottom="10dp">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        >
+                        android:orientation="vertical">
+
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:background="@color/colorPrimaryDark"
-                            >
+                            android:background="@color/colorPrimaryDark">
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Address"
                                 android:layout_margin="10dp"
                                 android:textColor="@color/tw__solid_white"
-                                android:textStyle="bold"
-                                />
+                                android:textStyle="bold" />
                         </RelativeLayout>
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
-                            android:padding="10dp"
-                            >
+                            android:padding="10dp">
+
                             <android.support.v7.widget.CardView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 app:cardBackgroundColor="@color/colorAccent"
                                 app:cardCornerRadius="2dp"
-                                android:layout_marginBottom="10dp"
-                                >
+                                android:layout_marginBottom="10dp">
 
                                 <EditText
                                     android:layout_width="match_parent"
@@ -238,7 +225,7 @@
                                     android:hint="Address Line 1"
                                     android:layout_marginStart="5dp"
                                     android:layout_marginEnd="5dp"
-                                    android:textCursorDrawable="@null"/>
+                                    android:textCursorDrawable="@null" />
 
                             </android.support.v7.widget.CardView>
 
@@ -247,8 +234,7 @@
                                 android:layout_height="wrap_content"
                                 app:cardBackgroundColor="@color/colorAccent"
                                 app:cardCornerRadius="2dp"
-                                android:layout_marginBottom="10dp"
-                                >
+                                android:layout_marginBottom="10dp">
 
                                 <EditText
                                     android:layout_width="match_parent"
@@ -260,8 +246,7 @@
                                     android:textSize="14sp"
                                     android:layout_marginStart="5dp"
                                     android:layout_marginEnd="5dp"
-                                    android:textCursorDrawable="@null"
-                                    />
+                                    android:textCursorDrawable="@null" />
 
                             </android.support.v7.widget.CardView>
 
@@ -270,8 +255,7 @@
                                 android:layout_height="wrap_content"
                                 app:cardBackgroundColor="@color/colorAccent"
                                 app:cardCornerRadius="2dp"
-                                android:layout_marginBottom="10dp"
-                                >
+                                android:layout_marginBottom="10dp">
 
                                 <EditText
                                     android:layout_width="match_parent"
@@ -283,8 +267,7 @@
                                     android:textSize="14sp"
                                     android:layout_marginStart="5dp"
                                     android:layout_marginEnd="5dp"
-                                    android:textCursorDrawable="@null"
-                                    />
+                                    android:textCursorDrawable="@null" />
 
                             </android.support.v7.widget.CardView>
 
@@ -293,8 +276,7 @@
                                 android:layout_height="wrap_content"
                                 app:cardBackgroundColor="@color/colorAccent"
                                 app:cardCornerRadius="2dp"
-                                android:layout_marginBottom="10dp"
-                                >
+                                android:layout_marginBottom="10dp">
 
                                 <EditText
                                     android:layout_width="match_parent"
@@ -306,8 +288,7 @@
                                     android:textSize="14sp"
                                     android:layout_marginStart="5dp"
                                     android:layout_marginEnd="5dp"
-                                    android:textCursorDrawable="@null"
-                                    />
+                                    android:textCursorDrawable="@null" />
 
                             </android.support.v7.widget.CardView>
 
@@ -316,8 +297,7 @@
                                 android:layout_height="wrap_content"
                                 app:cardBackgroundColor="@color/colorAccent"
                                 app:cardCornerRadius="2dp"
-                                android:layout_marginBottom="10dp"
-                                >
+                                android:layout_marginBottom="10dp">
 
                                 <EditText
                                     android:layout_width="match_parent"
@@ -329,8 +309,7 @@
                                     android:textSize="14sp"
                                     android:layout_marginStart="5dp"
                                     android:layout_marginEnd="5dp"
-                                    android:textCursorDrawable="@null"
-                                    />
+                                    android:textCursorDrawable="@null" />
 
                             </android.support.v7.widget.CardView>
 
@@ -345,9 +324,9 @@
         </ScrollView>
 
         <!-- Loading overlay; -->
-        <include layout="@layout/loading_overlay"
+        <include
+            layout="@layout/loading_overlay"
             android:id="@+id/loading_overlay" />
-
 
 
     </RelativeLayout>

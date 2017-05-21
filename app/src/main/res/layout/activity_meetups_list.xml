@@ -48,7 +48,7 @@
                 android:drawableStart="@drawable/ic_search"
                 android:ems="10"
                 android:gravity="center"
-                android:hint="Search Meetups..."/>
+                android:hint="Search Meetups..." />
         </LinearLayout>
 
         <LinearLayout
@@ -141,7 +141,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_below="@+id/gap"
-                    android:scrollbars="vertical"/>
+                    android:scrollbars="vertical" />
             </RelativeLayout>
         </ScrollView>
 

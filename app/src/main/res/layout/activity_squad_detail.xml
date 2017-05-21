@@ -58,8 +58,7 @@
                         android:layout_height="80dp"
                         android:layout_marginBottom="10dp"
                         android:src="@drawable/ic_donut_minim"
-                        android:id="@+id/squadDetail_image"
-                        />
+                        android:id="@+id/squadDetail_image" />
 
                     <ProgressBar
                         android:id="@+id/squadDetail_imageProgress"
@@ -67,7 +66,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
                 </RelativeLayout>
 
                 <android.support.v7.widget.CardView
@@ -217,8 +216,7 @@
                             android:layout_height="1dp"
                             android:layout_marginEnd="10dp"
                             android:layout_marginStart="10dp"
-                            android:background="@color/colorPrimaryDark">
-                        </RelativeLayout>
+                            android:background="@color/colorPrimaryDark"></RelativeLayout>
 
                         <Button
                             android:id="@+id/squadDetail_postButton"

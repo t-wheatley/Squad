@@ -9,28 +9,24 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="32dp"
-        >
+        android:padding="32dp">
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:cardCornerRadius="2dp"
             android:elevation="10dp"
-            app:cardBackgroundColor="@color/colorPrimary"
-            >
+            app:cardBackgroundColor="@color/colorPrimary">
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                >
+                android:layout_height="match_parent">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/colorPrimaryDark"
-                    android:id="@+id/login_title"
-                    >
+                    android:id="@+id/login_title">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -39,8 +35,7 @@
                         android:text="Terms and Conditions"
                         android:layout_margin="10dp"
                         android:textColor="@color/tw__solid_white"
-                        android:textStyle="bold"
-                        />
+                        android:textStyle="bold" />
 
                 </RelativeLayout>
 
@@ -54,20 +49,17 @@
                     app:cardBackgroundColor="@color/colorAccent"
                     android:id="@+id/login_termsCard"
                     android:layout_below="@+id/login_title"
-                    android:layout_above="@+id/sign_in_button"
-                    >
+                    android:layout_above="@+id/sign_in_button">
 
                     <ScrollView
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        >
+                        android:layout_height="match_parent">
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
-                            android:id="@+id/login_terms"
-                            />
+                            android:id="@+id/login_terms" />
 
                     </ScrollView>
 
@@ -83,8 +75,7 @@
                     android:layout_marginBottom="16dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginStart="12dp"
-                    android:layout_marginEnd="12dp"
-                    />
+                    android:layout_marginEnd="12dp" />
 
             </RelativeLayout>
 
@@ -95,6 +86,6 @@
 
 
     <!-- Loading overlay; -->
-    <include layout="@layout/loading_overlay"/>
+    <include layout="@layout/loading_overlay" />
 
 </RelativeLayout>

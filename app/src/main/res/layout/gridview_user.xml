@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/gridview_user"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:gravity="center_horizontal"
-              android:orientation="vertical">
+    android:id="@+id/gridview_user"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/gridview_user_image"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginTop="15dp"
         app:civ_border_width="2dp"
-        app:civ_border_color="@color/colorPrimaryDark"/>
+        app:civ_border_color="@color/colorPrimaryDark" />
 
     <TextView
         android:id="@+id/gridview_user_text"
@@ -21,6 +20,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:textSize="12sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
 </LinearLayout>
