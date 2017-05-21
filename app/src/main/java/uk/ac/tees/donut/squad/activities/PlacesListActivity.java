@@ -746,19 +746,31 @@ public class PlacesListActivity extends BaseActivity implements GoogleApiClient.
             {
                 public int compare(LocPlace p1, LocPlace p2)
                 {
-                    Location place1 = new Location("place1");
-                    place1.setLatitude(p1.getLocLat());
-                    place1.setLongitude(p1.getLocLong());
+                    if(p1.getLocLat() != 0)
+                    {
+                        if (p1.getLocLong() != 0)
+                        {
+                            if (p2.getLocLat() != 0)
+                            {
+                                if (p2.getLocLong() != 0)
+                                {
+                                    Location place1 = new Location("place1");
+                                    place1.setLatitude(p1.getLocLat());
+                                    place1.setLongitude(p1.getLocLong());
 
-                    Location place2 = new Location("place2");
-                    place2.setLatitude(p2.getLocLat());
-                    place2.setLongitude(p2.getLocLong());
+                                    Location place2 = new Location("place2");
+                                    place2.setLatitude(p2.getLocLat());
+                                    place2.setLongitude(p2.getLocLong());
 
-                    double distance1 = userLoc.distanceTo(place1);
-                    double distance2 = userLoc.distanceTo(place2);
+                                    double distance1 = userLoc.distanceTo(place1);
+                                    double distance2 = userLoc.distanceTo(place2);
 
-                    if (distance1 < distance2) return -1;
-                    if (distance1 > distance2) return 1;
+                                    if (distance1 < distance2) return -1;
+                                    if (distance1 > distance2) return 1;
+                                }
+                            }
+                        }
+                    }
                     return 0;
                 }
             });

@@ -23,7 +23,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.LoginActivity" />
-        <activity android:name=".activities.SquadListActivity" />
+        <activity
+            android:name=".activities.SquadListActivity"
+            android:launchMode="singleTask"/>
         <activity android:name=".activities.NewMeetupActivity" />
         <activity
             android:name=".activities.MeetupDetailActivity"
@@ -31,9 +33,6 @@
         <activity android:name=".activities.ProfileActivity" />
         <activity android:name=".activities.SquadDetailActivity" />
         <activity android:name=".activities.PlacesListActivity" />
-        <activity
-            android:name=".activities.SettingsActivity"
-            android:label="@string/title_activity_settings" />
 
         <service
             android:name=".location.FetchAddressIntentService"
