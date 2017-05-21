@@ -210,31 +210,43 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
         }
         if (id == R.id.btn_filter_ongoing)
         {
-            mMap.clear();
-            mMap.addMarker(new MarkerOptions().title("Current Position").position(currentLocation).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA)));
-            filter = 2;
-            addMarkers(mMap);
+            if(currentLocation != null)
+            {
+                mMap.clear();
+                mMap.addMarker(new MarkerOptions().title("Current Position").position(currentLocation).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA)));
+                filter = 2;
+                addMarkers(mMap);
+            }
         }
         if (id == R.id.btn_filter_all)
         {
-            mMap.clear();
-            mMap.addMarker(new MarkerOptions().title("Current Position").position(currentLocation).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA)));
-            filter = 1;
-            addMarkers(mMap);
+            if(currentLocation != null)
+            {
+                mMap.clear();
+                mMap.addMarker(new MarkerOptions().title("Current Position").position(currentLocation).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA)));
+                filter = 1;
+                addMarkers(mMap);
+            }
         }
         if (id == R.id.btn_filter_upcoming)
         {
-            mMap.clear();
-            mMap.addMarker(new MarkerOptions().title("Current Position").position(currentLocation).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA)));
-            filter = 3;
-            addMarkers(mMap);
+            if(currentLocation != null)
+            {
+                mMap.clear();
+                mMap.addMarker(new MarkerOptions().title("Current Position").position(currentLocation).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA)));
+                filter = 3;
+                addMarkers(mMap);
+            }
         }
         if (id == R.id.btn_filter_expired)
         {
-            mMap.clear();
-            mMap.addMarker(new MarkerOptions().title("Current Position").position(currentLocation).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA)));
-            filter = 4;
-            addMarkers(mMap);
+            if(currentLocation != null)
+            {
+                mMap.clear();
+                mMap.addMarker(new MarkerOptions().title("Current Position").position(currentLocation).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA)));
+                filter = 4;
+                addMarkers(mMap);
+            }
         }
         if (id == R.id.btn_show_meetup)
         {
