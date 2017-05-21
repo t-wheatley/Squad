@@ -113,7 +113,8 @@ public class LoginActivity extends AppCompatActivity implements
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null)
                 {
-                    // User is signed in, load MenuActivity
+
+
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
 
                     // Display loading overlay
