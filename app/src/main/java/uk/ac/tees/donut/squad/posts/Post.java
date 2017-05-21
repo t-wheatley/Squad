@@ -1,5 +1,7 @@
 package uk.ac.tees.donut.squad.posts;
 
+import java.util.HashMap;
+
 /**
  * Class used to represent a User's Post in a Squad.
  */
@@ -24,6 +26,7 @@ public class Post
      * @param id       The unique id of the Post.
      * @param dateTime The DateTime the Post was made at.
      */
+
     public Post(String user, String squad, String post, String id, long dateTime)
     {
         this.user = user;
@@ -33,7 +36,15 @@ public class Post
         this.dateTime = dateTime;
     }
 
+    public Post(String id, String post, String user, long dateTime) {
+        this.user = user;
+        this.post = post;
+        this.id = id;
+        this.dateTime = dateTime;
+    }
+
     // GETTERS
+
     public String getId()
     {
         return id;
@@ -60,6 +71,7 @@ public class Post
     }
 
     // SETTERS
+
     public void setId(String id)
     {
         this.id = id;
