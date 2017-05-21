@@ -56,58 +56,58 @@ import uk.ac.tees.donut.squad.users.FBUser;
 public class MeetupDetailActivity extends BaseActivity
 {
     // Firebase
-    DatabaseReference mDatabase;
-    FirebaseUser firebaseUser;
-    FirebaseStorage firebaseStorage;
-    StorageReference meetupStorage;
+    private DatabaseReference mDatabase;
+    private FirebaseUser firebaseUser;
+    private FirebaseStorage firebaseStorage;
+    private StorageReference meetupStorage;
 
     // Loading Overlay
-    RelativeLayout loadingOverlay;
-    TextView loadingText;
-    ProgressBar loadingImage;
+    private RelativeLayout loadingOverlay;
+    private TextView loadingText;
+    private ProgressBar loadingImage;
 
     // Activity UI
-    TextView nameDisplay;
-    TextView squadDisplay;
-    TextView hostDisplay;
-    TextView statusDisplay;
-    TextView descriptionDisplay;
-    TextView startDateDisplay;
-    TextView endDateDisplay;
-    TextView attendingDisplay;
-    TextView memberCountDisplay;
-    ImageView meetupImage;
-    ImageView meetupImageFull;
-    Button editName;
-    Button editDesc;
-    Button editPhoto;
-    Button attendBtn;
-    Button deleteBtn;
-    CardView imageViewCard;
-    TextView addressDisplay;
+    private TextView nameDisplay;
+    private TextView squadDisplay;
+    private TextView hostDisplay;
+    private TextView statusDisplay;
+    private TextView descriptionDisplay;
+    private TextView startDateDisplay;
+    private TextView endDateDisplay;
+    private TextView attendingDisplay;
+    private TextView memberCountDisplay;
+    private ImageView meetupImage;
+    private ImageView meetupImageFull;
+    private Button editName;
+    private Button editDesc;
+    private Button editPhoto;
+    private Button attendBtn;
+    private Button deleteBtn;
+    private CardView imageViewCard;
+    private TextView addressDisplay;
 
     //Burger Menu
-    FloatingActionButton fab;
-    RelativeLayout burgerMenu;
-    LinearLayout hostOptions;
-    boolean burger = false;
+    private FloatingActionButton fab;
+    private RelativeLayout burgerMenu;
+    private LinearLayout hostOptions;
+    private boolean burger = false;
 
     // Members display
-    GridView attendeesGrid;
-    List<String> userNames;
-    List<String> userPics;
-    List<String> userIds;
+    private GridView attendeesGrid;
+    private List<String> userNames;
+    private List<String> userPics;
+    private List<String> userIds;
 
     // Variables
-    String meetupId;
-    Meetup meetup;
-    Boolean attending;
-    int secretCount;
-    int memberCount;
-    double latitude;
-    double longitude;
-    boolean noPhoto;
-    boolean fullScreen;
+    private String meetupId;
+    private Meetup meetup;
+    private Boolean attending;
+    private int secretCount;
+    private int memberCount;
+    private double latitude;
+    private double longitude;
+    private boolean noPhoto;
+    private boolean fullScreen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -285,9 +285,15 @@ public class MeetupDetailActivity extends BaseActivity
                 else if (status == 1)
                     statusDisplay.setText("Ongoing");
                 else if (status == 2)
+                {
                     statusDisplay.setText("Expired");
-                else
+                    attendBtn.setEnabled(false);
+                } else
+                {
                     statusDisplay.setText("Deleted");
+                    attendBtn.setEnabled(false);
+                }
+
 
                 // If signed-in user is the Host of the Meetup
                 if (firebaseUser.getUid().equals(meetup.getHost()))
@@ -805,11 +811,18 @@ public class MeetupDetailActivity extends BaseActivity
      */
     public void attendMeetup()
     {
-        // Adds the user to the Meetup and changes the button
-        mDatabase.child("users").child(firebaseUser.getUid()).child("meetups").child(meetupId).setValue(true);
-        mDatabase.child("meetups").child(meetupId).child("users").child(firebaseUser.getUid()).setValue(true);
-        attending = true;
-        attendBtn.setText("Un-Attend");
+        // If meetup is not upcoming or ongoing
+        if(meetup.gimmeStatus() > 1)
+        {
+            Toast.makeText(MeetupDetailActivity.this, "Sorry, this Meetup can not be attended anymore!", Toast.LENGTH_SHORT);
+        } else
+        {
+            // Adds the user to the Meetup and changes the button
+            mDatabase.child("users").child(firebaseUser.getUid()).child("meetups").child(meetupId).setValue(true);
+            mDatabase.child("meetups").child(meetupId).child("users").child(firebaseUser.getUid()).setValue(true);
+            attending = true;
+            attendBtn.setText("Un-Attend");
+        }
     }
 
     /**

@@ -7,8 +7,8 @@ import java.util.HashMap;
  */
 public class Post
 {
-    String id, post, user, squad;
-    long dateTime;
+    private String id, post, user, squad;
+    private long dateTime;
 
     /**
      * Empty constructor for Firebase.

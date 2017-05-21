@@ -46,8 +46,8 @@ public class SquadListActivity extends BaseActivity
     private FirebaseStorage firebaseStorage;
 
     // Loading Overlay
-    RelativeLayout loadingOverlay;
-    TextView loadingText;
+    private RelativeLayout loadingOverlay;
+    private TextView loadingText;
 
     // Activity UI
     private RecyclerView mRecyclerView;
@@ -57,10 +57,10 @@ public class SquadListActivity extends BaseActivity
     TextView listText;
 
     // Variables
-    FirebaseUser firebaseUser;
-    String userId;
-    Boolean member;
-    int loadingCount;
+    private FirebaseUser firebaseUser;
+    private String userId;
+    private Boolean member;
+    private int loadingCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)

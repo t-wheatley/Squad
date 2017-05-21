@@ -67,8 +67,8 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback, Goo
     private DatabaseReference mDatabase;
     private ChildEventListener mChildEventListener;
 
-    LinearLayout burgerMenu;
-    FloatingActionButton burgerButton;
+    private LinearLayout burgerMenu;
+    private FloatingActionButton burgerButton;
     //for whenever burger menu is open or not
     boolean burger = false;
 

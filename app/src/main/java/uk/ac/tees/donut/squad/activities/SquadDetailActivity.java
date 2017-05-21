@@ -2,15 +2,24 @@ package uk.ac.tees.donut.squad.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.vision.text.Text;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -19,6 +28,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,35 +46,37 @@ import uk.ac.tees.donut.squad.users.FBUser;
 public class SquadDetailActivity extends BaseActivity
 {
     // Firebase
-    DatabaseReference mDatabase;
-    FirebaseUser firebaseUser;
+    private DatabaseReference mDatabase;
+    private FirebaseStorage firebaseStorage;
+    private FirebaseUser firebaseUser;
 
     // Loading Overlay
-    RelativeLayout loadingOverlay;
-    TextView loadingText;
+    private RelativeLayout loadingOverlay;
+    private TextView loadingText;
 
     // Activity UI
-    TextView nameDisplay;
-    TextView descriptionDisplay;
-    TextView memberCountDisplay;
-    TextView memberDisplay;
-    String squadId;
-    Button joinBtn;
-    ImageView image;
-    TextView meetupCount;
-    TextView placeCount;
+    private TextView nameDisplay;
+    private TextView descriptionDisplay;
+    private TextView memberCountDisplay;
+    private TextView memberDisplay;
+    private String squadId;
+    private Button joinBtn;
+    private ImageView squadImage;
+    private ProgressBar imageLoading;
+    private TextView meetupCount;
+    private TextView placeCount;
 
     // Members display
-    GridView membersGrid;
-    List<String> userNames;
-    List<String> userPics;
-    List<String> userIds;
+    private GridView membersGrid;
+    private List<String> userNames;
+    private List<String> userPics;
+    private List<String> userIds;
 
     // Variables
-    Squad squad;
-    Boolean member;
-    int secretCount;
-    int memberCount;
+    private Squad squad;
+    private Boolean member;
+    private int secretCount;
+    private int memberCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -85,7 +98,8 @@ public class SquadDetailActivity extends BaseActivity
         joinBtn = (Button) findViewById(R.id.squadDetail_joinBtn);
         meetupCount = (TextView) findViewById(R.id.squadDetail_meetupsCount);
         placeCount = (TextView) findViewById(R.id.squadDetail_placesCount);
-        image = (ImageView) findViewById(R.id.squadDetail_image);
+        imageLoading = (ProgressBar) findViewById(R.id.squadDetail_imageProgress);
+        squadImage = (ImageView) findViewById(R.id.squadDetail_image);
 
 
         // Gets the extra passed from the last activity
@@ -116,8 +130,9 @@ public class SquadDetailActivity extends BaseActivity
                     .show();
         }
 
-        // Getting the reference for the Firebase Realtime Database
+        // Getting the reference for the Firebase Realtime Database and Storage
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        firebaseStorage = FirebaseStorage.getInstance();
 
         // Defaults
         member = false;
@@ -126,7 +141,7 @@ public class SquadDetailActivity extends BaseActivity
         memberCount = 0;
 
         // Starts the loading chain
-        // loadSquad -> loadUsers
+        // loadSquad -> loadPicture -> loadUsers
         loadSquad();
     }
 
@@ -180,8 +195,8 @@ public class SquadDetailActivity extends BaseActivity
                     meetupCount.setText("0");
                 }
 
-                // Load the members of the Squad
-                loadUsers();
+                // Load the Picture of the Squad
+                loadPicture();
             }
 
             @Override
@@ -190,6 +205,57 @@ public class SquadDetailActivity extends BaseActivity
 
             }
         });
+    }
+
+    public void loadPicture()
+    {
+        // Gets the storage reference of the Squad's picture
+        StorageReference squadStorage = firebaseStorage.getReference().child("squads/" + squadId + ".png");
+
+        // Display picture loading
+        imageLoading.setVisibility(View.VISIBLE);
+
+        // Gets the Uri to download
+        squadStorage.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>()
+        {
+            @Override
+            public void onSuccess(Uri uri)
+            {
+                // If a picture exists
+                // Download and display using Glide
+                Glide.with(getApplicationContext())
+                        .load(uri)
+                        .listener(new RequestListener<Uri, GlideDrawable>()
+                        {
+                            @Override
+                            public boolean onException(Exception e, Uri model, Target<GlideDrawable> target, boolean isFirstResource)
+                            {
+                                imageLoading.setVisibility(View.GONE);
+                                return false;
+                            }
+
+                            @Override
+                            public boolean onResourceReady(GlideDrawable resource, Uri model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource)
+                            {
+                                imageLoading.setVisibility(View.GONE);
+                                return false;
+                            }
+                        })
+                        .error(R.drawable.ic_donut_minim)
+                        .into(squadImage);
+            }
+        }).addOnFailureListener(new OnFailureListener()
+        {
+            @Override
+            public void onFailure(@NonNull Exception exception)
+            {
+                // If no picture exists
+                imageLoading.setVisibility(View.GONE);
+            }
+        });
+
+        // Load the members of the Squad
+        loadUsers();
     }
 
     /**

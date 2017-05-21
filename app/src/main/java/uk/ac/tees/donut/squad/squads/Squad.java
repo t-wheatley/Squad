@@ -7,12 +7,12 @@ import java.util.HashMap;
  */
 public class Squad
 {
-    String id;
-    String name;
-    String description;
-    HashMap<String, Boolean> users;
-    HashMap<String, Boolean> meetups;
-    HashMap<String, Boolean> places;
+    private String id;
+    private String name;
+    private String description;
+    private HashMap<String, Boolean> users;
+    private HashMap<String, Boolean> meetups;
+    private HashMap<String, Boolean> places;
 
     /**
      * Empty constructor for Firebase.

@@ -69,47 +69,47 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
     private FirebaseRecyclerAdapter mAdapter;
 
     // Location
-    GoogleApiClient mGoogleApiClient;
-    LocationRequest mLocationRequest;
-    Location userLoc;
+    private GoogleApiClient mGoogleApiClient;
+    private LocationRequest mLocationRequest;
+    private Location userLoc;
 
     // Loading Overlay
-    RelativeLayout loadingOverlay;
-    TextView loadingText;
+    private RelativeLayout loadingOverlay;
+    private TextView loadingText;
 
     // Activity UI
-    TextView listText;
-    Button btnDistance;
-    Button btnStartTime;
-    Button pastButton;
-    EditText searchBar;
+    private TextView listText;
+    private Button btnDistance;
+    private Button btnStartTime;
+    private Button pastButton;
+    private EditText searchBar;
 
     // RecyclerView
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
     private RecyclerView.AdapterDataObserver mObserver;
-    MeetupAdapter filteredAdapter;
+    private MeetupAdapter filteredAdapter;
 
     // BurgerMenu
-    LinearLayout burgerMenu;
-    FloatingActionButton burgerButton;
+    private LinearLayout burgerMenu;
+    private FloatingActionButton burgerButton;
 
     // Variables
-    List<Meetup> searchList;
-    List<Meetup> filteredList;
-    List<Meetup> filteredListExpired;
-    String userId;
-    String squadId;
-    String placeId;
-    int filter;
-    int loadingCount;
-    boolean host;
-    boolean member;
-    boolean squad;
-    boolean place;
-    boolean search;
-    boolean past = false;
-    boolean burger = false;
+    private List<Meetup> searchList;
+    private List<Meetup> filteredList;
+    private List<Meetup> filteredListExpired;
+    private String userId;
+    private String squadId;
+    private String placeId;
+    private int filter;
+    private int loadingCount;
+    private boolean host;
+    private boolean member;
+    private boolean squad;
+    private boolean place;
+    private boolean search;
+    private boolean past = false;
+    private boolean burger = false;
 
     // Final Value
     final int LOCATION_PERMISSION_REQUEST_CODE = 1;

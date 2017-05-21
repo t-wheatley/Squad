@@ -59,8 +59,8 @@ public class NewMeetupActivity extends AppCompatActivity
     private DatabaseReference mDatabase;
 
     // Loading Overlay
-    RelativeLayout loadingOverlay;
-    TextView loadingText;
+    private RelativeLayout loadingOverlay;
+    private TextView loadingText;
 
     // Activity UI
     private LinearLayout newAddressLayout;
@@ -91,15 +91,15 @@ public class NewMeetupActivity extends AppCompatActivity
     protected String geocodeAddress;
 
     // Variables
-    String name, description, squadId;
-    HashMap<String, String> squads;
-    HashMap<String, String> places;
-    Calendar fromDateTime;
-    Calendar untilDateTime;
-    Calendar currentDateTime;
+    private String name, description, squadId;
+    private HashMap<String, String> squads;
+    private HashMap<String, String> places;
+    private Calendar fromDateTime;
+    private Calendar untilDateTime;
+    private Calendar currentDateTime;
     protected String a1, a2, pc, tc, county;
-    int currentYear, currentMonth, currentDay, currentHour, currentMinute;
-    boolean spinnerAddress;
+    private int currentYear, currentMonth, currentDay, currentHour, currentMinute;
+    private boolean spinnerAddress;
 
     // Final values
     private static final String TAG = "Auth";
