@@ -46,21 +46,9 @@ import uk.ac.tees.donut.squad.users.FBUser;
  */
 public class SquadPostActivity extends AppCompatActivity
 {
-<<<<<<< HEAD
     private static final String TAG = "Auth";
     boolean burger = false;
     FirebaseUser firebaseUser;
-=======
-    // Firebase
-    private FirebaseUser firebaseUser;
-    private DatabaseReference mDatabase;
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
-    private FirebaseRecyclerAdapter mAdapter;
-
-    // Loading Overlay
-    RelativeLayout loadingOverlay;
->>>>>>> master
     TextView loadingText;
     int loadingCount;
     RelativeLayout loadingOverlay;
@@ -315,7 +303,7 @@ public class SquadPostActivity extends AppCompatActivity
 
 
                     // Displays the user's photo in the ImageView
-                    Glide.with(SquadPostActivity.this)
+                    Glide.with(viewHolder.itemView.getContext())
                             .load(user.getPicture().trim())
                             .diskCacheStrategy(DiskCacheStrategy.NONE)
                             .skipMemoryCache(true)
@@ -324,8 +312,7 @@ public class SquadPostActivity extends AppCompatActivity
                                 public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
                                     return false;
                                 }
-
-<<<<<<< HEAD
+                                
                                 @Override
                                 public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
                                     // If profileImage isnt null
@@ -380,14 +367,6 @@ public class SquadPostActivity extends AppCompatActivity
 
         // If loading the last item
         if (mAdapter.getItemCount() == loadingCount)
-=======
-            // Pushing the post to the user's posts
-            mDatabase.child("users").child(user.getUid()).child("posts").child(postId).setValue(true);
-
-            finish();
-            startActivity(getIntent());
-        } else
->>>>>>> master
         {
             // Hide the loading overlay
             loadingOverlay.setVisibility(View.GONE);
@@ -534,6 +513,9 @@ public class SquadPostActivity extends AppCompatActivity
 
             // Pushing the post to the "posts" node using the postId
             mDatabase.child("posts").child(postId).setValue(postObject);
+
+            // Pushing the post to the user's posts
+            mDatabase.child("users").child(user.getUid()).child("posts").child(postId).setValue(true);
 
             finish();
             startActivity(getIntent());
