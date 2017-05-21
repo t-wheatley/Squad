@@ -44,37 +44,37 @@ import uk.ac.tees.donut.squad.users.FBUser;
 public class ProfileActivity extends BaseActivity implements GoogleApiClient.OnConnectionFailedListener
 {
     // Firebase + Google
-    FirebaseAuth mAuth;
-    FirebaseUser firebaseUser;
-    GoogleApiClient mGoogleApiClient;
-    DatabaseReference mDatabase;
+    private FirebaseAuth mAuth;
+    private FirebaseUser firebaseUser;
+    private GoogleApiClient mGoogleApiClient;
+    private DatabaseReference mDatabase;
 
     // Loading Overlay
-    RelativeLayout loadingOverlay;
-    TextView loadingText;
+    private RelativeLayout loadingOverlay;
+    private TextView loadingText;
 
     // Activity UI
-    TextView profileName;
-    TextView bio;
-    Button squadBtn;
-    Button attendingBtn;
-    Button hostingBtn;
-    Button secretBtn;
-    Button signOutBtn;
-    Button deleteBtn;
-    Button editBioBtn;
-    ImageView profileImage;
-    FloatingActionButton fab;
-    boolean burger = false;
-    RelativeLayout burgerMenu;
+    private TextView profileName;
+    private TextView bio;
+    private Button squadBtn;
+    private Button attendingBtn;
+    private Button hostingBtn;
+    private Button secretBtn;
+    private Button signOutBtn;
+    private Button deleteBtn;
+    private Button editBioBtn;
+    private ImageView profileImage;
+    private FloatingActionButton fab;
+    private boolean burger = false;
+    private RelativeLayout burgerMenu;
 
     // Variables
-    Boolean personal;
-    String uId;
-    FBUser user;
-    Boolean hasSquad;
-    Boolean hasMeetup;
-    Boolean hasHost;
+    private Boolean personal;
+    private String uId;
+    private FBUser user;
+    private Boolean hasSquad;
+    private Boolean hasMeetup;
+    private Boolean hasHost;
 
 
     @Override

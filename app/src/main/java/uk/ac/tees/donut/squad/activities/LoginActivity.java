@@ -59,8 +59,8 @@ public class LoginActivity extends AppCompatActivity implements
     private TextView terms;
 
     // Loading Overlay
-    RelativeLayout loadingOverlay;
-    TextView loadingText;
+    private RelativeLayout loadingOverlay;
+    private TextView loadingText;
 
     // Final Values
     private static final int RC_SIGN_IN = 9001;

@@ -8,13 +8,13 @@ import java.util.HashMap;
 public class Place
 {
 
-    public String placeId;
-    public String name;
-    public String description;
-    public String squad;
-    public String host;
-    HashMap<String, Boolean> meetups;
-    HashMap<String, String> pictures;
+    private String placeId;
+    private String name;
+    private String description;
+    private String squad;
+    private String host;
+    private HashMap<String, Boolean> meetups;
+    private HashMap<String, String> pictures;
 
     /**
      * Empty constructor for Firebase.

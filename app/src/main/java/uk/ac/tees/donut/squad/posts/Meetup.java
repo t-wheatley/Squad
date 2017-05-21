@@ -11,7 +11,7 @@ import java.util.HashMap;
 public class Meetup
 {
     // Info
-    String id,
+    private String id,
             name,
             description,
             squad,
@@ -24,17 +24,17 @@ public class Meetup
             postCode;
 
     // Attendees
-    HashMap<String, Boolean> users;
+    private HashMap<String, Boolean> users;
 
     // DateTime
-    Long startDateTime, endDateTime;
+    private Long startDateTime, endDateTime;
 
     //  Status
     //0 = upcoming, 1 = ongoing, 2 = happened/expired
-    int status;
+    private int status;
 
     // Location
-    Double longitude, latitude;
+    private Double longitude, latitude;
 
     /**
      * Empty constructor for Firebase.
