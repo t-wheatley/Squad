@@ -62,6 +62,9 @@ public class LoginActivity extends AppCompatActivity implements
     private RelativeLayout loadingOverlay;
     private TextView loadingText;
 
+    // Variables
+    private boolean started;
+
     // Final Values
     private static final int RC_SIGN_IN = 9001;
     private static final String TAG = "Auth";
@@ -74,6 +77,9 @@ public class LoginActivity extends AppCompatActivity implements
 
         // Getting an instance of FirebaseAuth
         mAuth = FirebaseAuth.getInstance();
+
+        // Default
+        started = false;
 
         // Getting UI
         terms = (TextView) findViewById(R.id.login_terms);
@@ -402,11 +408,15 @@ public class LoginActivity extends AppCompatActivity implements
             });
         }
 
-        // Start the main menu
-        Intent i = new Intent(LoginActivity.this, SquadListActivity.class);
-        startActivity(i);
-        finish();
+        if(started == false)
+        {
+            started = true;
 
+            // Start the main menu
+            Intent i = new Intent(LoginActivity.this, SquadListActivity.class);
+            startActivity(i);
+            finish();
+        }
     }
 
     public String getTerms()
