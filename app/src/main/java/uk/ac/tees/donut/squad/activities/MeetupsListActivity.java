@@ -293,6 +293,7 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
     protected void onDestroy()
     {
         mGoogleApiClient.disconnect();
+        mRecyclerView.setAdapter(null);
         super.onDestroy();
     }
 

@@ -48,17 +48,19 @@
                 android:drawableStart="@drawable/ic_search"
                 android:ems="10"
                 android:gravity="center"
-                android:hint="Search Places...">
-            </EditText>
+                android:hint="Search Places..."/>
         </RelativeLayout>
 
         <include
-            layout="@layout/element_bottom_navigation"
             android:id="@+id/navigation"
+            layout="@layout/element_bottom_navigation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_gravity="bottom" />
+
+        <!-- Loading overlay; -->
+        <include layout="@layout/loading_overlay" />
 
         <ScrollView
             android:id="@+id/scrollPL"
@@ -95,10 +97,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_below="@+id/gap"
-                    android:scrollbars="vertical">
-                </android.support.v7.widget.RecyclerView>
+                    android:scrollbars="vertical"/>
             </RelativeLayout>
-
         </ScrollView>
 
         <LinearLayout
@@ -111,9 +111,9 @@
             android:gravity="center"
             android:orientation="vertical"
             android:paddingBottom="16dp"
-            android:paddingTop="16dp"
-            android:paddingStart="16dp"
             android:paddingEnd="88dp"
+            android:paddingStart="16dp"
+            android:paddingTop="16dp"
             android:visibility="gone">
 
             <Button
@@ -141,7 +141,5 @@
         </LinearLayout>
 
     </RelativeLayout>
-    <!-- Loading overlay; -->
-    <include layout="@layout/loading_overlay" />
 
 </RelativeLayout>

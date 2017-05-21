@@ -40,9 +40,8 @@
             android:layout_gravity="bottom"
             />
 
+        <!-- Loading overlay; -->
+        <include layout="@layout/loading_overlay"/>
+
     </RelativeLayout>
-
-    <!-- Loading overlay; -->
-    <include layout="@layout/loading_overlay"/>
-
 </RelativeLayout>
