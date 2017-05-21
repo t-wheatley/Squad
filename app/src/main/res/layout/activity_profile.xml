@@ -24,8 +24,7 @@
             android:layout_margin="15dp"
             android:onClick="fab"
             android:src="@drawable/ic_burger"
-            app:fabSize="normal"
-            />
+            app:fabSize="normal" />
 
         <!-- AppBar at top -->
         <RelativeLayout
@@ -70,8 +69,7 @@
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingTop="@dimen/activity_vertical_margin"
                 android:orientation="vertical"
-                android:gravity="center"
-                >
+                android:gravity="center">
 
                 <!-- Profile Pic Card -->
                 <android.support.v7.widget.CardView
@@ -82,12 +80,12 @@
                     app:cardCornerRadius="2dp">
 
 
-                        <ImageView
-                            android:id="@+id/profileImage_ImageView"
-                            android:layout_width="100dp"
-                            android:layout_height="100dp"
-                            android:layout_centerHorizontal="true"
-                            android:src="@drawable/com_facebook_profile_picture_blank_portrait" />
+                    <ImageView
+                        android:id="@+id/profileImage_ImageView"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/com_facebook_profile_picture_blank_portrait" />
 
                 </android.support.v7.widget.CardView>
 
@@ -121,8 +119,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="Biography"
                                 android:gravity="center"
-                                android:textColor="#FFFFFF"
-                                />
+                                android:textColor="#FFFFFF" />
 
                         </RelativeLayout>
 
@@ -133,7 +130,7 @@
                             android:layout_height="wrap_content"
                             android:padding="10dp"
                             android:text="Bio goes here"
-                            android:gravity="center"/>
+                            android:gravity="center" />
 
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
@@ -205,8 +202,7 @@
             android:background="@color/colorPrimary"
             android:elevation="5dp"
             android:visibility="gone"
-            android:id="@+id/profile_burgerMenu"
-            >
+            android:id="@+id/profile_burgerMenu">
 
             <!-- Buttons -->
             <LinearLayout
@@ -220,8 +216,7 @@
                     android:layout_height="wrap_content"
                     style="@style/Widget.AppCompat.Button.Colored"
                     android:text="Edit Biography"
-                    android:id="@+id/profile_editBio"
-                    />
+                    android:id="@+id/profile_editBio" />
 
                 <!-- Secret Mode -->
                 <Button
@@ -229,8 +224,7 @@
                     android:layout_height="wrap_content"
                     style="@style/Widget.AppCompat.Button.Colored"
                     android:text="Enable Secret Mode"
-                    android:id="@+id/profile_secretBtn"
-                    />
+                    android:id="@+id/profile_secretBtn" />
 
                 <!-- Sign Out -->
                 <Button
@@ -239,8 +233,7 @@
                     android:layout_marginTop="10dp"
                     android:text="Sign Out"
                     android:id="@+id/profile_signOutBtn"
-                    style="@style/Widget.AppCompat.Button.Colored"
-                    />
+                    style="@style/Widget.AppCompat.Button.Colored" />
 
                 <!-- Delete account -->
                 <Button
@@ -248,8 +241,7 @@
                     android:layout_height="wrap_content"
                     android:text="Delete Account"
                     android:id="@+id/profile_deleteBtn"
-                    style="@style/Widget.AppCompat.Button.Colored"
-                    />
+                    style="@style/Widget.AppCompat.Button.Colored" />
 
             </LinearLayout>
 
@@ -257,13 +249,13 @@
 
 
     </RelativeLayout>
+
     <include
         layout="@layout/element_bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_gravity="bottom"
-        />
+        android:layout_gravity="bottom" />
 
     <!-- Loading overlay; -->
     <include layout="@layout/loading_overlay" />

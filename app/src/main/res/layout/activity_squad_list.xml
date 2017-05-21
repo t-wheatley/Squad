@@ -16,19 +16,18 @@
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
             android:ems="10"
-            android:layout_centerInParent = "true"
+            android:layout_centerInParent="true"
             android:id="@+id/squadList_textView"
             android:textColor="@color/tw__solid_white"
             android:visibility="gone"
-            android:text="There are no Squads here!"/>
+            android:text="There are no Squads here!" />
 
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="vertical"
             android:id="@+id/squadList_recyclerView"
-            android:layout_above="@+id/navigation"
-            >
+            android:layout_above="@+id/navigation">
 
         </android.support.v7.widget.RecyclerView>
 
@@ -37,12 +36,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_gravity="bottom"
-            />
+            android:layout_gravity="bottom" />
+
+        <!-- Loading overlay; -->
+        <include layout="@layout/loading_overlay" />
 
     </RelativeLayout>
-
-    <!-- Loading overlay; -->
-    <include layout="@layout/loading_overlay"/>
-
 </RelativeLayout>

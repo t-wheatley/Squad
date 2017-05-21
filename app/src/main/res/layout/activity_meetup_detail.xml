@@ -66,8 +66,7 @@
                     android:elevation="3dp"
                     android:visibility="gone"
                     app:cardBackgroundColor="@color/colorPrimary"
-                    app:cardCornerRadius="2dp"
-                    >
+                    app:cardCornerRadius="2dp">
 
                     <ImageView
                         android:id="@+id/meetupDetail_ImageView"
@@ -125,8 +124,7 @@
                                 android:text="Squad"
                                 android:layout_marginStart="10dp"
                                 android:layout_marginTop="10dp"
-                                android:textStyle="bold"
-                                />
+                                android:textStyle="bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -134,17 +132,14 @@
                                 android:text="SquadName"
                                 android:layout_marginTop="10dp"
                                 android:id="@+id/meetupDetail_squadName"
-                                android:textStyle="bold"
-                                />
+                                android:textStyle="bold" />
                         </LinearLayout>
 
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
                             android:background="@color/colorPrimaryDark"
-                            android:layout_margin="10dp"
-                            >
-                        </RelativeLayout>
+                            android:layout_margin="10dp"></RelativeLayout>
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -155,16 +150,14 @@
                                 android:layout_height="wrap_content"
                                 android:text="Status"
                                 android:layout_marginStart="10dp"
-                                android:textStyle="bold"
-                                />
+                                android:textStyle="bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Status"
                                 android:layout_marginBottom="10dp"
-                                android:id="@+id/meetupDetail_status"
-                                />
+                                android:id="@+id/meetupDetail_status" />
 
                         </LinearLayout>
 
@@ -172,79 +165,68 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
-                            android:layout_marginBottom="5dp"
-                            >
+                            android:layout_marginBottom="5dp">
 
                             <TextView
                                 android:layout_width="50dp"
                                 android:layout_height="wrap_content"
                                 android:text="Start"
-                                android:textStyle="bold"
-                                />
+                                android:textStyle="bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="MONTH DD, YYYY at 00:00 am"
                                 android:id="@+id/meetupDetail_startDate"
-                                android:ellipsize="marquee"
-                                />
+                                android:ellipsize="marquee" />
                         </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            >
+                            android:layout_marginStart="10dp">
 
                             <TextView
                                 android:layout_width="50dp"
                                 android:layout_height="wrap_content"
                                 android:text="End"
-                                android:textStyle="bold"
-                                />
+                                android:textStyle="bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="MONTH DD, YYYY at 00:00 am"
                                 android:id="@+id/meetupDetail_endDate"
-                                android:ellipsize="marquee"
-                                />
+                                android:ellipsize="marquee" />
                         </LinearLayout>
 
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
                             android:background="@color/colorPrimaryDark"
-                            android:layout_margin="10dp"
-                            >
-                        </RelativeLayout>
+                            android:layout_margin="10dp"></RelativeLayout>
 
                         <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Description"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginBottom="5dp"
-                        android:textStyle="bold"
-                        />
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Description"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginBottom="5dp"
+                            android:textStyle="bold" />
+
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:layout_marginEnd="10dp"
                             android:text="Description goes here"
-                            android:id="@+id/meetupDetail_description"
-                            />
+                            android:id="@+id/meetupDetail_description" />
 
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
                             android:background="@color/colorPrimaryDark"
-                            android:layout_margin="10dp"
-                            >
-                        </RelativeLayout>
+                            android:layout_margin="10dp"></RelativeLayout>
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -252,24 +234,21 @@
                             android:text="Address"
                             android:layout_marginStart="10dp"
                             android:layout_marginBottom="5dp"
-                            android:textStyle="bold"
-                            />
+                            android:textStyle="bold" />
+
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:layout_marginEnd="10dp"
                             android:text="Address goes here"
-                            android:id="@+id/meetupDetail_address"
-                            />
+                            android:id="@+id/meetupDetail_address" />
 
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
                             android:background="@color/colorPrimaryDark"
-                            android:layout_margin="10dp"
-                            >
-                        </RelativeLayout>
+                            android:layout_margin="10dp"></RelativeLayout>
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -280,8 +259,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="10dp"
                                 android:text="Host"
-                                android:textStyle="bold"
-                                />
+                                android:textStyle="bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -290,8 +268,7 @@
                                 android:layout_marginBottom="10dp"
                                 android:id="@+id/meetupDetail_host"
                                 android:onClick="viewHost"
-                                android:textStyle="bold"
-                                />
+                                android:textStyle="bold" />
 
                         </LinearLayout>
                     </LinearLayout>
@@ -310,15 +287,13 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        >
+                        android:orientation="vertical">
 
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@color/colorPrimaryDark"
-                            android:gravity="center"
-                            >
+                            android:gravity="center">
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -327,30 +302,27 @@
                                 android:textColor="@color/tw__solid_white"
                                 android:textStyle="bold"
                                 android:layout_margin="10dp"
-                                android:layout_centerVertical="true"
-                                />
+                                android:layout_centerVertical="true" />
                         </RelativeLayout>
 
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="10dp"
-                            >
+                            android:layout_margin="10dp">
 
-                           <TextView
-                               android:layout_width="wrap_content"
-                               android:layout_height="25dp"
-                               android:layout_centerVertical="true"
-                               android:drawableStart="@drawable/ic_member_icon"
-                               android:drawablePadding="5dp"
-                               android:gravity="center_vertical"
-                               android:text="## (## Secret)"
-                               android:layout_alignParentStart="true"
-                               android:layout_toStartOf="@+id/meetupDetail_attendBtn"
-                               android:ellipsize="marquee"
-                               android:id="@+id/meetupDetail_attendeeCount"
-                               android:textStyle="bold"
-                               />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="25dp"
+                                android:layout_centerVertical="true"
+                                android:drawableStart="@drawable/ic_member_icon"
+                                android:drawablePadding="5dp"
+                                android:gravity="center_vertical"
+                                android:text="## (## Secret)"
+                                android:layout_alignParentStart="true"
+                                android:layout_toStartOf="@+id/meetupDetail_attendBtn"
+                                android:ellipsize="marquee"
+                                android:id="@+id/meetupDetail_attendeeCount"
+                                android:textStyle="bold" />
 
                             <Button
                                 android:id="@+id/meetupDetail_attendBtn"
@@ -369,9 +341,7 @@
                             android:background="@color/colorPrimaryDark"
                             android:layout_marginBottom="10dp"
                             android:layout_marginStart="10dp"
-                            android:layout_marginEnd="10dp"
-                            >
-                        </RelativeLayout>
+                            android:layout_marginEnd="10dp"></RelativeLayout>
 
                         <TextView
                             android:layout_width="match_parent"
@@ -380,8 +350,7 @@
                             android:text="This Meetup has no one attending!"
                             android:layout_margin="10dp"
                             android:visibility="gone"
-                            android:id="@+id/meetupDetail_noAttendees"
-                            />
+                            android:id="@+id/meetupDetail_noAttendees" />
 
                         <GridView
                             android:id="@+id/meetupDetail_userGrid"
@@ -390,8 +359,7 @@
                             android:columnWidth="110dp"
                             android:gravity="center"
                             android:numColumns="auto_fit"
-                            android:layout_marginBottom="10dp"
-                            />
+                            android:layout_marginBottom="10dp" />
 
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
@@ -404,8 +372,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_gravity="bottom"
-            />
+            android:layout_gravity="bottom" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -413,8 +380,7 @@
             android:background="@color/colorPrimary"
             android:id="@+id/meetupDetail_burgerMenu"
             android:elevation="5dp"
-            android:visibility="gone"
-            >
+            android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -424,8 +390,7 @@
                 android:orientation="vertical"
                 android:gravity="center"
                 android:visibility="visible"
-                android:layout_marginBottom="16dp"
-                >
+                android:layout_marginBottom="16dp">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -434,16 +399,14 @@
                     android:layout_marginTop="16dp"
                     android:gravity="center"
                     android:textColor="@color/tw__solid_white"
-                    android:textStyle="bold"
-                    />
+                    android:textStyle="bold" />
 
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     style="@style/Base.Widget.AppCompat.Button.Colored"
                     android:text="Map Location"
-                    android:onClick="mapLocation"
-                    />
+                    android:onClick="mapLocation" />
 
                 <!-- Host Options -->
                 <LinearLayout
@@ -453,8 +416,7 @@
                     android:gravity="center"
                     android:id="@+id/meetupDetail_hostBurgerMenu"
                     android:layout_marginTop="6dp"
-                    android:visibility="gone"
-                    >
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -462,32 +424,28 @@
                         android:textStyle="bold"
                         android:text="Host Options"
                         android:layout_margin="10dp"
-                        android:textColor="@color/tw__solid_white"
-                        />
+                        android:textColor="@color/tw__solid_white" />
 
                     <Button
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         style="@style/Widget.AppCompat.Button.Colored"
                         android:text="Edit Name"
-                        android:id="@+id/meetupDetail_editNameBtn"
-                        />
+                        android:id="@+id/meetupDetail_editNameBtn" />
 
                     <Button
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         style="@style/Widget.AppCompat.Button.Colored"
                         android:text="Add/Change Photo"
-                        android:id="@+id/meetupDetail_editPhotoBtn"
-                        />
+                        android:id="@+id/meetupDetail_editPhotoBtn" />
 
                     <Button
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         style="@style/Widget.AppCompat.Button.Colored"
                         android:text="Edit Description"
-                        android:id="@+id/meetupDetail_editDescriptionBtn"
-                        />
+                        android:id="@+id/meetupDetail_editDescriptionBtn" />
 
                     <Button
                         android:layout_width="match_parent"
@@ -495,8 +453,7 @@
                         android:layout_marginTop="10dp"
                         style="@style/Widget.AppCompat.Button.Colored"
                         android:text="Delete Meetup"
-                        android:id="@+id/meetupDetail_deleteBtn"
-                        />
+                        android:id="@+id/meetupDetail_deleteBtn" />
 
                 </LinearLayout>
 
@@ -514,7 +471,7 @@
         android:id="@+id/meetupDetail_imageFullScreen"
         android:visibility="gone"
         android:scaleType="fitCenter"
-        android:background="@color/cardview_dark_background"/>
+        android:background="@color/cardview_dark_background" />
 
     <!-- Loading overlay; -->
     <include layout="@layout/loading_overlay" />

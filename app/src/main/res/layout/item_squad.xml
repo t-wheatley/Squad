@@ -47,8 +47,7 @@
                     android:layout_height="match_parent"
                     android:layout_centerHorizontal="true"
                     android:src="@drawable/ic_donut_minim"
-                    android:layout_margin="10dp"
-                    />
+                    android:layout_margin="10dp" />
 
                 <ImageView
                     android:id="@+id/itemSquad_memberIcon"
@@ -67,8 +66,7 @@
                     android:layout_margin="5dp"
                     android:layout_toEndOf="@+id/itemSquad_memberIcon"
                     android:text="#"
-                    android:textStyle="bold"
-                    />
+                    android:textStyle="bold" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -77,7 +75,7 @@
                     android:paddingEnd="10dp"
                     android:src="@drawable/ic_tick"
                     android:visibility="visible"
-                    android:id="@+id/itemSquad_tick"/>
+                    android:id="@+id/itemSquad_tick" />
 
                 <ProgressBar
                     android:id="@+id/itemSquad_imageProgress"
@@ -85,7 +83,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
             </RelativeLayout>
 
@@ -106,7 +104,7 @@
                 android:layout_marginTop="7dp"
                 android:layout_marginBottom="10dp"
                 android:text="Description"
-                android:id="@+id/itemSquad_description"/>
+                android:id="@+id/itemSquad_description" />
 
         </LinearLayout>
 
