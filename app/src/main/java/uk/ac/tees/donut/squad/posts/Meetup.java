@@ -160,7 +160,7 @@ public class Meetup
         return a;
     }
 
-    public int gimmeStatus()    //not 'get' so doesn't get sent to firebase
+    public int getStatus()
     {
         return status;
     }
@@ -232,11 +232,6 @@ public class Meetup
 
     public void setAddress1(String a1) {
         address1 = a1;}
-
-    public void changeStatus(int st)    //not 'set' so firebase api doesn't do anything with it
-    {
-        status = st;
-    }
 
     /**
      * Changes the Meetup's status based on the current time. if the Meetup's status has changed the

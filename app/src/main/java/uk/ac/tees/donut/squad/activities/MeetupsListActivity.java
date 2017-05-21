@@ -815,7 +815,7 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
         model.updateStatus();
 
         // Displaying the status of the Meetup
-        int status = model.gimmeStatus();
+        int status = model.getStatus();
         if (status == 0)
             viewHolder.statusField.setText("Upcoming");
         else if (status == 1)
@@ -903,7 +903,7 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
         if (!searchText.isEmpty())
         {
             // If not filter has been applied yet, needs original list
-            if (filter == 0)
+            if (filter == 0 && past == true)
             {
                 filteredList.clear();
 
@@ -913,15 +913,32 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
                 }
             }
 
-            searchText = searchText.toLowerCase();
-
-            // Finds the Meetups that contain the search
-            for (Meetup meetup : filteredList)
+            // If filtered with past Meetups
+            if(filter > 0 && past == true)
             {
-                if (meetup.getName().toLowerCase().contains(searchText))
+                searchText = searchText.toLowerCase();
+
+                // Finds the Meetups that contain the search
+                for (Meetup meetup : filteredListExpired)
                 {
-                    // Adds the Meetup to the list
-                    searchList.add(meetup);
+                    if (meetup.getName().toLowerCase().contains(searchText))
+                    {
+                        // Adds the Meetup to the list
+                        searchList.add(meetup);
+                    }
+                }
+            } else // If filtered without past Meetups
+            {
+                searchText = searchText.toLowerCase();
+
+                // Finds the Meetups that contain the search
+                for (Meetup meetup : filteredList)
+                {
+                    if (meetup.getName().toLowerCase().contains(searchText))
+                    {
+                        // Adds the Meetup to the list
+                        searchList.add(meetup);
+                    }
                 }
             }
 
@@ -937,7 +954,7 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
         {
             search = false;
 
-            if (filter == 0)
+            if (filter == 0 && past == true)
             {
                 mRecyclerView.setAdapter(mAdapter);
             } else
@@ -1032,13 +1049,12 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
             for (Iterator<Meetup> iterator = filteredList.iterator(); iterator.hasNext(); )
             {
                 Meetup meetup = iterator.next();
-                if (meetup.gimmeStatus() == 2)
+                if (meetup.getStatus() == 2)
                 {
                     // Remove the current element from the iterator and the list.
                     iterator.remove();
                 }
             }
-
 
             // If user wants expired
             if (past == true)
@@ -1121,7 +1137,7 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
         for (Iterator<Meetup> iterator = filteredList.iterator(); iterator.hasNext(); )
         {
             Meetup meetup = iterator.next();
-            if (meetup.gimmeStatus() == 2)
+            if (meetup.getStatus() == 2)
             {
                 // Remove the current element from the iterator and the list.
                 iterator.remove();
@@ -1349,7 +1365,7 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
 
             // Getting status
             meetup.updateStatus();
-            int status = meetup.gimmeStatus();
+            int status = meetup.getStatus();
             if (status == 0)
                 holder.statusField.setText("Upcoming");
             else if (status == 1)
@@ -1489,7 +1505,7 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
                 for (Iterator<Meetup> iterator = filteredList.iterator(); iterator.hasNext(); )
                 {
                     Meetup meetup = iterator.next();
-                    if (meetup.gimmeStatus() == 2)
+                    if (meetup.getStatus() == 2)
                     {
                         // Remove the current element from the iterator and the list.
                         iterator.remove();
@@ -1525,6 +1541,12 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
                 filteredAdapter = new MeetupAdapter(filteredList);
                 mRecyclerView.setAdapter(filteredAdapter);
             }
+        }
+
+        // If there is a search
+        if (search = true)
+        {
+            search(searchBar.getText().toString());
         }
     }
 }
