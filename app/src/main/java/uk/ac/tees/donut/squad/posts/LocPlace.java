@@ -6,8 +6,8 @@ package uk.ac.tees.donut.squad.posts;
 
 public class LocPlace extends AddressPlace
 {
-    public Double locLat;
-    public Double locLong;
+    private Double locLat;
+    private Double locLong;
 
     public LocPlace()
     {

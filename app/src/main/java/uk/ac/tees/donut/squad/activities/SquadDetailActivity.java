@@ -46,37 +46,37 @@ import uk.ac.tees.donut.squad.users.FBUser;
 public class SquadDetailActivity extends BaseActivity
 {
     // Firebase
-    DatabaseReference mDatabase;
+    private DatabaseReference mDatabase;
     private FirebaseStorage firebaseStorage;
-    FirebaseUser firebaseUser;
+    private FirebaseUser firebaseUser;
 
     // Loading Overlay
-    RelativeLayout loadingOverlay;
-    TextView loadingText;
+    private RelativeLayout loadingOverlay;
+    private TextView loadingText;
 
     // Activity UI
-    TextView nameDisplay;
-    TextView descriptionDisplay;
-    TextView memberCountDisplay;
-    TextView memberDisplay;
-    String squadId;
-    Button joinBtn;
-    ImageView squadImage;
-    ProgressBar imageLoading;
-    TextView meetupCount;
-    TextView placeCount;
+    private TextView nameDisplay;
+    private TextView descriptionDisplay;
+    private TextView memberCountDisplay;
+    private TextView memberDisplay;
+    private String squadId;
+    private Button joinBtn;
+    private ImageView squadImage;
+    private ProgressBar imageLoading;
+    private TextView meetupCount;
+    private TextView placeCount;
 
     // Members display
-    GridView membersGrid;
-    List<String> userNames;
-    List<String> userPics;
-    List<String> userIds;
+    private GridView membersGrid;
+    private List<String> userNames;
+    private List<String> userPics;
+    private List<String> userIds;
 
     // Variables
-    Squad squad;
-    Boolean member;
-    int secretCount;
-    int memberCount;
+    private Squad squad;
+    private Boolean member;
+    private int secretCount;
+    private int memberCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)

@@ -50,8 +50,8 @@ public class NewPlaceActivity extends AppCompatActivity
     private DatabaseReference mDatabase;
 
     // Loading Overlay
-    RelativeLayout loadingOverlay;
-    TextView loadingText;
+    private RelativeLayout loadingOverlay;
+    private TextView loadingText;
 
     // Activity UI
     private EditText editName;
@@ -81,7 +81,7 @@ public class NewPlaceActivity extends AppCompatActivity
     protected String pc;
     protected String tc;
     protected String c;
-    HashMap<String, String> squads;
+    private HashMap<String, String> squads;
 
     // Final values
     private static final String TAG = "Auth";

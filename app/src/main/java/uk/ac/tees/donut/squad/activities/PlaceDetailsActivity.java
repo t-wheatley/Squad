@@ -55,43 +55,43 @@ import uk.ac.tees.donut.squad.posts.LocPlace;
 
 public class PlaceDetailsActivity extends BaseActivity {
     // Firebase
-    DatabaseReference mDatabase;
-    FirebaseUser firebaseUser;
-    FirebaseStorage firebaseStorage;
-    StorageReference placeStorage;
+    private DatabaseReference mDatabase;
+    private FirebaseUser firebaseUser;
+    private FirebaseStorage firebaseStorage;
+    private StorageReference placeStorage;
 
     // Loading Overlay
-    RelativeLayout loadingOverlay;
-    TextView loadingText;
-    ProgressBar imageLoading;
+    private RelativeLayout loadingOverlay;
+    private TextView loadingText;
+    private ProgressBar imageLoading;
 
     // Activity UI
-    TextView placeName;
-    TextView description;
-    TextView noPic;
-    TextView address;
-    TextView squad;
-    Button mapBtn;
-    Button meetupsBtn;
-    LinearLayout galleryLayout;
-    ImageSwitcher gallery;
-    ImageView placeImageFull;
-    TextView galleryCounter;
-    TextView meetupCounter;
+    private TextView placeName;
+    private TextView description;
+    private TextView noPic;
+    private TextView address;
+    private TextView squad;
+    private Button mapBtn;
+    private Button meetupsBtn;
+    private LinearLayout galleryLayout;
+    private ImageSwitcher gallery;
+    private ImageView placeImageFull;
+    private TextView galleryCounter;
+    private TextView meetupCounter;
 
-    boolean burger = false;
-    FloatingActionButton fab;
-    LinearLayout burgerMenu;
-    LinearLayout hostMenu;
+    private boolean burger = false;
+    private FloatingActionButton fab;
+    private LinearLayout burgerMenu;
+    private LinearLayout hostMenu;
 
     // Variables
-    String placeId;
-    LocPlace place;
-    double latitude;
-    double longitude;
-    ArrayList<String> images;
-    int imagePosition;
-    boolean fullScreen;
+    private String placeId;
+    private LocPlace place;
+    private double latitude;
+    private double longitude;
+    private ArrayList<String> images;
+    private int imagePosition;
+    private boolean fullScreen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

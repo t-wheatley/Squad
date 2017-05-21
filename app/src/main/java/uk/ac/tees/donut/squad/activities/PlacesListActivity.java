@@ -66,19 +66,19 @@ public class PlacesListActivity extends BaseActivity implements GoogleApiClient.
     private DatabaseReference mDatabase;
 
     // Location
-    GoogleApiClient mGoogleApiClient;
-    LocationRequest mLocationRequest;
-    Location userLoc;
+    private GoogleApiClient mGoogleApiClient;
+    private LocationRequest mLocationRequest;
+    private Location userLoc;
 
     // Loading Overlay
-    RelativeLayout loadingOverlay;
-    TextView loadingText;
+    private RelativeLayout loadingOverlay;
+    private TextView loadingText;
 
     // Activity UI
-    RelativeLayout searchMenu;
-    TextView listText;
-    Button btnDistance;
-    EditText searchBar;
+    private RelativeLayout searchMenu;
+    private TextView listText;
+    private Button btnDistance;
+    private EditText searchBar;
 
     // RecyclerView
     private RecyclerView mRecyclerView;
@@ -87,19 +87,19 @@ public class PlacesListActivity extends BaseActivity implements GoogleApiClient.
     private RecyclerView.AdapterDataObserver mObserver;
 
     // BurgerMenu
-    LinearLayout burgerMenu;
-    FloatingActionButton burgerButton;
+    private LinearLayout burgerMenu;
+    private FloatingActionButton burgerButton;
 
     // Variables
-    List<LocPlace> searchList;
-    List<LocPlace> filteredList;
-    PlaceAdapter filteredAdapter;
-    String squadId;
-    int filter;
-    int loadingCount;
-    boolean squad;
-    boolean search;
-    boolean burger = false;
+    private List<LocPlace> searchList;
+    private List<LocPlace> filteredList;
+    private PlaceAdapter filteredAdapter;
+    private String squadId;
+    private int filter;
+    private int loadingCount;
+    private boolean squad;
+    private boolean search;
+    private boolean burger = false;
 
     // Final values
     final int LOCATION_PERMISSION_REQUEST_CODE = 1;

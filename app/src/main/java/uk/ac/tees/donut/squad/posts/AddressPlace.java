@@ -8,11 +8,11 @@ package uk.ac.tees.donut.squad.posts;
 
 public class AddressPlace extends Place
 {
-    public String address1;
-    public String address2;
-    public String townCity;
-    public String county;
-    public String postCode;
+    private String address1;
+    private String address2;
+    private String townCity;
+    private String county;
+    private String postCode;
 
     public AddressPlace()
     {

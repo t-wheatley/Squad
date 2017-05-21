@@ -47,7 +47,7 @@ import uk.ac.tees.donut.squad.users.FBUser;
 public class SquadPostActivity extends AppCompatActivity
 {
     // Firebase
-    FirebaseUser firebaseUser;
+    private FirebaseUser firebaseUser;
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
