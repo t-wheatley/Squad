@@ -12,7 +12,7 @@
         app:cardBackgroundColor="@color/colorPrimary"
         app:cardCornerRadius="2dp"
         android:elevation="3dp"
-        >
+        android:id="@+id/cardView">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -49,6 +49,17 @@
                     android:id="@+id/userName"
                     />
 
+                <TextView
+                    android:text="TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txtDate"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:textColor="@color/tw__solid_white"
+                    android:layout_margin="1dp"
+                    android:textSize="10sp"/>
+
             </RelativeLayout>
 
             <TextView
@@ -63,30 +74,18 @@
                 />
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyclerView"
+                android:id="@+id/commentRV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:scrollbars="vertical"
                 android:layout_below="@+id/txtPost"
-                android:visibility="gone"
+                android:background="@color/colorAccent"
                 />
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/colorPrimaryDark"
-                android:layout_below="@+id/txtPost"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-
-                android:id="@+id/seperator"
-                >
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/seperator"
+                android:layout_below="@+id/commentRV"
                 android:orientation="horizontal"
                 >
 
@@ -120,7 +119,7 @@
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Post"
+                    android:text="Comment"
                     android:layout_marginTop="5dp"
                     android:layout_marginEnd="7dp"
                     android:layout_alignParentEnd="true"
