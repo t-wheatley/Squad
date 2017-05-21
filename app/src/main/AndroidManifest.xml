@@ -23,7 +23,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.LoginActivity" />
-        <activity android:name=".activities.SquadListActivity" />
+        <activity
+            android:name=".activities.SquadListActivity"
+            android:launchMode="singleTask"/>
         <activity android:name=".activities.NewMeetupActivity" />
         <activity
             android:name=".activities.MeetupDetailActivity"
