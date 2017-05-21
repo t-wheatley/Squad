@@ -56,7 +56,6 @@ public class SquadPostActivity extends AppCompatActivity
     private Button btnPost;
     private LinearLayout burgerMenu;
     private FloatingActionButton fab;
-    private TextView title;
     private RecyclerView mRecyclerView;
     private EditText txtBox;
     private FirebaseAuth mAuth;
@@ -87,7 +86,6 @@ public class SquadPostActivity extends AppCompatActivity
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         fab = (FloatingActionButton) findViewById(R.id.squadPost_fab);
         burgerMenu = (LinearLayout) findViewById(R.id.squadPost_burgerMenu);
-        title = (TextView) findViewById(R.id.squadPost_title);
 
         // Getting the reference for the Firebase Realtime Database
         mDatabase = FirebaseDatabase.getInstance().getReference();
