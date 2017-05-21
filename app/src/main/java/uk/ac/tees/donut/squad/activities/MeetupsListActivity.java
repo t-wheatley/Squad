@@ -815,7 +815,7 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
         model.updateStatus();
 
         // Displaying the status of the Meetup
-        int status = model.gimmeStatus();
+        int status = model.getStatus();
         if (status == 0)
             viewHolder.statusField.setText("Upcoming");
         else if (status == 1)
@@ -903,7 +903,7 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
         if (!searchText.isEmpty())
         {
             // If not filter has been applied yet, needs original list
-            if (filter == 0)
+            if (filter == 0 && past == true)
             {
                 filteredList.clear();
 
@@ -913,15 +913,32 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
                 }
             }
 
-            searchText = searchText.toLowerCase();
-
-            // Finds the Meetups that contain the search
-            for (Meetup meetup : filteredList)
+            // If filtered with past Meetups
+            if(filter > 0 && past == true)
             {
-                if (meetup.getName().toLowerCase().contains(searchText))
+                searchText = searchText.toLowerCase();
+
+                // Finds the Meetups that contain the search
+                for (Meetup meetup : filteredListExpired)
                 {
-                    // Adds the Meetup to the list
-                    searchList.add(meetup);
+                    if (meetup.getName().toLowerCase().contains(searchText))
+                    {
+                        // Adds the Meetup to the list
+                        searchList.add(meetup);
+                    }
+                }
+            } else // If filtered without past Meetups
+            {
+                searchText = searchText.toLowerCase();
+
+                // Finds the Meetups that contain the search
+                for (Meetup meetup : filteredList)
+                {
+                    if (meetup.getName().toLowerCase().contains(searchText))
+                    {
+                        // Adds the Meetup to the list
+                        searchList.add(meetup);
+                    }
                 }
             }
 
@@ -937,7 +954,7 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
         {
             search = false;
 
-            if (filter == 0)
+            if (filter == 0 && past == true)
             {
                 mRecyclerView.setAdapter(mAdapter);
             } else
@@ -1007,21 +1024,32 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
             {
                 public int compare(Meetup m1, Meetup m2)
                 {
-                    Location meetupLoc1 = new Location("meetup1");
-                    meetupLoc1.setLatitude(m1.getLatitude());
-                    meetupLoc1.setLongitude(m1.getLongitude());
+                    if(m1.getLatitude() != null)
+                    {
+                        if(m1.getLongitude() != null)
+                        {
+                            if(m2.getLatitude() != null)
+                            {
+                                if(m2.getLongitude() != null)
+                                {
+                                    Location meetupLoc1 = new Location("meetup1");
+                                    meetupLoc1.setLatitude(m1.getLatitude());
+                                    meetupLoc1.setLongitude(m1.getLongitude());
 
-                    Location meetupLoc2 = new Location("meetup2");
-                    meetupLoc2.setLatitude(m2.getLatitude());
-                    meetupLoc2.setLongitude(m2.getLongitude());
+                                    Location meetupLoc2 = new Location("meetup2");
+                                    meetupLoc2.setLatitude(m2.getLatitude());
+                                    meetupLoc2.setLongitude(m2.getLongitude());
 
-                    double distance1 = userLoc.distanceTo(meetupLoc1);
-                    double distance2 = userLoc.distanceTo(meetupLoc2);
+                                    double distance1 = userLoc.distanceTo(meetupLoc1);
+                                    double distance2 = userLoc.distanceTo(meetupLoc2);
 
-                    if (distance1 < distance2) return -1;
-                    if (distance1 > distance2) return 1;
+                                    if (distance1 < distance2) return -1;
+                                    if (distance1 > distance2) return 1;
+                                }
+                            }
+                        }
+                    }
                     return 0;
-
                 }
             });
 
@@ -1032,13 +1060,12 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
             for (Iterator<Meetup> iterator = filteredList.iterator(); iterator.hasNext(); )
             {
                 Meetup meetup = iterator.next();
-                if (meetup.gimmeStatus() == 2)
+                if (meetup.getStatus() == 2)
                 {
                     // Remove the current element from the iterator and the list.
                     iterator.remove();
                 }
             }
-
 
             // If user wants expired
             if (past == true)
@@ -1107,8 +1134,14 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
         {
             public int compare(Meetup m1, Meetup m2)
             {
-                if (m1.getStartDateTime() < m2.getStartDateTime()) return -1;
-                if (m1.getStartDateTime() > m2.getStartDateTime()) return 1;
+                if(m1.getStartDateTime() != null)
+                {
+                    if(m2.getStartDateTime() != null)
+                    {
+                        if (m1.getStartDateTime() < m2.getStartDateTime()) return -1;
+                        if (m1.getStartDateTime() > m2.getStartDateTime()) return 1;
+                    }
+                }
                 return 0;
             }
         });
@@ -1121,7 +1154,7 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
         for (Iterator<Meetup> iterator = filteredList.iterator(); iterator.hasNext(); )
         {
             Meetup meetup = iterator.next();
-            if (meetup.gimmeStatus() == 2)
+            if (meetup.getStatus() == 2)
             {
                 // Remove the current element from the iterator and the list.
                 iterator.remove();
@@ -1260,7 +1293,7 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
             squadField = (TextView) v.findViewById(R.id.listCard_text2);
             attendingField = (TextView) v.findViewById(R.id.listCard_text4);
             statusField = (TextView) v.findViewById(R.id.listCard_text5);
-            layout = (RelativeLayout) v.findViewById(R.id.layout);
+            //layout = (RelativeLayout) v.findViewById(R.id.layout);
             imageLayout = (LinearLayout) v.findViewById(R.id.listCard_imageLayout);
         }
     }
@@ -1349,7 +1382,7 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
 
             // Getting status
             meetup.updateStatus();
-            int status = meetup.gimmeStatus();
+            int status = meetup.getStatus();
             if (status == 0)
                 holder.statusField.setText("Upcoming");
             else if (status == 1)
@@ -1489,7 +1522,7 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
                 for (Iterator<Meetup> iterator = filteredList.iterator(); iterator.hasNext(); )
                 {
                     Meetup meetup = iterator.next();
-                    if (meetup.gimmeStatus() == 2)
+                    if (meetup.getStatus() == 2)
                     {
                         // Remove the current element from the iterator and the list.
                         iterator.remove();
@@ -1525,6 +1558,12 @@ public class MeetupsListActivity extends BaseActivity implements GoogleApiClient
                 filteredAdapter = new MeetupAdapter(filteredList);
                 mRecyclerView.setAdapter(filteredAdapter);
             }
+        }
+
+        // If there is a search
+        if (search = true)
+        {
+            search(searchBar.getText().toString());
         }
     }
 }

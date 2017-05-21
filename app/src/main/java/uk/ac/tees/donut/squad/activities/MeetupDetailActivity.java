@@ -279,7 +279,7 @@ public class MeetupDetailActivity extends BaseActivity
                 meetup.updateStatus();
 
                 // Displaying the state of the Meetup
-                int status = meetup.gimmeStatus();
+                int status = meetup.getStatus();
                 if (status == 0)
                     statusDisplay.setText("Upcoming");
                 else if (status == 1)
@@ -812,7 +812,7 @@ public class MeetupDetailActivity extends BaseActivity
     public void attendMeetup()
     {
         // If meetup is not upcoming or ongoing
-        if(meetup.gimmeStatus() > 1)
+        if(meetup.getStatus() > 1)
         {
             Toast.makeText(MeetupDetailActivity.this, "Sorry, this Meetup can not be attended anymore!", Toast.LENGTH_SHORT);
         } else

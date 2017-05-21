@@ -88,10 +88,4 @@
     <string name="menu_maps">Maps</string>
     <string name="menu_map">Map</string>
 
-    <string-array name="spinnerItems">
-        <item>Squads</item>
-        <item>Meetups</item>
-        <item>Places</item>
-        <item>Alex Luong</item>
-    </string-array>
 </resources>
